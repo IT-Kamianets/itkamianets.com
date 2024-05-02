@@ -1,13 +1,44 @@
+$primary-color: #e0dc10;
+$secondary-color: #242b36;
+$font-color: #fff;
+$accent-color: #8b890d;
+$button-color: #e0dc10;
+$button-text-color: #000;
 
-// Colors
+// Your SCSS styles here
+.section {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+    position: relative;
 
-$blue: #007eff;
-$dark: #1c1c1c;
-$white: #ffffff;
-$blue-gray: #868401;
-$blue-gray-darken: #6d6b07;
-$yellow: #e0dc10;
-$yellow-darken:#d6d310;
-$green: #928907;
-$green-darken:#16a085;
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* затемнення фону */
+    }
+
+    .content {
+        z-index: 1; /* зміщення вперед від затемнення */
+    }
+
+    h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.2em;
+    }
+}
 
