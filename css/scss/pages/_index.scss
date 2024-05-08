@@ -523,3 +523,27 @@
     max-width: 100%;
     height: auto;
 }
+
+#scrollToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    border-radius: 50%; /* Зроблю кнопку круглою */
+    width: 50px; /* Змінюю ширину кнопки */
+    height: 50px; /* Змінюю висоту кнопки */
+    outline: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+  
