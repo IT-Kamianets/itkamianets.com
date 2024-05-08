@@ -140,3 +140,147 @@
     max-width: 100%;
     height: auto;
 }
+
+.restaurant-solutions-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #242b36; // ваш фоновий колір, якщо потрібно
+    color: #fff; // ваш колір тексту
+}
+
+.restaurant-solutions-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    padding: 0 20px; // відступи по краях
+}
+
+.restaurant-solutions-text {
+    flex: 1;
+    order: 2;
+    margin-left: 20px;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.restaurant-solutions-text h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.restaurant-solutions-text p {
+    font-size: 1.2em;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.restaurant-solutions-image {
+    flex: 1;
+    order: 1;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.restaurant-solutions-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.art-support-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
+    color: #000000; // ваш колір тексту
+}
+
+.art-support-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    padding: 0 20px; // відступи по краях
+}
+
+.art-support-text {
+    flex: 1;
+    order: 1;
+    margin-left: 20px;
+    text-align: left; // текст вирівнюємо зправа
+}
+
+.art-support-text h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.art-support-text p {
+    font-size: 1.2em;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.art-support-image {
+    flex: 1;
+    order: 2;
+    text-align: left; // текст вирівнюємо зправа
+}
+
+.art-support-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.auto-industry-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #242b36; // ваш фоновий колір, якщо потрібно
+    color: #fff; // ваш колір тексту
+}
+
+.auto-industry-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    padding: 0 20px; // відступи по краях
+}
+
+.auto-industry-text {
+    flex: 1;
+    order: 2;
+    margin-left: 20px;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.auto-industry-text h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.auto-industry-text p {
+    font-size: 1.2em;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.auto-industry-image {
+    flex: 1;
+    order: 1;
+    text-align: right; // текст вирівнюємо зправа
+}
+
+.auto-industry-image img {
+    max-width: 100%;
+    height: auto;
+}
