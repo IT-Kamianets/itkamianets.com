@@ -3,13 +3,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #242b36; // ваш фоновий колір, якщо потрібно
-    color: #fff; // ваш колір тексту
+    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
+    color: #000000; // ваш колір тексту
 }
 
 .welcome-content {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     max-width: 1200px; // адаптивна ширина вашого контенту
@@ -18,6 +19,7 @@
 
 .welcome-text {
     flex: 1;
+    order: 1;
     text-align: left; // текст вирівнюємо зліва
 }
 
@@ -28,15 +30,113 @@
 
 .welcome-text p {
     font-size: 1.2em;
+    margin-right: 20px;
     margin-top: 20px;
 }
 
 .welcome-image {
     flex: 1;
+    order: 2;
     text-align: right; // текст вирівнюємо зправа
 }
 
 .welcome-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.technology-partnership-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #242b36; // ваш фоновий колір, якщо потрібно
+    color: #fff; // ваш колір тексту
+}
+
+.technology-partnership-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    padding: 0 20px; // відступи по краях
+}
+
+.technology-partnership-text {
+    flex: 1;
+    order: 2;
+    margin-left: 20px;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.technology-partnership-text h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.technology-partnership-text p {
+    font-size: 1.2em;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.technology-partnership-image {
+    flex: 1;
+    order: 1;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.technology-partnership-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.medical-innovations-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
+    color: #000000; // ваш колір тексту
+}
+
+.medical-innovations-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    padding: 0 20px; // відступи по краях
+}
+
+.medical-innovations-text {
+    flex: 1;
+    order: 1;
+    margin-left: 20px;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.medical-innovations-text h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.medical-innovations-text p {
+    font-size: 1.2em;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.medical-innovations-image {
+    flex: 1;
+    order: 2;
+    text-align: left; // текст вирівнюємо зліва
+}
+
+.medical-innovations-image img {
     max-width: 100%;
     height: auto;
 }
