@@ -1,4 +1,4 @@
-.welcome-section {
+.section1-section {
     height: 100vh;
     display: flex;
     align-items: center;
@@ -7,7 +7,7 @@
     color: #000000; // ваш колір тексту
 }
 
-.welcome-content {
+.section1-content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -17,35 +17,35 @@
     padding: 0 20px; // відступи по краях
 }
 
-.welcome-text {
+.section1-text {
     flex: 1;
     order: 1;
     text-align: left; // текст вирівнюємо зліва
 }
 
-.welcome-text h1 {
+.section1-text h1 {
     font-size: 2em;
     margin: 0;
 }
 
-.welcome-text p {
+.section1-text p {
     font-size: 1.2em;
     margin-right: 20px;
     margin-top: 20px;
 }
 
-.welcome-image {
+.section1-image {
     flex: 1;
     order: 2;
     text-align: right; // текст вирівнюємо зправа
 }
 
-.welcome-image img {
+.section1-image img {
     max-width: 100%;
     height: auto;
 }
 
-.technology-partnership-section {
+.section2-section {
     height: 100vh;
     display: flex;
     align-items: center;
@@ -54,7 +54,7 @@
     color: #fff; // ваш колір тексту
 }
 
-.technology-partnership-content {
+.section2-content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -64,36 +64,36 @@
     padding: 0 20px; // відступи по краях
 }
 
-.technology-partnership-text {
+.section2-text {
     flex: 1;
     order: 2;
     margin-left: 20px;
     text-align: left; // текст вирівнюємо зліва
 }
 
-.technology-partnership-text h1 {
+.section2-text h1 {
     font-size: 2em;
     margin: 0;
 }
 
-.technology-partnership-text p {
+.section2-text p {
     font-size: 1.2em;
     margin-right: 20px;
     margin-top: 20px;
 }
 
-.technology-partnership-image {
+.section2-image {
     flex: 1;
     order: 1;
     text-align: left; // текст вирівнюємо зліва
 }
 
-.technology-partnership-image img {
+.section2-image img {
     max-width: 100%;
     height: auto;
 }
 
-.medical-innovations-section {
+.Contact-section {
     height: 100vh;
     display: flex;
     align-items: center;
@@ -102,7 +102,7 @@
     color: #000000; // ваш колір тексту
 }
 
-.medical-innovations-content {
+.Contact-content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -112,414 +112,30 @@
     padding: 0 20px; // відступи по краях
 }
 
-.medical-innovations-text {
-    flex: 1;
-    order: 1;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.medical-innovations-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.medical-innovations-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.medical-innovations-image {
-    flex: 1;
-    order: 2;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.medical-innovations-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.restaurant-solutions-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #242b36; // ваш фоновий колір, якщо потрібно
-    color: #fff; // ваш колір тексту
-}
-
-.restaurant-solutions-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.restaurant-solutions-text {
-    flex: 1;
-    order: 2;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.restaurant-solutions-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.restaurant-solutions-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.restaurant-solutions-image {
+.Contact-text {
     flex: 1;
     order: 1;
     text-align: left; // текст вирівнюємо зліва
 }
 
-.restaurant-solutions-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.art-support-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
-    color: #000000; // ваш колір тексту
-}
-
-.art-support-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.art-support-text {
-    flex: 1;
-    order: 1;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зправа
-}
-
-.art-support-text h1 {
+.Contact-text h1 {
     font-size: 2em;
     margin: 0;
 }
 
-.art-support-text p {
+.Contact-text p {
     font-size: 1.2em;
     margin-right: 20px;
     margin-top: 20px;
 }
 
-.art-support-image {
+.Contact-image {
     flex: 1;
     order: 2;
-    text-align: left; // текст вирівнюємо зправа
-}
-
-.art-support-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.auto-industry-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #242b36; // ваш фоновий колір, якщо потрібно
-    color: #fff; // ваш колір тексту
-}
-
-.auto-industry-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.auto-industry-text {
-    flex: 1;
-    order: 2;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.auto-industry-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.auto-industry-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.auto-industry-image {
-    flex: 1;
-    order: 1;
     text-align: right; // текст вирівнюємо зправа
 }
 
-.auto-industry-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.fashion-tech-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
-    color: #000000; // ваш колір тексту
-}
-
-.fashion-tech-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.fashion-tech-text {
-    flex: 1;
-    order: 1;
-    margin-left: 20px;
-    text-align: left;
-}
-
-.fashion-tech-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.fashion-tech-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.fashion-tech-image {
-    flex: 1;
-    order: 2;
-    text-align: left; 
-}
-
-.fashion-tech-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.tourism-innovation-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #242b36; // ваш фоновий колір, якщо потрібно
-    color: #ffffff; // ваш колір тексту
-}
-
-.tourism-innovation-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.tourism-innovation-text {
-    flex: 1;
-    order: 2;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.tourism-innovation-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.tourism-innovation-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.tourism-innovation-image {
-    flex: 1;
-    order: 1;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.tourism-innovation-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.sport-digitalization-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
-    color: #000000; // ваш колір тексту
-}
-
-.sport-digitalization-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.sport-digitalization-text {
-    flex: 1;
-    order: 1;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.sport-digitalization-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.sport-digitalization-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.sport-digitalization-image {
-    flex: 1;
-    order: 2;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.sport-digitalization-image img {
-    max-width: 100%;
-    height: auto;
-}
-.education-technology-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #242b36; // ваш фоновий колір, якщо потрібно
-    color: #ffffff; // ваш колір тексту
-}
-
-.education-technology-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.education-technology-text {
-    flex: 1;
-    order: 2;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.education-technology-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.education-technology-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.education-technology-image {
-    flex: 1;
-    order: 1;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.education-technology-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.contact-us-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff; // ваш фоновий колір, якщо потрібно
-    color: #000000; // ваш колір тексту
-}
-
-.contact-us-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; // адаптивна ширина вашого контенту
-    padding: 0 20px; // відступи по краях
-}
-
-.contact-us-text {
-    flex: 1;
-    order: 1;
-    margin-left: 20px;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.contact-us-text h1 {
-    font-size: 2em;
-    margin: 0;
-}
-
-.contact-us-text p {
-    font-size: 1.2em;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.contact-us-image {
-    flex: 1;
-    order: 2;
-    text-align: left; // текст вирівнюємо зліва
-}
-
-.contact-us-image img {
+.Contact-image img {
     max-width: 100%;
     height: auto;
 }
@@ -547,3 +163,32 @@
     }
   }
   
+  #Contact-us {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.Contact-us-container {
+    margin-top: 20px; /* Додайте потрібний відступ між текстом і кнопкою */
+}
