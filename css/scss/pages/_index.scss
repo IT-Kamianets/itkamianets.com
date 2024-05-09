@@ -192,3 +192,66 @@
 .Contact-us-container {
     margin-top: 20px; /* Додайте потрібний відступ між текстом і кнопкою */
 }
+
+.section1-section,
+.section2-section,
+.Contact-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 20px; // відступи по краях
+}
+
+.section1-content,
+.section2-content,
+.Contact-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    width: 100%;
+}
+
+.section1-text,
+.section2-text,
+.Contact-text {
+    flex: 1;
+    text-align: left;
+}
+
+.section1-image,
+.section2-image,
+.Contact-image {
+    flex: 1;
+    text-align: right;
+}
+
+.section1-image img,
+.section2-image img,
+.Contact-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+// Встановлення переходу для ефекту появи
+.section1-section,
+.section2-section,
+.Contact-section {
+    .section1-content,
+    .section2-content,
+    .Contact-content {
+        opacity: 0; // Початкова прозорість: елементи приховані
+        transition: opacity 2s ease; // Плавний перехід протягом 0.5 секунди
+        transition: opacity 2s ease, transform 2s ease; // Властивість переходу з появою та зміщенням
+    }
+    
+    .section1-content.visible,
+    .section2-content.visible,
+    .Contact-content.visible {
+        opacity: 1; // Значення прозорості при з'явленні
+        transform: translateY(0); // Значення зміщення по вертикалі при з'явленні
+    }
+}
