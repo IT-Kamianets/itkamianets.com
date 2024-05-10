@@ -11,7 +11,10 @@ function scrollFunction() {
 function scrollToTop() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
+  document.getElementById("scrollToTopBtn").style.display = "none"; // Приховуємо кнопку після натискання
 }
+
+
 
 // Отримуємо всі елементи розділів, які мають бути анімовані
 const sections = document.querySelectorAll('.section1-content, .section2-content, .Contact-content');
