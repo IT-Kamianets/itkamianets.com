@@ -62,12 +62,6 @@
     padding: 0 20px; // відступи по краях
 }
 
-@media (max-width: 768px) {
-    .section1-content {
-        flex-direction: column; 
-    }
-}
-
 .section1-text {
     flex: 1;
     order: 1;
@@ -78,20 +72,10 @@
     font-size: 2em;
     margin: 0;
 }
-@media (max-width: 768px) {
-    .section1-text h1 {
-        font-size: 1.2em; /* Зменшення розміру шрифту для малих екранів */
-    }
-}
 .section1-text p {
     font-size: 1.2em;
     margin-right: 20px;
     margin-top: 20px;
-}
-@media (max-width: 768px) {
-    .section1-text p {
-        font-size: 0.9em; /* Зменшення розміру шрифту для малих екранів */
-    }
 }
 
 .section1-image {
@@ -105,12 +89,6 @@
     height: auto;
 }
 
-@media (max-width: 768px) {
-    .section1-image img {
-        max-width: 80%; /* Зменшення максимальної ширини для малих екранів */
-    }
-}
-    
 .section2-section {
     height: 100vh;
     display: flex;
@@ -342,4 +320,19 @@
     margin: 0; /* Видаляємо зовнішні відступи для абзацу */
     color: #495057; /* Колір тексту футера */
     font-size: 14px; /* Розмір шрифту */
+}
+.section1-content,
+.section2-content,
+.Contact-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; // адаптивна ширина вашого контенту
+    padding: 0 20px; // відступи по краях
+
+    @media (max-width: 768px) {
+        flex-direction: column-reverse; // Змінюємо порядок для малих екранів
+    }
 }
