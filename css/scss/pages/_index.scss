@@ -1,3 +1,48 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; // Забезпечує, щоб хедер був поверх усіх інших елементів
+    background-color: #f8f9fa;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тінь внизу */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+        img {
+            width: 100px; // Змініть ширину фотографії за вашими потребами
+            height: auto; // Зберігаємо пропорції, автоматично регулюючи висоту
+            border-radius: 50%; // Заокруглюємо кути, щоб зробити фотографію круглою
+            margin-left: 20px;
+        }
+    }
+    
+    .navbar {
+        ul {
+            list-style-type: none; // Видаляємо маркери списку
+            margin: 0;
+            padding: 0;
+            display: flex;
+
+            li {
+                margin-right: 20px; // Відступи між пунктами меню
+
+                a {
+                    text-decoration: none; // Видаляємо підкреслення посилання
+                    color: #333; // Колір тексту посилань
+
+                    &:hover {
+                        color: #007bff; // Колір тексту посилань при наведенні
+                    }
+                }
+            }
+        }
+    }
+}
+
 .section1-section {
     height: 100vh;
     display: flex;
@@ -145,7 +190,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 99;
+    z-index: 10000;
     font-size: 18px;
     border: none;
     border-radius: 50%; 
@@ -255,4 +300,25 @@
         opacity: 1; // Значення прозорості при з'явленні
         transform: translateY(0); // Значення зміщення по вертикалі при з'явленні
     }
+}
+
+.footer {
+    background-color: #f8f9fa; /* Колір футера */
+    padding: 20px 0; /* Відступи від вмісту футера */
+    text-align: center; /* Вирівнювання тексту по центру */
+    position: relative; 
+    width: 100%; /* Ширина футера на всю ширину екрану */
+    z-index: 9999; /* Встановлюємо вище за іншими елементами */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Тінь вверху футера */
+}
+
+.footer-content {
+    max-width: 1200px; /* Максимальна ширина контенту футера */
+    margin: 0 auto; /* Центруємо контент по горизонталі */
+}
+
+.footer p {
+    margin: 0; /* Видаляємо зовнішні відступи для абзацу */
+    color: #495057; /* Колір тексту футера */
+    font-size: 14px; /* Розмір шрифту */
 }

@@ -14,7 +14,21 @@ function scrollToTop() {
   document.getElementById("scrollToTopBtn").style.display = "none"; // Приховуємо кнопку після натискання
 }
 
+let lastScrollTop = 0;
 
+window.addEventListener("scroll", function() {
+    let currentScroll = window.scrollY || document.documentElement.scrollTop;
+    if (currentScroll > lastScrollTop) {
+        // Прокрутка вниз
+        document.querySelector('.header').style.transition = "top 0.3s ease-in-out"; // Додаємо плавний перехід
+        document.querySelector('.header').style.top = "-100px"; // Ховаємо хедер при прокрутці вниз
+    } else {
+        // Прокрутка вверх
+        document.querySelector('.header').style.transition = "top 0.3s ease-in-out"; // Додаємо плавний перехід
+        document.querySelector('.header').style.top = "0"; // Показуємо хедер при прокрутці вверх
+    }
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Для мобільних пристроїв
+}, false);
 
 // Отримуємо всі елементи розділів, які мають бути анімовані
 const sections = document.querySelectorAll('.section1-content, .section2-content, .Contact-content');
