@@ -323,7 +323,7 @@
 }
 .section1-content,
 .section2-content,
-.Contact-content {
+.Contact-content {      
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -334,5 +334,42 @@
 
     @media (max-width: 768px) {
         flex-direction: column-reverse; // Змінюємо порядок для малих екранів
+        text-align: center; // Вирівнюємо текст по центру
+
+        .section1-text,
+        .section2-text,
+        .Contact-text {
+            text-align: center; // Вирівнюємо текст по центру
+            margin: 20px auto; // Додаємо відступи між елементами
+            order: 0;
+            width: 100%; // Забезпечуємо, що текст займає всю ширину контейнера
+            padding: 0 10px; // Внутрішні відступи для тексту
+        }
+        .section1-text p,
+        .section2-text p,
+        .Contact-text p {
+            padding-left: 30px;
+            font-size: 1em;
+        }
+        .section1-text h1,
+        .section2-text h1,
+        .Contact-text h1 {
+            font-size: 1.4em;
+        }
+
+        .section1-image,
+        .section2-image,
+        .Contact-image {
+            text-align: center; // Вирівнюємо зображення по центру
+            order: 0;
+            width: 100%; // Забезпечуємо, що зображення займає всю ширину контейнера
+            max-width: 100%; // Обмежуємо максимальну ширину зображення
+            padding: 10px; // Внутрішні відступи для зображення
+            box-sizing: border-box; // Враховуємо padding у ширину елемента
+        }
+                img {
+            max-width: 75%; // Забезпечуємо, що зображення не виходить за межі контейнера
+            height: auto; // Зберігаємо пропорції зображення
+        }
     }
 }
