@@ -7,6 +7,7 @@
 	"author": "author",
 	"moderators": [],
 	"scss": "scss/index.scss",
+	"favicon": "img/favicon.png",
 	"variables": {
 		"primary_color": "#e0dc10"
 	},
