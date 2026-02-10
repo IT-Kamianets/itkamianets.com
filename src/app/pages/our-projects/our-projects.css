@@ -21,11 +21,30 @@
 }
 
 /* ---- Page Header ---- */
+@keyframes heroFadeIn {
+	from { opacity: 0; transform: translateY(25px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
 .page-header {
+	position: relative;
 	padding: 80px 0 48px;
 	text-align: center;
-	background: var(--c-bg-secondary);
-	border-bottom: 1px solid var(--c-border);
+	background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&h=600&fit=crop');
+	background-size: cover;
+	background-position: center;
+	overflow: hidden;
+}
+
+.page-header__overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(0,0,0,.75) 0%, rgba(37,110,255,.55) 100%);
+}
+
+.page-header__content {
+	position: relative;
+	z-index: 1;
 }
 
 .section-label {
@@ -34,24 +53,27 @@
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 2px;
-	color: var(--c-primary);
+	color: rgba(255,255,255,.7);
 	margin-bottom: 12px;
+	animation: heroFadeIn 1s ease-out .2s backwards;
 }
 
 .page-title {
 	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
 	font-weight: 800;
-	color: var(--c-text-secondary);
+	color: #fff;
 	line-height: 1.2;
 	margin-bottom: 12px;
+	animation: heroFadeIn 1s ease-out .3s backwards;
 }
 
 .page-subtitle {
 	font-size: 1.05rem;
-	color: var(--c-text-muted);
+	color: rgba(255,255,255,.8);
 	line-height: 1.7;
 	max-width: 580px;
 	margin: 0 auto;
+	animation: heroFadeIn 1s ease-out .4s backwards;
 }
 
 .page-body {
@@ -65,10 +87,13 @@
 	gap: 10px;
 	justify-content: center;
 	margin-bottom: 48px;
+	padding-bottom: 4px;
 }
 
 .filter-chip {
-	padding: 9px 22px;
+	padding: 10px 22px;
+	min-width: 130px;
+	text-align: center;
 	font-size: 13px;
 	font-weight: 600;
 	border-radius: 999px;
@@ -77,21 +102,28 @@
 	color: var(--c-text-primary);
 	cursor: pointer;
 	transition: all .25s ease;
+	white-space: nowrap;
 }
 
 .filter-chip:hover {
 	border-color: var(--c-primary);
 	color: var(--c-primary);
+	background: var(--c-bg-primary);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(37, 110, 255, 0.12);
 }
 
 .filter-chip--active {
 	background: var(--c-primary);
 	color: #fff;
 	border-color: var(--c-primary);
+	box-shadow: 0 4px 16px rgba(37, 110, 255, 0.3);
 }
 
 .filter-chip--active:hover {
 	color: #fff;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(37, 110, 255, 0.4);
 }
 
 /* ---- Projects Grid ---- */
@@ -300,7 +332,13 @@
 	box-shadow: 0 24px 64px rgba(0, 0, 0, .3);
 	position: relative;
 	animation: modalSlideIn .3s ease;
+	scrollbar-width: thin;
+	scrollbar-color: var(--c-border) transparent;
 }
+
+.modal::-webkit-scrollbar { width: 6px; }
+.modal::-webkit-scrollbar-track { background: transparent; }
+.modal::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 3px; }
 
 .modal__close {
 	position: absolute;
@@ -426,6 +464,22 @@
 	gap: 10px;
 }
 
+.modal__team-member--clickable {
+	cursor: pointer;
+	padding: 6px 10px;
+	border-radius: 10px;
+	transition: background .2s ease, transform .2s ease;
+}
+
+.modal__team-member--clickable:hover {
+	background: var(--c-bg-secondary);
+	transform: translateY(-2px);
+}
+
+.modal__team-member--clickable:hover .modal__team-name {
+	color: var(--c-primary);
+}
+
 .modal__team-avatar {
 	width: 40px;
 	height: 40px;
@@ -438,6 +492,7 @@
 	font-size: .88rem;
 	font-weight: 600;
 	color: var(--c-text-secondary);
+	transition: color .2s ease;
 }
 
 .modal__team-role {
@@ -499,6 +554,8 @@
 	display: flex;
 	gap: 12px;
 	flex-wrap: wrap;
+	justify-content: center;
+	margin-top: 24px;
 }
 
 @keyframes fadeIn {
@@ -514,4 +571,160 @@
 @media (max-width: 640px) {
 	.modal { max-width: 100%; }
 	.modal__info-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Member Portfolio Modal ---- */
+.member-modal {
+	max-width: 680px;
+}
+
+.member-modal__top {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	padding: 28px 28px 0;
+}
+
+.member-modal__avatar {
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 3px solid var(--c-primary);
+	flex-shrink: 0;
+}
+
+.member-modal__header {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.member-modal__name {
+	font-size: 1.4rem;
+	font-weight: 800;
+	color: var(--c-text-secondary);
+	margin: 0;
+}
+
+.member-modal__role {
+	font-size: .9rem;
+	font-weight: 600;
+	color: var(--c-primary);
+}
+
+.member-modal__exp {
+	font-size: .82rem;
+	color: var(--c-text-muted);
+}
+
+.member-modal__section {
+	margin-bottom: 20px;
+}
+
+.member-modal__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.member-modal__tag {
+	display: inline-block;
+	padding: 5px 14px;
+	font-size: .82rem;
+	font-weight: 500;
+	border-radius: 20px;
+}
+
+.member-modal__tag--lang {
+	background: rgba(37,110,255,.08);
+	color: var(--c-primary);
+}
+
+.member-modal__tag--tech {
+	background: var(--c-bg-secondary);
+	color: var(--c-text-primary);
+	border: 1px solid var(--c-border);
+}
+
+/* ── Portfolio two-column grid ── */
+.member-modal__portfolio-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 24px;
+}
+
+.member-modal__portfolio-col-title {
+	font-size: .8rem;
+	font-weight: 600;
+	color: var(--c-text-muted);
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	margin: 0 0 10px;
+	text-align: center;
+}
+
+.member-modal__portfolio-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.member-modal__portfolio-item {
+	font-size: .85rem;
+	color: var(--c-text-secondary);
+	padding: 6px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: color .2s ease, background .2s ease;
+	position: relative;
+	padding-left: 20px;
+}
+
+.member-modal__portfolio-item::before {
+	content: '▸';
+	position: absolute;
+	left: 6px;
+	color: var(--c-primary);
+	font-weight: 700;
+}
+
+.member-modal__portfolio-item:hover {
+	color: var(--c-primary);
+	background: var(--c-bg-secondary);
+}
+
+/* ── Proposal modal extras ── */
+.modal__features {
+	margin-bottom: 24px;
+}
+
+.modal__features-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.modal__feature-tag {
+	display: inline-block;
+	padding: 6px 14px;
+	font-size: .8rem;
+	font-weight: 500;
+	background: var(--c-bg-secondary);
+	color: var(--c-text-primary);
+	border-radius: 999px;
+	border: 1px solid var(--c-border);
+}
+
+@media (max-width: 640px) {
+	.member-modal__top {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.member-modal__portfolio-grid {
+		grid-template-columns: 1fr;
+	}
 }

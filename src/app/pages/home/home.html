@@ -37,15 +37,23 @@
 					<div class="about-stats">
 						<div class="stat">
 							<span class="stat__number">9+</span>
-							<span class="stat__label">Галузей</span>
+							<span class="stat__label">Напрямків</span>
+						</div>
+						<div class="stat">
+							<span class="stat__number">27+</span>
+							<span class="stat__label">Пропозицій</span>
 						</div>
 						<div class="stat">
 							<span class="stat__number">50+</span>
-							<span class="stat__label">Проєктів</span>
+							<span class="stat__label">Готових проєктів</span>
 						</div>
 						<div class="stat">
 							<span class="stat__number">100%</span>
 							<span class="stat__label">Відданість</span>
+						</div>
+						<div class="stat">
+							<span class="stat__number">100%</span>
+							<span class="stat__label">Якість</span>
 						</div>
 					</div>
 				</div>
@@ -281,28 +289,12 @@
 	</section>
 
 	<!-- ============================================ -->
-	<!-- CTA SECTION -->
-	<!-- ============================================ -->
-	<section class="cta-section">
-		<div class="cta-section__overlay"></div>
-		<div class="container cta-section__content">
-			<h2 class="cta-section__title">Готові розпочати?</h2>
-			<p class="cta-section__subtitle">
-				Зв'яжіться з нами сьогодні і дізнайтесь, як IT Kamianets може допомогти вашому бізнесу рости завдяки інноваційним технологіям.
-			</p>
-			<div class="cta-section__actions">
-				<a routerLink="/order" class="hero__btn hero__btn--primary">Замовити рішення</a>
-			</div>
-		</div>
-	</section>
-
-	<!-- ============================================ -->
 	<!-- PROPOSAL DETAIL MODAL -->
 	<!-- ============================================ -->
 	@if (selectedProposal(); as p) {
 		<div class="modal-backdrop" (click)="closeProposal()">
 			<div class="modal" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeProposal()" aria-label="Закрити">
+				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 				</button>
 
@@ -339,7 +331,7 @@
 						<h4 class="modal__section-title">Команда проєкту</h4>
 						<div class="modal__team-list">
 							@for (member of p.team; track member.name) {
-								<div class="modal__team-member">
+								<div class="modal__team-member modal__team-member--clickable" (click)="openTeamMemberByName(member.name)">
 									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
 									<div>
 										<span class="modal__team-name">{{ member.name }}</span>
@@ -351,8 +343,8 @@
 					</div>
 
 					<div class="modal__actions">
-						<a routerLink="/order" class="hero__btn hero__btn--primary" (click)="closeProposal()">Замовити</a>
-						<button class="hero__btn hero__btn--outline" (click)="closeProposal()">Закрити</button>
+						<a routerLink="/order" class="hero__btn hero__btn--primary" (click)="closeAll()">Замовити</a>
+						<button class="hero__btn hero__btn--outline" (click)="closeProposal()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
 					</div>
 				</div>
 			</div>
@@ -365,7 +357,7 @@
 	@if (selectedTeamMember(); as m) {
 		<div class="modal-backdrop" (click)="closeTeamMember()">
 			<div class="modal team-modal-home" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeTeamMember()" aria-label="Закрити">
+				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 				</button>
 
@@ -401,16 +393,29 @@
 
 					<div class="modal__features">
 						<h4 class="modal__section-title">Проєкти</h4>
-						<div class="modal__features-list">
-							@for (proj of m.projects; track proj) {
-								<span class="modal__feature-tag">{{ proj }}</span>
-							}
+						<div class="modal__portfolio-grid">
+							<div class="modal__portfolio-col">
+								<h5 class="modal__portfolio-col-title">Пропозиції</h5>
+								<ul class="modal__portfolio-list">
+									@for (prop of getProposalsForMember(m.name); track prop.id) {
+										<li class="modal__portfolio-item" (click)="openProposalByTitle(prop.title)">{{ prop.title }}</li>
+									}
+								</ul>
+							</div>
+							<div class="modal__portfolio-col">
+								<h5 class="modal__portfolio-col-title">Виконані проєкти</h5>
+								<ul class="modal__portfolio-list">
+									@for (proj of getCompletedProjectsForMember(m.name); track proj.id) {
+										<li class="modal__portfolio-item" (click)="openProjectByTitle(proj.title)">{{ proj.title }}</li>
+									}
+								</ul>
+							</div>
 						</div>
 					</div>
 
 					<div class="modal__actions">
-						<a routerLink="/our-team" class="hero__btn hero__btn--primary" (click)="closeTeamMember()">Переглянути команду</a>
-						<button class="hero__btn hero__btn--outline" (click)="closeTeamMember()">Закрити</button>
+						<a routerLink="/our-team" class="hero__btn hero__btn--primary" (click)="closeAll()">Переглянути усю команду</a>
+						<button class="hero__btn hero__btn--outline" (click)="closeTeamMember()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
 					</div>
 				</div>
 			</div>
@@ -421,7 +426,7 @@
 	@if (selectedProject(); as proj) {
 		<div class="modal-backdrop" (click)="closeProject()">
 			<div class="modal" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeProject()" aria-label="Закрити">
+				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 				</button>
 
@@ -457,7 +462,7 @@
 						<h4 class="modal__section-title">Команда проєкту</h4>
 						<div class="modal__team-list">
 							@for (member of proj.team; track member.name) {
-								<div class="modal__team-member">
+								<div class="modal__team-member modal__team-member--clickable" (click)="openTeamMemberByName(member.name)">
 									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
 									<div>
 										<span class="modal__team-name">{{ member.name }}</span>
@@ -482,8 +487,8 @@
 					</div>
 
 					<div class="modal__actions">
-						<a routerLink="/order" class="hero__btn hero__btn--primary" (click)="closeProject()">Замовити подібний</a>
-						<button class="hero__btn hero__btn--outline" (click)="closeProject()">Закрити</button>
+						<a routerLink="/order" class="hero__btn hero__btn--primary" (click)="closeAll()">Замовити подібний</a>
+						<button class="hero__btn hero__btn--outline" (click)="closeProject()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
 					</div>
 				</div>
 			</div>

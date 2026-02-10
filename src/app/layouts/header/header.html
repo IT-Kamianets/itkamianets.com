@@ -1,29 +1,30 @@
 <header class="header">
-	<nav class="mx-auto max-w-7xl px-3 py-2 sm:px-4 sm:py-3">
+	<nav class="header__inner">
 
 		<!-- ============================================ -->
 		<!-- DESKTOP LAYOUT (>= 640px) -->
 		<!-- ============================================ -->
-		<div class="hidden sm:flex sm:items-center sm:justify-between sm:gap-4">
+		<div class="header__desktop">
 			<!-- Left: Logo + Brand -->
-			<div class="flex items-center gap-3 shrink-0 min-w-[160px]">
-				<img src="logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-[var(--radius)]"/>
-				<span class="text-lg font-bold tracking-wide" style="color: var(--c-text-secondary);">IT-KAMIANETS</span>
+			<div class="header__brand">
+				<div class="header__logo-wrap">
+					<img src="logo.png" alt="Logo" class="header__logo"/>
+				</div>
+				<span class="header__brand-name">IT-KAMIANETS</span>
 			</div>
 
 			<!-- Center: Navigation Links -->
-			<div class="header__nav flex flex-wrap justify-center gap-1 flex-1">
-				<a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="header__link--active" class="header__link rounded-md px-3 py-2 text-sm font-medium transition">Home</a>
-				<a routerLink="/proposals" routerLinkActive="header__link--active" class="header__link rounded-md px-3 py-2 text-sm font-medium transition">Proposals</a>
-				<a routerLink="/our-team" routerLinkActive="header__link--active" class="header__link rounded-md px-3 py-2 text-sm font-medium transition">Our team</a>
-				<a routerLink="/our-projects" routerLinkActive="header__link--active" class="header__link rounded-md px-3 py-2 text-sm font-medium transition">Our projects</a>
-				<a routerLink="/order" routerLinkActive="header__link--active" class="header__link rounded-md px-3 py-2 text-sm font-medium transition">Order</a>
+			<div class="header__nav-pill">
+				<a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="header__link--active" class="header__link">Головна</a>
+				<a routerLink="/proposals" routerLinkActive="header__link--active" class="header__link">Пропозиції</a>
+				<a routerLink="/our-team" routerLinkActive="header__link--active" class="header__link">Наша команда</a>
+				<a routerLink="/our-projects" routerLinkActive="header__link--active" class="header__link">Наші проєкти</a>
+				<a routerLink="/order" routerLinkActive="header__link--active" class="header__link">Замовити</a>
 			</div>
 
 			<!-- Right: Theme Toggle -->
-			<div class="flex items-center shrink-0 min-w-[160px] justify-end">
+			<div class="header__actions">
 				<button type="button" class="theme-toggle" [class.theme-toggle--dark]="isDark" (click)="toggleTheme()" aria-label="Toggle theme">
-					<!-- Sun icon -->
 					<svg class="theme-toggle__icon theme-toggle__sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<circle cx="12" cy="12" r="5"/>
 						<line x1="12" y1="1" x2="12" y2="3"/>
@@ -35,7 +36,6 @@
 						<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
 						<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
 					</svg>
-					<!-- Moon icon -->
 					<svg class="theme-toggle__icon theme-toggle__moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
 					</svg>
@@ -46,12 +46,14 @@
 		<!-- ============================================ -->
 		<!-- MOBILE LAYOUT (< 640px) -->
 		<!-- ============================================ -->
-		<div class="sm:hidden">
+		<div class="header__mobile">
 			<!-- Row 1: Logo + Brand + Theme Toggle -->
-			<div class="flex items-center justify-between mb-1">
-				<div class="flex items-center gap-2">
-					<img src="logo.png" alt="Logo" class="w-6 h-6 object-contain rounded-[var(--radius)]"/>
-					<span class="text-xs font-bold tracking-wide" style="color: var(--c-text-secondary);">IT-KAMIANETS</span>
+			<div class="header__mobile-top">
+				<div class="header__brand header__brand--sm">
+					<div class="header__logo-wrap header__logo-wrap--sm">
+						<img src="logo.png" alt="Logo" class="header__logo"/>
+					</div>
+					<span class="header__brand-name">IT-KAMIANETS</span>
 				</div>
 				<button type="button" class="theme-toggle theme-toggle--sm" [class.theme-toggle--dark]="isDark" (click)="toggleTheme()" aria-label="Toggle theme">
 					<svg class="theme-toggle__icon theme-toggle__sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -72,12 +74,12 @@
 			</div>
 
 			<!-- Row 2: Navigation Links -->
-			<div class="header__nav flex items-center justify-center gap-0.5 py-1 overflow-x-auto -mx-3 px-3">
-				<a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="header__link--active" class="header__link rounded px-1.5 py-1 text-xs font-medium transition whitespace-nowrap">Home</a>
-				<a routerLink="/proposals" routerLinkActive="header__link--active" class="header__link rounded px-1.5 py-1 text-xs font-medium transition whitespace-nowrap">Proposals</a>
-				<a routerLink="/our-team" routerLinkActive="header__link--active" class="header__link rounded px-1.5 py-1 text-xs font-medium transition whitespace-nowrap">Our team</a>
-				<a routerLink="/our-projects" routerLinkActive="header__link--active" class="header__link rounded px-1.5 py-1 text-xs font-medium transition whitespace-nowrap">Our projects</a>
-				<a routerLink="/order" routerLinkActive="header__link--active" class="header__link rounded px-1.5 py-1 text-xs font-medium transition whitespace-nowrap">Order</a>
+			<div class="header__nav-pill header__nav-pill--mobile">
+				<a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="header__link--active" class="header__link">Головна</a>
+				<a routerLink="/proposals" routerLinkActive="header__link--active" class="header__link">Пропозиції</a>
+				<a routerLink="/our-team" routerLinkActive="header__link--active" class="header__link">Наша команда</a>
+				<a routerLink="/our-projects" routerLinkActive="header__link--active" class="header__link">Наші проєкти</a>
+				<a routerLink="/order" routerLinkActive="header__link--active" class="header__link">Замовити</a>
 			</div>
 		</div>
 	</nav>

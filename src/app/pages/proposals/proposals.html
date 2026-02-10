@@ -2,7 +2,8 @@
 
 	<!-- HEADER -->
 	<div class="page-header">
-		<div class="container">
+		<div class="page-header__overlay"></div>
+		<div class="container page-header__content">
 			<span class="section-label">Наші пропозиції</span>
 			<h1 class="page-title">Готові ІТ-рішення для вашого бізнесу</h1>
 			<p class="page-subtitle">
@@ -58,7 +59,7 @@
 	@if (selectedProposal(); as p) {
 		<div class="modal-backdrop" (click)="closeProposal()">
 			<div class="modal" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeProposal()" aria-label="Закрити">
+				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 				</button>
 
@@ -90,12 +91,21 @@
 							}
 						</div>
 					</div>
-
+				@if (p.idealFor && p.idealFor.length) {
+					<div class="modal__ideal-for">
+						<h4 class="modal__section-title">Для кого</h4>
+						<div class="modal__ideal-list">
+							@for (target of p.idealFor; track target) {
+								<span class="modal__ideal-tag">{{ target }}</span>
+							}
+						</div>
+					</div>
+				}
 					<div class="modal__team">
 						<h4 class="modal__section-title">Команда проєкту</h4>
 						<div class="modal__team-list">
 							@for (member of p.team; track member.name) {
-								<div class="modal__team-member">
+								<div class="modal__team-member modal__team-member--clickable" (click)="openMemberByName(member.name)">
 									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
 									<div>
 										<span class="modal__team-name">{{ member.name }}</span>
@@ -107,8 +117,152 @@
 					</div>
 
 					<div class="modal__actions">
-						<a routerLink="/order" class="btn-primary" (click)="closeProposal()">Замовити</a>
-						<button class="btn-outline" (click)="closeProposal()">Закрити</button>
+						<a routerLink="/order" class="btn-primary" (click)="closeAll()">Замовити</a>
+						<button class="btn-outline" (click)="closeProposal()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- TEAM MEMBER PORTFOLIO MODAL -->
+	@if (selectedMember(); as m) {
+		<div class="modal-backdrop" (click)="closeMember()">
+			<div class="modal member-modal" (click)="$event.stopPropagation()">
+				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+
+				<div class="member-modal__top">
+					<img [src]="m.avatar" [alt]="m.name" class="member-modal__avatar" />
+					<div class="member-modal__header">
+						<h2 class="member-modal__name">{{ m.name }}</h2>
+						<span class="member-modal__role">{{ m.role }}</span>
+						<span class="member-modal__exp">{{ m.experienceYears }} років досвіду</span>
+					</div>
+				</div>
+
+				<div class="modal__body">
+					<p class="modal__description">{{ m.fullBio }}</p>
+
+					<div class="member-modal__section">
+						<h4 class="modal__section-title">Мови спілкування</h4>
+						<div class="member-modal__tags">
+							@for (lang of m.spokenLanguages; track lang) {
+								<span class="member-modal__tag member-modal__tag--lang">{{ lang }}</span>
+							}
+						</div>
+					</div>
+
+					<div class="member-modal__section">
+						<h4 class="modal__section-title">Технології</h4>
+						<div class="member-modal__tags">
+							@for (tech of m.technologies; track tech) {
+								<span class="member-modal__tag member-modal__tag--tech">{{ tech }}</span>
+							}
+						</div>
+					</div>
+
+					<div class="member-modal__section">
+						<h4 class="modal__section-title">Проєкти</h4>
+						<div class="member-modal__portfolio-grid">
+							<div class="member-modal__portfolio-col">
+								<h5 class="member-modal__portfolio-col-title">Пропозиції</h5>
+								<ul class="member-modal__portfolio-list">
+									@for (prop of getProposalsForMember(m.name); track prop.id) {
+										<li class="member-modal__portfolio-item" (click)="openProposalByTitle(prop.title)">{{ prop.title }}</li>
+									}
+								</ul>
+							</div>
+							<div class="member-modal__portfolio-col">
+								<h5 class="member-modal__portfolio-col-title">Виконані проєкти</h5>
+								<ul class="member-modal__portfolio-list">
+									@for (proj of getCompletedProjectsForMember(m.name); track proj.id) {
+										<li class="member-modal__portfolio-item" (click)="openProjectByTitle(proj.title)">{{ proj.title }}</li>
+									}
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal__actions">
+						<button class="btn-outline" (click)="closeMember()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	<!-- PROJECT DETAIL MODAL -->
+	@if (selectedProjectModal(); as proj) {
+		<div class="modal-backdrop" (click)="closeProjectModal()">
+			<div class="modal" (click)="$event.stopPropagation()">
+				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+
+				<div class="modal__img">
+					<img [src]="proj.image" [alt]="proj.title" />
+					<span class="modal__cat">{{ proj.category }}</span>
+				</div>
+
+				<div class="modal__body">
+					<h2 class="modal__title">{{ proj.title }}</h2>
+					<p class="modal__description">{{ proj.fullDescription }}</p>
+
+					<div class="modal__info-grid">
+						<div class="modal__info-item">
+							<span class="modal__info-label">Замовник</span>
+							<span class="modal__info-value" style="color: var(--c-text-secondary)">{{ proj.clientOrg }}</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Завершено</span>
+							<span class="modal__info-value" style="color: var(--c-text-secondary)">{{ proj.completedDate }}</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Вартість</span>
+							<span class="modal__info-value">{{ proj.cost }}</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Термін</span>
+							<span class="modal__info-value">{{ proj.duration }}</span>
+						</div>
+					</div>
+
+					<div class="modal__team">
+						<h4 class="modal__section-title">Команда проєкту</h4>
+						<div class="modal__team-list">
+							@for (member of proj.team; track member.name) {
+								<div class="modal__team-member modal__team-member--clickable" (click)="openMemberByName(member.name)">
+									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
+									<div>
+										<span class="modal__team-name">{{ member.name }}</span>
+										<span class="modal__team-role">{{ member.role }}</span>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+
+					<div class="modal__review">
+						<h4 class="modal__section-title">Відгук клієнта</h4>
+						<div class="review-card">
+							<div class="review-card__stars">
+								@for (star of formatStars(proj.review.rating); track $index) {
+									<span class="review-star">{{ star }}</span>
+								}
+							</div>
+							<p class="review-card__text">«{{ proj.review.text }}»</p>
+							<div class="review-card__author">
+								<span class="review-card__name">{{ proj.review.author }}</span>
+								<span class="review-card__position">{{ proj.review.position }}</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal__actions">
+						<a routerLink="/order" class="btn-primary" (click)="closeAll()">Замовити подібний</a>
+						<button class="btn-outline" (click)="closeProjectModal()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
 					</div>
 				</div>
 			</div>

@@ -46,7 +46,7 @@ export class Order {
 	email = signal('');
 	selectedCategory = signal('');
 	selectedProposalId = signal<number | null>(null);
-	qualityIndex = signal(2);
+	qualityIndex = signal(1);
 	speedIndex = signal(1);
 	includeSupport = signal(false);
 	includeSeo = signal(false);
@@ -121,6 +121,7 @@ export class Order {
 		if (!this.isFormValid()) return;
 		this.submitted.set(true);
 		document.body.style.overflow = 'hidden';
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
 
 	closeSuccess(): void {
@@ -137,7 +138,7 @@ export class Order {
 		this.email.set('');
 		this.selectedCategory.set('');
 		this.selectedProposalId.set(null);
-		this.qualityIndex.set(2);
+		this.qualityIndex.set(1);
 		this.speedIndex.set(1);
 		this.includeSupport.set(false);
 		this.includeSeo.set(false);

@@ -35,7 +35,7 @@ export class Home {
 			image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=500&fit=crop',
 		},
 		{
-			title: 'Ресторани і кафе',
+			title: 'Заклади',
 			description: 'Автоматизація замовлень, доставки та обслуговування для закладів харчування.',
 			image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop',
 		},
@@ -60,7 +60,7 @@ export class Home {
 			image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=500&fit=crop',
 		},
 		{
-			title: 'Спорт та фітнес',
+			title: 'Спорт',
 			description: 'Платформи для фітнес-клубів: абонементи, розклад та клієнтська база.',
 			image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=500&fit=crop',
 		},
@@ -80,6 +80,7 @@ export class Home {
 	carouselOffset = signal(0);
 	teamCarouselOffset = signal(0);
 	projectsCarouselOffset = signal(0);
+	private modalStack = signal<Array<{type: 'proposal' | 'project' | 'team', data: any}>>([]);
 
 	readonly testimonials: Testimonial[] = [
 		{ text: 'Команда IT Kamianets перевершила всі наші очікування. Систему впровадили швидко і без жодних проблем.', author: 'Василь Дорошенко', position: 'Генеральний директор, АгроХолдинг «Золоте Зерно»', rating: 5 },
@@ -112,11 +113,14 @@ export class Home {
 	}
 
 	openProposal(proposal: Proposal): void {
+		this.modalStack.set([]);
 		this.selectedProposal.set(proposal);
+		document.body.style.overflow = 'hidden';
 	}
 
 	closeProposal(): void {
 		this.selectedProposal.set(null);
+		this.popFromStack();
 	}
 
 	formatPrice(price: number): string {
@@ -144,13 +148,14 @@ export class Home {
 	}
 
 	openTeamMember(member: TeamMemberFull): void {
+		this.modalStack.set([]);
 		this.selectedTeamMember.set(member);
 		document.body.style.overflow = 'hidden';
 	}
 
 	closeTeamMember(): void {
 		this.selectedTeamMember.set(null);
-		document.body.style.overflow = '';
+		this.popFromStack();
 	}
 
 	/* ── Projects carousel ── */
@@ -174,16 +179,94 @@ export class Home {
 	}
 
 	openProject(project: CompletedProject): void {
+		this.modalStack.set([]);
 		this.selectedProject.set(project);
 		document.body.style.overflow = 'hidden';
 	}
 
 	closeProject(): void {
 		this.selectedProject.set(null);
-		document.body.style.overflow = '';
+		this.popFromStack();
 	}
 
 	formatStars(rating: number): string[] {
 		return Array(rating).fill('★');
+	}
+
+	/* ── Cross-modal navigation ── */
+	openTeamMemberByName(name: string): void {
+		const member = this.teamMembers.find(m => m.name === name);
+		if (member) {
+			this.pushCurrentToStack();
+			this.selectedTeamMember.set(member);
+			document.body.style.overflow = 'hidden';
+		}
+	}
+
+	openProjectByTitle(title: string): void {
+		const project = this.completedProjects.find(p => p.title === title);
+		if (project) {
+			this.pushCurrentToStack();
+			this.selectedProject.set(project);
+			document.body.style.overflow = 'hidden';
+		}
+	}
+
+	openProposalByTitle(title: string): void {
+		const proposal = this.proposals.find(p => p.title === title);
+		if (proposal) {
+			this.pushCurrentToStack();
+			this.selectedProposal.set(proposal);
+			document.body.style.overflow = 'hidden';
+		}
+	}
+
+	getProposalsForMember(name: string): Proposal[] {
+		return this.proposals.filter(p => p.team.some(m => m.name === name));
+	}
+
+	getCompletedProjectsForMember(name: string): CompletedProject[] {
+		return this.completedProjects.filter(p => p.team.some(m => m.name === name));
+	}
+
+	hasStack(): boolean {
+		return this.modalStack().length > 0;
+	}
+
+	closeAll(): void {
+		this.selectedProposal.set(null);
+		this.selectedTeamMember.set(null);
+		this.selectedProject.set(null);
+		this.modalStack.set([]);
+		document.body.style.overflow = '';
+	}
+
+	private pushCurrentToStack(): void {
+		const proposal = this.selectedProposal();
+		const project = this.selectedProject();
+		const team = this.selectedTeamMember();
+		if (proposal) {
+			this.modalStack.update(s => [...s, { type: 'proposal', data: proposal }]);
+			this.selectedProposal.set(null);
+		} else if (project) {
+			this.modalStack.update(s => [...s, { type: 'project', data: project }]);
+			this.selectedProject.set(null);
+		} else if (team) {
+			this.modalStack.update(s => [...s, { type: 'team', data: team }]);
+			this.selectedTeamMember.set(null);
+		}
+	}
+
+	private popFromStack(): void {
+		const stack = this.modalStack();
+		if (stack.length > 0) {
+			const prev = stack[stack.length - 1];
+			this.modalStack.update(s => s.slice(0, -1));
+			if (prev.type === 'proposal') this.selectedProposal.set(prev.data);
+			else if (prev.type === 'project') this.selectedProject.set(prev.data);
+			else if (prev.type === 'team') this.selectedTeamMember.set(prev.data);
+		} else {
+			document.body.style.overflow = '';
+		}
 	}
 }
