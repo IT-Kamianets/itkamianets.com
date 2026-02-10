@@ -33,9 +33,7 @@
             "ssr": {
               "entry": "src/server.ts"
             },
-            "prerender": {
-              "discoverRoutes": true
-            }
+            "prerender": true
           },
           "configurations": {
             "production": {
