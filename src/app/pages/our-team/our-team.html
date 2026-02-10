@@ -1,0 +1,73 @@
+<div class="team-page">
+	<div class="team-container">
+
+		<div class="team-header">
+			<h1 class="team-title">Наша команда</h1>
+			<p class="team-subtitle">9 фахівців, які перетворюють ваші ідеї на потужні цифрові рішення</p>
+		</div>
+
+		<div class="team-grid">
+			@for (member of members; track member.id) {
+				<div class="member-card" (click)="openMember(member)">
+					<div class="member-card__photo">
+						<img [src]="member.avatar" [alt]="member.name" />
+					</div>
+					<div class="member-card__info">
+						<h3 class="member-card__name">{{ member.name }}</h3>
+						<span class="member-card__role">{{ member.role }}</span>
+						<span class="member-card__exp">{{ member.experienceYears }} років досвіду</span>
+						<p class="member-card__bio">{{ member.shortBio }}</p>
+						<button class="member-card__btn">Детальніше</button>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+
+	<!-- Modal -->
+	@if (selectedMember(); as m) {
+		<div class="team-modal-overlay" (click)="closeMember()">
+			<div class="team-modal" (click)="$event.stopPropagation()">
+				<button class="team-modal__close" (click)="closeMember()">✕</button>
+
+				<div class="team-modal__top">
+					<img [src]="m.avatar" [alt]="m.name" class="team-modal__avatar" />
+					<div class="team-modal__header">
+						<h2 class="team-modal__name">{{ m.name }}</h2>
+						<span class="team-modal__role">{{ m.role }}</span>
+						<span class="team-modal__exp">{{ m.experienceYears }} років досвіду</span>
+					</div>
+				</div>
+
+				<p class="team-modal__bio">{{ m.fullBio }}</p>
+
+				<div class="team-modal__section">
+					<h4 class="team-modal__label">Мови спілкування</h4>
+					<div class="team-modal__tags">
+						@for (lang of m.spokenLanguages; track lang) {
+							<span class="team-modal__tag team-modal__tag--lang">{{ lang }}</span>
+						}
+					</div>
+				</div>
+
+				<div class="team-modal__section">
+					<h4 class="team-modal__label">Технології</h4>
+					<div class="team-modal__tags">
+						@for (tech of m.technologies; track tech) {
+							<span class="team-modal__tag team-modal__tag--tech">{{ tech }}</span>
+						}
+					</div>
+				</div>
+
+				<div class="team-modal__section">
+					<h4 class="team-modal__label">Проєкти</h4>
+					<ul class="team-modal__projects">
+						@for (proj of m.projects; track proj) {
+							<li>{{ proj }}</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	}
+</div>

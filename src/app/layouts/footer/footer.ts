@@ -15,7 +15,7 @@ export class Footer {
 		{ label: 'About Us', routerLink: '/' },
 		{ label: 'Our Team', routerLink: '/' },
 		{ label: 'Careers', routerLink: '/' },
-		{ label: 'Blog', routerLink: '/content' },
+		{ label: 'Blog', routerLink: '/' },
 	];
 
 	protected readonly productLinks = [

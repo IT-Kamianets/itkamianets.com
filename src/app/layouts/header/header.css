@@ -44,40 +44,78 @@
 	color: #fff !important;
 }
 
-/* Theme Switcher Segments */
-.header__seg {
-	display: inline-flex;
+/* ============================================ */
+/* Theme Toggle Button - Sun/Moon Animation     */
+/* ============================================ */
+.theme-toggle {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
 	border: 1px solid var(--c-border);
-	border-radius: var(--radius-btn);
-	overflow: hidden;
+	border-radius: 50%;
 	background: var(--c-bg-tertiary);
-}
-
-/* Desktop segment buttons */
-.header__seg-btn {
-	padding: 6px 10px;
-	color: var(--c-text-primary);
-	border: none;
-	background: transparent;
 	cursor: pointer;
+	overflow: hidden;
+	transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
 }
 
-.header__seg-btn:hover {
-	color: var(--c-text-secondary);
+.theme-toggle:hover {
+	background: var(--c-bg-secondary);
+	border-color: var(--c-primary);
+	transform: scale(1.1);
 }
 
-.header__seg-btn--active {
-	background: var(--c-primary);
-	color: #fff;
+.theme-toggle:active {
+	transform: scale(0.95);
 }
 
-.header__seg-btn:focus-visible {
+.theme-toggle:focus-visible {
 	outline: none;
 	box-shadow: var(--focus-ring);
 }
 
-/* Mobile segment buttons - smaller */
-.header__seg-btn--mobile {
-	font-size: 10px;
-	padding: 3px 5px;
+.theme-toggle--sm {
+	width: 32px;
+	height: 32px;
+}
+
+/* Icons */
+.theme-toggle__icon {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	color: var(--c-text-primary);
+	transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+				opacity 0.3s ease;
+}
+
+.theme-toggle--sm .theme-toggle__icon {
+	width: 16px;
+	height: 16px;
+}
+
+/* Sun: visible in light mode */
+.theme-toggle__sun {
+	opacity: 1;
+	transform: rotate(0deg) scale(1);
+}
+
+/* Moon: hidden in light mode */
+.theme-toggle__moon {
+	opacity: 0;
+	transform: rotate(-90deg) scale(0.5);
+}
+
+/* Dark mode: swap icons */
+.theme-toggle--dark .theme-toggle__sun {
+	opacity: 0;
+	transform: rotate(90deg) scale(0.5);
+}
+
+.theme-toggle--dark .theme-toggle__moon {
+	opacity: 1;
+	transform: rotate(0deg) scale(1);
 }

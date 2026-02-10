@@ -1,0 +1,118 @@
+<div class="proposals-page">
+
+	<!-- HEADER -->
+	<div class="page-header">
+		<div class="container">
+			<span class="section-label">Наші пропозиції</span>
+			<h1 class="page-title">Готові ІТ-рішення для вашого бізнесу</h1>
+			<p class="page-subtitle">
+				Оберіть категорію та знайдіть рішення, яке ідеально підходить для вашої галузі
+			</p>
+		</div>
+	</div>
+
+	<div class="container page-body">
+
+		<!-- CATEGORY FILTERS -->
+		<div class="filters">
+			@for (cat of categories; track cat) {
+				<button
+					class="filter-chip"
+					[class.filter-chip--active]="selectedCategory() === cat"
+					(click)="filterByCategory(cat)"
+				>
+					{{ cat }}
+				</button>
+			}
+		</div>
+
+		<!-- PROPOSALS GRID -->
+		<div class="proposals-grid">
+			@for (p of filteredProposals(); track p.id) {
+				<div class="prop-card" (click)="openProposal(p)">
+					<div class="prop-card__img">
+						<img [src]="p.image" [alt]="p.title" loading="lazy" />
+						<span class="prop-card__badge">{{ p.category }}</span>
+					</div>
+					<div class="prop-card__body">
+						<h3 class="prop-card__title">{{ p.title }}</h3>
+						<p class="prop-card__desc">{{ p.shortDescription }}</p>
+						<div class="prop-card__meta">
+							<span class="prop-card__price">{{ formatPrice(p.priceFrom) }} – {{ formatPrice(p.priceTo) }} грн</span>
+							<span class="prop-card__time">{{ p.timeFrom }} – {{ p.timeTo }}</span>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+
+		@if (filteredProposals().length === 0) {
+			<div class="empty-state">
+				<p>Нічого не знайдено в цій категорії</p>
+			</div>
+		}
+
+	</div>
+
+	<!-- MODAL -->
+	@if (selectedProposal(); as p) {
+		<div class="modal-backdrop" (click)="closeProposal()">
+			<div class="modal" (click)="$event.stopPropagation()">
+				<button class="modal__close" (click)="closeProposal()" aria-label="Закрити">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+
+				<div class="modal__img">
+					<img [src]="p.image" [alt]="p.title" />
+					<span class="modal__cat">{{ p.category }}</span>
+				</div>
+
+				<div class="modal__body">
+					<h2 class="modal__title">{{ p.title }}</h2>
+					<p class="modal__description">{{ p.fullDescription }}</p>
+
+					<div class="modal__info-grid">
+						<div class="modal__info-item">
+							<span class="modal__info-label">Вартість</span>
+							<span class="modal__info-value">{{ formatPrice(p.priceFrom) }} – {{ formatPrice(p.priceTo) }} грн</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Терміни</span>
+							<span class="modal__info-value">{{ p.timeFrom }} – {{ p.timeTo }}</span>
+						</div>
+					</div>
+
+					<div class="modal__features">
+						<h4 class="modal__section-title">Що входить</h4>
+						<div class="modal__features-list">
+							@for (feat of p.features; track feat) {
+								<span class="modal__feature-tag">{{ feat }}</span>
+							}
+						</div>
+					</div>
+
+					<div class="modal__team">
+						<h4 class="modal__section-title">Команда проєкту</h4>
+						<div class="modal__team-list">
+							@for (member of p.team; track member.name) {
+								<div class="modal__team-member">
+									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
+									<div>
+										<span class="modal__team-name">{{ member.name }}</span>
+										<span class="modal__team-role">{{ member.role }}</span>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+
+					<div class="modal__actions">
+						<a routerLink="/order" class="btn-primary" (click)="closeProposal()">Замовити</a>
+						<button class="btn-outline" (click)="closeProposal()">Закрити</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+</div>

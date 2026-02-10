@@ -1,12 +1,10 @@
 import { Routes } from '@angular/router';
 import { Public } from './layouts/public/public';
-import { Content } from './pages/content/content';
-import { Form } from './pages/form/form';
-import { Gallery } from './pages/gallery/gallery';
 import { Home } from './pages/home/home';
-import { List } from './pages/list/list';
-import { Profile } from './pages/profile/profile';
-import { Table } from './pages/table/table';
+import { Proposals } from './pages/proposals/proposals';
+import { OurTeam } from './pages/our-team/our-team';
+import { OurProjects } from './pages/our-projects/our-projects';
+import { Order } from './pages/order/order';
 
 export const routes: Routes = [
 	{
@@ -18,28 +16,20 @@ export const routes: Routes = [
 				component: Home,
 			},
 			{
-				path: 'list',
-				component: List,
+				path: 'proposals',
+				component: Proposals,
 			},
 			{
-				path: 'profile',
-				component: Profile,
+				path: 'our-team',
+				component: OurTeam,
 			},
 			{
-				path: 'form',
-				component: Form,
+				path: 'our-projects',
+				component: OurProjects,
 			},
 			{
-				path: 'table',
-				component: Table,
-			},
-			{
-				path: 'gallery',
-				component: Gallery,
-			},
-			{
-				path: 'content',
-				component: Content,
+				path: 'order',
+				component: Order,
 			},
 		],
 	},

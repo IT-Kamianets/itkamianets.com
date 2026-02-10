@@ -1,0 +1,141 @@
+<div class="projects-page">
+
+	<!-- HEADER -->
+	<div class="page-header">
+		<div class="container">
+			<span class="section-label">Наші проєкти</span>
+			<h1 class="page-title">Портфоліо виконаних робіт</h1>
+			<p class="page-subtitle">
+				Реальні проєкти, реальні результати — подивіться, що ми створили для наших клієнтів
+			</p>
+		</div>
+	</div>
+
+	<div class="container page-body">
+
+		<!-- CATEGORY FILTERS -->
+		<div class="filters">
+			@for (cat of categories; track cat) {
+				<button
+					class="filter-chip"
+					[class.filter-chip--active]="selectedCategory() === cat"
+					(click)="selectCategory(cat)"
+				>
+					{{ cat }}
+				</button>
+			}
+		</div>
+
+		<!-- PROJECTS GRID -->
+		<div class="projects-grid">
+			@for (project of filteredProjects(); track project.id) {
+				<div class="project-card" (click)="openProject(project)">
+					<div class="project-card__img">
+						<img [src]="project.image" [alt]="project.title" loading="lazy" />
+						<span class="project-card__badge">{{ project.category }}</span>
+						<span class="project-card__date">{{ project.completedDate }}</span>
+					</div>
+					<div class="project-card__body">
+						<h3 class="project-card__title">{{ project.title }}</h3>
+						<p class="project-card__desc">{{ project.shortDescription }}</p>
+						<div class="project-card__meta">
+							<span class="project-card__cost">{{ project.cost }}</span>
+							<span class="project-card__duration">{{ project.duration }}</span>
+						</div>
+						<div class="project-card__review-stars">
+							@for (star of formatStars(project.review.rating); track $index) {
+								<span class="star">{{ star }}</span>
+							}
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+
+		@if (filteredProjects().length === 0) {
+			<div class="empty-state">
+				<p>Нічого не знайдено в цій категорії</p>
+			</div>
+		}
+
+	</div>
+
+	<!-- MODAL -->
+	@if (selectedProject(); as p) {
+		<div class="modal-backdrop" (click)="closeProject()">
+			<div class="modal" (click)="$event.stopPropagation()">
+				<button class="modal__close" (click)="closeProject()" aria-label="Закрити">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+
+				<div class="modal__img">
+					<img [src]="p.image" [alt]="p.title" />
+					<span class="modal__cat">{{ p.category }}</span>
+				</div>
+
+				<div class="modal__body">
+					<h2 class="modal__title">{{ p.title }}</h2>
+					<p class="modal__description">{{ p.fullDescription }}</p>
+
+					<div class="modal__info-grid">
+						<div class="modal__info-item">
+							<span class="modal__info-label">Замовник</span>
+							<span class="modal__info-value modal__info-value--text">{{ p.clientOrg }}</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Дата завершення</span>
+							<span class="modal__info-value modal__info-value--text">{{ p.completedDate }}</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Вартість</span>
+							<span class="modal__info-value">{{ p.cost }}</span>
+						</div>
+						<div class="modal__info-item">
+							<span class="modal__info-label">Термін виконання</span>
+							<span class="modal__info-value">{{ p.duration }}</span>
+						</div>
+					</div>
+
+					<div class="modal__team">
+						<h4 class="modal__section-title">Команда проєкту</h4>
+						<div class="modal__team-list">
+							@for (member of p.team; track member.name) {
+								<div class="modal__team-member">
+									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
+									<div>
+										<span class="modal__team-name">{{ member.name }}</span>
+										<span class="modal__team-role">{{ member.role }}</span>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+
+					<!-- CLIENT REVIEW -->
+					<div class="modal__review">
+						<h4 class="modal__section-title">Відгук клієнта</h4>
+						<div class="review-card">
+							<div class="review-card__stars">
+								@for (star of formatStars(p.review.rating); track $index) {
+									<span class="review-star">{{ star }}</span>
+								}
+							</div>
+							<p class="review-card__text">«{{ p.review.text }}»</p>
+							<div class="review-card__author">
+								<span class="review-card__name">{{ p.review.author }}</span>
+								<span class="review-card__position">{{ p.review.position }}</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal__actions">
+						<a routerLink="/order" class="btn-primary" (click)="closeProject()">Замовити подібний проєкт</a>
+						<button class="btn-outline" (click)="closeProject()">Закрити</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+</div>
+

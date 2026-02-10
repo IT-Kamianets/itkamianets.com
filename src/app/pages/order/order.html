@@ -1,0 +1,291 @@
+<div class="order-page">
+
+	<!-- HEADER -->
+	<div class="page-header">
+		<div class="container">
+			<span class="section-label">Замовлення</span>
+			<h1 class="page-title">Замовити ІТ-рішення</h1>
+			<p class="page-subtitle">
+				Заповніть форму, оберіть послугу та налаштуйте параметри — ми зв'яжемось з вами найближчим часом
+			</p>
+		</div>
+	</div>
+
+	<div class="container page-body">
+		<div class="order-form">
+
+			<!-- ═══ SECTION 1: Personal Info ═══ -->
+			<div class="form-section">
+				<div class="form-section__header">
+					<span class="form-section__number">1</span>
+					<div>
+						<h3 class="form-section__title">Контактна інформація</h3>
+						<p class="form-section__subtitle">Вкажіть ваші дані для зворотного зв'язку</p>
+					</div>
+				</div>
+
+				<div class="form-grid">
+					<div class="form-field">
+						<label class="form-label">Ім'я <span class="required">*</span></label>
+						<input
+							type="text"
+							class="form-input"
+							placeholder="Ваше ім'я"
+							[ngModel]="firstName()"
+							(ngModelChange)="firstName.set($event)"
+						/>
+					</div>
+					<div class="form-field">
+						<label class="form-label">Прізвище <span class="required">*</span></label>
+						<input
+							type="text"
+							class="form-input"
+							placeholder="Ваше прізвище"
+							[ngModel]="lastName()"
+							(ngModelChange)="lastName.set($event)"
+						/>
+					</div>
+					<div class="form-field">
+						<label class="form-label">Організація</label>
+						<input
+							type="text"
+							class="form-input"
+							placeholder="Назва компанії (необов'язково)"
+							[ngModel]="organization()"
+							(ngModelChange)="organization.set($event)"
+						/>
+					</div>
+					<div class="form-field">
+						<label class="form-label">Телефон <span class="required">*</span></label>
+						<input
+							type="tel"
+							class="form-input"
+							placeholder="+380 XX XXX XX XX"
+							[ngModel]="phone()"
+							(ngModelChange)="phone.set($event)"
+						/>
+					</div>
+					<div class="form-field form-field--full">
+						<label class="form-label">Email <span class="required">*</span></label>
+						<input
+							type="email"
+							class="form-input"
+							placeholder="your@email.com"
+							[ngModel]="email()"
+							(ngModelChange)="email.set($event)"
+						/>
+					</div>
+				</div>
+			</div>
+
+			<!-- ═══ SECTION 2: Service Selection ═══ -->
+			<div class="form-section">
+				<div class="form-section__header">
+					<span class="form-section__number">2</span>
+					<div>
+						<h3 class="form-section__title">Оберіть послугу</h3>
+						<p class="form-section__subtitle">Знайдіть рішення, яке вам потрібно</p>
+					</div>
+				</div>
+
+				<!-- Category filter -->
+				<div class="cat-filters">
+					<button
+						class="cat-chip"
+						[class.cat-chip--active]="selectedCategory() === ''"
+						(click)="selectCategory('')"
+					>Усі</button>
+					@for (cat of categories; track cat) {
+						<button
+							class="cat-chip"
+							[class.cat-chip--active]="selectedCategory() === cat"
+							(click)="selectCategory(cat)"
+						>{{ cat }}</button>
+					}
+				</div>
+
+				<!-- Proposals list -->
+				<div class="service-list">
+					@for (p of filteredProposals(); track p.id) {
+						<div
+							class="service-item"
+							[class.service-item--selected]="selectedProposalId() === p.id"
+							(click)="selectProposal(p.id)"
+						>
+							<div class="service-item__radio">
+								<span class="radio-dot" [class.radio-dot--active]="selectedProposalId() === p.id"></span>
+							</div>
+							<div class="service-item__info">
+								<span class="service-item__cat">{{ p.category }}</span>
+								<h4 class="service-item__title">{{ p.title }}</h4>
+								<p class="service-item__desc">{{ p.shortDescription }}</p>
+							</div>
+							<div class="service-item__price">
+								{{ formatPrice(p.priceFrom) }} – {{ formatPrice(p.priceTo) }} грн
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+
+			<!-- ═══ SECTION 3: Quality & Speed ═══ -->
+			@if (selectedProposal(); as sp) {
+				<div class="form-section">
+					<div class="form-section__header">
+						<span class="form-section__number">3</span>
+						<div>
+							<h3 class="form-section__title">Якість та швидкість</h3>
+							<p class="form-section__subtitle">Налаштуйте рівень якості й терміни — це впливає на вартість</p>
+						</div>
+					</div>
+
+					<!-- Quality -->
+					<div class="setting-group">
+						<h4 class="setting-label">Рівень якості</h4>
+						<div class="level-cards">
+							@for (q of qualityLevels; track q.label; let i = $index) {
+								<div
+									class="level-card"
+									[class.level-card--active]="qualityIndex() === i"
+									(click)="setQuality(i)"
+								>
+									<span class="level-card__badge">×{{ q.multiplier }}</span>
+									<h5 class="level-card__title">{{ q.label }}</h5>
+									<p class="level-card__desc">{{ q.description }}</p>
+								</div>
+							}
+						</div>
+					</div>
+
+					<!-- Speed -->
+					<div class="setting-group">
+						<h4 class="setting-label">Швидкість виконання</h4>
+						<div class="level-cards">
+							@for (s of speedLevels; track s.label; let i = $index) {
+								<div
+									class="level-card"
+									[class.level-card--active]="speedIndex() === i"
+									(click)="setSpeed(i)"
+								>
+									<span class="level-card__badge">×{{ s.multiplier }}</span>
+									<h5 class="level-card__title">{{ s.label }}</h5>
+									<p class="level-card__desc">{{ s.description }}</p>
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+
+				<!-- ═══ SECTION 4: Extras ═══ -->
+				<div class="form-section">
+					<div class="form-section__header">
+						<span class="form-section__number">4</span>
+						<div>
+							<h3 class="form-section__title">Додаткові послуги</h3>
+							<p class="form-section__subtitle">Оберіть додаткові опції для вашого проєкту</p>
+						</div>
+					</div>
+
+					<div class="extras-grid">
+						<label class="extra-card" [class.extra-card--active]="includeSupport()">
+							<input type="checkbox" [ngModel]="includeSupport()" (ngModelChange)="includeSupport.set($event)" />
+							<div class="extra-card__body">
+								<h5 class="extra-card__title">Технічна підтримка</h5>
+								<p class="extra-card__desc">3 місяці підтримки після запуску</p>
+								<span class="extra-card__price">+ 3 000 грн</span>
+							</div>
+						</label>
+						<label class="extra-card" [class.extra-card--active]="includeSeo()">
+							<input type="checkbox" [ngModel]="includeSeo()" (ngModelChange)="includeSeo.set($event)" />
+							<div class="extra-card__body">
+								<h5 class="extra-card__title">SEO-оптимізація</h5>
+								<p class="extra-card__desc">Базовий SEO-аудит і налаштування</p>
+								<span class="extra-card__price">+ 2 500 грн</span>
+							</div>
+						</label>
+						<label class="extra-card" [class.extra-card--active]="includeAnalytics()">
+							<input type="checkbox" [ngModel]="includeAnalytics()" (ngModelChange)="includeAnalytics.set($event)" />
+							<div class="extra-card__body">
+								<h5 class="extra-card__title">Аналітика</h5>
+								<p class="extra-card__desc">Підключення Google Analytics</p>
+								<span class="extra-card__price">+ 2 000 грн</span>
+							</div>
+						</label>
+						<label class="extra-card" [class.extra-card--active]="includeTraining()">
+							<input type="checkbox" [ngModel]="includeTraining()" (ngModelChange)="includeTraining.set($event)" />
+							<div class="extra-card__body">
+								<h5 class="extra-card__title">Навчання</h5>
+								<p class="extra-card__desc">Онлайн-навчання для вашої команди</p>
+								<span class="extra-card__price">+ 1 500 грн</span>
+							</div>
+						</label>
+					</div>
+				</div>
+
+				<!-- ═══ SECTION 5: Comments ═══ -->
+				<div class="form-section">
+					<div class="form-section__header">
+						<span class="form-section__number">5</span>
+						<div>
+							<h3 class="form-section__title">Додаткові побажання</h3>
+							<p class="form-section__subtitle">Опишіть деталі або особливі вимоги</p>
+						</div>
+					</div>
+
+					<textarea
+						class="form-textarea"
+						rows="5"
+						placeholder="Ваші коментарі, побажання або запитання..."
+						[ngModel]="comments()"
+						(ngModelChange)="comments.set($event)"
+					></textarea>
+				</div>
+
+				<!-- ═══ PRICE SUMMARY ═══ -->
+				<div class="price-summary">
+					<div class="price-summary__left">
+						<span class="price-summary__label">Орієнтовна вартість</span>
+						<span class="price-summary__value">
+							{{ formatPrice(estimatedPrice().min) }} – {{ formatPrice(estimatedPrice().max) }} грн
+						</span>
+					</div>
+					<div class="price-summary__details">
+						<span>Послуга: {{ sp.title }}</span>
+						<span>Якість: {{ qualityLevels[qualityIndex()].label }} (×{{ qualityLevels[qualityIndex()].multiplier }})</span>
+						<span>Швидкість: {{ speedLevels[speedIndex()].label }} (×{{ speedLevels[speedIndex()].multiplier }})</span>
+					</div>
+				</div>
+			}
+
+			<!-- ═══ ACTIONS ═══ -->
+			<div class="form-actions">
+				<button
+					class="btn-primary"
+					[disabled]="!isFormValid()"
+					(click)="submitOrder()"
+				>
+					Надіслати замовлення
+				</button>
+				<button class="btn-outline" (click)="resetForm()">Очистити форму</button>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- SUCCESS MODAL -->
+	@if (submitted()) {
+		<div class="modal-backdrop" (click)="closeSuccess()">
+			<div class="success-modal" (click)="$event.stopPropagation()">
+				<div class="success-modal__icon">
+					<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+				</div>
+				<h2 class="success-modal__title">Замовлення надіслано!</h2>
+				<p class="success-modal__text">
+					Дякуємо, {{ firstName() }}! Ваше замовлення отримано. Наш менеджер зв'яжеться з вами протягом 24 годин для уточнення деталей.
+				</p>
+				<button class="btn-primary" (click)="closeSuccess()">Чудово</button>
+			</div>
+		</div>
+	}
+
+</div>
