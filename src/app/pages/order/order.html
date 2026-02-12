@@ -7,13 +7,13 @@
 			<span class="section-label">Замовлення</span>
 			<h1 class="page-title">Замовити ІТ-рішення</h1>
 			<p class="page-subtitle">
-				Заповніть форму, оберіть послугу та налаштуйте параметри — ми зв'яжемось з вами найближчим часом
+				Заповніть форму, оберіть послугу та налаштуйте параметри – ми зв'яжемось з вами найближчим часом
 			</p>
 		</div>
 	</div>
 
 	<div class="container page-body">
-		<div class="order-form">
+		<form #orderForm="ngForm" class="order-form">
 
 			<!-- ═══ SECTION 1: Personal Info ═══ -->
 			<div class="form-section">
@@ -34,7 +34,22 @@
 							placeholder="Ваше ім'я"
 							[ngModel]="firstName()"
 							(ngModelChange)="firstName.set($event)"
+							name="firstName"
+							#firstNameInput="ngModel"
+							required
+							minlength="3"
+							(keydown)="blockDigits($event)"
+							(paste)="pasteLettersOnly($event, firstName)"
 						/>
+						@if (firstNameInput.invalid && (firstNameInput.dirty || firstNameInput.touched)) {
+							<div class="form-error">
+								@if (firstNameInput.errors?.['required']) {
+									<span>Це поле обов'язкове.</span>
+								} @else if (firstNameInput.errors?.['minlength']) {
+									<span>Ім'я має містити щонайменше 3 літери.</span>
+								}
+							</div>
+						}
 					</div>
 					<div class="form-field">
 						<label class="form-label">Прізвище <span class="required">*</span></label>
@@ -44,7 +59,22 @@
 							placeholder="Ваше прізвище"
 							[ngModel]="lastName()"
 							(ngModelChange)="lastName.set($event)"
+							name="lastName"
+							#lastNameInput="ngModel"
+							required
+							minlength="3"
+							(keydown)="blockDigits($event)"
+							(paste)="pasteLettersOnly($event, lastName)"
 						/>
+						@if (lastNameInput.invalid && (lastNameInput.dirty || lastNameInput.touched)) {
+							<div class="form-error">
+								@if (lastNameInput.errors?.['required']) {
+									<span>Це поле обов'язкове.</span>
+								} @else if (lastNameInput.errors?.['minlength']) {
+									<span>Прізвище має містити щонайменше 3 літери.</span>
+								}
+							</div>
+						}
 					</div>
 					<div class="form-field">
 						<label class="form-label">Організація</label>
@@ -54,27 +84,93 @@
 							placeholder="Назва компанії (необов'язково)"
 							[ngModel]="organization()"
 							(ngModelChange)="organization.set($event)"
+							name="organization"
 						/>
 					</div>
 					<div class="form-field">
+
 						<label class="form-label">Телефон <span class="required">*</span></label>
+
 						<input
+
 							type="tel"
+
 							class="form-input"
-							placeholder="+380 XX XXX XX XX"
+
+							placeholder="(+380) XX XXX XX XX"
+
 							[ngModel]="phone()"
+
 							(ngModelChange)="phone.set($event)"
+
+							name="phone"
+
+							#phoneInput="ngModel"
+
+							required
+
+							(focus)="onPhoneFocus()"
+
+							(blur)="onPhoneBlur()"
+
+							(input)="onPhoneInput($event)"
+
+							(keydown)="onPhoneKeydown($event)"
+
+							(click)="onPhoneClick($event)"
+
+							(select)="onPhoneClick($event)"
+
 						/>
+
+						@if (phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)) {
+
+							<div class="form-error">
+
+								@if (phoneInput.errors?.['required']) {
+
+									<span>Це поле обов'язкове.</span>
+
+								}
+
+							</div>
+
+						}
+
+						@if (phoneDigitError()) {
+
+							<div class="form-error">
+
+								<span>Номер телефону має містити 9 цифр.</span>
+
+							</div>
+
+						}
+
 					</div>
+
 					<div class="form-field form-field--full">
 						<label class="form-label">Email <span class="required">*</span></label>
 						<input
 							type="email"
 							class="form-input"
-							placeholder="your@email.com"
+							placeholder="your@gmail.com"
 							[ngModel]="email()"
 							(ngModelChange)="email.set($event)"
+							name="email"
+							#emailInput="ngModel"
+							required
+							pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
 						/>
+						@if (emailInput.invalid && (emailInput.dirty || emailInput.touched)) {
+							<div class="form-error">
+								@if (emailInput.errors?.['required']) {
+									<span>Це поле обов'язкове.</span>
+								} @else if (emailInput.errors?.['pattern']) {
+									<span>Email має закінчуватися на @gmail.com.</span>
+								}
+							</div>
+						}
 					</div>
 				</div>
 			</div>
@@ -122,7 +218,8 @@
 								<p class="service-item__desc">{{ p.shortDescription }}</p>
 							</div>
 							<div class="service-item__price">
-								{{ formatPrice(p.priceFrom) }} – {{ formatPrice(p.priceTo) }} грн
+								<span class="service-item__price-from">{{ formatPrice(p.priceFrom) }} –&nbsp;</span>
+								<span class="service-item__price-to">{{ formatPrice(p.priceTo) }} грн</span>
 							</div>
 						</div>
 					}
@@ -136,7 +233,7 @@
 						<span class="form-section__number">3</span>
 						<div>
 							<h3 class="form-section__title">Якість та швидкість</h3>
-							<p class="form-section__subtitle">Налаштуйте рівень якості й терміни — це впливає на вартість</p>
+							<p class="form-section__subtitle">Налаштуйте рівень якості й терміни – це впливає на вартість</p>
 						</div>
 					</div>
 
@@ -189,7 +286,7 @@
 
 					<div class="extras-grid">
 						<label class="extra-card" [class.extra-card--active]="includeSupport()">
-							<input type="checkbox" [ngModel]="includeSupport()" (ngModelChange)="includeSupport.set($event)" />
+							<input type="checkbox" [ngModel]="includeSupport()" (ngModelChange)="includeSupport.set($event)" name="includeSupport" />
 							<div class="extra-card__body">
 								<h5 class="extra-card__title">Технічна підтримка</h5>
 								<p class="extra-card__desc">3 місяці підтримки після запуску</p>
@@ -197,7 +294,7 @@
 							</div>
 						</label>
 						<label class="extra-card" [class.extra-card--active]="includeSeo()">
-							<input type="checkbox" [ngModel]="includeSeo()" (ngModelChange)="includeSeo.set($event)" />
+							<input type="checkbox" [ngModel]="includeSeo()" (ngModelChange)="includeSeo.set($event)" name="includeSeo" />
 							<div class="extra-card__body">
 								<h5 class="extra-card__title">SEO-оптимізація</h5>
 								<p class="extra-card__desc">Базовий SEO-аудит і налаштування</p>
@@ -205,7 +302,7 @@
 							</div>
 						</label>
 						<label class="extra-card" [class.extra-card--active]="includeAnalytics()">
-							<input type="checkbox" [ngModel]="includeAnalytics()" (ngModelChange)="includeAnalytics.set($event)" />
+							<input type="checkbox" [ngModel]="includeAnalytics()" (ngModelChange)="includeAnalytics.set($event)" name="includeAnalytics" />
 							<div class="extra-card__body">
 								<h5 class="extra-card__title">Аналітика</h5>
 								<p class="extra-card__desc">Підключення Google Analytics</p>
@@ -213,7 +310,7 @@
 							</div>
 						</label>
 						<label class="extra-card" [class.extra-card--active]="includeTraining()">
-							<input type="checkbox" [ngModel]="includeTraining()" (ngModelChange)="includeTraining.set($event)" />
+							<input type="checkbox" [ngModel]="includeTraining()" (ngModelChange)="includeTraining.set($event)" name="includeTraining" />
 							<div class="extra-card__body">
 								<h5 class="extra-card__title">Навчання</h5>
 								<p class="extra-card__desc">Онлайн-навчання для вашої команди</p>
@@ -239,6 +336,7 @@
 						placeholder="Ваші коментарі, побажання або запитання..."
 						[ngModel]="comments()"
 						(ngModelChange)="comments.set($event)"
+						name="comments"
 					></textarea>
 				</div>
 
@@ -270,7 +368,7 @@
 				<button class="btn-outline" (click)="resetForm()">Очистити форму</button>
 			</div>
 
-		</div>
+		</form>
 	</div>
 
 	<!-- SUCCESS MODAL -->

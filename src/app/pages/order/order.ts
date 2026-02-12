@@ -1,5 +1,5 @@
-import { Component, signal, computed } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, signal, computed, ViewChild, AfterViewInit, WritableSignal } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Proposal, PROPOSALS, CATEGORIES } from '../../data/proposals.data';
 
 interface QualityLevel {
@@ -20,7 +20,9 @@ interface SpeedLevel {
 	templateUrl: './order.html',
 	styleUrl: './order.css',
 })
-export class Order {
+export class Order implements AfterViewInit {
+	@ViewChild('orderForm') orderForm!: NgForm;
+
 	readonly proposals = PROPOSALS;
 	readonly categories = CATEGORIES.filter(c => c !== 'Усі');
 
@@ -32,7 +34,7 @@ export class Order {
 	];
 
 	readonly speedLevels: SpeedLevel[] = [
-		{ label: 'Економна', description: 'Без поспіху — знижена ціна', multiplier: 0.7 },
+		{ label: 'Економна', description: 'Без поспіху – знижена ціна', multiplier: 0.7 },
 		{ label: 'Стандартна', description: 'Оптимальні терміни виконання', multiplier: 0.85 },
 		{ label: 'Прискорена', description: 'Швидше виконання з пріоритетом', multiplier: 1.0 },
 		{ label: 'Терміново', description: 'Максимальний пріоритет, найкоротші терміни', multiplier: 1.25 },
@@ -54,8 +56,24 @@ export class Order {
 	includeTraining = signal(false);
 	comments = signal('');
 	submitted = signal(false);
+	formStatus = signal<'VALID' | 'INVALID' | 'PENDING'>('INVALID');
+	phoneTouched = signal(false);
 
 	/* ── Computed ── */
+	phoneDigitCount = computed(() => {
+		const prefix = '(+380) ';
+		const val = this.phone();
+		if (!val.startsWith(prefix)) return 0;
+		return val.substring(prefix.length).replace(/[^\d]/g, '').length;
+	});
+
+	phoneDigitError = computed(() => {
+		const val = this.phone();
+		if (!val || val === '(+380) ') return false;
+		if (!this.phoneTouched()) return false;
+		const count = this.phoneDigitCount();
+		return count > 0 && count < 9;
+	});
 	filteredProposals = computed(() => {
 		const cat = this.selectedCategory();
 		if (!cat) return this.proposals;
@@ -86,14 +104,19 @@ export class Order {
 	});
 
 	isFormValid = computed(() => {
-		return (
-			this.firstName().trim().length > 0 &&
-			this.lastName().trim().length > 0 &&
-			this.phone().trim().length > 0 &&
-			this.email().trim().length > 0 &&
-			this.selectedProposalId() !== null
-		);
+		return this.formStatus() === 'VALID'
+			&& this.selectedProposalId() !== null
+			&& this.phoneDigitCount() === 9;
 	});
+
+	/* ── Lifecycle ── */
+	ngAfterViewInit(): void {
+		this.orderForm.statusChanges?.subscribe(status => {
+			if (status) {
+				this.formStatus.set(status);
+			}
+		});
+	}
 
 	/* ── Methods ── */
 	selectCategory(cat: string): void {
@@ -117,6 +140,123 @@ export class Order {
 		return n.toLocaleString('uk-UA');
 	}
 
+	onPhoneFocus(): void {
+		if (!this.phone()) {
+			this.phone.set('(+380) ');
+		}
+	}
+
+	onPhoneBlur(): void {
+		this.phoneTouched.set(true);
+		if (this.phone() === '(+380) ') {
+			this.phone.set('');
+		}
+	}
+
+	onPhoneKeydown(event: KeyboardEvent): void {
+		const input = event.target as HTMLInputElement;
+		const prefix = '(+380) ';
+		const cursorPos = input.selectionStart ?? 0;
+
+		// Allow: navigation keys, Tab, etc.
+		if (['Tab', 'Escape', 'Enter'].includes(event.key)) return;
+
+		// Block letters and special chars (allow digits, Backspace, Delete, arrows)
+		if (event.key.length === 1 && !/\d/.test(event.key)) {
+			event.preventDefault();
+			return;
+		}
+
+		// Prevent deleting the prefix
+		if (event.key === 'Backspace' && cursorPos <= prefix.length) {
+			event.preventDefault();
+			return;
+		}
+		if (event.key === 'Delete' && cursorPos < prefix.length) {
+			event.preventDefault();
+			return;
+		}
+
+		// Prevent typing inside the prefix
+		if (event.key.length === 1 && cursorPos < prefix.length) {
+			event.preventDefault();
+			return;
+		}
+
+		// Prevent arrow left from entering the prefix
+		if (event.key === 'ArrowLeft' && cursorPos <= prefix.length) {
+			event.preventDefault();
+			return;
+		}
+		if (event.key === 'Home') {
+			event.preventDefault();
+			input.setSelectionRange(prefix.length, prefix.length);
+			return;
+		}
+
+		// Block if already 9 digits and pressing a digit
+		if (/\d/.test(event.key)) {
+			const currentDigits = this.phone().substring(prefix.length).replace(/[^\d]/g, '').length;
+			if (currentDigits >= 9) {
+				event.preventDefault();
+				return;
+			}
+		}
+	}
+
+	onPhoneClick(event: Event): void {
+		const input = event.target as HTMLInputElement;
+		const prefix = '(+380) ';
+		requestAnimationFrame(() => {
+			const pos = input.selectionStart ?? 0;
+			if (pos < prefix.length) {
+				input.setSelectionRange(prefix.length, prefix.length);
+			}
+		});
+	}
+
+	onPhoneInput(event: Event): void {
+		const input = event.target as HTMLInputElement;
+		const prefix = '(+380) ';
+		let value = input.value;
+
+		if (!value.startsWith(prefix)) {
+			value = prefix;
+		}
+
+		let numbers = value.substring(prefix.length).replace(/[^\d]/g, '');
+		if (numbers.length > 9) {
+			numbers = numbers.substring(0, 9);
+		}
+
+		let formatted = prefix;
+		if (numbers.length > 0) formatted += numbers.substring(0, 2);
+		if (numbers.length > 2) formatted += ' ' + numbers.substring(2, 5);
+		if (numbers.length > 5) formatted += ' ' + numbers.substring(5, 7);
+		if (numbers.length > 7) formatted += ' ' + numbers.substring(7, 9);
+
+		this.phone.set(formatted);
+
+		requestAnimationFrame(() => {
+			input.setSelectionRange(formatted.length, formatted.length);
+		});
+	}
+
+	/* ── Name input helpers ── */
+	blockDigits(event: KeyboardEvent): void {
+		if (event.key.length === 1 && /\d/.test(event.key)) {
+			event.preventDefault();
+		}
+	}
+
+	pasteLettersOnly(event: ClipboardEvent, target: WritableSignal<string>): void {
+		event.preventDefault();
+		const text = event.clipboardData?.getData('text') ?? '';
+		const lettersOnly = text.replace(/[\d]/g, '');
+		if (lettersOnly) {
+			target.set(target() + lettersOnly);
+		}
+	}
 	submitOrder(): void {
 		if (!this.isFormValid()) return;
 		this.submitted.set(true);
@@ -148,3 +288,4 @@ export class Order {
 		this.submitted.set(false);
 	}
 }
+

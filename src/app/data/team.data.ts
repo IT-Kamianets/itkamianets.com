@@ -197,7 +197,7 @@ export const TEAM_MEMBERS: TeamMemberFull[] = [
 		role: 'Data Engineer / Аналітик',
 		avatar: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=300&h=300&fit=crop&crop=face',
 		experienceYears: 5,
-		shortBio: 'Python, SQL та аналітика — перетворює дані на цінні бізнес-інсайти.',
+		shortBio: 'Python, SQL та аналітика – перетворює дані на цінні бізнес-інсайти.',
 		fullBio: 'Data-інженер та аналітик, який перетворює дані на цінні бізнес-інсайти. Будує ETL-пайплайни, дашборди та аналітичні рішення. Має досвід у Machine Learning та прогнозній аналітиці для сільськогосподарських, медичних та ресторанних проєктів.',
 		spokenLanguages: ['Українська', 'Англійська (B2)'],
 		technologies: ['Python', 'SQL', 'PostgreSQL', 'Power BI', 'Tableau', 'Machine Learning', 'Pandas', 'ETL', 'Apache Airflow', 'Data Warehousing'],

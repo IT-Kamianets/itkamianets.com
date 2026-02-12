@@ -13,5 +13,6 @@ export class App {
 
 	constructor() {
 		this._themeService.init();
+		this._themeService.setMode('dark');
 	}
 }

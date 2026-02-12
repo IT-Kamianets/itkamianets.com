@@ -92,12 +92,12 @@ html[data-mode='dark'] {
 /* ITKP = city brand colors */
 html[data-mode='itkp'] {
 	/* primary brand palette */
-	--c-bg-primary: #005bbb; /* deep sky blue — representing blue sky & official flag field */
-	--c-bg-secondary: #f7c948; /* warm gold yellow — sun, stone highlights */
-	--c-bg-tertiary: #d9cba3; /* light stone/beige — historic stone facades and plaster */
+	--c-bg-primary: #005bbb; /* deep sky blue – representing blue sky & official flag field */
+	--c-bg-secondary: #f7c948; /* warm gold yellow – sun, stone highlights */
+	--c-bg-tertiary: #d9cba3; /* light stone/beige – historic stone facades and plaster */
 
 	/* accent & nature tones */
-	--c-bg-accent: #6a8a62; /* muted green — canyon/greenery context */
+	--c-bg-accent: #6a8a62; /* muted green – canyon/greenery context */
 
 	/* text */
 	--c-text-primary: #1b1b1b; /* near black for strong readability on light surfaces */
@@ -163,4 +163,3 @@ html { scroll-behavior: auto; }
 	background: rgba(37, 110, 255, 0.15);
 	color: inherit;
 }
-

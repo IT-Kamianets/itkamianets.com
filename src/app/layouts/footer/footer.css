@@ -207,7 +207,7 @@
 	transform: translateY(-2px);
 }
 
-/* Brand colors on hover — only the icon changes color */
+/* Brand colors on hover – only the icon changes color */
 .footer__social-link[data-social="x"]:hover {
 	color: #000000;
 }

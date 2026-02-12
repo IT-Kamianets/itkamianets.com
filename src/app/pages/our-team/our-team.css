@@ -593,7 +593,6 @@
 
 .team-modal__order-btn:hover {
 	background: var(--c-primary-hover, #1d4fd8);
-	transform: translateY(-2px);
 	box-shadow: 0 6px 28px rgba(37, 110, 255, .45);
 }
 
@@ -610,12 +609,18 @@
 	border: 1.5px solid var(--c-border);
 	background: transparent;
 	color: var(--c-text-primary);
-	transition: all .3s ease;
+	transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .team-modal__close-btn:hover {
 	border-color: var(--c-primary);
 	color: var(--c-primary);
+	transform: translateY(-1px);
+}
+
+.team-modal__close-btn:active {
+	transform: scale(0.96);
+	transition-duration: 0.08s;
 }
 
 @media (max-width: 580px) {

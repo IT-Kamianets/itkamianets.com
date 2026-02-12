@@ -124,6 +124,9 @@
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 	margin-top: 6px;
+	padding: 3px;
+	gap: 5px;
+	border-radius: 10px;
 }
 
 .header__nav-pill--mobile::-webkit-scrollbar {
@@ -182,9 +185,9 @@
 
 /* Mobile link sizing */
 .header__nav-pill--mobile .header__link {
-	padding: 6px 11px;
-	font-size: 0.72rem;
-	border-radius: 6px;
+	padding: 4px;
+	font-size: 0.6rem;
+	border-radius: 8px;
 }
 
 /* ── Right actions ── */
