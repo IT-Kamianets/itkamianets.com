@@ -41,10 +41,20 @@ export const PROJECTS: Project[] = [
 		tags: ['Tailwind', 'Medicine', 'Services'],
 		image: 'semimed.itkamianets.com',
 	},
+	{
+		id: 4,
+		title: 'Vernisazh',
+		description: 'Корпоративний веб-сайт із чистим мінімалістичним інтерфейсом на базі Tailwind CSS.',
+		category: 'theme-tailwind',
+		repoUrl: 'https://github.com/IT-Kamianets/vernisazh.itkamianets.com',
+		liveUrl: 'https://vernisazh.itkamianets.com',
+		tags: ['Tailwind', 'Medicine', 'Services'],
+		image: 'vernisazh.itkamianets.com',
+	},
 
 	// ── Bulma ──
 	{
-		id: 4,
+		id: 5,
 		title: 'Kudlati',
 		description: 'Сайт для зоосалону з каталогом послуг та онлайн-записом, побудований на Bulma.',
 		category: 'theme-bulma',
@@ -54,7 +64,7 @@ export const PROJECTS: Project[] = [
 		image: 'kudlati.itkamianets.com',
 	},
 	{
-		id: 5,
+		id: 6,
 		title: 'Dog Style',
 		description: 'Стильний сайт для грумінг-салону з галереєю робіт та формою запису.',
 		category: 'theme-bulma',
@@ -64,7 +74,7 @@ export const PROJECTS: Project[] = [
 		image: 'dog-style.itkamianets.com',
 	},
 	{
-		id: 6,
+		id: 7,
 		title: 'Laznya',
 		description: 'Веб-сайт для лазні з описом послуг, прайсом та бронюванням.',
 		category: 'theme-bulma',
@@ -74,7 +84,7 @@ export const PROJECTS: Project[] = [
 		image: 'laznya.itkamianets.com',
 	},
 	{
-		id: 7,
+		id: 8,
 		title: 'AI Lab',
 		description: 'Лендінг для лабораторії штучного інтелекту з демонстрацією проєктів та досліджень.',
 		category: 'theme-bulma',
@@ -84,7 +94,7 @@ export const PROJECTS: Project[] = [
 		image: 'ai-lab.itkamianets.com',
 	},
 	{
-		id: 8,
+		id: 9,
 		title: 'Novita',
 		description: 'Корпоративний сайт компанії з інформацією про продукти та послуги.',
 		category: 'theme-bulma',
@@ -94,7 +104,7 @@ export const PROJECTS: Project[] = [
 		image: 'novita.itkamianets.com',
 	},
 	{
-		id: 9,
+		id: 10,
 		title: 'Marlin',
 		description: 'Бізнес-сайт із каталогом товарів та контактною інформацією на Bulma.',
 		category: 'theme-bulma',
@@ -106,7 +116,7 @@ export const PROJECTS: Project[] = [
 
 	// ── Bootstrap ──
 	{
-		id: 10,
+		id: 11,
 		title: 'Monte Kristo',
 		description: 'Сайт ресторану з меню, галереєю та системою бронювання столиків на Bootstrap.',
 		category: 'theme-bootstrap',
@@ -116,7 +126,7 @@ export const PROJECTS: Project[] = [
 		image: 'monte-kristo.itkamianets.com',
 	},
 	{
-		id: 11,
+		id: 12,
 		title: 'Dominicana',
 		description: 'Туристичний сайт з оглядом турів, фотогалереєю та формою замовлення.',
 		category: 'theme-bootstrap',
@@ -126,7 +136,7 @@ export const PROJECTS: Project[] = [
 		image: 'dominicana.itkamianets.com',
 	},
 	{
-		id: 12,
+		id: 13,
 		title: 'Bilya Richky',
 		description: 'Сайт бази відпочинку з описом номерів, послуг та онлайн-бронюванням.',
 		category: 'theme-bootstrap',
