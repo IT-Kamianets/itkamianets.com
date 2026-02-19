@@ -25,7 +25,7 @@ export class ListItem {
 	private router = inject(Router);
 
 	navigateToDetails(): void {
-		this.router.navigate(['/our-team']);
+		this.router.navigate(['/team']);
 	}
 
 	getCategoryColor(category: string): string {

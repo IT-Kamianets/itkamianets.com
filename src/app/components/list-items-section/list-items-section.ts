@@ -58,6 +58,6 @@ export class ListItemsSection {
 
 	// 3. Метод, що викликається при кліку на кнопку "View All"
 	onViewAllClick() {
-		this.router.navigate(['/proposals']);
+		this.router.navigate(['/projects']);
 	}
 }

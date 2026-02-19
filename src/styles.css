@@ -29,7 +29,7 @@
 	--shadow-primary: 0 6px 24px rgba(37, 110, 255, 0.25);
 
 	/* typography */
-	--ff-base: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+	--ff-base: 'Balsamiq Sans', cursive, system-ui, sans-serif;
 	--fs: 16px;
 	--letter-spacing: 0.3px;
 
@@ -157,6 +157,46 @@ html[data-radius='square'] {
 
 /* scroll: auto by default so router navigation is instant, smooth only for anchors */
 html { scroll-behavior: auto; }
+
+body {
+	font-family: var(--ff-base);
+}
+
+/* ========= Custom Scrollbar ========= */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--c-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--c-primary);
+	border-radius: 4px;
+	border: 2px solid var(--c-bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--c-primary-hover);
+}
+
+/* Firefox scrollbar */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--c-primary) var(--c-bg-primary);
+}
+
+/* ========= Global button press animation ========= */
+button, .btn-outline, a.btn-outline, [class*="__add"], [class*="__checkout"], [class*="__link"] {
+	transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+
+button:active, .btn-outline:active, a.btn-outline:active {
+	transform: scale(0.96);
+	transition-duration: 0.08s;
+}
 
 /* global selection color */
 ::selection {

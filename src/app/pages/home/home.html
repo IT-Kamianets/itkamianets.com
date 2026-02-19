@@ -3,49 +3,52 @@
 	<!-- ============================================ -->
 	<!-- HERO SECTION -->
 	<!-- ============================================ -->
+
 	<section class="hero">
-		<div class="hero__overlay"></div>
-		<div class="hero__content">
-			<h1 class="hero__title">
-				Ласкаво просимо до<br/>
-				<span class="hero__highlight">IT-Kamianets</span>
-			</h1>
-			<p class="hero__subtitle">
-				Динамічна і інноваційна організація, яка надає ІТ-рішення, спрямовані на підвищення технологічних можливостей бізнесів у різних галузях нашого міста.
-			</p>
-		</div>
+	   <div class="hero__overlay"></div>
+	   <div class="hero__content">
+		   <h1 class="hero__title">
+			   Ласкаво просимо до<br/>
+			   <span class="hero__highlight">IT-Kamianets</span>
+		   </h1>
+		   <p class="hero__subtitle">
+			   Динамічна і інноваційна організація, яка надає ІТ-рішення, спрямовані на підвищення технологічних можливостей бізнесів у різних галузях нашого міста.
+		   </p>
+	   </div>
 	</section>
+
+
+	<!-- Divider between header and about-section (full style) -->
+	<div class="section-divider-bar">
+		<span class="section-divider-bar__line"></span>
+	</div>
 
 	<!-- ============================================ -->
 	<!-- ABOUT SECTION -->
 	<!-- ============================================ -->
-	<section class="about-section">
+	<section class="section about-section">
 		<div class="container">
 			<div class="about-grid">
 				<div class="about-text">
 					<span class="section-label">Про нас</span>
 					<h2 class="section-title">Хто ми такі?</h2>
 					<p class="about-description">
-						IT Kamianets – це динамічна і інноваційна організація, яка надає ІТ-рішення, спрямовані на підвищення технологічних можливостей бізнесів у різних галузях нашого міста.
+						IT-Kamianets – це інноваційна організація, що впроваджує сучасні ІТ-рішення для розвитку та підвищення технологічного рівня бізнесів різних галузей міста Кам'янець-Подільський.
 					</p>
 					<p class="about-description">
-						Наш досвід включає розробку індивідуальних програмних рішень та забезпечення комплексної ІТ-підтримки в агропромисловому комплексі, харчовій промисловості, медицині, мистецтві, автомобільній галузі та багатьох інших секторах.
+						Наш досвід включає розробку індивідуальних програмних рішень та забезпечення комплексної ІТ-підтримки в багатьох секторах бізнесу.
 					</p>
 					<p class="about-description">
 						Ми допомагаємо підприємствам оптимізувати їхню діяльність завдяки передовим технологічним рішенням.
 					</p>
 					<div class="about-stats">
 						<div class="stat">
-							<span class="stat__number">9+</span>
-							<span class="stat__label">Напрямків</span>
+							<span class="stat__number">12+</span>
+							<span class="stat__label">Проєктів</span>
 						</div>
 						<div class="stat">
-							<span class="stat__number">27+</span>
-							<span class="stat__label">Пропозицій</span>
-						</div>
-						<div class="stat">
-							<span class="stat__number">50+</span>
-							<span class="stat__label">Готових проєктів</span>
+							<span class="stat__number">10+</span>
+							<span class="stat__label">Учасників</span>
 						</div>
 						<div class="stat">
 							<span class="stat__number">100%</span>
@@ -58,8 +61,8 @@
 					</div>
 				</div>
 				<div class="about-image">
-					<img 
-						src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=500&fit=crop" 
+					<img
+						src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=500&fit=crop"
 						alt="IT Kamianets Team"
 						loading="lazy"
 					/>
@@ -69,163 +72,167 @@
 	</section>
 
 	<!-- ============================================ -->
-	<!-- DIRECTIONS SECTION (Наші напрямки) -->
+	<!-- PROPOSALS CAROUSEL SECTION -->
 	<!-- ============================================ -->
-	<section class="directions-section">
+	<section class="section proposals-carousel-section">
 		<div class="container">
 			<div class="section-header">
-				<span class="section-label">Наші напрямки</span>
+				<span class="section-label">Наші послуги</span>
 				<h2 class="section-title">Технологічне партнерство для кожної галузі</h2>
 				<p class="section-subtitle">
 					Ми створюємо ІТ-рішення, які трансформують бізнеси та відкривають нові можливості для зростання
 				</p>
 			</div>
 
-			<div class="directions-grid">
-				@for (dir of directions; track dir.title) {
-					<div class="direction-card">
-						<div class="direction-card__img-wrap">
-							<img [src]="dir.image" [alt]="dir.title" loading="lazy" />
-						</div>
-						<div class="direction-card__overlay">
-							<h3 class="direction-card__title">{{ dir.title }}</h3>
-							<p class="direction-card__desc">{{ dir.description }}</p>
-						</div>
-					</div>
+			<!-- Category Tabs -->
+			<div class="carousel-tabs">
+				@for (cat of categories; track cat; let i = $index) {
+					<button
+						class="carousel-tab"
+						[class.carousel-tab--active]="activeCategory === i"
+						(click)="selectCategory(i)"
+					>{{ cat }}</button>
 				}
 			</div>
-		</div>
-	</section>
 
-	<!-- ============================================ -->
-	<!-- PROPOSALS CAROUSEL SECTION -->
-	<!-- ============================================ -->
-	<section class="proposals-home-section">
-		<div class="container">
-			<div class="section-header">
-				<span class="section-label">Наші пропозиції</span>
-				<h2 class="section-title">Готові рішення для вашого бізнесу</h2>
-				<p class="section-subtitle">
-					Оберіть рішення, яке найкраще підходить для ваших потреб
-				</p>
-			</div>
-
-			<div class="carousel">
-				<button class="carousel__btn carousel__btn--prev" (click)="carouselPrev()" [disabled]="carouselOffset() === 0" aria-label="Попередній">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-				</button>
-
-				<div class="carousel__track-wrapper">
-					<div class="carousel__track" [style.transform]="'translateX(-' + (carouselOffset() * (100 / visibleCards)) + '%)'">
-						@for (p of proposals; track p.id) {
-							<div class="carousel__slide" [style.flex]="'0 0 ' + (100 / visibleCards) + '%'">
-								<div class="prop-card" (click)="openProposal(p)">
-									<div class="prop-card__img">
-										<img [src]="p.image" [alt]="p.title" loading="lazy" />
-									</div>
-									<div class="prop-card__body">
-										<span class="prop-card__cat">{{ p.category }}</span>
-										<h3 class="prop-card__title">{{ p.title }}</h3>
-										<p class="prop-card__desc">{{ p.shortDescription }}</p>
-										<div class="prop-card__meta">
-											<span class="prop-card__price">{{ formatPrice(p.priceFrom) }} – {{ formatPrice(p.priceTo) }} грн</span>
-											<span class="prop-card__time">{{ p.timeFrom }} – {{ p.timeTo }}</span>
-										</div>
-									</div>
-								</div>
+			<!-- Carousel Card -->
+			<div class="carousel-card">
+				<div class="carousel-card__img">
+					<img [src]="currentProposal.image" [alt]="currentProposal.title" />
+				</div>
+				<div class="carousel-card__body">
+					<span class="carousel-card__badge">{{ currentProposal.category }}</span>
+					<h3 class="carousel-card__title">{{ currentProposal.title }}</h3>
+					<p class="carousel-card__desc">{{ currentProposal.fullDescription }}</p>
+					<div class="carousel-card__features">
+						@for (f of currentProposal.features; track f) {
+							<span class="carousel-card__feature">✓ {{ f }}</span>
+						}
+					</div>
+					<div class="carousel-card__meta">
+						<span class="carousel-card__price">{{ currentProposal.priceFrom | number }}–{{ currentProposal.priceTo | number }} грн</span>
+						<span class="carousel-card__time">{{ currentProposal.timeFrom }}–{{ currentProposal.timeTo }} тижнів</span>
+					</div>
+					<div class="carousel-card__team-row">
+						@for (member of currentProposal.team; track member.name) {
+							<div class="carousel-card__member" [title]="member.name + ' — ' + member.role">
+								<img [src]="member.avatar" [alt]="member.name" />
 							</div>
 						}
 					</div>
 				</div>
+			</div>
 
-				<button class="carousel__btn carousel__btn--next" (click)="carouselNext()" [disabled]="carouselOffset() >= maxOffset" aria-label="Наступний">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+			<!-- Carousel Controls -->
+			<div class="carousel-controls">
+				<button class="carousel-btn" (click)="prevSlide()">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+				</button>
+				<span class="carousel-counter">{{ carouselIndex + 1 }} / {{ currentCategoryProposals.length }}</span>
+				<button class="carousel-btn" (click)="nextSlide()">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
 				</button>
 			</div>
 
-			<div class="proposals-home-section__cta">
-				<a routerLink="/proposals" class="btn-outline">Переглянути всі пропозиції</a>
+			<div class="section-cta">
+				<a routerLink="/proposals" class="btn-outline">Переглянути всі послуги</a>
 			</div>
 		</div>
 	</section>
 
 	<!-- ============================================ -->
-	<!-- TEAM SECTION -->
+	<!-- TEAM PREVIEW SECTION -->
 	<!-- ============================================ -->
-	<section class="team-home-section">
+	<section class="section team-home-section">
 		<div class="container">
 			<div class="section-header">
 				<span class="section-label">Наша команда</span>
 				<h2 class="section-title">Фахівці, яким можна довіряти</h2>
 				<p class="section-subtitle">
-					9 професіоналів з експертизою у різних технологічних напрямках
+					10 професіоналів з експертизою у різних технологічних напрямках
 				</p>
 			</div>
 
-			<div class="carousel">
-				<button class="carousel__btn carousel__btn--prev" (click)="teamCarouselPrev()" [disabled]="teamCarouselOffset() === 0" aria-label="Попередній">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+			<div class="slider-wrapper">
+				<button class="slider-btn slider-btn--prev" (click)="prevTeam()">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 				</button>
-
-				<div class="carousel__track-wrapper">
-					<div class="carousel__track" [style.transform]="'translateX(-' + (teamCarouselOffset() * (100 / teamVisibleCards)) + '%)'">
-						@for (m of teamMembers; track m.id) {
-							<div class="carousel__slide" [style.flex]="'0 0 ' + (100 / teamVisibleCards) + '%'">
-								<div class="team-card" (click)="openTeamMember(m)">
+				<div class="slider-viewport">
+				<div class="slider-track" [style.transform]="'translateX(-' + teamSlideIndex * (100 / TEAM_VISIBLE) + '%)'">
+						@for (m of allTeam; track m.id) {
+							<div class="slider-item">
+								<div class="team-card">
 									<div class="team-card__photo">
-										<img [src]="m.avatar" [alt]="m.name" loading="lazy" />
+										<img [src]="'/' + m.avatar + '.png'" [alt]="m.name" loading="lazy" />
 									</div>
 									<h3 class="team-card__name">{{ m.name }}</h3>
 									<span class="team-card__role">{{ m.role }}</span>
-									<span class="team-card__exp">{{ m.experienceYears }} р. досвіду</span>
+									<span class="team-card__exp">{{ m.internshipDates }}</span>
 								</div>
 							</div>
 						}
 					</div>
 				</div>
-
-				<button class="carousel__btn carousel__btn--next" (click)="teamCarouselNext()" [disabled]="teamCarouselOffset() >= teamMaxOffset" aria-label="Наступний">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+				<button class="slider-btn slider-btn--next" (click)="nextTeam()">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
 				</button>
 			</div>
 
-			<div class="proposals-home-section__cta">
-				<a routerLink="/our-team" class="btn-outline">Детальніше про команду</a>
+			<div class="slider-dots">
+				@for (dot of teamDots; track $index) {
+					<button class="slider-dot" [class.slider-dot--active]="$index === teamSlideIndex" (click)="teamSlideIndex = $index"></button>
+				}
+			</div>
+
+			<div class="section-cta">
+				<a routerLink="/team" class="btn-outline">Детальніше про команду</a>
 			</div>
 		</div>
 	</section>
 
-	<!-- PROJECTS CAROUSEL SECTION -->
-	<section class="projects-home-section">
+	<!-- ============================================ -->
+	<!-- PROJECTS PREVIEW SECTION -->
+	<!-- ============================================ -->
+	<section class="section projects-home-section">
 		<div class="container">
 			<div class="section-header">
 				<span class="section-label">Наші проєкти</span>
 				<h2 class="section-title">Реалізовані рішення</h2>
 				<p class="section-subtitle">
-					Портфоліо виконаних робіт, якими ми пишаємось
+					Портфоліо робіт на різних CSS-фреймворках
 				</p>
 			</div>
 
-			<div class="carousel">
-				<button class="carousel__btn carousel__btn--prev" (click)="projectsCarouselPrev()" [disabled]="projectsCarouselOffset() === 0" aria-label="Попередній">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+			<div class="slider-wrapper">
+				<button class="slider-btn slider-btn--prev" (click)="prevProject()">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 				</button>
-
-				<div class="carousel__track-wrapper">
-					<div class="carousel__track" [style.transform]="'translateX(-' + (projectsCarouselOffset() * (100 / projectsVisibleCards)) + '%)'">
-						@for (proj of completedProjects; track proj.id) {
-							<div class="carousel__slide" [style.flex]="'0 0 ' + (100 / projectsVisibleCards) + '%'">
-								<div class="project-card-home" (click)="openProject(proj)">
+				<div class="slider-viewport">
+				<div class="slider-track" [style.transform]="'translateX(-' + projectSlideIndex * (100 / PROJECTS_VISIBLE) + '%)'">
+						@for (proj of allProjects; track proj.id) {
+							<div class="slider-item">
+								<div class="project-card-home">
 									<div class="project-card-home__img">
-										<img [src]="proj.image" [alt]="proj.title" loading="lazy" />
-										<span class="project-card-home__badge">{{ proj.category }}</span>
+										<img [src]="'/' + proj.image + '.png'" [alt]="proj.title" loading="lazy" />
+										<span class="project-card-home__badge project-card-home__badge--{{ proj.category }}">{{ categoryLabel(proj.category) }}</span>
 									</div>
 									<div class="project-card-home__body">
 										<h3 class="project-card-home__title">{{ proj.title }}</h3>
-										<p class="project-card-home__desc">{{ proj.shortDescription }}</p>
-										<div class="project-card-home__meta">
-											<span class="project-card-home__cost">{{ proj.cost }}</span>
-											<span class="project-card-home__duration">{{ proj.duration }}</span>
+										<p class="project-card-home__desc">{{ proj.description }}</p>
+										<div class="project-card-home__tags">
+											@for (tag of proj.tags; track tag) {
+												<span class="project-card-home__tag">{{ tag }}</span>
+											}
+										</div>
+										<div class="project-card-home__links">
+											<a [href]="proj.repoUrl" target="_blank" rel="noopener" class="project-card-home__link">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+												GitHub
+											</a>
+											<a [href]="proj.liveUrl" target="_blank" rel="noopener" class="project-card-home__link project-card-home__link--live">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+												Live
+											</a>
 										</div>
 									</div>
 								</div>
@@ -233,266 +240,56 @@
 						}
 					</div>
 				</div>
-
-				<button class="carousel__btn carousel__btn--next" (click)="projectsCarouselNext()" [disabled]="projectsCarouselOffset() >= projectsMaxOffset" aria-label="Наступний">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+				<button class="slider-btn slider-btn--next" (click)="nextProject()">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
 				</button>
 			</div>
 
-			<div class="proposals-home-section__cta">
-				<a routerLink="/our-projects" class="btn-outline">Переглянути всі проєкти</a>
+			<div class="slider-dots">
+				@for (dot of projectDots; track $index) {
+					<button class="slider-dot" [class.slider-dot--active]="$index === projectSlideIndex" (click)="projectSlideIndex = $index"></button>
+				}
+			</div>
+
+			<div class="section-cta">
+				<a routerLink="/projects" class="btn-outline">Переглянути всі проєкти</a>
 			</div>
 		</div>
 	</section>
 
-	<!-- TESTIMONIALS SECTION -->
-	<section class="testimonials-section">
+	<!-- ============================================ -->
+	<!-- NEWS & MERCH PROMO SECTION -->
+	<!-- ============================================ -->
+	<section class="section promo-section">
 		<div class="container">
 			<div class="section-header">
-				<span class="section-label">Відгуки</span>
-				<h2 class="section-title">Що кажуть наші клієнти</h2>
+				<span class="section-label">Інше</span>
+				<h2 class="section-title">Новини та мерч</h2>
+				<p class="section-subtitle">
+					Слідкуйте за оновленнями та підтримайте нашу команду
+				</p>
 			</div>
-		</div>
-		<div class="testimonials-marquee">
-			<div class="testimonials-track">
-				@for (t of testimonials; track $index) {
-					<div class="testimonial-card">
-						<div class="testimonial-card__stars">
-							@for (star of formatStars(t.rating); track $index) {
-								<span class="tstar">★</span>
-							}
-						</div>
-						<p class="testimonial-card__text">«{{ t.text }}»</p>
-						<div class="testimonial-card__author">
-							<span class="testimonial-card__name">{{ t.author }}</span>
-							<span class="testimonial-card__position">{{ t.position }}</span>
-						</div>
+
+			<div class="promo-grid">
+				<a routerLink="/news" class="promo-card">
+					<div class="promo-card__icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="10" x2="18" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
 					</div>
-				}
-				<!-- Duplicate for infinite scroll -->
-				@for (t of testimonials; track $index) {
-					<div class="testimonial-card">
-						<div class="testimonial-card__stars">
-							@for (star of formatStars(t.rating); track $index) {
-								<span class="tstar">★</span>
-							}
-						</div>
-						<p class="testimonial-card__text">«{{ t.text }}»</p>
-						<div class="testimonial-card__author">
-							<span class="testimonial-card__name">{{ t.author }}</span>
-							<span class="testimonial-card__position">{{ t.position }}</span>
-						</div>
+					<h3 class="promo-card__title">Новини</h3>
+					<p class="promo-card__desc">Події, оновлення та статті від нашої команди. Будьте в курсі останніх подій IT-Kamianets.</p>
+					<span class="promo-card__link">Перейти до новин →</span>
+				</a>
+
+				<a routerLink="/merch" class="promo-card">
+					<div class="promo-card__icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
 					</div>
-				}
+					<h3 class="promo-card__title">Мерч</h3>
+					<p class="promo-card__desc">Чашки, футболки,стікери та інше з символікою IT-Kamianets. Підтримай команду стильно!</p>
+					<span class="promo-card__link">Перейти до мерчу →</span>
+				</a>
 			</div>
 		</div>
 	</section>
-
-	<!-- ============================================ -->
-	<!-- PROPOSAL DETAIL MODAL -->
-	<!-- ============================================ -->
-	@if (selectedProposal(); as p) {
-		<div class="modal-backdrop" (click)="closeProposal()">
-			<div class="modal" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-				</button>
-
-				<div class="modal__img">
-					<img [src]="p.image" [alt]="p.title" />
-					<span class="modal__cat">{{ p.category }}</span>
-				</div>
-
-				<div class="modal__body">
-					<h2 class="modal__title">{{ p.title }}</h2>
-					<p class="modal__description">{{ p.fullDescription }}</p>
-
-					<div class="modal__info-grid">
-						<div class="modal__info-item">
-							<span class="modal__info-label">Вартість</span>
-							<span class="modal__info-value">{{ formatPrice(p.priceFrom) }} – {{ formatPrice(p.priceTo) }} грн</span>
-						</div>
-						<div class="modal__info-item">
-							<span class="modal__info-label">Терміни</span>
-							<span class="modal__info-value">{{ p.timeFrom }} – {{ p.timeTo }}</span>
-						</div>
-					</div>
-
-					<div class="modal__features">
-						<h4 class="modal__section-title">Що входить</h4>
-						<div class="modal__features-list">
-							@for (feat of p.features; track feat) {
-								<span class="modal__feature-tag">{{ feat }}</span>
-							}
-						</div>
-					</div>
-
-					<div class="modal__team">
-						<h4 class="modal__section-title">Команда проєкту</h4>
-						<div class="modal__team-list">
-							@for (member of p.team; track member.name) {
-								<div class="modal__team-member modal__team-member--clickable" (click)="openTeamMemberByName(member.name)">
-									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
-									<div>
-										<span class="modal__team-name">{{ member.name }}</span>
-										<span class="modal__team-role">{{ member.role }}</span>
-									</div>
-								</div>
-							}
-						</div>
-					</div>
-
-					<div class="modal__actions">
-						<a routerLink="/order" class="hero__btn hero__btn--primary" (click)="closeAll()">Замовити</a>
-						<button class="hero__btn hero__btn--outline" (click)="closeProposal()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	}
-
-	<!-- ============================================ -->
-	<!-- TEAM MEMBER MODAL -->
-	<!-- ============================================ -->
-	@if (selectedTeamMember(); as m) {
-		<div class="modal-backdrop" (click)="closeTeamMember()">
-			<div class="modal team-modal-home" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-				</button>
-
-				<div class="tm-modal-top">
-					<img [src]="m.avatar" [alt]="m.name" class="tm-modal-avatar" />
-					<div class="tm-modal-header">
-						<h2 class="modal__title" style="margin-bottom: 4px">{{ m.name }}</h2>
-						<span class="tm-modal-role">{{ m.role }}</span>
-						<span class="tm-modal-exp">{{ m.experienceYears }} років досвіду</span>
-					</div>
-				</div>
-
-				<div class="modal__body">
-					<p class="modal__description">{{ m.fullBio }}</p>
-
-					<div class="modal__features">
-						<h4 class="modal__section-title">Мови спілкування</h4>
-						<div class="modal__features-list">
-							@for (lang of m.spokenLanguages; track lang) {
-								<span class="modal__feature-tag">{{ lang }}</span>
-							}
-						</div>
-					</div>
-
-					<div class="modal__features">
-						<h4 class="modal__section-title">Технології</h4>
-						<div class="modal__features-list">
-							@for (tech of m.technologies; track tech) {
-								<span class="modal__feature-tag">{{ tech }}</span>
-							}
-						</div>
-					</div>
-
-					<div class="modal__features">
-						<h4 class="modal__section-title">Проєкти</h4>
-						<div class="modal__portfolio-grid">
-							<div class="modal__portfolio-col">
-								<h5 class="modal__portfolio-col-title">Пропозиції</h5>
-								<ul class="modal__portfolio-list">
-									@for (prop of getProposalsForMember(m.name); track prop.id) {
-										<li class="modal__portfolio-item" (click)="openProposalByTitle(prop.title)">{{ prop.title }}</li>
-									}
-								</ul>
-							</div>
-							<div class="modal__portfolio-col">
-								<h5 class="modal__portfolio-col-title">Виконані проєкти</h5>
-								<ul class="modal__portfolio-list">
-									@for (proj of getCompletedProjectsForMember(m.name); track proj.id) {
-										<li class="modal__portfolio-item" (click)="openProjectByTitle(proj.title)">{{ proj.title }}</li>
-									}
-								</ul>
-							</div>
-						</div>
-					</div>
-
-					<div class="modal__actions">
-						<a routerLink="/our-team" class="hero__btn hero__btn--primary" (click)="closeAll()">Переглянути усю команду</a>
-						<button class="hero__btn hero__btn--outline" (click)="closeTeamMember()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	}
-
-	<!-- PROJECT DETAIL MODAL -->
-	@if (selectedProject(); as proj) {
-		<div class="modal-backdrop" (click)="closeProject()">
-			<div class="modal" (click)="$event.stopPropagation()">
-				<button class="modal__close" (click)="closeAll()" aria-label="Закрити">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-				</button>
-
-				<div class="modal__img">
-					<img [src]="proj.image" [alt]="proj.title" />
-					<span class="modal__cat">{{ proj.category }}</span>
-				</div>
-
-				<div class="modal__body">
-					<h2 class="modal__title">{{ proj.title }}</h2>
-					<p class="modal__description">{{ proj.fullDescription }}</p>
-
-					<div class="modal__info-grid">
-						<div class="modal__info-item">
-							<span class="modal__info-label">Замовник</span>
-							<span class="modal__info-value" style="color: var(--c-text-secondary)">{{ proj.clientOrg }}</span>
-						</div>
-						<div class="modal__info-item">
-							<span class="modal__info-label">Завершено</span>
-							<span class="modal__info-value" style="color: var(--c-text-secondary)">{{ proj.completedDate }}</span>
-						</div>
-						<div class="modal__info-item">
-							<span class="modal__info-label">Вартість</span>
-							<span class="modal__info-value">{{ proj.cost }}</span>
-						</div>
-						<div class="modal__info-item">
-							<span class="modal__info-label">Термін</span>
-							<span class="modal__info-value">{{ proj.duration }}</span>
-						</div>
-					</div>
-
-					<div class="modal__team">
-						<h4 class="modal__section-title">Команда проєкту</h4>
-						<div class="modal__team-list">
-							@for (member of proj.team; track member.name) {
-								<div class="modal__team-member modal__team-member--clickable" (click)="openTeamMemberByName(member.name)">
-									<img [src]="member.avatar" [alt]="member.name" class="modal__team-avatar" />
-									<div>
-										<span class="modal__team-name">{{ member.name }}</span>
-										<span class="modal__team-role">{{ member.role }}</span>
-									</div>
-								</div>
-							}
-						</div>
-					</div>
-
-					<div class="project-review-home">
-						<h4 class="modal__section-title">Відгук клієнта</h4>
-						<div class="review-card-home">
-							<div class="review-card-home__stars">
-								@for (star of formatStars(proj.review.rating); track $index) {
-									<span class="tstar">★</span>
-								}
-							</div>
-							<p class="review-card-home__text">«{{ proj.review.text }}»</p>
-							<span class="review-card-home__author">{{ proj.review.author }}, {{ proj.review.position }}</span>
-						</div>
-					</div>
-
-					<div class="modal__actions">
-						<a routerLink="/order" class="hero__btn hero__btn--primary" (click)="closeAll()">Замовити подібний</a>
-						<button class="hero__btn hero__btn--outline" (click)="closeProject()">{{ hasStack() ? 'Назад' : 'Закрити' }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	}
 
 </div>

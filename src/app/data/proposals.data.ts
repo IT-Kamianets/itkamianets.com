@@ -1,9 +1,3 @@
-export interface TeamMember {
-	name: string;
-	role: string;
-	avatar: string;
-}
-
 export interface Proposal {
 	id: number;
 	title: string;
@@ -11,17 +5,15 @@ export interface Proposal {
 	fullDescription: string;
 	category: string;
 	image: string;
+	features: string[];
+	team: { name: string; avatar: string; role: string }[];
 	priceFrom: number;
 	priceTo: number;
-	timeFrom: string;
-	timeTo: string;
-	features: string[];
-	idealFor?: string[];
-	team: TeamMember[];
+	timeFrom: number;
+	timeTo: number;
 }
 
 export const CATEGORIES: string[] = [
-	'Усі',
 	'Агроіндустрія',
 	'Медицина',
 	'Заклади',
@@ -33,440 +25,328 @@ export const CATEGORIES: string[] = [
 	'Освіта',
 ];
 
-/* ── Team member avatar shortcuts ── */
-const A = {
-	oleksii: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-	andrii: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
-	dmytro: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-	mariia: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
-	serhii: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
-	maksym: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop&crop=face',
-	ihor: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=100&h=100&fit=crop&crop=face',
-	roman: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
-	vitalii: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=100&h=100&fit=crop&crop=face',
-};
-
 export const PROPOSALS: Proposal[] = [
-	/* ═══════════════ АГРОІНДУСТРІЯ ═══════════════ */
+	// ── Агроіндустрія ──
 	{
 		id: 1,
-		title: 'Система обліку врожаю',
-		shortDescription: 'Автоматизація обліку врожаю та управління складськими запасами для аграрних підприємств.',
-		fullDescription: 'Повноцінна система обліку врожаю з модулями для відстеження посівних площ, прогнозування врожайності на основі даних, управління складськими запасами та інтеграції з логістичними сервісами. Включає мобільний додаток для польових працівників та веб-панель для менеджерів.',
+		title: 'Система моніторингу полів',
+		shortDescription: 'Інтерактивна карта полів з GPS-трекінгом та аналітикою врожайності.',
+		fullDescription: 'Повноцінна веб-платформа для моніторингу сільськогосподарських угідь із інтеграцією GPS-трекінгу техніки, аналізом якості ґрунтів та прогнозуванням врожайності на основі історичних даних.',
 		category: 'Агроіндустрія',
-		image: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600&h=400&fit=crop',
-		priceFrom: 15000, priceTo: 45000, timeFrom: '2 місяці', timeTo: '4 місяці',
-		features: ['Облік посівних площ', 'Прогноз врожайності', 'Складський модуль', 'Мобільний додаток', 'Аналітика та звіти'],
+		image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['GPS-трекінг', 'Аналітика ґрунтів', 'Прогноз врожайності', 'Мобільний доступ'],
 		team: [
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
+			{ name: 'Гончар Денис', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', role: 'Full-stack' }, // назва файлу з папки public/images/team/
+			{ name: 'Вальцер Вадим', avatar: 'https://randomuser.me/api/portraits/men/44.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 15000,
+		priceTo: 35000,
+		timeFrom: 4,
+		timeTo: 8,
 	},
 	{
 		id: 2,
-		title: 'Платформа агро-торгівлі',
-		shortDescription: 'Онлайн-маркетплейс для купівлі та продажу сільськогосподарської продукції.',
-		fullDescription: 'Маркетплейс, що з\'єднує фермерів із покупцями напряму. Включає каталог продукції з фільтрами, систему замовлень, відгуки, інтеграцію з платіжними системами та модуль доставки. Підтримка багатомовності та мобільна версія.',
+		title: 'Маркетплейс агропродукції',
+		shortDescription: 'Онлайн-платформа для купівлі-продажу сільськогосподарської продукції.',
+		fullDescription: 'B2B маркетплейс для фермерів та закупівельників з системою аукціонів, логістичними інтеграціями та безпечними онлайн-оплатами.',
 		category: 'Агроіндустрія',
-		image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=400&fit=crop',
-		priceFrom: 25000, priceTo: 60000, timeFrom: '3 місяці', timeTo: '6 місяців',
-		features: ['Каталог продукції', 'Система замовлень', 'Онлайн-оплата', 'Модуль доставки', 'Рейтинги та відгуки'],
+		image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Онлайн-аукціони', 'Логістика', 'Безпечна оплата', 'Рейтинги продавців'],
 		team: [
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
+			{ name: 'Гончар Денис', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', role: 'Full-stack' }, // назва файлу з папки public/images/team/
+			{ name: 'Гумельник Анатолій', avatar: 'https://randomuser.me/api/portraits/men/22.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
-	},
-	{
-		id: 3,
-		title: 'Моніторинг ґрунтів та погоди',
-		shortDescription: 'IoT-платформа для моніторингу стану ґрунтів, вологості та погодних умов у реальному часі.',
-		fullDescription: 'Інтелектуальна платформа, що збирає дані з IoT-датчиків на полях: вологість ґрунту, температура, pH, погодні умови. Прогнозна аналітика допомагає оптимізувати полив та визначити оптимальний час для сівби та збору врожаю. Інтеграція з метеосервісами та дашборд у реальному часі.',
-		category: 'Агроіндустрія',
-		image: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600&h=400&fit=crop',
-		priceFrom: 20000, priceTo: 50000, timeFrom: '2 місяці', timeTo: '5 місяців',
-		features: ['IoT-інтеграція', 'Дашборд реального часу', 'Прогноз погоди', 'Аналітика ґрунтів', 'Сповіщення'],
-		team: [
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
-		],
+		priceFrom: 20000,
+		priceTo: 50000,
+		timeFrom: 6,
+		timeTo: 12,
 	},
 
-	/* ═══════════════ МЕДИЦИНА ═══════════════ */
+	// ── Медицина ──
 	{
-		id: 4,
-		title: 'Медична інформаційна система',
-		shortDescription: 'Комплексне рішення для управління клінікою: пацієнти, записи, діагнози.',
-		fullDescription: 'Система для приватних клінік, що охоплює реєстратуру, електронні медичні картки, розклад лікарів, онлайн-запис пацієнтів, лабораторні результати та фінансовий модуль. Повна відповідність стандартам захисту медичних даних.',
+		id: 3,
+		title: 'Електронна реєстратура',
+		shortDescription: 'Запис до лікаря онлайн з інтеграцією електронних медичних карток.',
+		fullDescription: 'Система онлайн-запису для клінік з електронними картками пацієнтів, нагадуваннями про візити через SMS/email та інтеграцією з лабораторними системами.',
 		category: 'Медицина',
-		image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop',
-		priceFrom: 30000, priceTo: 80000, timeFrom: '3 місяці', timeTo: '7 місяців',
-		features: ['Електронні картки', 'Онлайн-запис', 'Розклад лікарів', 'Лабораторний модуль', 'Фінансовий облік'],
+		image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Онлайн-запис', 'Електронні картки', 'SMS-нагадування', 'Інтеграція з лабораторіями'],
 		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
+			{ name: 'Окряк Віктор', avatar: 'https://randomuser.me/api/portraits/men/55.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Демчина Дмитро', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 18000,
+		priceTo: 40000,
+		timeFrom: 5,
+		timeTo: 10,
 	},
 	{
-		id: 5,
-		title: 'Аптечна система обліку',
-		shortDescription: 'Логістика та облік медикаментів для аптечних мереж і окремих аптек.',
-		fullDescription: 'Програмне забезпечення для управління аптечним бізнесом: облік медикаментів, терміни придатності, автоматичне замовлення при мінімальному залишку, POS-система, інтеграція з постачальниками та аналітика продажів.',
+		id: 4,
+		title: 'Аптечний портал',
+		shortDescription: 'Пошук ліків у найближчих аптеках з порівнянням цін.',
+		fullDescription: 'Агрегатор аптек із зручним пошуком медикаментів, порівнянням цін, інформацією про наявність та можливістю бронювання ліків онлайн.',
 		category: 'Медицина',
-		image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=600&h=400&fit=crop',
-		priceFrom: 12000, priceTo: 35000, timeFrom: '1.5 місяці', timeTo: '3 місяці',
-		features: ['Облік медикаментів', 'Контроль термінів', 'Автозамовлення', 'POS-система', 'Аналітика продажів'],
+		image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Пошук ліків', 'Порівняння цін', 'Бронювання', 'Геолокація аптек'],
 		team: [
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
+			{ name: 'Шулепко Роман', avatar: 'https://randomuser.me/api/portraits/men/75.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Данильчук Андрій', avatar: 'https://randomuser.me/api/portraits/men/85.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 12000,
+		priceTo: 28000,
+		timeFrom: 3,
+		timeTo: 7,
+	},
+
+	// ── Заклади ──
+	{
+		id: 5,
+		title: 'Система онлайн-замовлень',
+		shortDescription: 'Меню та замовлення онлайн для кафе та ресторанів.',
+		fullDescription: 'Повнофункціональна система для закладів харчування: цифрове меню з фото, онлайн-замовлення, інтеграція з кухонним дисплеєм та системою доставки.',
+		category: 'Заклади',
+		image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Цифрове меню', 'Онлайн-замовлення', 'Кухонний дисплей', 'Доставка'],
+		team: [
+			{ name: 'Гончар Денис', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', role: 'Full-stack' }, // назва файлу з папки public/images/team/
+			{ name: 'Левчук Владислав', avatar: 'https://randomuser.me/api/portraits/men/91.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+		],
+		priceFrom: 10000,
+		priceTo: 25000,
+		timeFrom: 3,
+		timeTo: 6,
 	},
 	{
 		id: 6,
-		title: 'Телемедична платформа',
-		shortDescription: 'Онлайн-консультації з лікарями, відеодзвінки та електронні рецепти.',
-		fullDescription: 'Платформа для віддалених медичних консультацій: відеодзвінки пацієнт-лікар, електронні рецепти, чат з лікарем, запис на прийом, зберігання медичної історії та інтеграція з лабораторіями для отримання результатів аналізів онлайн.',
-		category: 'Медицина',
-		image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&h=400&fit=crop',
-		priceFrom: 35000, priceTo: 90000, timeFrom: '4 місяці', timeTo: '8 місяців',
-		features: ['Відеоконсультації', 'Електронні рецепти', 'Чат з лікарем', 'Медична історія', 'Інтеграція з лабораторіями'],
+		title: 'Платформа бронювання столиків',
+		shortDescription: 'Бронювання столиків онлайн з можливістю передзамовлення.',
+		fullDescription: 'Сервіс бронювання столиків для ресторанів та кафе із інтерактивною схемою залу, передзамовленням страв та автоматичним підтвердженням.',
+		category: 'Заклади',
+		image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Схема залу', 'Передзамовлення', 'Підтвердження', 'Відгуки'],
 		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
+			{ name: 'Вальцер Вадим', avatar: 'https://randomuser.me/api/portraits/men/44.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Горецький Максим', avatar: 'https://randomuser.me/api/portraits/men/47.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 8000,
+		priceTo: 20000,
+		timeFrom: 2,
+		timeTo: 5,
 	},
 
-	/* ═══════════════ ЗАКЛАДИ ═══════════════ */
+	// ── Мистецтво ──
 	{
 		id: 7,
-		title: 'Система замовлень для ресторану',
-		shortDescription: 'Автоматизація замовлень, кухні та доставки для ресторанів і кафе.',
-		fullDescription: 'Повна автоматизація ресторанного бізнесу: прийом замовлень через планшет або QR-код, відображення на кухні в реальному часі, управління столиками, інтеграція з сервісами доставки, система лояльності та детальна аналітика.',
-		category: 'Заклади',
-		image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop',
-		priceFrom: 10000, priceTo: 30000, timeFrom: '1 місяць', timeTo: '3 місяці',
-		features: ['QR-код меню', 'Кухонний дисплей', 'Резерв столиків', 'Інтеграція з доставкою', 'Програма лояльності'],
+		title: 'Онлайн-галерея',
+		shortDescription: 'Платформа для митців з можливістю продажу творів мистецтва.',
+		fullDescription: 'Віртуальна галерея із 3D-оглядом робіт, можливістю покупки, портфоліо митців та інтеграцією з соціальними мережами.',
+		category: 'Мистецтво',
+		image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['3D-огляд', 'Продаж творів', 'Портфоліо', 'Соцмережі'],
 		team: [
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
+			{ name: 'Макуш Валерія', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', role: 'UI/UX' }, // назва файлу з папки public/images/team/
+			{ name: 'Гумельник Анатолій', avatar: 'https://randomuser.me/api/portraits/men/22.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 12000,
+		priceTo: 30000,
+		timeFrom: 4,
+		timeTo: 8,
 	},
 	{
 		id: 8,
-		title: 'Сайт-вітрина для кав\'ярні',
-		shortDescription: 'Стильний веб-сайт з меню, локацією та можливістю онлайн-замовлення.',
-		fullDescription: 'Сучасний лендинг для кав\'ярні або ресторану з інтерактивним меню, галереєю страв, картою розташування, формою бронювання столика та інтеграцією з соціальними мережами. Адаптивний дизайн та SEO-оптимізація.',
-		category: 'Заклади',
-		image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop',
-		priceFrom: 5000, priceTo: 15000, timeFrom: '2 тижні', timeTo: '1 місяць',
-		features: ['Інтерактивне меню', 'Галерея страв', 'Карта розташування', 'Бронювання столика', 'SEO-оптимізація'],
+		title: 'Платформа для культурних подій',
+		shortDescription: 'Афіша культурних подій міста з продажем квитків.',
+		fullDescription: 'Платформа для організації та просування культурних подій: виставок, концертів, вистав. Онлайн-продаж квитків та інтерактивна карта локацій.',
+		category: 'Мистецтво',
+		image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Афіша подій', 'Онлайн-квитки', 'Карта локацій', 'Push-сповіщення'],
 		team: [
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
+			{ name: 'Окряк Віктор', avatar: 'https://randomuser.me/api/portraits/men/55.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Макуш Валерія', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', role: 'UI/UX' }, // назва файлу з папки public/images/team/
 		],
-	},
-	{
-		id: 9,
-		title: 'Система доставки їжі',
-		shortDescription: 'Платформа для замовлення та доставки їжі з ресторанів міста.',
-		fullDescription: 'Комплексна платформа доставки їжі: мобільний додаток для клієнтів, панель управління для ресторанів, відстеження кур\'єрів у реальному часі, система оплати, рейтинги закладів та промокоди. GPS-навігація для кур\'єрів.',
-		category: 'Заклади',
-		image: 'https://images.unsplash.com/photo-1526367790999-0150786686a2?w=600&h=400&fit=crop',
-		priceFrom: 30000, priceTo: 75000, timeFrom: '3 місяці', timeTo: '6 місяців',
-		features: ['Мобільний додаток', 'Панель для ресторанів', 'GPS-трекінг', 'Онлайн-оплата', 'Рейтинги та промокоди'],
-		team: [
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
-		],
+		priceFrom: 15000,
+		priceTo: 35000,
+		timeFrom: 5,
+		timeTo: 10,
 	},
 
-	/* ═══════════════ МИСТЕЦТВО ═══════════════ */
+	// ── Автомобілі ──
 	{
-		id: 10,
-		title: 'Онлайн-галерея для митців',
-		shortDescription: 'Віртуальна галерея для продажу творів мистецтва з каталогом та оплатою.',
-		fullDescription: 'Платформа для художників і ремісників: каталог творів з високоякісними фото, віртуальний тур, кошик покупок, безпечна оплата, профілі авторів та блог. Інтеграція з Instagram та Pinterest для просування.',
-		category: 'Мистецтво',
-		image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop',
-		priceFrom: 8000, priceTo: 25000, timeFrom: '1 місяць', timeTo: '2.5 місяці',
-		features: ['Каталог творів', 'Віртуальний тур', 'Профілі авторів', 'Онлайн-оплата', 'Інтеграція з соц.мережами'],
+		id: 9,
+		title: 'Сайт для автосервісу',
+		shortDescription: 'Онлайн-запис на СТО з відстеженням статусу ремонту.',
+		fullDescription: 'Комплексна платформа для автосервісів: онлайн-запис, CRM для клієнтів, відстеження процесу ремонту та інтеграція з каталогом запчастин.',
+		category: 'Автомобілі',
+		image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Онлайн-запис', 'CRM', 'Статус ремонту', 'Каталог запчастин'],
 		team: [
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
+			{ name: 'Демчина Дмитро', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Шулепко Роман', avatar: 'https://randomuser.me/api/portraits/men/75.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 10000,
+		priceTo: 25000,
+		timeFrom: 3,
+		timeTo: 7,
 	},
 	{
-		id: 11,
-		title: 'Платформа для музикантів',
-		shortDescription: 'Сервіс для продажу музики, організації концертів та промоції артистів.',
-		fullDescription: 'Платформа для незалежних музикантів: стрімінг та продаж треків, організація концертів і подій, створення портфоліо артиста, аналітика прослуховувань, краудфандинг для музичних проєктів та інтеграція з SoundCloud і Spotify.',
-		category: 'Мистецтво',
-		image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600&h=400&fit=crop',
-		priceFrom: 15000, priceTo: 40000, timeFrom: '2 місяці', timeTo: '4 місяці',
-		features: ['Стрімінг музики', 'Портфоліо артиста', 'Організація подій', 'Краудфандинг', 'Аналітика'],
+		id: 10,
+		title: 'Маркетплейс автозапчастин',
+		shortDescription: 'Пошук та порівняння запчастин від різних постачальників.',
+		fullDescription: 'Маркетплейс для пошуку автозапчастин за VIN-кодом або моделлю авто. Порівняння цін, рейтинги постачальників та доставка по Україні.',
+		category: 'Автомобілі',
+		image: 'https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Пошук за VIN', 'Порівняння цін', 'Рейтинги', 'Доставка'],
 		team: [
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
+			{ name: 'Данильчук Андрій', avatar: 'https://randomuser.me/api/portraits/men/85.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Левчук Владислав', avatar: 'https://randomuser.me/api/portraits/men/91.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 18000,
+		priceTo: 45000,
+		timeFrom: 5,
+		timeTo: 10,
+	},
+
+	// ── Мода та одяг ──
+	{
+		id: 11,
+		title: 'Інтернет-магазин одягу',
+		shortDescription: 'Повнофункціональний e-commerce з системою розмірів та примірки.',
+		fullDescription: 'Сучасний інтернет-магазин одягу із розумною системою рекомендацій, таблицею розмірів, фото 360° та інтеграцією з платіжними системами.',
+		category: 'Мода та одяг',
+		image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Каталог з фільтрами', 'Система розмірів', 'Онлайн-оплата', 'Рекомендації'],
+		team: [
+			{ name: 'Макуш Валерія', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', role: 'UI/UX' }, // назва файлу з папки public/images/team/
+			{ name: 'Вальцер Вадим', avatar: 'https://randomuser.me/api/portraits/men/44.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+		],
+		priceFrom: 15000,
+		priceTo: 40000,
+		timeFrom: 4,
+		timeTo: 9,
 	},
 	{
 		id: 12,
-		title: 'Додаток для арт-подій',
-		shortDescription: 'Мобільний додаток для організації та відвідування мистецьких подій.',
-		fullDescription: 'Додаток для творчої спільноти: календар виставок, фестивалів та воркшопів, купівля квитків онлайн, інтерактивна карта подій, push-сповіщення, рейтинги та відгуки відвідувачів, соціальний модуль для обговорень.',
-		category: 'Мистецтво',
-		image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&h=400&fit=crop',
-		priceFrom: 12000, priceTo: 35000, timeFrom: '1.5 місяці', timeTo: '3.5 місяці',
-		features: ['Календар подій', 'Онлайн-квитки', 'Карта подій', 'Push-сповіщення', 'Відгуки відвідувачів'],
+		title: 'Платформа для дизайнерів',
+		shortDescription: 'Портфоліо-платформа для модних дизайнерів.',
+		fullDescription: 'Платформа для українських дизайнерів з можливістю створення портфоліо, продажу колекцій та взаємодії з покупцями та байерами.',
+		category: 'Мода та одяг',
+		image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Портфоліо', 'Продаж колекцій', 'Зв\'язок з байерами', 'Лукбуки'],
 		team: [
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
+			{ name: 'Горецький Максим', avatar: 'https://randomuser.me/api/portraits/men/47.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Макуш Валерія', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', role: 'UI/UX' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 12000,
+		priceTo: 30000,
+		timeFrom: 4,
+		timeTo: 8,
 	},
 
-	/* ═══════════════ АВТОМОБІЛІ ═══════════════ */
+	// ── Туризм ──
 	{
 		id: 13,
-		title: 'Платформа автосервісу',
-		shortDescription: 'Веб-система для автосервісів: запис, облік робіт та історія авто.',
-		fullDescription: 'Система управління автосервісом: онлайн-запис клієнтів, облік виконаних робіт, історія обслуговування авто за VIN-кодом, каталог запчастин, розрахунок вартості та SMS/Viber-сповіщення клієнтам.',
-		category: 'Автомобілі',
-		image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&h=400&fit=crop',
-		priceFrom: 12000, priceTo: 35000, timeFrom: '1.5 місяці', timeTo: '3 місяці',
-		features: ['Онлайн-запис', 'Історія авто', 'Каталог запчастин', 'Калькулятор вартості', 'SMS-сповіщення'],
+		title: 'Портал бронювання турів',
+		shortDescription: 'Платформа для бронювання екскурсій та турів по Кам\'янець-Подільському.',
+		fullDescription: 'Туристичний портал з каталогом турів, онлайн-бронюванням, інтерактивною картою пам\'яток та відгуками відвідувачів.',
+		category: 'Туризм',
+		image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Каталог турів', 'Онлайн-бронювання', 'Карта пам\'яток', 'Відгуки'],
 		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
+			{ name: 'Гончар Денис', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', role: 'Full-stack' }, // назва файлу з папки public/images/team/
+			{ name: 'Окряк Віктор', avatar: 'https://randomuser.me/api/portraits/men/55.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 14000,
+		priceTo: 35000,
+		timeFrom: 4,
+		timeTo: 9,
 	},
 	{
 		id: 14,
-		title: 'Магазин автозапчастин онлайн',
-		shortDescription: 'E-commerce платформа для продажу автозапчастин з пошуком по авто.',
-		fullDescription: 'Інтернет-магазин автозапчастин з розумним пошуком по марці/моделі/року авто, каталогом запчастин з фото та характеристиками, кошиком, онлайн-оплатою, модулем доставки та CRM для менеджерів.',
-		category: 'Автомобілі',
-		image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop',
-		priceFrom: 18000, priceTo: 50000, timeFrom: '2 місяці', timeTo: '5 місяців',
-		features: ['Пошук по авто', 'Каталог з фільтрами', 'Онлайн-оплата', 'Модуль доставки', 'CRM для менеджерів'],
+		title: 'Мобільний гід по місту',
+		shortDescription: 'Інтерактивний гід з аудіоекскурсіями та AR-елементами.',
+		fullDescription: 'PWA-додаток для туристів з аудіогідом, AR-навігацією по історичних місцях, офлайн-картами та рекомендаціями найкращих закладів.',
+		category: 'Туризм',
+		image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Аудіогід', 'AR-навігація', 'Офлайн-карти', 'Рекомендації'],
 		team: [
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
+			{ name: 'Гумельник Анатолій', avatar: 'https://randomuser.me/api/portraits/men/22.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Демчина Дмитро', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
-	},
-	{
-		id: 15,
-		title: 'CRM для автосалону',
-		shortDescription: 'Система управління клієнтами та продажами для автосалонів і дилерів.',
-		fullDescription: 'CRM-система для автобізнесу: ведення бази клієнтів, воронка продажів, облік автомобілів на складі, trade-in калькулятор, кредитний калькулятор, маркетингові кампанії та звітність для керівництва.',
-		category: 'Автомобілі',
-		image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&h=400&fit=crop',
-		priceFrom: 20000, priceTo: 55000, timeFrom: '2 місяці', timeTo: '4 місяці',
-		features: ['База клієнтів', 'Воронка продажів', 'Trade-in калькулятор', 'Кредитний модуль', 'Звітність'],
-		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-		],
+		priceFrom: 20000,
+		priceTo: 50000,
+		timeFrom: 6,
+		timeTo: 12,
 	},
 
-	/* ═══════════════ МОДА ТА ОДЯГ ═══════════════ */
+	// ── Спорт ──
 	{
-		id: 16,
-		title: 'Онлайн-магазин одягу',
-		shortDescription: 'Інтернет-магазин з каталогом, розмірною сіткою та примірочною.',
-		fullDescription: 'Повнофункціональний інтернет-магазин одягу з каталогом колекцій, розмірною сіткою, віртуальною примірочною, кошиком, оплатою, модулем знижок та сезонних розпродажів, CRM та email-маркетинг.',
-		category: 'Мода та одяг',
-		image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=600&h=400&fit=crop',
-		priceFrom: 15000, priceTo: 45000, timeFrom: '2 місяці', timeTo: '4 місяці',
-		features: ['Каталог колекцій', 'Розмірна сітка', 'Кошик та оплата', 'Модуль знижок', 'Email-маркетинг'],
+		id: 15,
+		title: 'Платформа для фітнес-клубу',
+		shortDescription: 'CRM для фітнес-клубів з управлінням абонементами та розкладом.',
+		fullDescription: 'Комплексна система для фітнес-клубів: управління абонементами, розклад тренувань, профілі тренерів, онлайн-запис на заняття та аналітика відвідувань.',
+		category: 'Спорт',
+		image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Абонементи', 'Розклад', 'Онлайн-запис', 'Аналітика'],
 		team: [
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
+			{ name: 'Шулепко Роман', avatar: 'https://randomuser.me/api/portraits/men/75.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Данильчук Андрій', avatar: 'https://randomuser.me/api/portraits/men/85.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 12000,
+		priceTo: 30000,
+		timeFrom: 4,
+		timeTo: 8,
 	},
 	{
-		id: 17,
-		title: 'Система управління запасами',
-		shortDescription: 'Автоматизація складського обліку та логістики для рітейлу одягу.',
-		fullDescription: 'Система для ритейлерів одягу: облік товарів на складі та в точках продажу, штрих-коди, автоматичні замовлення при мінімальному залишку, переміщення між магазинами, інвентаризація та детальна аналітика.',
-		category: 'Мода та одяг',
-		image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop',
-		priceFrom: 10000, priceTo: 30000, timeFrom: '1 місяць', timeTo: '3 місяці',
-		features: ['Облік товарів', 'Штрих-коди', 'Автозамовлення', 'Інвентаризація', 'Аналітика'],
+		id: 16,
+		title: 'Спортивний портал міста',
+		shortDescription: 'Новини спорту, розклад змагань та рейтинги команд.',
+		fullDescription: 'Портал спортивного життя міста: новини, розклад змагань, таблиці рейтингів, профілі спортсменів та онлайн-трансляції подій.',
+		category: 'Спорт',
+		image: 'https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Новини', 'Розклад змагань', 'Рейтинги', 'Онлайн-трансляції'],
 		team: [
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
+			{ name: 'Левчук Владислав', avatar: 'https://randomuser.me/api/portraits/men/91.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Горецький Максим', avatar: 'https://randomuser.me/api/portraits/men/47.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
+		priceFrom: 10000,
+		priceTo: 25000,
+		timeFrom: 3,
+		timeTo: 7,
+	},
+
+	// ── Освіта ──
+	{
+		id: 17,
+		title: 'LMS-платформа',
+		shortDescription: 'Система управління навчанням з курсами та тестуванням.',
+		fullDescription: 'Платформа дистанційного навчання з відеокурсами, інтерактивними тестами, системою оцінювання та сертифікатами по завершенню.',
+		category: 'Освіта',
+		image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Відеокурси', 'Тестування', 'Оцінювання', 'Сертифікати'],
+		team: [
+			{ name: 'Гончар Денис', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', role: 'Full-stack' }, // назва файлу з папки public/images/team/
+			{ name: 'Вальцер Вадим', avatar: 'https://randomuser.me/api/portraits/men/44.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+		],
+		priceFrom: 20000,
+		priceTo: 50000,
+		timeFrom: 6,
+		timeTo: 12,
 	},
 	{
 		id: 18,
-		title: 'Оптова B2B-платформа одягу',
-		shortDescription: 'Платформа для оптових постачальників та покупців одягу.',
-		fullDescription: 'B2B-маркетплейс для оптової торгівлі одягом: каталоги від постачальників, мінімальні партії замовлень, оптові ціни з рівнями знижок, модуль логістики, документообіг (рахунки, накладні) та аналітика закупівель.',
-		category: 'Мода та одяг',
-		image: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=600&h=400&fit=crop',
-		priceFrom: 25000, priceTo: 65000, timeFrom: '3 місяці', timeTo: '6 місяців',
-		features: ['Каталоги постачальників', 'Оптові ціни', 'Логістичний модуль', 'Документообіг', 'Аналітика закупівель'],
-		team: [
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
-		],
-	},
-
-	/* ═══════════════ ТУРИЗМ ═══════════════ */
-	{
-		id: 19,
-		title: 'Туристичний портал',
-		shortDescription: 'Платформа для туристичних агентств з бронюванням та маршрутами.',
-		fullDescription: 'Веб-портал для туристичних компаній: каталог турів та екскурсій, інтерактивна карта маршрутів, система бронювання та оплати, відгуки туристів, інтеграція з Booking та Google Maps, багатомовність.',
-		category: 'Туризм',
-		image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=400&fit=crop',
-		priceFrom: 20000, priceTo: 55000, timeFrom: '2 місяці', timeTo: '5 місяців',
-		features: ['Каталог турів', 'Інтерактивна карта', 'Бронювання онлайн', 'Відгуки туристів', 'Багатомовність'],
-		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-		],
-	},
-	{
-		id: 20,
-		title: 'Екскурсійний додаток',
-		shortDescription: 'Мобільний додаток-гід з аудіо-екскурсіями по місту та околицях.',
-		fullDescription: 'Мобільний додаток для самостійних екскурсій: аудіо-гід з GPS-навігацією, інтерактивні маршрути по Кам\'янцю-Подільському та околицях, історичні довідки, фотогалерея, офлайн-режим та підтримка кількох мов.',
-		category: 'Туризм',
-		image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&h=400&fit=crop',
-		priceFrom: 25000, priceTo: 65000, timeFrom: '3 місяці', timeTo: '6 місяців',
-		features: ['Аудіо-гід', 'GPS-навігація', 'Офлайн-режим', 'Історичні довідки', 'Мультимовність'],
-		team: [
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-		],
-	},
-	{
-		id: 21,
-		title: 'Система бронювання готелів',
-		shortDescription: 'Онлайн-платформа для бронювання номерів у готелях та гостинних будинках.',
-		fullDescription: 'Платформа для готельного бізнесу: каталог номерів з фото та описом, календар доступності, онлайн-бронювання та оплата, інтеграція з OTA-системами (Booking, Airbnb), модуль управління для адміністрації та аналітика завантаженості.',
-		category: 'Туризм',
-		image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
-		priceFrom: 18000, priceTo: 50000, timeFrom: '2 місяці', timeTo: '4 місяці',
-		features: ['Каталог номерів', 'Календар доступності', 'Онлайн-бронювання', 'OTA-інтеграція', 'Аналітика завантаженості'],
-		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-		],
-	},
-
-	/* ═══════════════ СПОРТ ═══════════════ */
-	{
-		id: 22,
-		title: 'Платформа фітнес-клубу',
-		shortDescription: 'Система управління фітнес-центром: абонементи, розклад, тренери.',
-		fullDescription: 'Комплексне рішення для фітнес-клубів: управління абонементами, розклад занять та тренерів, онлайн-запис на тренування, контроль відвідувань через QR-код або NFC, мобільний додаток для клієнтів, маркетингові кампанії.',
-		category: 'Спорт',
-		image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop',
-		priceFrom: 15000, priceTo: 40000, timeFrom: '2 місяці', timeTo: '4 місяці',
-		features: ['Абонементи', 'Розклад занять', 'Онлайн-запис', 'QR-контроль', 'Мобільний додаток'],
-		team: [
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-		],
-	},
-	{
-		id: 23,
-		title: 'Додаток для спортивних змагань',
-		shortDescription: 'Мобільний додаток для організації турнірів, трекінгу результатів та рейтингів.',
-		fullDescription: 'Додаток для спортивних організацій: створення та управління турнірами, реєстрація учасників, турнірні сітки, онлайн-трансляція результатів, рейтинги спортсменів, push-сповіщення та інтеграція з GPS для біг/велоспорт трекінгу.',
-		category: 'Спорт',
-		image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&h=400&fit=crop',
-		priceFrom: 18000, priceTo: 45000, timeFrom: '2 місяці', timeTo: '5 місяців',
-		features: ['Турнірні сітки', 'Реєстрація учасників', 'Онлайн-результати', 'Рейтинги', 'GPS-трекінг'],
-		team: [
-			{ name: 'Ігор Савченко', role: 'Mobile розробник', avatar: A.ihor },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-		],
-	},
-	{
-		id: 24,
-		title: 'Платформа для персональних тренерів',
-		shortDescription: 'Онлайн-сервіс для тренерів: програми тренувань, харчування та клієнти.',
-		fullDescription: 'Платформа для персональних тренерів: створення індивідуальних програм тренувань, планувальник харчування, відео-тренування, трекінг прогресу клієнтів, чат тренер-клієнт, онлайн-оплата та розклад сесій.',
-		category: 'Спорт',
-		image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop',
-		priceFrom: 10000, priceTo: 30000, timeFrom: '1.5 місяці', timeTo: '3 місяці',
-		features: ['Програми тренувань', 'План харчування', 'Відео-тренування', 'Трекінг прогресу', 'Чат тренер-клієнт'],
-		team: [
-			{ name: 'Андрій Бондаренко', role: 'Backend розробник', avatar: A.andrii },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-		],
-	},
-
-	/* ═══════════════ ОСВІТА ═══════════════ */
-	{
-		id: 25,
-		title: 'Освітня LMS-платформа',
-		shortDescription: 'Система управління навчанням для шкіл, курсів та тренінгових центрів.',
-		fullDescription: 'Платформа для онлайн-навчання: створення та проходження курсів, відео-уроки, тестування та сертифікація, прогрес студентів, чат і форум, аналітика успішності та інтеграція з відеоконференціями (Zoom, Google Meet).',
+		title: 'Портал для школи',
+		shortDescription: 'Електронний щоденник, розклад та комунікація з батьками.',
+		fullDescription: 'Шкільний портал з електронним щоденником, розкладом занять, домашніми завданнями, чатом між вчителями та батьками та онлайн-оплатою послуг.',
 		category: 'Освіта',
-		image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop',
-		priceFrom: 20000, priceTo: 55000, timeFrom: '2.5 місяці', timeTo: '5 місяців',
-		features: ['Конструктор курсів', 'Відео-уроки', 'Тестування', 'Чат та форум', 'Аналітика'],
+		image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		features: ['Е-щоденник', 'Розклад', 'Чат', 'Онлайн-оплата'],
 		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Олексій Коваль', role: 'Full-stack розробник', avatar: A.oleksii },
-			{ name: 'Віталій Олійник', role: 'Data Engineer', avatar: A.vitalii },
+			{ name: 'Окряк Віктор', avatar: 'https://randomuser.me/api/portraits/men/55.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
+			{ name: 'Гумельник Анатолій', avatar: 'https://randomuser.me/api/portraits/men/22.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
 		],
-	},
-	{
-		id: 26,
-		title: 'Сайт для автошколи',
-		shortDescription: 'Веб-сайт автошколи з розкладом, онлайн-записом та теоретичними тестами.',
-		fullDescription: 'Сайт для автошколи із системою онлайн-запису на навчання, розкладом теоретичних та практичних занять, тренажером для підготовки до іспиту з ПДР, профілями інструкторів, оплатою та чат-ботом для консультацій.',
-		category: 'Освіта',
-		image: 'https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=600&h=400&fit=crop',
-		priceFrom: 7000, priceTo: 18000, timeFrom: '3 тижні', timeTo: '1.5 місяці',
-		features: ['Онлайн-запис', 'Тренажер ПДР', 'Розклад занять', 'Профілі інструкторів', 'Чат-бот'],
-		team: [
-			{ name: 'Максим Петренко', role: 'Frontend розробник', avatar: A.maksym },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
-			{ name: 'Сергій Литвиненко', role: 'DevOps інженер', avatar: A.serhii },
-		],
-	},
-	{
-		id: 27,
-		title: 'Платформа для онлайн-курсів',
-		shortDescription: 'Маркетплейс для створення та продажу авторських онлайн-курсів.',
-		fullDescription: 'Маркетплейс для викладачів та авторів курсів: конструктор уроків (відео, текст, квізи), система оплати та підписок, сертифікати по завершенню, рейтинги курсів, партнерська програма та інструменти маркетингу для авторів.',
-		category: 'Освіта',
-		image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop',
-		priceFrom: 25000, priceTo: 60000, timeFrom: '3 місяці', timeTo: '6 місяців',
-		features: ['Конструктор уроків', 'Система підписок', 'Сертифікати', 'Рейтинги курсів', 'Партнерська програма'],
-		team: [
-			{ name: 'Дмитро Ткаченко', role: 'Архітектор рішень', avatar: A.dmytro },
-			{ name: 'Марія Шевченко', role: 'UI/UX дизайнер', avatar: A.mariia },
-			{ name: 'Роман Кравченко', role: 'QA інженер', avatar: A.roman },
-		],
+		priceFrom: 15000,
+		priceTo: 35000,
+		timeFrom: 5,
+		timeTo: 10,
 	},
 ];

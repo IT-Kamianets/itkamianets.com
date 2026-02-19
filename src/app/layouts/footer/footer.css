@@ -207,6 +207,11 @@
 	transform: translateY(-2px);
 }
 
+.footer__social-link:active {
+	transform: scale(0.95);
+	transition-duration: 0.08s;
+}
+
 /* Brand colors on hover – only the icon changes color */
 .footer__social-link[data-social="x"]:hover {
 	color: #000000;

@@ -19,10 +19,11 @@ export class Footer {
 
 	protected readonly navLinks = [
 		{ label: 'Головна', routerLink: '/' },
-		{ label: 'Пропозиції', routerLink: '/proposals' },
-		{ label: 'Наша команда', routerLink: '/our-team' },
-		{ label: 'Наші проєкти', routerLink: '/our-projects' },
-		{ label: 'Замовити', routerLink: '/order' },
+		{ label: 'Послуги', routerLink: '/proposals' },
+		{ label: 'Проєкти', routerLink: '/projects' },
+		{ label: 'Команда', routerLink: '/team' },
+		{ label: 'Новини', routerLink: '/news' },
+		{ label: 'Мерч', routerLink: '/merch' },
 	];
 
 	protected readonly serviceLinks = [

@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 import { Public } from './layouts/public/public';
 import { Home } from './pages/home/home';
+import { Projects } from './pages/projects/projects';
+import { Team } from './pages/team/team';
+import { News } from './pages/news/news';
+import { Merch } from './pages/merch/merch';
 import { Proposals } from './pages/proposals/proposals';
-import { OurTeam } from './pages/our-team/our-team';
-import { OurProjects } from './pages/our-projects/our-projects';
-import { Order } from './pages/order/order';
 
 export const routes: Routes = [
 	{
@@ -16,20 +17,24 @@ export const routes: Routes = [
 				component: Home,
 			},
 			{
+				path: 'projects',
+				component: Projects,
+			},
+			{
+				path: 'team',
+				component: Team,
+			},
+			{
+				path: 'news',
+				component: News,
+			},
+			{
+				path: 'merch',
+				component: Merch,
+			},
+			{
 				path: 'proposals',
 				component: Proposals,
-			},
-			{
-				path: 'our-team',
-				component: OurTeam,
-			},
-			{
-				path: 'our-projects',
-				component: OurProjects,
-			},
-			{
-				path: 'order',
-				component: Order,
 			},
 		],
 	},
