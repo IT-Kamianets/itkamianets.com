@@ -5,9 +5,13 @@
 	position: relative;
 	z-index: 50;
 	border-bottom: 1px solid var(--c-border);
-	background: color-mix(in srgb, var(--c-bg-secondary) 80%, transparent);
+	background: var(--c-bg-secondary);
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
+}
+
+html[data-mode='light'] .header {
+	background: color-mix(in srgb, var(--c-bg-secondary) 95%, transparent);
 }
 
 @media (min-width: 640px) {
@@ -119,6 +123,66 @@
 	margin: 0 auto;
 }
 
+/* ============================================ */
+/* ОВЕРРАЙДИ ДЛЯ СВІТЛОЇ ТЕМИ (ANGULAR FIX)     */
+/* ============================================ */
+
+/* 1. Робимо контейнер суцільним кольором (колір бордера) */
+:host-context(html[data-mode='light']) .header__nav-pill,
+:host-context(html[data-mode='light']) .header__nav-pill--mobile {
+    background: var(--c-border) !important;
+    border: 1px solid transparent !important; 
+    box-shadow: none !important;
+}
+
+/* 2. Повертаємо прозорий фон для звичайних лінків */
+:host-context(html[data-mode='light']) .header__nav-pill .header__link,
+:host-context(html[data-mode='light']) .header__nav-pill--mobile .header__link {
+    background: transparent !important;
+    color: var(--c-text-primary) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 3. Зберігаємо синю кнопку для активного пункту меню */
+:host-context(html[data-mode='light']) .header__nav-pill .header__link.header__link--active,
+:host-context(html[data-mode='light']) .header__nav-pill--mobile .header__link.header__link--active {
+    background: linear-gradient(135deg, var(--c-primary), #4f8fff) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 10px color-mix(in srgb, var(--c-primary) 40%, transparent) !important;
+    font-weight: 600 !important;
+}
+
+/* Тема перемикача */
+:host-context(html[data-mode='light']) .theme-toggle {
+    border: 1px solid transparent !important;
+    background: var(--c-border) !important;
+}
+/* ============================================ */
+/* ХОВЕРИ ДЛЯ СВІТЛОЇ ТЕМИ (ПОВЕРТАЄМО ЕФЕКТИ)  */
+/* ============================================ */
+
+/* 1. Наведення на кнопку перемикання теми (синя обводка) */
+:host-context(html[data-mode='light']) .theme-toggle:hover {
+    border-color: var(--c-primary) !important;
+    background: var(--c-bg-secondary) !important; 
+}
+
+/* 2. Наведення на звичайні навігаційні кнопки (прозоро-синій фон, текст НЕ ЗМІНЮЄТЬСЯ) */
+:host-context(html[data-mode='light']) .header__nav-pill .header__link:hover,
+:host-context(html[data-mode='light']) .header__nav-pill--mobile .header__link:hover {
+    background: color-mix(in srgb, var(--c-primary) 15%, transparent) !important;
+    /* Рядок з color тут видалено, тому колір тексту лишається незмінним */
+}
+
+/* 3. Наведення на вже АКТИВНУ кнопку (сильніше світіння тіні) */
+:host-context(html[data-mode='light']) .header__nav-pill .header__link.header__link--active:hover,
+:host-context(html[data-mode='light']) .header__nav-pill--mobile .header__link.header__link--active:hover {
+    background: linear-gradient(135deg, var(--c-primary), #4f8fff) !important;
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--c-primary) 70%, transparent) !important;
+    color: #fff !important;
+}
+
 .header__nav-pill--mobile {
 	overflow-x: auto;
 	-ms-overflow-style: none;
@@ -127,6 +191,7 @@
 	padding: 3px;
 	gap: 5px;
 	border-radius: 10px;
+	width: 100%;
 }
 
 .header__nav-pill--mobile::-webkit-scrollbar {
@@ -192,7 +257,7 @@
 
 /* Mobile link sizing */
 .header__nav-pill--mobile .header__link {
-	padding: 4px;
+	padding: 7px 7px;
 	font-size: 0.6rem;
 	border-radius: 8px;
 }
