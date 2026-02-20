@@ -12,15 +12,43 @@
 	padding: 0 24px;
 }
 
+/* Divider between hero and content */
+.section-divider-bar {
+	width: 100%;
+	border-top: 2px solid var(--c-border);
+	position: relative;
+	margin: 0;
+	height: 0;
+}
+.section-divider-bar__line {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: -2px;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--c-primary);
+	z-index: 2;
+}
+
 /* ── Page Hero ── */
 .page-hero {
 	position: relative;
-	padding: 60px 0 50px;
+	padding: 62px 0 50px;
 	text-align: center;
 	background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=600&fit=crop');
 	background-size: cover;
 	background-position: center;
-	margin-bottom: 48px;
+}
+
+.page-hero .section-divider-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
 }
 
 .page-hero__overlay {
@@ -62,6 +90,7 @@
 	font-weight: 700;
 	color: var(--c-text-secondary);
 	text-align: center;
+	margin-top: 26px;
 	margin-bottom: 24px;
 	padding-bottom: 12px;
 		border-bottom: 2px solid var(--c-primary);
@@ -79,7 +108,7 @@
 .team-head {
 	display: flex;
 	justify-content: center;
-	margin-bottom: 48px;
+	margin-bottom: 0;
 }
 
 /* ── Grid ── */
@@ -109,9 +138,11 @@
 	transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.team-card:hover {
-	box-shadow: var(--shadow-card-hover);
-	transform: translateY(-2px);
+@media (hover: hover) {
+	.team-card:hover {
+		box-shadow: var(--shadow-card-hover);
+		transform: translateY(-2px);
+	}
 }
 
 .team-card--head {
@@ -179,8 +210,26 @@
 	transition: color 0.25s ease, background 0.25s ease, transform 0.15s ease;
 }
 
-.team-card__social:hover {
-	transform: translateY(-2px);
+@media (hover: hover) {
+	.team-card__social:hover {
+		transform: translateY(-2px);
+	}
+
+	.team-card__social--linkedin:hover {
+		color: #0A66C2;
+	}
+
+	.team-card__social--github:hover {
+		color: #181717;
+	}
+
+	html[data-mode="dark"] .team-card__social--github:hover {
+		color: #ffffff;
+	}
+
+	.team-card__social--upwork:hover {
+		color: #14a800;
+	}
 }
 
 .team-card__social:active {
@@ -188,18 +237,18 @@
 	transition-duration: 0.08s;
 }
 
-.team-card__social--linkedin:hover {
+.team-card__social--linkedin:active {
 	color: #0A66C2;
 }
 
-.team-card__social--github:hover {
+.team-card__social--github:active {
 	color: #181717;
 }
 
-html[data-mode="dark"] .team-card__social--github:hover {
+html[data-mode="dark"] .team-card__social--github:active {
 	color: #ffffff;
 }
 
-.team-card__social--upwork:hover {
+.team-card__social--upwork:active {
 	color: #14a800;
 }

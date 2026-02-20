@@ -22,15 +22,43 @@
 	padding: 0 24px;
 }
 
+/* Divider between hero and content */
+.section-divider-bar {
+	width: 100%;
+	border-top: 2px solid var(--c-border);
+	position: relative;
+	margin: 0;
+	height: 0;
+}
+.section-divider-bar__line {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: -2px;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--c-primary);
+	z-index: 2;
+}
+
 /* ── Page Hero ── */
 .page-hero {
 	position: relative;
-	padding: 60px 0 50px;
+	padding: 62px 0 50px;
 	text-align: center;
 	background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&h=600&fit=crop');
 	background-size: cover;
 	background-position: center;
-	margin-bottom: 48px;
+}
+
+.page-hero .section-divider-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
 }
 
 .page-hero__overlay {
@@ -68,6 +96,10 @@
 	margin-bottom: 64px;
 }
 
+.projects-group:first-child {
+	margin-top: 32px;
+}
+
 .projects-group:last-child {
 	margin-bottom: 0;
 }
@@ -91,9 +123,22 @@
 	flex-shrink: 0;
 }
 
-.projects-group__dot--tailwind { background: #06b6d4; }
+.projects-group__dot--tailwind { background: #0ea5e9; }
 .projects-group__dot--bulma { background: #00d1b2; }
 .projects-group__dot--bootstrap { background: #7952b3; }
+
+/* Фарбуємо роздільну лінію під заголовком у колір відповідної крапки */
+.projects-group__title:has(.projects-group__dot--tailwind) {
+    border-bottom: 2px solid #0ea5e9;
+}
+
+.projects-group__title:has(.projects-group__dot--bulma) {
+    border-bottom: 2px solid #00d1b2;
+}
+
+.projects-group__title:has(.projects-group__dot--bootstrap) {
+    border-bottom: 2px solid #7952b3;
+}
 
 /* ── Grid ── */
 .projects-grid {
@@ -119,9 +164,15 @@
 	transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.project-card:hover {
-	box-shadow: var(--shadow-card-hover);
-	transform: translateY(-2px);
+@media (hover: hover) {
+	.project-card:hover {
+		box-shadow: var(--shadow-card-hover);
+		transform: translateY(-2px);
+	}
+
+	.project-card:hover .project-card__img img {
+		transform: scale(1.05);
+	}
 }
 
 .project-card__img {
@@ -134,10 +185,6 @@
 	height: 100%;
 	object-fit: cover;
 	transition: transform 0.4s ease;
-}
-
-.project-card:hover .project-card__img img {
-	transform: scale(1.05);
 }
 
 .project-card__body {
@@ -231,14 +278,25 @@
 	transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
 }
 
-.project-card__link:hover {
-	border-color: var(--c-text-muted);
-	color: var(--c-text-secondary);
-	background: var(--c-bg-tertiary);
+@media (hover: hover) {
+	.project-card__link:hover {
+		border-color: var(--c-text-muted);
+		color: var(--c-text-secondary);
+		background: var(--c-bg-tertiary);
+	}
+}
+
+@media (hover: hover) {
+	.project-card__link--live:hover {
+		background: var(--c-primary);
+		color: #fff;
+		border-color: var(--c-primary);
+	}
 }
 
 .project-card__link:active {
 	transform: scale(0.95);
+	background: var(--c-bg-tertiary);
 	transition-duration: 0.08s;
 }
 
@@ -247,8 +305,24 @@
 	color: var(--c-primary);
 }
 
-.project-card__link--live:hover {
+.project-card__link--live:active {
 	background: var(--c-primary);
 	color: #fff;
-	border-color: var(--c-primary);
+	transform: scale(0.95);
 }
+
+@media (max-width: 640px) {
+	.project-card__link {
+		border-color: var(--c-text-muted) !important;
+		color: var(--c-text-secondary) !important;
+		background: var(--c-bg-tertiary) !important;
+		/* Відключаємо переходи кольорів на мобільних, щоб не було анімації при натисканні крім трансформації */
+		transition: transform 0.15s ease !important;
+	}
+	.project-card__link--live {
+		background: var(--c-primary) !important;
+		color: #fff !important;
+		border-color: var(--c-primary) !important;
+	}
+}
+

@@ -7,6 +7,10 @@
 			<h1 class="page-hero__title">Наші пропозиції</h1>
 			<p class="page-hero__subtitle">Комплексні ІТ-рішення для різних галузей бізнесу</p>
 		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
 	</section>
 
 	<div class="container">
@@ -17,7 +21,7 @@
 				class="proposals-filter"
 				[class.proposals-filter--active]="activeCategory() === 'All'"
 				(click)="setFilter('All')"
-			>Всі</button>
+			>Усі</button>
 			@for (cat of categories; track cat) {
 				<button
 					class="proposals-filter"
