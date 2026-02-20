@@ -168,8 +168,14 @@
 	cursor: pointer;
 }
 
-.footer__link:hover {
+.footer__link:active {
 	color: var(--c-primary);
+}
+
+@media (hover: hover) {
+	.footer__link:hover {
+		color: var(--c-primary);
+	}
 }
 
 .footer__link:focus-visible {
@@ -222,47 +228,34 @@
 	transition: color 0.3s ease, background 0.3s ease, transform 0.2s ease;
 }
 
-.footer__social-link:hover {
-	transform: translateY(-2px);
+@media (hover: hover) {
+	.footer__social-link:hover {
+		transform: translateY(-2px);
+	}
+
+	.footer__social-link[data-social="x"]:hover { color: #000000; }
+	html[data-mode="dark"] .footer__social-link[data-social="x"]:hover { color: #ffffff; }
+	.footer__social-link[data-social="facebook"]:hover { color: #1877F2; }
+	.footer__social-link[data-social="instagram"]:hover { color: #E4405F; }
+	.footer__social-link[data-social="telegram"]:hover { color: #26A5E4; }
+	.footer__social-link[data-social="linkedin"]:hover { color: #0A66C2; }
+	.footer__social-link[data-social="github"]:hover { color: #181717; }
+	html[data-mode="dark"] .footer__social-link[data-social="github"]:hover { color: #ffffff; }
 }
 
 .footer__social-link:active {
-	transform: scale(0.95);
-	transition-duration: 0.08s;
+	transform: scale(0.92);
+	transition-duration: 0.1s;
 }
 
-/* Brand colors on hover – only the icon changes color */
-.footer__social-link[data-social="x"]:hover {
-	color: #000000;
-}
-
-html[data-mode="dark"] .footer__social-link[data-social="x"]:hover {
-	color: #ffffff;
-}
-
-.footer__social-link[data-social="facebook"]:hover {
-	color: #1877F2;
-}
-
-.footer__social-link[data-social="instagram"]:hover {
-	color: #E4405F;
-}
-
-.footer__social-link[data-social="telegram"]:hover {
-	color: #26A5E4;
-}
-
-.footer__social-link[data-social="linkedin"]:hover {
-	color: #0A66C2;
-}
-
-.footer__social-link[data-social="github"]:hover {
-	color: #181717;
-}
-
-html[data-mode="dark"] .footer__social-link[data-social="github"]:hover {
-	color: #ffffff;
-}
+.footer__social-link[data-social="x"]:active { color: #000000; }
+html[data-mode="dark"] .footer__social-link[data-social="x"]:active { color: #ffffff; }
+.footer__social-link[data-social="facebook"]:active { color: #1877F2; }
+.footer__social-link[data-social="instagram"]:active { color: #E4405F; }
+.footer__social-link[data-social="telegram"]:active { color: #26A5E4; }
+.footer__social-link[data-social="linkedin"]:active { color: #0A66C2; }
+.footer__social-link[data-social="github"]:active { color: #181717; }
+html[data-mode="dark"] .footer__social-link[data-social="github"]:active { color: #ffffff; }
 
 .footer__social-svg {
 	width: 18px;
@@ -288,8 +281,14 @@ html[data-mode="dark"] .footer__social-link[data-social="github"]:hover {
 	cursor: pointer;
 }
 
-.footer__legal-link:hover {
+.footer__legal-link:active {
 	color: var(--c-primary);
+}
+
+@media (hover: hover) {
+	.footer__legal-link:hover {
+		color: var(--c-primary);
+	}
 }
 
 .footer__legal-sep {

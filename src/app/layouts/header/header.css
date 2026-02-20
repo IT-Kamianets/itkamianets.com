@@ -51,6 +51,15 @@
         align-items: center;
         justify-content: space-between;
         gap: 20px;
+        position: relative; /* Base for absolute positioning of nav-pill */
+    }
+
+    .header__nav-pill {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        z-index: 1;
     }
 }
 
@@ -63,6 +72,8 @@
     pointer-events: none;
     cursor: default;
     user-select: none;
+    position: relative;
+    z-index: 2; /* Keep above nav-pill if overlapping */
 }
 
 .header__brand--sm {
@@ -273,6 +284,7 @@
     align-items: center;
     justify-content: flex-end;
     flex-shrink: 0;
+    margin-right: 35px;
 }
 
 /* ── Mobile layout (Base) ── */

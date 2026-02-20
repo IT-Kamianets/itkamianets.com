@@ -1,4 +1,5 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 interface MerchItem {
 	id: number;
@@ -19,6 +20,20 @@ interface CartItem {
 	styleUrl: './merch.css',
 })
 export class Merch {
+	private platformId = inject(PLATFORM_ID);
+	private isBrowser = isPlatformBrowser(this.platformId);
+
+	constructor() {
+		effect(() => {
+			if (!this.isBrowser) return;
+			if (this.showCart()) {
+				document.body.style.overflow = 'hidden';
+			} else {
+				document.body.style.overflow = '';
+			}
+		});
+	}
+
 	readonly products: MerchItem[] = [
 		{
 			id: 1,
@@ -66,8 +81,18 @@ export class Merch {
 
 	cart = signal<CartItem[]>([]);
 	showCart = signal(false);
-	showToast = signal(false);
+	toasts = signal<{ id: number; message: string }[]>([]);
 	showShippingForm = signal(false);
+
+	private toastIdCounter = 0;
+
+	private addToast(message: string, duration: number): void {
+		const id = ++this.toastIdCounter;
+		this.toasts.update(current => [...current, { id, message }]);
+		setTimeout(() => {
+			this.toasts.update(current => current.filter(t => t.id !== id));
+		}, duration);
+	}
 
 	// Shipping form fields
 	shippingFirstName = '';
@@ -130,6 +155,7 @@ export class Merch {
 			}
 			return [...items, { product, quantity: 1 }];
 		});
+		this.addToast('Товар додано у кошик', 2000);
 	}
 
 	removeFromCart(productId: number): void {
@@ -176,12 +202,14 @@ export class Merch {
 		this.cart.set([]);
 		this.showCart.set(false);
 		this.showShippingForm.set(false);
+		if (this.isBrowser) {
+			document.body.style.overflow = '';
+		}
 		this.shippingFirstName = '';
 		this.shippingLastName = '';
 		this.shippingCity = '';
 		this.shippingPostOffice = '';
 		this.touched = {};
-		this.showToast.set(true);
-		setTimeout(() => this.showToast.set(false), 4000);
+		this.addToast('Замовлення оформлено. Дякуємо за покупку!', 3000);
 	}
 }

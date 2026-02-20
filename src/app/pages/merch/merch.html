@@ -1,13 +1,15 @@
 <div class="merch-page">
-	<!-- Toast Notification -->
-	@if (showToast()) {
-		<div class="toast">
-			<div class="toast__icon">
-				<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+	<!-- Toast Notifications Container -->
+	<div class="toast-container">
+		@for (t of toasts(); track t.id) {
+			<div class="toast">
+				<div class="toast__icon">
+					<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+				</div>
+				<span class="toast__text">{{ t.message }}</span>
 			</div>
-			<span class="toast__text">Замовлення оформлено. Дякуємо за покупку!</span>
-		</div>
-	}
+		}
+	</div>
 
 	<!-- Page Hero -->
 	<section class="page-hero">
@@ -16,6 +18,10 @@
 			<span class="section-label">Мерч</span>
 			<h1 class="page-hero__title">Мерч IT-Kamianets</h1>
 			<p class="page-hero__subtitle">Підтримайте нашу спільноту та отримайте стильний мерч з логотипом IT-Kamianets</p>
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
 		</div>
 	</section>
 

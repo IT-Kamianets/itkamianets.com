@@ -9,6 +9,28 @@
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 .section-label { display: inline-block; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--c-primary); margin-bottom: 12px; }
 
+/* Divider between hero and content */
+.section-divider-bar {
+	width: 100%;
+	border-top: 2px solid var(--c-border);
+	position: relative;
+	margin: 0;
+	height: 0;
+}
+.section-divider-bar__line {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: -2px;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--c-primary);
+	z-index: 2;
+}
+
 /* ── Page Hero ── */
 .page-hero {
 	position: relative;
@@ -17,7 +39,13 @@
 	background-image: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1920&auto=format&fit=crop');
 	background-size: cover;
 	background-position: center;
-	margin-bottom: 32px;
+}
+
+.page-hero .section-divider-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
 }
 
 .page-hero__overlay {
@@ -54,6 +82,7 @@
 .merch-cart-toggle-wrap {
 	display: flex;
 	justify-content: flex-end;
+	margin-top: 32px;
 	margin-bottom: 32px;
 }
 
@@ -73,12 +102,16 @@
 	position: relative;
 }
 
-.merch-cart-toggle:hover {
-	background: var(--c-primary);
-	color: #fff;
+@media (hover: hover) {
+	.merch-cart-toggle:hover {
+		background: var(--c-primary);
+		color: #fff;
+	}
 }
 
 .merch-cart-toggle:active {
+	background: var(--c-primary);
+	color: #fff;
 	transform: scale(0.95);
 	transition-duration: 0.08s;
 }
@@ -119,9 +152,15 @@
 	transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.merch-card:hover {
-	box-shadow: var(--shadow-card-hover);
-	transform: translateY(-2px);
+@media (hover: hover) {
+	.merch-card:hover {
+		box-shadow: var(--shadow-card-hover);
+		transform: translateY(-2px);
+	}
+
+	.merch-card:hover .merch-card__img img {
+		transform: scale(1.05);
+	}
 }
 
 .merch-card__img {
@@ -134,10 +173,6 @@
 	height: 100%;
 	object-fit: cover;
 	transition: transform 0.4s ease;
-}
-
-.merch-card:hover .merch-card__img img {
-	transform: scale(1.05);
 }
 
 .merch-card__body {
@@ -188,12 +223,16 @@
 	transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
 }
 
-.merch-card__add:hover {
-	background: var(--c-primary);
-	color: #fff;
+@media (hover: hover) {
+	.merch-card__add:hover {
+		background: var(--c-primary);
+		color: #fff;
+	}
 }
 
 .merch-card__add:active {
+	background: var(--c-primary);
+	color: #fff;
 	transform: scale(0.95);
 	transition-duration: 0.08s;
 }
@@ -203,15 +242,17 @@
 	position: fixed;
 	inset: 0;
 	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(2px);
+	-webkit-backdrop-filter: blur(2px);
 	z-index: 998;
 }
 
 .cart-panel {
 	position: fixed;
 	top: 0;
-	right: 8px;
+	right: 0;
 	width: 400px;
-	max-width: calc(100vw - 16px);
+	max-width: 100%;
 	height: 100vh;
 	background: var(--c-bg-secondary);
 	border-left: 1px solid var(--c-border);
@@ -219,6 +260,86 @@
 	display: flex;
 	flex-direction: column;
 	box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 640px) {
+	.merch-cart-toggle,
+	.merch-card__add {
+		background: var(--c-primary);
+		color: #fff;
+	}
+	.merch-cart-toggle:active,
+	.merch-card__add:active {
+		background: var(--c-primary);
+		transform: scale(0.95);
+	}
+
+	.shipping-form__input::placeholder {
+        font-size: 0.75rem;
+    }
+	
+	.cart-panel {
+		top: 50%;
+		left: 50%;
+		right: auto;
+		transform: translate(-50%, -50%);
+		width: calc(100% - 32px);
+		max-width: 400px;
+		height: auto;
+		max-height: calc(100dvh - 40px);
+		border-radius: 20px;
+		border: 1px solid var(--c-border);
+	}
+	.cart-panel__title {
+		font-size: 1rem;
+	}
+	.cart-panel__header {
+		padding: 10px 16px;
+	}
+	.cart-panel__footer,
+	.cart-panel__items,
+	.shipping-form {
+		padding: 12px 16px;
+	}
+	.cart-item {
+		padding: 8px;
+		gap: 8px;
+	}
+	.cart-item__img {
+		width: 40px;
+		height: 40px;
+	}
+	.shipping-form {
+		gap: 10px;
+	}
+	.shipping-form__title {
+		margin-bottom: 0;
+	}
+	.shipping-form__field {
+		gap: 2px;
+	}
+	.shipping-form__input {
+		padding: 8px 12px;
+		width: 100%;
+	}
+
+	.toast-container {
+        top: 105px !important; /* Опускаємо під хедер */
+        width: 100% !important;
+        max-width: 300px !important; 
+        gap: 6px !important;
+    }
+    .toast {
+        padding: 6px 12px !important; 
+        border-radius: 8px !important;
+    }
+    .toast__text {
+        font-size: 0.75rem !important; 
+    }
+    .toast__icon svg {
+        width: 16px !important; 
+        height: 16px !important;
+    }
 }
 
 .cart-panel__header {
@@ -241,11 +362,19 @@
 	color: var(--c-text-muted);
 	cursor: pointer;
 	padding: 4px;
-	transition: color 0.2s ease;
+	transition: color 0.2s ease, transform 0.15s ease;
 }
 
-.cart-panel__close:hover {
-	color: var(--c-text-secondary);
+@media (hover: hover) {
+	.cart-panel__close:hover {
+		color: var(--c-text-secondary);
+	}
+}
+
+/* Анімація зменшення в центр для хрестика закриття */
+.cart-panel__close:active {
+	transform: scale(0.95);
+	transition-duration: 0.08s;
 }
 
 .cart-panel__empty {
@@ -327,12 +456,15 @@
 	transition: background 0.2s ease, transform 0.15s ease;
 }
 
-.cart-item__btn:hover {
-	background: var(--c-bg-primary);
+@media (hover: hover) {
+	.cart-item__btn:hover {
+		background: var(--c-bg-primary);
+	}
 }
 
 .cart-item__btn:active {
 	transform: scale(0.95);
+	transition-duration: 0.08s;
 }
 
 .cart-item__qty {
@@ -349,11 +481,19 @@
 	color: var(--c-text-muted);
 	cursor: pointer;
 	padding: 4px;
-	transition: color 0.2s ease;
+	transition: color 0.2s ease, transform 0.15s ease;
 }
 
-.cart-item__remove:hover {
-	color: var(--c-secondary);
+@media (hover: hover) {
+	.cart-item__remove:hover {
+		color: var(--c-secondary);
+	}
+}
+
+/* Анімація зменшення в центр для хрестика видалення */
+.cart-item__remove:active {
+	transform: scale(0.95);
+	transition-duration: 0.08s;
 }
 
 /* ── Cart Footer ── */
@@ -385,8 +525,10 @@
 	transition: background 0.25s ease, transform 0.15s ease;
 }
 
-.cart-panel__checkout:hover {
-	background: var(--c-primary-hover);
+@media (hover: hover) {
+	.cart-panel__checkout:hover {
+		background: var(--c-primary-hover);
+	}
 }
 
 .cart-panel__checkout:active {
@@ -397,28 +539,35 @@
 .cart-panel__checkout--disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
+	/* Повна заборона взаємодії: ні анімації, ні кліків */
+	pointer-events: none;
 }
 
-.cart-panel__checkout--disabled:hover {
-	background: var(--c-primary);
-}
-
-/* ── Toast Notification ── */
-.toast {
+/* ── Toast Notifications ── */
+.toast-container {
 	position: fixed;
-	top: 24px;
+	top: 80px;
 	left: 50%;
 	transform: translateX(-50%);
-	z-index: 10000;
+	z-index: 49;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	pointer-events: none;
+}
+
+.toast {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	padding: 14px 24px;
+	padding: 12px 20px;
 	background: var(--c-bg-primary);
 	border: 1.5px solid var(--c-primary);
 	border-radius: var(--radius-btn);
 	box-shadow: var(--shadow-card-hover);
-	animation: toastSlideIn 0.4s ease-out, toastFadeOut 0.4s ease-in 3.6s forwards;
+	animation: toastSlideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+	pointer-events: auto;
 }
 
 .toast__icon {
@@ -427,7 +576,7 @@
 }
 
 .toast__text {
-	font-size: 0.9rem;
+	font-size: 0.88rem;
 	font-weight: 600;
 	color: var(--c-text-secondary);
 	white-space: nowrap;
@@ -436,22 +585,11 @@
 @keyframes toastSlideIn {
 	from {
 		opacity: 0;
-		transform: translateX(-50%) translateY(-20px);
+		transform: translateY(-20px);
 	}
 	to {
 		opacity: 1;
-		transform: translateX(-50%) translateY(0);
-	}
-}
-
-@keyframes toastFadeOut {
-	from {
-		opacity: 1;
-		transform: translateX(-50%) translateY(0);
-	}
-	to {
-		opacity: 0;
-		transform: translateX(-50%) translateY(-20px);
+		transform: translateY(0);
 	}
 }
 
@@ -514,7 +652,7 @@
 
 .shipping-form__carriers {
 	display: flex;
-	gap: 8px;
+	gap: 10px;
 }
 
 .shipping-form__carrier {
@@ -538,9 +676,16 @@
 	display: none;
 }
 
-.shipping-form__carrier:hover {
-	border-color: var(--c-primary);
-	color: var(--c-primary);
+@media (hover: hover) {
+	.shipping-form__carrier:hover {
+		border-color: var(--c-primary);
+		color: var(--c-primary);
+	}
+}
+
+.shipping-form__carrier:active {
+	transform: scale(0.95);
+	transition-duration: 0.08s;
 }
 
 .shipping-form__carrier--active {
