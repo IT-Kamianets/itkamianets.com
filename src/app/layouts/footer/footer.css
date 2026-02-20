@@ -33,9 +33,18 @@
 
 .footer__grid {
 	display: grid;
-	grid-template-columns: 1fr;
-	gap: 40px;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px 20px;
 	text-align: center;
+}
+
+.footer__company {
+	grid-column: 1 / -1;
+}
+
+.footer__links-col--services {
+	grid-column: 1 / -1;
+	order: 10;
 }
 
 @media (min-width: 768px) {
@@ -44,6 +53,16 @@
 		gap: 40px;
 		text-align: left;
 	}
+
+	.footer__company {
+		grid-column: auto;
+	}
+
+	.footer__links-col--services {
+		grid-column: auto;
+		order: 0;
+	}
+	
 	.footer__brand-row {
 		justify-content: flex-start;
 	}

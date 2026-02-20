@@ -2,204 +2,232 @@
 
 /* Design tokens (CSS variables). Runtime-themable; keep SCSS using var(--token) */
 :root {
-	/* brand / actions */
-	--c-primary: #256eff;
-	--c-primary-hover: #0051f1;
-	--c-secondary: #c53d3d;
-	--c-secondary-hover: #962a2a;
+    /* brand / actions */
+    --c-primary: #256eff;
+    --c-primary-hover: #0051f1;
+    --c-secondary: #c53d3d;
+    --c-secondary-hover: #962a2a;
 
-	/* surfaces */
-	--c-bg-primary: #f3f4f7;
-	--c-bg-secondary: #ffffff;
-	--c-bg-tertiary: #fcfdfe;
+    /* surfaces */
+    --c-bg-primary: #f3f4f7;
+    --c-bg-secondary: #ffffff;
+    --c-bg-tertiary: #fcfdfe;
 
-	/* content */
-	--c-text-primary: #5f6066;
-	--c-text-secondary: #17224f;
-	--c-text-muted: #8b8d94;
-	--c-placeholder: #313335ab;
+    /* content */
+    --c-text-primary: #5f6066;
+    --c-text-secondary: #17224f;
+    --c-text-muted: #8b8d94;
+    --c-placeholder: #313335ab;
 
-	/* borders & elevation */
-	--c-border: #eceef5;
-	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
-	--shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
-	--shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.1);
-	--shadow-card: 0 4px 16px rgba(0, 0, 0, 0.05);
-	--shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.1);
-	--shadow-primary: 0 6px 24px rgba(37, 110, 255, 0.25);
+    /* borders & elevation */
+    --c-border: #eceef5;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.05);
+    --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --shadow-primary: 0 6px 24px rgba(37, 110, 255, 0.25);
 
-	/* typography */
-	--ff-base: 'Balsamiq Sans', cursive, system-ui, sans-serif;
-	--fs: 16px;
-	--letter-spacing: 0.3px;
+    /* typography */
+    --ff-base: 'Balsamiq Sans', cursive, system-ui, sans-serif;
+    --fs: 16px;
+    --letter-spacing: 0.3px;
 
-	/* radius (default rounded) */
-	--radius: 8px;
-	--radius-card: 10px;
-	--radius-btn: 10px;
+    /* radius (default rounded) */
+    --radius: 8px;
+    --radius-card: 10px;
+    --radius-btn: 10px;
 
-	/* spacing (default comfortable) */
-	--sp-0: 0px;
-	--sp-1: 4px;
-	--sp-2: 8px;
-	--sp-3: 12px;
-	--sp-4: 16px;
-	--sp-5: 20px;
-	--sp-6: 24px;
-	--sp-7: 32px;
-	--sp-8: 40px;
+    /* spacing (default comfortable) */
+    --sp-0: 0px;
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-7: 32px;
+    --sp-8: 40px;
 
-	/* layout */
-	--container: 1210px;
-	--gutter: 10px;
+    /* layout */
+    --container: 1210px;
+    --gutter: 10px;
 
-	/* motion */
-	--easing: cubic-bezier(0.25, 0.8, 0.25, 1);
-	--motion-fast: 0.15s;
-	--motion: 0.25s;
-	--motion-slow: 0.4s;
+    /* motion */
+    --easing: cubic-bezier(0.25, 0.8, 0.25, 1);
+    --motion-fast: 0.15s;
+    --motion: 0.25s;
+    --motion-slow: 0.4s;
 
-	/* focus */
-	--focus-ring: 0 0 0 3px rgba(37, 110, 255, 0.35);
+    /* focus */
+    --focus-ring: 0 0 0 3px rgba(37, 110, 255, 0.35);
 }
 
 /* ========= modes ========= */
 html[data-mode='dark'] {
-	/* surfaces */
-	--c-bg-primary: #282828;
-	--c-bg-secondary: #343434;
-	--c-bg-tertiary: #404040;
+    /* surfaces */
+    --c-bg-primary: #282828;
+    --c-bg-secondary: #343434;
+    --c-bg-tertiary: #404040;
 
-	/* borders & elevation */
-	--c-border: #404040;
-	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-	--shadow-md: 0 10px 30px rgba(0, 0, 0, 0.45);
-	--shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.35);
-	--shadow-card: 0 4px 16px rgba(0, 0, 0, 0.2);
-	--shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.3);
-	--shadow-primary: 0 6px 24px rgba(37, 110, 255, 0.35);
+    /* borders & elevation */
+    --c-border: #404040;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.35);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.3);
+    --shadow-primary: 0 6px 24px rgba(37, 110, 255, 0.35);
 
-	/* content */
-	--c-text-primary: #e8e8e8;
-	--c-text-secondary: #ffffff;
-	--c-text-muted: #b7b7b7;
-	--c-placeholder: #d3cdcd;
+    /* content */
+    --c-text-primary: #e8e8e8;
+    --c-text-secondary: #ffffff;
+    --c-text-muted: #b7b7b7;
+    --c-placeholder: #d3cdcd;
 
-	/* focus (keeps using primary) */
-	--focus-ring: 0 0 0 3px rgba(37, 110, 255, 0.35);
+    /* focus (keeps using primary) */
+    --focus-ring: 0 0 0 3px rgba(37, 110, 255, 0.35);
 }
 
 /* ITKP = city brand colors */
 html[data-mode='itkp'] {
-	/* primary brand palette */
-	--c-bg-primary: #005bbb; /* deep sky blue – representing blue sky & official flag field */
-	--c-bg-secondary: #f7c948; /* warm gold yellow – sun, stone highlights */
-	--c-bg-tertiary: #d9cba3; /* light stone/beige – historic stone facades and plaster */
+    /* primary brand palette */
+    --c-bg-primary: #005bbb; 
+    --c-bg-secondary: #f7c948; 
+    --c-bg-tertiary: #d9cba3; 
 
-	/* accent & nature tones */
-	--c-bg-accent: #6a8a62; /* muted green – canyon/greenery context */
+    /* accent & nature tones */
+    --c-bg-accent: #6a8a62; 
 
-	/* text */
-	--c-text-primary: #1b1b1b; /* near black for strong readability on light surfaces */
-	--c-text-secondary: #f7f1e1; /* off-white for contrast on dark blue */
-	--c-text-muted: #7a7a7a; /* neutral muted/stone text tone */
+    /* text */
+    --c-text-primary: #1b1b1b; 
+    --c-text-secondary: #f7f1e1; 
+    --c-text-muted: #7a7a7a; 
 
-	/* borders & elevation */
-	--c-border: #a69f8e; /* stone-neutral border */
-	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
-	--shadow-md: 0 8px 20px rgba(0, 0, 0, 0.3);
+    /* borders & elevation */
+    --c-border: #a69f8e; 
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.3);
 
-	/* focus ring */
-	--focus-ring: 0 0 0 3px rgba(255, 200, 80, 0.45);
+    /* focus ring */
+    --focus-ring: 0 0 0 3px rgba(255, 200, 80, 0.45);
 }
 
 /* ========= density ========= */
 html[data-density='compact'] {
-	--sp-1: 2px;
-	--sp-2: 6px;
-	--sp-3: 10px;
-	--sp-4: 14px;
-	--sp-5: 18px;
-	--sp-6: 22px;
-	--sp-7: 28px;
-	--sp-8: 36px;
-
-	--gutter: 8px;
+    --sp-1: 2px;
+    --sp-2: 6px;
+    --sp-3: 10px;
+    --sp-4: 14px;
+    --sp-5: 18px;
+    --sp-6: 22px;
+    --sp-7: 28px;
+    --sp-8: 36px;
+    --gutter: 8px;
 }
 
 /* ========= radius ========= */
 html[data-radius='square'] {
-	--radius: 0px;
-	--radius-card: 0px;
-	--radius-btn: 0px;
+    --radius: 0px;
+    --radius-card: 0px;
+    --radius-btn: 0px;
 }
 
 /* ========= global animations ========= */
 @keyframes fadeInUp {
-	from { opacity: 0; transform: translateY(24px); }
-	to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideInLeft {
-	from { opacity: 0; transform: translateX(-20px); }
-	to { opacity: 1; transform: translateX(0); }
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes pulse-glow {
-	0%, 100% { box-shadow: 0 0 0 0 rgba(37, 110, 255, 0); }
-	50% { box-shadow: 0 0 0 8px rgba(37, 110, 255, 0.08); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37, 110, 255, 0); }
+    50% { box-shadow: 0 0 0 8px rgba(37, 110, 255, 0.08); }
 }
 
 /* scroll: auto by default so router navigation is instant, smooth only for anchors */
 html { scroll-behavior: auto; }
 
 body {
-	font-family: var(--ff-base);
+    font-family: var(--ff-base);
 }
 
-/* ========= Custom Scrollbar ========= */
+/* =======================================================
+   СУВОРИЙ КАСТОМНИЙ СКРОЛБАР (ПЛАВАЮЧА КАПСУЛА)
+   ======================================================= */
+:root {
+    --c-scrollbar-track: #e5e7eb; 
+}
+
+html[data-mode='dark'] {
+    --c-scrollbar-track: var(--c-border); 
+}
+
+/* 1. Глобальний WebKit скролбар (робимо трохи ширшим для "повітря") */
 ::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+    width: 14px !important; 
+    height: 14px !important;
+    -webkit-appearance: none !important;
 }
 
+/* 2. Трек (фон скролбара) - на всю висоту */
 ::-webkit-scrollbar-track {
-	background: var(--c-bg-primary);
+    background-color: var(--c-scrollbar-track) !important;
+    border-radius: 0 !important;
 }
 
+/* 3. ВБИВАЄМО ТРИКУТНИКИ/КНОПКИ */
+::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* 4. Сама синя смуга (Ефект плаваючої капсули) */
 ::-webkit-scrollbar-thumb {
-	background: var(--c-primary);
-	border-radius: 4px;
-	border: 2px solid var(--c-bg-primary);
+    background-color: var(--c-primary) !important;
+    border-radius: 10px !important; /* Сильне заокруглення для форми пігулки */
+    
+    /* ХИТРІСТЬ: Рамка кольору фону створює візуальний відступ навколо смуги */
+    border: 4px solid var(--c-scrollbar-track) !important; 
+    background-clip: padding-box !important;
 }
 
+/* 5. Ховер-ефект (Смуга стає трохи товщою) */
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--c-primary-hover);
+    background-color: var(--c-primary-hover) !important;
+    border-width: 3px !important; 
 }
 
-/* Firefox scrollbar */
-* {
-	scrollbar-width: thin;
-	scrollbar-color: var(--c-primary) var(--c-bg-primary);
+/* 6. ФІКС ДЛЯ ХРОМУ (Ховаємо від нього Firefox-стилі) */
+@-moz-document url-prefix() {
+    * {
+        scrollbar-width: thin !important;
+        scrollbar-color: var(--c-primary) var(--c-scrollbar-track) !important;
+    }
 }
 
 /* ========= Global button press animation ========= */
 button, .btn-outline, a.btn-outline, [class*="__add"], [class*="__checkout"], [class*="__link"] {
-	transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
 }
 
 button:active, .btn-outline:active, a.btn-outline:active {
-	transform: scale(0.96);
-	transition-duration: 0.08s;
+    transform: scale(0.95);
+    transition-duration: 0.08s;
 }
 
 /* global selection color */
 ::selection {
-	background: rgba(37, 110, 255, 0.15);
-	color: inherit;
+    background: rgba(37, 110, 255, 0.15);
+    color: inherit;
 }
