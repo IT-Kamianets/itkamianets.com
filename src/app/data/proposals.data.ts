@@ -230,7 +230,7 @@ export const PROPOSALS: Proposal[] = [
 		shortDescription: 'Портфоліо-платформа для модних дизайнерів.',
 		fullDescription: 'Платформа для українських дизайнерів з можливістю створення портфоліо, продажу колекцій та взаємодії з покупцями та байерами.',
 		category: 'Мода та одяг',
-		image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		image: 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
 		features: ['Портфоліо', 'Продаж колекцій', 'Зв\'язок з байерами', 'Лукбуки'],
 		team: [
 			{ name: 'Горецький Максим', avatar: 'https://randomuser.me/api/portraits/men/47.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/
@@ -302,7 +302,7 @@ export const PROPOSALS: Proposal[] = [
 		shortDescription: 'Новини спорту, розклад змагань та рейтинги команд.',
 		fullDescription: 'Портал спортивного життя міста: новини, розклад змагань, таблиці рейтингів, профілі спортсменів та онлайн-трансляції подій.',
 		category: 'Спорт',
-		image: 'https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
+		image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&h=500&fit=crop', // назва файлу з папки public/images/proposals/
 		features: ['Новини', 'Розклад змагань', 'Рейтинги', 'Онлайн-трансляції'],
 		team: [
 			{ name: 'Левчук Владислав', avatar: 'https://randomuser.me/api/portraits/men/91.jpg', role: 'Frontend' }, // назва файлу з папки public/images/team/

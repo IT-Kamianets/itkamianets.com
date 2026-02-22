@@ -1,3 +1,6 @@
+:host-context(html[data-mode='light']) .project-card {
+    border-color: #cbd5e1 !important;
+}
 /* Вирівнюємо section-label під стиль сторінки Послуги */
 .page-hero .section-label {
 	display: inline-block;

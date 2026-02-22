@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
@@ -10,77 +11,301 @@ import { PROPOSALS, Proposal, CATEGORIES } from '../../data/proposals.data';
 	templateUrl: './home.html',
 	styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit {
 	/** Proposals carousel */
 	readonly proposals: Proposal[] = PROPOSALS;
-	readonly categories: string[] = CATEGORIES;
+	readonly categories: string[] = ['Усі', ...CATEGORIES];
 	activeCategory = 0;
-	carouselIndex = 0;
-
-	get currentCategoryProposals(): Proposal[] {
-		return this.proposals.filter(p => p.category === this.categories[this.activeCategory]);
-	}
-
-	get currentProposal(): Proposal {
-		const items = this.currentCategoryProposals;
-		return items[this.carouselIndex % items.length];
-	}
-
-	selectCategory(index: number): void {
-		this.activeCategory = index;
-		this.carouselIndex = 0;
-	}
-
-	prevSlide(): void {
-		const len = this.currentCategoryProposals.length;
-		this.carouselIndex = (this.carouselIndex - 1 + len) % len;
-	}
-
-	nextSlide(): void {
-		const len = this.currentCategoryProposals.length;
-		this.carouselIndex = (this.carouselIndex + 1) % len;
-	}
+	proposalSlideIndex = 0;
+	proposalsVisible = 3;
+	proposalScrollStep = 2;
 
 	/** Team slider */
 	readonly allTeam: TeamMember[] = TEAM_MEMBERS;
 	teamSlideIndex = 0;
-	readonly TEAM_VISIBLE = 3; // Number of visible team members
-
-	get teamMaxIndex(): number {
-		return Math.max(0, this.allTeam.length - 1); // Adjusted for correct max index
-	}
-
-	get teamDots(): number[] {
-		return Array(Math.max(1, this.allTeam.length - this.TEAM_VISIBLE + 1)).fill(0);
-	}
-
-	prevTeam(): void {
-		this.teamSlideIndex = Math.max(0, this.teamSlideIndex - 1);
-	}
-
-	nextTeam(): void {
-		this.teamSlideIndex = Math.min(this.allTeam.length - this.TEAM_VISIBLE, this.teamSlideIndex + 1);
-	}
+	teamVisible = 3;
+	teamScrollStep = 2;
 
 	/** Projects slider */
 	readonly allProjects: Project[] = PROJECTS;
 	projectSlideIndex = 0;
-	readonly PROJECTS_VISIBLE = 3; // Number of visible projects
+	projectsVisible = 3;
+	projectsScrollStep = 2;
 
-	get projectMaxIndex(): number {
-		return Math.max(0, this.allProjects.length - 1); // Adjusted for correct max index
+	constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+	ngOnInit() {
+		if (isPlatformBrowser(this.platformId)) {
+			this.updateResponsiveConfig();
+		}
 	}
 
+	@HostListener('window:resize')
+	onResize() {
+		if (isPlatformBrowser(this.platformId)) {
+			this.updateResponsiveConfig();
+		}
+	}
+
+	private updateResponsiveConfig() {
+		const width = window.innerWidth;
+		if (width < 768) {
+			// Mobile
+			this.proposalsVisible = 1;
+			this.proposalScrollStep = 1;
+			
+			this.teamVisible = 1;
+			this.teamScrollStep = 1;
+
+			this.projectsVisible = 1;
+			this.projectsScrollStep = 1;
+		} else if (width < 1024) {
+			// Tablet
+			this.proposalsVisible = 2;
+			this.proposalScrollStep = 1;
+			
+			this.teamVisible = 2;
+			this.teamScrollStep = 1;
+
+			this.projectsVisible = 2;
+			this.projectsScrollStep = 1;
+		} else {
+			// Desktop
+			this.proposalsVisible = 3;
+			this.proposalScrollStep = 2;
+
+			this.teamVisible = 3;
+			this.teamScrollStep = 2;
+
+			this.projectsVisible = 3;
+			this.projectsScrollStep = 2;
+		}
+		
+		// Adjust Proposal Index
+		const propCount = this.currentCategoryProposals.length;
+		const maxPropIndex = Math.max(0, propCount - this.proposalsVisible);
+		if (this.proposalSlideIndex > maxPropIndex) {
+			this.proposalSlideIndex = maxPropIndex;
+		}
+
+		// Adjust Team Index
+		const teamCount = this.allTeam.length;
+		const maxTeamIndex = Math.max(0, teamCount - this.teamVisible);
+		if (this.teamSlideIndex > maxTeamIndex) {
+			this.teamSlideIndex = maxTeamIndex;
+		}
+
+		// Adjust Project Index
+		const projCount = this.allProjects.length;
+		const maxProjIndex = Math.max(0, projCount - this.projectsVisible);
+		if (this.projectSlideIndex > maxProjIndex) {
+			this.projectSlideIndex = maxProjIndex;
+		}
+	}
+
+	get currentCategoryProposals(): Proposal[] {
+		if (this.categories[this.activeCategory] === 'Усі') {
+			return this.proposals;
+		}
+		return this.proposals.filter(p => p.category === this.categories[this.activeCategory]);
+	}
+
+	get proposalDots(): number[] {
+		const count = this.currentCategoryProposals.length;
+		const visible = this.proposalsVisible;
+		const step = this.proposalScrollStep;
+		
+		if (count <= visible) return [];
+		
+		const maxIndex = count - visible;
+		const dots = [];
+		for (let i = 0; i <= maxIndex; i += step) {
+			dots.push(i);
+		}
+		const lastDot = dots[dots.length - 1];
+		if (lastDot < maxIndex) {
+			dots.push(maxIndex);
+		}
+		return dots;
+	}
+
+	selectCategory(index: number): void {
+		this.activeCategory = index;
+		this.proposalSlideIndex = 0;
+	}
+
+	prevProposal(): void {
+		const dots = this.proposalDots;
+		if (dots.length === 0) return;
+		
+		const currentDotIndex = dots.findIndex(d => d === this.proposalSlideIndex);
+		if (currentDotIndex > 0) {
+			this.proposalSlideIndex = dots[currentDotIndex - 1];
+		} else {
+			const prevDot = [...dots].reverse().find(d => d < this.proposalSlideIndex);
+			this.proposalSlideIndex = prevDot !== undefined ? prevDot : dots[0];
+		}
+	}
+
+	nextProposal(): void {
+		const dots = this.proposalDots;
+		if (dots.length === 0) return;
+
+		const currentDotIndex = dots.findIndex(d => d === this.proposalSlideIndex);
+		if (currentDotIndex !== -1 && currentDotIndex < dots.length - 1) {
+			this.proposalSlideIndex = dots[currentDotIndex + 1];
+		} else {
+			const nextDot = dots.find(d => d > this.proposalSlideIndex);
+			this.proposalSlideIndex = nextDot !== undefined ? nextDot : dots[dots.length - 1];
+		}
+	}
+
+	setProposalSlide(index: number): void {
+		this.proposalSlideIndex = index;
+	}
+
+	isDotActive(dotValue: number): boolean {
+		const dots = this.proposalDots;
+		if (dots.length === 0) return false;
+		
+		let closest = dots[0];
+		let minDiff = Math.abs(this.proposalSlideIndex - closest);
+		
+		for (const val of dots) {
+			const diff = Math.abs(this.proposalSlideIndex - val);
+			if (diff < minDiff) {
+				minDiff = diff;
+				closest = val;
+			}
+		}
+		
+		return closest === dotValue;
+	}
+
+	/** Team slider */
+	get teamDots(): number[] {
+		const count = this.allTeam.length;
+		const visible = this.teamVisible;
+		const step = this.teamScrollStep;
+		
+		if (count <= visible) return [];
+		
+		const maxIndex = count - visible;
+		const dots = [];
+		for (let i = 0; i <= maxIndex; i += step) {
+			dots.push(i);
+		}
+		const lastDot = dots[dots.length - 1];
+		if (lastDot < maxIndex) {
+			dots.push(maxIndex);
+		}
+		return dots;
+	}
+
+	prevTeam(): void {
+		const dots = this.teamDots;
+		if (dots.length === 0) return;
+		const currentDotIndex = dots.findIndex(d => d === this.teamSlideIndex);
+		if (currentDotIndex > 0) {
+			this.teamSlideIndex = dots[currentDotIndex - 1];
+		} else {
+			const prevDot = [...dots].reverse().find(d => d < this.teamSlideIndex);
+			this.teamSlideIndex = prevDot !== undefined ? prevDot : dots[0];
+		}
+	}
+
+	nextTeam(): void {
+		const dots = this.teamDots;
+		if (dots.length === 0) return;
+		const currentDotIndex = dots.findIndex(d => d === this.teamSlideIndex);
+		if (currentDotIndex !== -1 && currentDotIndex < dots.length - 1) {
+			this.teamSlideIndex = dots[currentDotIndex + 1];
+		} else {
+			const nextDot = dots.find(d => d > this.teamSlideIndex);
+			this.teamSlideIndex = nextDot !== undefined ? nextDot : dots[dots.length - 1];
+		}
+	}
+
+	setTeamSlide(index: number): void {
+		this.teamSlideIndex = index;
+	}
+
+	isTeamDotActive(dotValue: number): boolean {
+		const dots = this.teamDots;
+		if (dots.length === 0) return false;
+		let closest = dots[0];
+		let minDiff = Math.abs(this.teamSlideIndex - closest);
+		for (const val of dots) {
+			const diff = Math.abs(this.teamSlideIndex - val);
+			if (diff < minDiff) {
+				minDiff = diff;
+				closest = val;
+			}
+		}
+		return closest === dotValue;
+	}
+
+	/** Projects slider */
 	get projectDots(): number[] {
-		return Array(Math.max(1, this.allProjects.length - this.PROJECTS_VISIBLE + 1)).fill(0);
+		const count = this.allProjects.length;
+		const visible = this.projectsVisible;
+		const step = this.projectsScrollStep;
+		
+		if (count <= visible) return [];
+		
+		const maxIndex = count - visible;
+		const dots = [];
+		for (let i = 0; i <= maxIndex; i += step) {
+			dots.push(i);
+		}
+		const lastDot = dots[dots.length - 1];
+		if (lastDot < maxIndex) {
+			dots.push(maxIndex);
+		}
+		return dots;
 	}
 
 	prevProject(): void {
-		this.projectSlideIndex = Math.max(0, this.projectSlideIndex - 1);
+		const dots = this.projectDots;
+		if (dots.length === 0) return;
+		const currentDotIndex = dots.findIndex(d => d === this.projectSlideIndex);
+		if (currentDotIndex > 0) {
+			this.projectSlideIndex = dots[currentDotIndex - 1];
+		} else {
+			const prevDot = [...dots].reverse().find(d => d < this.projectSlideIndex);
+			this.projectSlideIndex = prevDot !== undefined ? prevDot : dots[0];
+		}
 	}
 
 	nextProject(): void {
-		this.projectSlideIndex = Math.min(this.allProjects.length - this.PROJECTS_VISIBLE, this.projectSlideIndex + 1);
+		const dots = this.projectDots;
+		if (dots.length === 0) return;
+		const currentDotIndex = dots.findIndex(d => d === this.projectSlideIndex);
+		if (currentDotIndex !== -1 && currentDotIndex < dots.length - 1) {
+			this.projectSlideIndex = dots[currentDotIndex + 1];
+		} else {
+			const nextDot = dots.find(d => d > this.projectSlideIndex);
+			this.projectSlideIndex = nextDot !== undefined ? nextDot : dots[dots.length - 1];
+		}
+	}
+
+	setProjectSlide(index: number): void {
+		this.projectSlideIndex = index;
+	}
+
+	isProjectDotActive(dotValue: number): boolean {
+		const dots = this.projectDots;
+		if (dots.length === 0) return false;
+		let closest = dots[0];
+		let minDiff = Math.abs(this.projectSlideIndex - closest);
+		for (const val of dots) {
+			const diff = Math.abs(this.projectSlideIndex - val);
+			if (diff < minDiff) {
+				minDiff = diff;
+				closest = val;
+			}
+		}
+		return closest === dotValue;
 	}
 
 	categoryLabel(cat: string): string {

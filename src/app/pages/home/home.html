@@ -95,47 +95,69 @@
 				}
 			</div>
 
-			<!-- Carousel Card -->
-			<div class="carousel-card">
-				<div class="carousel-card__img">
-					<img [src]="currentProposal.image" [alt]="currentProposal.title" />
-				</div>
-				<div class="carousel-card__body">
-					<span class="carousel-card__badge">{{ currentProposal.category }}</span>
-					<h3 class="carousel-card__title">{{ currentProposal.title }}</h3>
-					<p class="carousel-card__desc">{{ currentProposal.fullDescription }}</p>
-					<div class="carousel-card__features">
-						@for (f of currentProposal.features; track f) {
-							<span class="carousel-card__feature">✓ {{ f }}</span>
-						}
-					</div>
-					<div class="carousel-card__meta">
-						<span class="carousel-card__price">{{ currentProposal.priceFrom | number }}–{{ currentProposal.priceTo | number }} грн</span>
-						<span class="carousel-card__time">{{ currentProposal.timeFrom }}–{{ currentProposal.timeTo }} тижнів</span>
-					</div>
-					<div class="carousel-card__team-row">
-						@for (member of currentProposal.team; track member.name) {
-							<div class="carousel-card__member" [title]="member.name + ' — ' + member.role">
-								<img [src]="member.avatar" [alt]="member.name" />
+			<div class="slider-wrapper">
+				<button class="slider-btn slider-btn--prev" (click)="prevProposal()" [disabled]="proposalSlideIndex === 0">
+					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+				</button>
+				<div class="slider-viewport">
+					<div class="slider-track" [style.transform]="'translateX(-' + proposalSlideIndex * (100 / proposalsVisible) + '%)'">
+						@for (p of currentCategoryProposals; track p.id) {
+							<div class="slider-item" [style.flex]="'0 0 ' + (100 / proposalsVisible) + '%'">
+								<div class="proposal-card">
+									<div class="proposal-card__img">
+										<img [src]="p.image" [alt]="p.title" loading="lazy" />
+										<span class="proposal-card__badge">{{ p.category }}</span>
+									</div>
+									<div class="proposal-card__body">
+										<h3 class="proposal-card__title">{{ p.title }}</h3>
+										<p class="proposal-card__desc">{{ p.shortDescription }}</p>
+										<div class="proposal-card__features">
+											@for (f of p.features; track f) {
+												<span class="proposal-card__feature">{{ f }}</span>
+											}
+										</div>
+										<div class="proposal-card__meta">
+											<div class="proposal-card__meta-item">
+												<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+												<span class="proposal-card__meta-text">
+													<span class="meta-line-1">{{ p.priceFrom | number }}–</span>
+													<span class="meta-line-2">{{ p.priceTo | number }} грн</span>
+												</span>
+											</div>
+											<div class="proposal-card__meta-item">
+												<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+												<span class="proposal-card__meta-text">
+													<span class="meta-line-1">{{ p.timeFrom }}–{{ p.timeTo }}</span>
+													<span class="meta-line-2">тиж.</span>
+												</span>
+											</div>
+										</div>
+										<div class="proposal-card__team">
+											@for (member of p.team; track member.name) {
+												<div class="proposal-card__member" [title]="member.name + ' — ' + member.role">
+													<img [src]="member.avatar" [alt]="member.name" />
+												</div>
+											}
+										</div>
+									</div>
+								</div>
 							</div>
 						}
 					</div>
 				</div>
-			</div>
-
-			<!-- Carousel Controls -->
-			<div class="carousel-controls">
-				<button class="carousel-btn" (click)="prevSlide()">
-					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-				</button>
-				<span class="carousel-counter">{{ carouselIndex + 1 }} / {{ currentCategoryProposals.length }}</span>
-				<button class="carousel-btn" (click)="nextSlide()">
+				<button class="slider-btn slider-btn--next" (click)="nextProposal()" [disabled]="proposalSlideIndex >= currentCategoryProposals.length - proposalsVisible">
 					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
 				</button>
 			</div>
 
+			<div class="slider-dots">
+				@for (dotValue of proposalDots; track $index) {
+					<button class="slider-dot" [class.slider-dot--active]="isDotActive(dotValue)" (click)="setProposalSlide(dotValue)"></button>
+				}
+			</div>
+
 			<div class="section-cta">
-				<a routerLink="/proposals" class="btn-outline">Переглянути всі послуги</a>
+				<a routerLink="/proposals" class="btn-outline btn-services-cta">Переглянути всі послуги</a>
 			</div>
 		</div>
 	</section>
@@ -154,13 +176,13 @@
 			</div>
 
 			<div class="slider-wrapper">
-				<button class="slider-btn slider-btn--prev" (click)="prevTeam()">
+				<button class="slider-btn slider-btn--prev" (click)="prevTeam()" [disabled]="teamSlideIndex === 0">
 					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 				</button>
 				<div class="slider-viewport">
-				<div class="slider-track" [style.transform]="'translateX(-' + teamSlideIndex * (100 / TEAM_VISIBLE) + '%)'">
+				<div class="slider-track" [style.transform]="'translateX(-' + teamSlideIndex * (100 / teamVisible) + '%)'">
 						@for (m of allTeam; track m.id) {
-							<div class="slider-item">
+							<div class="slider-item" [style.flex]="'0 0 ' + (100 / teamVisible) + '%'">
 								<div class="team-card">
 									<div class="team-card__photo">
 										<img [src]="'/' + m.avatar + '.png'" [alt]="m.name" loading="lazy" />
@@ -173,14 +195,14 @@
 						}
 					</div>
 				</div>
-				<button class="slider-btn slider-btn--next" (click)="nextTeam()">
+				<button class="slider-btn slider-btn--next" (click)="nextTeam()" [disabled]="teamSlideIndex >= allTeam.length - teamVisible">
 					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
 				</button>
 			</div>
 
 			<div class="slider-dots">
-				@for (dot of teamDots; track $index) {
-					<button class="slider-dot" [class.slider-dot--active]="$index === teamSlideIndex" (click)="teamSlideIndex = $index"></button>
+				@for (dotValue of teamDots; track $index) {
+					<button class="slider-dot" [class.slider-dot--active]="isTeamDotActive(dotValue)" (click)="setTeamSlide(dotValue)"></button>
 				}
 			</div>
 
@@ -204,13 +226,13 @@
 			</div>
 
 			<div class="slider-wrapper">
-				<button class="slider-btn slider-btn--prev" (click)="prevProject()">
+				<button class="slider-btn slider-btn--prev" (click)="prevProject()" [disabled]="projectSlideIndex === 0">
 					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 				</button>
 				<div class="slider-viewport">
-				<div class="slider-track" [style.transform]="'translateX(-' + projectSlideIndex * (100 / PROJECTS_VISIBLE) + '%)'">
+				<div class="slider-track" [style.transform]="'translateX(-' + projectSlideIndex * (100 / projectsVisible) + '%)'">
 						@for (proj of allProjects; track proj.id) {
-							<div class="slider-item">
+							<div class="slider-item" [style.flex]="'0 0 ' + (100 / projectsVisible) + '%'">
 								<div class="project-card-home">
 									<div class="project-card-home__img">
 										<img [src]="'/' + proj.image + '.png'" [alt]="proj.title" loading="lazy" />
@@ -240,14 +262,14 @@
 						}
 					</div>
 				</div>
-				<button class="slider-btn slider-btn--next" (click)="nextProject()">
+				<button class="slider-btn slider-btn--next" (click)="nextProject()" [disabled]="projectSlideIndex >= allProjects.length - projectsVisible">
 					<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
 				</button>
 			</div>
 
 			<div class="slider-dots">
-				@for (dot of projectDots; track $index) {
-					<button class="slider-dot" [class.slider-dot--active]="$index === projectSlideIndex" (click)="projectSlideIndex = $index"></button>
+				@for (dotValue of projectDots; track $index) {
+					<button class="slider-dot" [class.slider-dot--active]="isProjectDotActive(dotValue)" (click)="setProjectSlide(dotValue)"></button>
 				}
 			</div>
 

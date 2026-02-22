@@ -1,3 +1,6 @@
+:host-context(html[data-mode='light']) .merch-card {
+	border-color: #cbd5e1 !important;
+}
 .merch-page {
 	min-height: 100vh;
 	background: var(--c-bg-primary);

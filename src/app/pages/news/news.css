@@ -1,3 +1,6 @@
+:host-context(html[data-mode='light']) .news-card {
+	border-color: #cbd5e1 !important;
+}
 :host-context(html[data-mode='light']) .news-filter:not(.news-filter--active) {
     border-color: #cbd5e1 !important; 
 }

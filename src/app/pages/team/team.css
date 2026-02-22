@@ -1,3 +1,6 @@
+:host-context(html[data-mode='light']) .team-grid .team-card {
+	border-color: #cbd5e1 !important;
+}
 .team-page {
 	min-height: 100vh;
 	background: var(--c-bg-primary);
