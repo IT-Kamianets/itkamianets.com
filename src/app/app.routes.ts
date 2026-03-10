@@ -1,40 +1,56 @@
 import { Routes } from '@angular/router';
-import { Public } from './layouts/public/public';
-import { Home } from './pages/home/home';
-import { Projects } from './pages/projects/projects';
-import { Team } from './pages/team/team';
-import { News } from './pages/news/news';
-import { Merch } from './pages/merch/merch';
-import { Proposals } from './pages/proposals/proposals';
 
 export const routes: Routes = [
 	{
 		path: '',
-		component: Public,
+		loadComponent: () =>
+			import('./layouts/public/public.component').then((m) => m.PublicComponent),
 		children: [
 			{
 				path: '',
-				component: Home,
+				loadComponent: () =>
+					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
 				path: 'projects',
-				component: Projects,
+				loadComponent: () =>
+					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
+			},
+			{
+				path: 'hackathons',
+				loadComponent: () =>
+					import('./pages/hackathons/hackathons.component').then(
+						(m) => m.HackathonsComponent,
+					),
+			},
+			{
+				path: 'hackathon',
+				loadComponent: () =>
+					import('./pages/hackathon/hackathon.component').then(
+						(m) => m.HackathonComponent,
+					),
 			},
 			{
 				path: 'team',
-				component: Team,
+				loadComponent: () =>
+					import('./pages/team/team.component').then((m) => m.TeamComponent),
 			},
 			{
 				path: 'news',
-				component: News,
+				loadComponent: () =>
+					import('./pages/news/news.component').then((m) => m.NewsComponent),
 			},
 			{
 				path: 'merch',
-				component: Merch,
+				loadComponent: () =>
+					import('./pages/merch/merch.component').then((m) => m.MerchComponent),
 			},
 			{
 				path: 'proposals',
-				component: Proposals,
+				loadComponent: () =>
+					import('./pages/proposals/proposals.component').then(
+						(m) => m.ProposalsComponent,
+					),
 			},
 		],
 	},

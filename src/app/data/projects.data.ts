@@ -14,7 +14,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 1,
 		title: 'Demchuk Denys',
-		description: 'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-tailwind',
 		repoUrl: 'https://github.com/IT-Kamianets/demchukdenys.itkamianets.com',
 		liveUrl: 'https://demchukdenys.itkamianets.com',
@@ -24,7 +25,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 2,
 		title: 'MC',
-		description: 'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-tailwind',
 		repoUrl: 'https://github.com/IT-Kamianets/mc.itkamianets.com',
 		liveUrl: 'https://mc.itkamianets.com',
@@ -34,7 +36,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 3,
 		title: 'SemiMed',
-		description: 'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-tailwind',
 		repoUrl: 'https://github.com/IT-Kamianets/semimed.itkamianets.com',
 		liveUrl: 'https://semimed.itkamianets.com',
@@ -44,7 +47,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 4,
 		title: 'Vernisazh',
-		description: 'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-tailwind',
 		repoUrl: 'https://github.com/IT-Kamianets/vernisazh.itkamianets.com',
 		liveUrl: 'https://vernisazh.itkamianets.com',
@@ -54,7 +58,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 5,
 		title: 'Vilen',
-		description: 'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Tailwind CSS з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-tailwind',
 		repoUrl: 'https://github.com/IT-Kamianets/vilen.itkamianets.com',
 		liveUrl: 'https://vilen.itkamianets.com',
@@ -66,7 +71,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 6,
 		title: 'Kudlati',
-		description: 'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bulma',
 		repoUrl: 'https://github.com/IT-Kamianets/kudlati.itkamianets.com',
 		liveUrl: 'https://kudlati.itkamianets.com',
@@ -76,7 +82,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 7,
 		title: 'Dog Style',
-		description: 'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bulma',
 		repoUrl: 'https://github.com/IT-Kamianets/dog-style.itkamianets.com',
 		liveUrl: 'https://dog-style.itkamianets.com',
@@ -86,7 +93,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 8,
 		title: 'Laznya',
-		description: 'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bulma',
 		repoUrl: 'https://github.com/IT-Kamianets/laznya.itkamianets.com',
 		liveUrl: 'https://laznya.itkamianets.com',
@@ -96,7 +104,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 9,
 		title: 'AI Lab',
-		description: 'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bulma',
 		repoUrl: 'https://github.com/IT-Kamianets/ai-lab.itkamianets.com',
 		liveUrl: 'https://ai-lab.itkamianets.com',
@@ -106,7 +115,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 10,
 		title: 'Novita',
-		description: 'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bulma',
 		repoUrl: 'https://github.com/IT-Kamianets/novita.itkamianets.com',
 		liveUrl: 'https://novita.itkamianets.com',
@@ -116,7 +126,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 11,
 		title: 'Marlin',
-		description: 'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bulma з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bulma',
 		repoUrl: 'https://github.com/IT-Kamianets/marlin.itkamianets.com',
 		liveUrl: 'https://marlin.itkamianets.com',
@@ -128,7 +139,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 12,
 		title: 'Monte Kristo',
-		description: 'Персональний сайт-портфоліо, побудований на Bootstrap з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bootstrap з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bootstrap',
 		repoUrl: 'https://github.com/IT-Kamianets/monte-kristo.itkamianets.com',
 		liveUrl: 'https://monte-kristo.itkamianets.com',
@@ -138,7 +150,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 13,
 		title: 'Dominicana',
-		description: 'Персональний сайт-портфоліо, побудований на Bootstrap з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bootstrap з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bootstrap',
 		repoUrl: 'https://github.com/IT-Kamianets/dominicana.itkamianets.com',
 		liveUrl: 'https://dominicana.itkamianets.com',
@@ -148,7 +161,8 @@ export const PROJECTS: Project[] = [
 	{
 		id: 14,
 		title: 'Bilya Richky',
-		description: 'Персональний сайт-портфоліо, побудований на Bootstrap з адаптивним дизайном та сучасними анімаціями.',
+		description:
+			'Персональний сайт-портфоліо, побудований на Bootstrap з адаптивним дизайном та сучасними анімаціями.',
 		category: 'theme-bootstrap',
 		repoUrl: 'https://github.com/IT-Kamianets/bilya-richky.itkamianets.com',
 		liveUrl: 'https://bilya-richky.itkamianets.com',

@@ -1,15 +1,66 @@
-### Contributing rules
+# Contributing
+
+This project is an Angular 21 landing page template built around SSR prerendering, TailwindCSS v4, shared theme variables, and a minimal project structure.
+
+Keep contributions aligned with the current template conventions described in [README.md](/c:/Users/crack/work/itkp.ngx-default/README.md).
+
+## Core rules
 
 - Use **Conventional Commits**: `type(scope): subject`
-- Types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `style`, `chore`, `build`, `ci`, `revert`
-- Subject: **imperative**, present tense, **no period**, keep it short
-- One commit = **one logical change** (split big work into smaller commits)
-- Prefix private class variables with an underscore (e.g. \_cache, \_token, \_state) to clearly mark internal usage and avoid accidental external access.
-- In Angular templates, if the same expression (signal read, computed, or method call) is used more than once, assign it with `@let` and reuse the variable instead of calling it repeatedly. Use inline expression only when it appears once.
-- Use Tailwind via BEM + @apply in component scss; keep templates readable (no long utility strings in HTML).
-- Avoid hover effects that change layout (border/size/padding). Prefer non-layout effects (background tint, shadow) and always add matching :focus-visible styles.
-- Keep spacing and colors consistent (use Tailwind scale + existing design tokens; avoid ad-hoc pixel values unless unavoidable).
-- Write unit tests with Vitest, using describe/it/expect in \*.spec.ts.
-- Document only public functions and variables with short, clear comments directly above their declarations (purpose + expected behavior).
-- Structure each feature as an isolated domain folder: `src/app/feature/{FeatureName}/pages`, `src/app/feature/{FeatureName}/components`, `src/app/feature/{FeatureName}/services`, `src/app/feature/{FeatureName}/interfaces` etc. Do not mix feature files across other domains.
-- Branch names must follow: {type}/{feature}/{team}-{issueId}. Use lowercase kebab-case. type must match Conventional Commit types (e.g. feat, fix, refactor). feature is the domain name (e.g. people, events). team is the responsible team name. Always append the GitHub issue number at the end.
+- Keep one commit focused on one logical change
+- Use **OnPush** components by default
+- Keep state used in HTML class bindings as **signals**
+- Prefer **Angular Signal Forms** for new forms
+- Prefer Angular signal-first APIs over older decorator-heavy patterns where practical
+- Use the new Angular template control flow (`@if`, `@for`, `@switch`) in new code
+- Keep new code SSR-safe; do not assume browser-only APIs exist during server rendering
+
+## Styling
+
+- Use **TailwindCSS first** for normal UI work
+- Use shared theme variables from `src/styles/_theme.scss` for colors, surfaces, spacing, radius, motion, and typography
+- Use component `.scss` files for local styling only when Tailwind is not the right tool
+- Avoid hard-coded hex colors and random pixel values when a theme token already exists
+- Keep styles compatible with `data-mode`, `data-density`, and `data-radius`
+- Avoid hover effects that change layout; prefer background, color, shadow, or opacity changes
+- Always provide matching accessible focus styles for interactive elements
+
+## Icons and assets
+
+- Use **Material Symbols Outlined** as the default icon set
+- Treat icons as decorative unless they carry meaning; add visible text or `aria-label` where needed
+
+## Structure
+
+- App-level pages belong in `src/app/pages`
+- Layout components belong in `src/app/layouts`
+- Feature-specific business logic can live in `src/app/feature/<name>`
+- Generic shared code can live in `src/app/components`, `directives`, `pipes`, `services`, and `interfaces`
+- Public front-end runtime config belongs in `src/environments`
+- Do not place secrets in Angular environment files
+
+## Translations
+
+- UI translation entries live in `src/app/app.translates.ts`
+- Language metadata lives in `src/app/feature/language/language.type.ts`, `language.interface.ts`, `language.const.ts`, and `language.service.ts`
+- Keep translation keys aligned with the English source text used in templates and components
+- If you add a language, update both `LanguageCode` and `LANGUAGES`
+- Save translation files as UTF-8 and use proper native characters for labels and translated text
+- Do not replace native characters with mojibake, HTML entities, or ad hoc transliterations
+
+## Code quality
+
+- Keep templates and components simple and readable
+- If the same signal read, computed value, or method call is used multiple times in a template, assign it with `@let`
+- Prefer short, clear comments only where intent is not obvious
+- Keep naming consistent with the existing codebase
+- Respect `.editorconfig` and `.prettierrc`
+
+## Before opening a PR
+
+- Confirm the change matches the template conventions in the README
+- Check that styling uses shared theme variables where applicable
+- Check that dark mode still works
+- Check that the change does not break SSR or prerender assumptions
+- Check that any edited translations still render as proper native characters in the UI
+- Keep documentation updated when project conventions or structure change

@@ -1,0 +1,58 @@
+<div class="news-page">
+	<!-- Page Hero -->
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Новини</span>
+			<h1 class="page-hero__title">Останні новини</h1>
+			<p class="page-hero__subtitle">
+				Слідкуйте за подіями, оновленнями та статтями від IT-Kamianets
+			</p>
+			<!-- фон тепер задається через CSS, окреме зображення не потрібно -->
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<!-- Filters -->
+		<div class="news-filters">
+			@for (cat of categories; track cat) {
+				<button
+					class="news-filter"
+					[class.news-filter--active]="activeFilter() === cat"
+					(click)="setFilter(cat)"
+				>
+					{{
+						cat === 'All'
+							? 'Усі'
+							: cat === 'Events'
+								? 'Події'
+								: cat === 'Updates'
+									? 'Оновлення'
+									: 'Статті'
+					}}
+				</button>
+			}
+		</div>
+
+		<!-- News Grid -->
+		<div class="news-grid">
+			@for (item of filteredNews; track item.id) {
+				<article class="news-card">
+					<div class="news-card__img">
+						<img [src]="item.image" [alt]="item.title" loading="lazy" />
+						<span class="news-card__badge">{{ getCategoryLabel(item.category) }}</span>
+					</div>
+					<div class="news-card__body">
+						<span class="news-card__date">{{ item.date }}</span>
+						<h3 class="news-card__title">{{ item.title }}</h3>
+						<p class="news-card__excerpt">{{ item.excerpt }}</p>
+					</div>
+				</article>
+			}
+		</div>
+	</div>
+</div>

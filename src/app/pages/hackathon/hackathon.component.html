@@ -1,0 +1,182 @@
+<section class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+	<div
+		class="overflow-hidden rounded-[2rem] border border-[var(--c-border)] bg-[linear-gradient(140deg,rgba(30,41,59,0.96),rgba(8,145,178,0.72))] text-white shadow-[var(--shadow-card)]"
+	>
+		<div class="grid gap-6 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1.4fr_0.9fr]">
+			<div class="flex flex-col gap-4">
+				<span class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
+					Подія хакатону
+				</span>
+				<h1 class="max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">
+					Фінал AI Product Forge
+				</h1>
+				<p class="max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
+					Три внутрішні команди розробників презентують прототипи, робочі демо та
+					стратегію запуску для журі та партнерів.
+				</p>
+			</div>
+
+			<div
+				class="grid gap-4 rounded-[1.5rem] border border-white/10 bg-white/10 p-5 backdrop-blur"
+			>
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+						Формат
+					</p>
+					<p class="mt-2 text-lg font-semibold text-white">
+						72 години розробки та живий пітч
+					</p>
+				</div>
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+						Результат
+					</p>
+					<p class="mt-2 text-sm leading-6 text-slate-200">
+						Кожна команда показує робочий прототип, публічний демо-сценарій та дорожню
+						карту наступного релізу.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid gap-6">
+		<div class="flex items-center justify-between gap-4">
+			<div>
+				<p
+					class="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--c-primary)]"
+				>
+					Команди
+				</p>
+				<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">
+					Учасники фіналу
+				</h2>
+			</div>
+		</div>
+
+		<div class="grid gap-6 xl:grid-cols-3">
+			@for (team of teams; track team.id) {
+				<article
+					class="flex h-full flex-col rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+				>
+					<div class="flex items-start justify-between gap-4">
+						<div>
+							<h3 class="text-2xl font-bold text-[var(--c-text-secondary)]">
+								{{ team.name }}
+							</h3>
+							<p class="mt-3 text-sm leading-7 text-[var(--c-text-primary)]">
+								{{ team.summary }}
+							</p>
+						</div>
+						<span
+							class="rounded-full bg-[var(--c-bg-tertiary)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--c-text-muted)]"
+						>
+							{{ team.members.length }} учасники
+						</span>
+					</div>
+
+					<div class="mt-6">
+						<p
+							class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-primary)]"
+						>
+							Учасники
+						</p>
+						<div class="mt-4 grid gap-3">
+							@for (member of team.members; track member.id) {
+								<div
+									class="flex items-center gap-3 rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-3"
+								>
+									<img
+										[src]="'developer/' + member.avatar + '.png'"
+										[alt]="member.name"
+										class="h-12 w-12 rounded-full object-cover"
+										loading="lazy"
+									/>
+									<div>
+										<p class="font-semibold text-[var(--c-text-secondary)]">
+											{{ member.name }}
+										</p>
+										<p class="text-sm text-[var(--c-text-muted)]">
+											{{ member.role }}
+										</p>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+
+					<div class="mt-6">
+						<p
+							class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-primary)]"
+						>
+							Проєкти
+						</p>
+						<div class="mt-4 flex flex-wrap gap-2">
+							@for (project of team.projects; track project.id) {
+								<a
+									[href]="project.liveUrl"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="inline-flex items-center gap-2 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-2 text-sm font-medium text-[var(--c-text-secondary)] transition-colors duration-200 hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+								>
+									{{ project.title }}
+									<span
+										class="material-symbols-outlined text-base"
+										aria-hidden="true"
+										>open_in_new</span
+									>
+								</a>
+							}
+						</div>
+					</div>
+				</article>
+			}
+		</div>
+	</div>
+
+	<div class="grid gap-6 lg:grid-cols-2">
+		<section
+			class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+		>
+			<p class="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--c-primary)]">
+				Журі
+			</p>
+			<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">Експертна панель</h2>
+			<div class="mt-6 grid gap-4">
+				@for (judge of judges; track judge.name) {
+					<div
+						class="rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4"
+					>
+						<p class="font-semibold text-[var(--c-text-secondary)]">{{ judge.name }}</p>
+						<p class="mt-1 text-sm text-[var(--c-text-primary)]">{{ judge.role }}</p>
+						<p class="mt-1 text-sm text-[var(--c-text-muted)]">{{ judge.company }}</p>
+					</div>
+				}
+			</div>
+		</section>
+
+		<section
+			class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+		>
+			<p class="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--c-primary)]">
+				Партнери
+			</p>
+			<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">
+				Підтримка події
+			</h2>
+			<div class="mt-6 grid gap-4">
+				@for (sponsor of sponsors; track sponsor.name) {
+					<div
+						class="rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4"
+					>
+						<p class="font-semibold text-[var(--c-text-secondary)]">
+							{{ sponsor.name }}
+						</p>
+						<p class="mt-1 text-sm text-[var(--c-text-primary)]">{{ sponsor.role }}</p>
+						<p class="mt-1 text-sm text-[var(--c-text-muted)]">{{ sponsor.company }}</p>
+					</div>
+				}
+			</div>
+		</section>
+	</div>
+</section>

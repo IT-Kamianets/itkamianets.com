@@ -1,0 +1,127 @@
+<header class="header">
+	<nav class="header__inner">
+		<!-- ============================================ -->
+		<!-- DESKTOP LAYOUT (>= 640px) -->
+		<!-- ============================================ -->
+		<div class="header__desktop">
+			<!-- Left: Logo + Brand -->
+			<div class="header__brand">
+				<div class="header__logo-wrap">
+					<img src="logo.png" alt="Logo" class="header__logo" />
+				</div>
+				<span class="header__brand-name">IT-KAMIANETS</span>
+			</div>
+
+			<!-- Center: Navigation Links -->
+			<div class="header__nav-pill">
+				<a
+					[routerLinkActiveOptions]="{ exact: true }"
+					routerLinkActive="header__link--active"
+					class="header__link"
+					routerLink="/"
+					>Головна</a
+				>
+				<a
+					routerLinkActive="header__link--active"
+					routerLink="/proposals"
+					class="header__link"
+					>Послуги</a
+				>
+				<a
+					routerLinkActive="header__link--active"
+					routerLink="/hackathons"
+					class="header__link"
+					>Змагання</a
+				>
+				<a
+					routerLinkActive="header__link--active"
+					routerLink="/projects"
+					class="header__link"
+					>Проєкти</a
+				>
+				<a routerLink="/team" routerLinkActive="header__link--active" class="header__link"
+					>Команда</a
+				>
+				<a routerLink="/news" routerLinkActive="header__link--active" class="header__link"
+					>Новини</a
+				>
+				<a routerLink="/merch" routerLinkActive="header__link--active" class="header__link"
+					>Мерч</a
+				>
+			</div>
+
+			<!-- Right: Theme Toggle -->
+			<div class="header__actions">
+				<button
+					type="button"
+					class="theme-toggle"
+					[class.theme-toggle--dark]="isDark"
+					(click)="toggleTheme()"
+					[attr.aria-label]="themeLabel"
+				>
+					<span class="material-symbols-outlined theme-toggle__icon" aria-hidden="true">
+						{{ themeIcon }}
+					</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- ============================================ -->
+		<!-- MOBILE LAYOUT (< 640px) -->
+		<!-- ============================================ -->
+		<div class="header__mobile">
+			<!-- Row 1: Logo + Brand + Theme Toggle -->
+			<div class="header__mobile-top">
+				<div class="header__brand header__brand--sm">
+					<div class="header__logo-wrap header__logo-wrap--sm">
+						<img src="logo.png" alt="Logo" class="header__logo" />
+					</div>
+					<span class="header__brand-name">IT-KAMIANETS</span>
+				</div>
+				<button
+					type="button"
+					class="theme-toggle theme-toggle--sm"
+					[class.theme-toggle--dark]="isDark"
+					(click)="toggleTheme()"
+					[attr.aria-label]="themeLabel"
+				>
+					<span class="material-symbols-outlined theme-toggle__icon" aria-hidden="true">
+						{{ themeIcon }}
+					</span>
+				</button>
+			</div>
+
+			<!-- Row 2: Navigation Links -->
+			<div class="header__nav-pill header__nav-pill--mobile">
+				<a
+					routerLink="/"
+					[routerLinkActiveOptions]="{ exact: true }"
+					routerLinkActive="header__link--active"
+					class="header__link"
+					>Головна</a
+				>
+				<a
+					routerLink="/proposals"
+					routerLinkActive="header__link--active"
+					class="header__link"
+					>Послуги</a
+				>
+				<a
+					routerLink="/projects"
+					routerLinkActive="header__link--active"
+					class="header__link"
+					>Проєкти</a
+				>
+				<a routerLink="/team" routerLinkActive="header__link--active" class="header__link"
+					>Команда</a
+				>
+				<a routerLink="/news" routerLinkActive="header__link--active" class="header__link"
+					>Новини</a
+				>
+				<a routerLink="/merch" routerLinkActive="header__link--active" class="header__link"
+					>Мерч</a
+				>
+			</div>
+		</div>
+	</nav>
+</header>

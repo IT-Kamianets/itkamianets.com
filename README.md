@@ -11,16 +11,16 @@ Build the digital operating system of IT Kamianets.
 
 The platform connects:
 
-* People
-* Education
-* Businesses
-* Jobs
-* Events
-* Competitions
-* Projects
-* Services
-* Community
-* Merch
+- People
+- Education
+- Businesses
+- Jobs
+- Events
+- Competitions
+- Projects
+- Services
+- Community
+- Merch
 
 ---
 
@@ -30,17 +30,17 @@ The platform is divided into independent feature domains.
 
 Each domain:
 
-* Owns its backend logic
-* Owns its frontend pages
-* Defines its data models
-* Integrates via shared contracts
+- Owns its backend logic
+- Owns its frontend pages
+- Defines its data models
+- Integrates via shared contracts
 
 All teams follow shared standards:
 
-* UI design system
-* API structure
-* Role & permission model
-* Definition of done
+- UI design system
+- API structure
+- Role & permission model
+- Definition of done
 
 ---
 
@@ -54,11 +54,11 @@ Public community members.
 
 Includes:
 
-* Public profile pages
-* Roles (student, mentor, founder, etc.)
-* Achievements
-* Linked projects
-* Event participation history
+- Public profile pages
+- Roles (student, mentor, founder, etc.)
+- Achievements
+- Linked projects
+- Event participation history
 
 Purpose:
 Create identity and recognition inside the ecosystem.
@@ -71,11 +71,11 @@ Internal IT Kamianets organization.
 
 Includes:
 
-* Core team members
-* Developers building the platform
-* Mentors
-* Organizational structure
-* Contact information
+- Core team members
+- Developers building the platform
+- Mentors
+- Organizational structure
+- Contact information
 
 Purpose:
 Represent the structure behind the community.
@@ -88,12 +88,12 @@ Community gatherings and learning activities.
 
 Includes:
 
-* Meetups
-* Workshops
-* Conferences
-* Registration system
-* QR check-in
-* Feedback
+- Meetups
+- Workshops
+- Conferences
+- Registration system
+- QR check-in
+- Feedback
 
 Purpose:
 Drive engagement and offline interaction.
@@ -106,12 +106,12 @@ Hackathons, tournaments, and challenges.
 
 Includes:
 
-* Competition pages
-* Team formation
-* Submissions
-* Voting
-* Leaderboards
-* Prize tracking
+- Competition pages
+- Team formation
+- Submissions
+- Voting
+- Leaderboards
+- Prize tracking
 
 Purpose:
 Encourage innovation and collaboration.
@@ -124,11 +124,11 @@ Career opportunities for the community.
 
 Includes:
 
-* Job listings
-* Internship listings
-* Company pages
-* Application flow
-* Status tracking
+- Job listings
+- Internship listings
+- Company pages
+- Application flow
+- Status tracking
 
 Purpose:
 Connect talent with companies.
@@ -141,11 +141,11 @@ Local IT companies and digital agencies.
 
 Includes:
 
-* Company profiles
-* Services offered
-* Tech stack
-* Reviews
-* Contact details
+- Company profiles
+- Services offered
+- Tech stack
+- Reviews
+- Contact details
 
 Purpose:
 Map the local economy.
@@ -158,11 +158,11 @@ Education centers and training programs.
 
 Includes:
 
-* Courses
-* Teachers
-* Programs
-* Enrollment system
-* Certificates
+- Courses
+- Teachers
+- Programs
+- Enrollment system
+- Certificates
 
 Purpose:
 Support continuous learning.
@@ -175,11 +175,11 @@ Showcase of student and local projects.
 
 Includes:
 
-* Product pages
-* Team members
-* GitHub links
-* Media
-* Likes and feedback
+- Product pages
+- Team members
+- GitHub links
+- Media
+- Likes and feedback
 
 Purpose:
 Build real portfolios.
@@ -192,10 +192,10 @@ Freelancers and service providers.
 
 Includes:
 
-* Developer profiles
-* Design services
-* Consulting offers
-* Contact or booking flow
+- Developer profiles
+- Design services
+- Consulting offers
+- Contact or booking flow
 
 Purpose:
 Enable real economic activity inside the ecosystem.
@@ -208,11 +208,11 @@ Community merchandise.
 
 Includes:
 
-* T-shirts
-* Hoodies
-* Stickers
-* Event merchandise
-* Limited releases
+- T-shirts
+- Hoodies
+- Stickers
+- Event merchandise
+- Limited releases
 
 Purpose:
 Support sustainability and brand identity.
@@ -225,12 +225,12 @@ Central communication layer.
 
 Includes:
 
-* Announcements
-* Event reminders
-* Job highlights
-* Community posts
-* Media content
-* Comments and reactions
+- Announcements
+- Event reminders
+- Job highlights
+- Community posts
+- Media content
+- Comments and reactions
 
 Purpose:
 Connect all domains together.
