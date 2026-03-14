@@ -83,6 +83,23 @@ const USERNAME_REPO_NAMES: Record<string, string[]> = {
 	],
 };
 
+const formatProjectName = (value: string): string => {
+	const normalized = value.replace('.itkamianets.com', '').replace(/-/g, ' ').trim();
+
+	if (!normalized) {
+		return value;
+	}
+
+	if (normalized.toLowerCase() === 'mc') {
+		return 'MC';
+	}
+
+	return normalized
+		.split(/\s+/)
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.join(' ');
+};
+
 const getProjectNamesFor = (username: string): { name: string; url: string }[] =>
 	repoRecords
 		.filter((repo) => {
@@ -103,11 +120,13 @@ const getProjectNamesFor = (username: string): { name: string; url: string }[] =
 			}
 
 			return contributors.every(
-				(item) => usernames.includes(item.login) || item.contributions <= contributor.contributions,
+				(item) =>
+					usernames.includes(item.login) ||
+					item.contributions <= contributor.contributions,
 			);
 		})
 		.map((repo) => ({
-			name: repo.company || repo.name.replace('.itkamianets.com', ''),
+			name: formatProjectName(repo.company || repo.name),
 			url: `https://${repo.name}`,
 		}))
 		.sort((left, right) => left.name.localeCompare(right.name));
@@ -134,8 +153,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 	description:
 		'Три внутрішні команди розробників презентують прототипи, робочі демо та стратегію запуску для журі та партнерів.',
 	format: 'Три команди, окремі UI-фреймворки, фінальна презентація з живими демо.',
-	result:
-		'Кожна команда показує готові сторінки, набір проєктів зі свого стеку та короткий план подальшого запуску.',
+	result: 'Кожна команда показує готові сторінки, набір проєктів зі свого стеку та короткий план подальшого запуску.',
 	judgesTitle: 'Журі',
 	judgesSubtitle: 'Експертна комісія фінального перегляду',
 	teamsTitle: 'Команди',
@@ -150,8 +168,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		{
 			name: 'Dmytro Maksiuta',
 			photo: 'judges/Dmytro Maksiuta.jpg',
-			description:
-				'QA tester, Front-end Angular і React developer з досвідом понад 8 років.',
+			description: 'QA tester, Front-end Angular і React developer з досвідом понад 8 років.',
 		},
 		{
 			name: 'Diana Irikova',
@@ -160,7 +177,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		},
 		{
 			name: 'Solomia Maksiuta',
-			photo: 'judges/Solomia Maksiuta.png',
+			photo: 'judges/Solomia Maksiuta.jpg',
 			description: 'QA tester з досвідом у QA понад 3 роки.',
 		},
 		{
@@ -217,7 +234,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 				},
 				{
 					username: 's1a6ks',
-					fullName: 'Максим Горецький',
+					fullName: 'Рома Шулепко',
 					projects: getProjectNamesFor('s1a6ks'),
 				},
 				{
