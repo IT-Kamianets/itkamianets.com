@@ -7,11 +7,11 @@
 				Хакатони
 			</span>
 			<h1 class="max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">
-				Хакатони для команд розробників, які створюють продукти
+				Практичні хакатони для команд, які збирають живі продукти
 			</h1>
 			<p class="max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
-				Кожен формат розрахований на команди, яким потрібні чітка задача, обмежений
-				термін виконання та публічний демо-день.
+				Кожен формат сфокусований на короткому циклі розробки, публічному демо та
+				командній відповідальності за результат.
 			</p>
 		</div>
 	</div>
@@ -47,6 +47,9 @@
 				<p class="mt-4 text-sm leading-7 text-[var(--c-text-primary)]">
 					{{ hackathon.description }}
 				</p>
+				<p class="mt-4 text-sm font-medium text-[var(--c-text-muted)]">
+					{{ hackathon.period }}
+				</p>
 
 				<div class="mt-6 flex flex-wrap gap-2">
 					@for (item of hackathon.stack; track item) {
@@ -63,10 +66,10 @@
 						[routerLink]="hackathon.cta"
 						class="inline-flex items-center gap-2 rounded-full bg-[var(--c-primary)] px-5 py-3 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90"
 					>
-						Відкрити приклад події
-						<span class="material-symbols-outlined text-base" aria-hidden="true"
-							>arrow_forward</span
-						>
+						Відкрити сторінку
+						<span class="material-symbols-outlined text-base" aria-hidden="true">
+							arrow_forward
+						</span>
 					</a>
 				</div>
 			</article>
