@@ -211,7 +211,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 				},
 				{
 					username: 'Keyd8n',
-					fullName: 'Денис Коваль',
+					fullName: 'Дмитро Демченко',
 					projects: getProjectNamesFor('Keyd8n'),
 				},
 			],
@@ -257,7 +257,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			developers: [
 				{
 					username: 'Vyluk',
-					fullName: 'Віталій Вилюк',
+					fullName: 'Роман Шулепко',
 					projects: getProjectNamesFor('Vyluk'),
 				},
 				{
