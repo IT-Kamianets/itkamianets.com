@@ -234,7 +234,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 				},
 				{
 					username: 's1a6ks',
-					fullName: 'Рома Шулепко',
+					fullName: 'Максим Горецький',
 					projects: getProjectNamesFor('s1a6ks'),
 				},
 				{
