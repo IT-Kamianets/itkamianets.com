@@ -6,6 +6,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/pavloizhytskyi',
 		created: '2024-09-30',
 		updated: '2024-10-01',
+		developer: 'izhytskyi',
 		contributors: [
 			{
 				login: 'izhytskyi',
@@ -26,6 +27,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/honchardenys',
 		created: '2024-09-24',
 		updated: '2024-09-24',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -41,6 +43,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/advance',
 		created: '2024-07-18',
 		updated: '2024-09-13',
+		developer: 'LeoSmotryk',
 		contributors: [
 			{
 				login: 'LeoSmotryk',
@@ -71,6 +74,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/maksymbilous',
 		created: '2024-09-30',
 		updated: '2024-10-01',
+		developer: 'BilousMaks',
 		contributors: [
 			{
 				login: 'BilousMaks',
@@ -82,10 +86,11 @@ export const repos = [
 	{
 		id: 1160683023,
 		name: 'demchukdenys.com',
-		company: '',
+		company: 'Demchuk Denys',
 		url: 'https://github.com/IT-Kamianets/demchukdenys.com',
 		created: '2026-02-18',
 		updated: '2026-03-03',
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -106,6 +111,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/jokes',
 		created: '2024-11-12',
 		updated: '2024-11-19',
+		developer: 'RuslanYaremko',
 		contributors: [
 			{
 				login: 'RuslanYaremko',
@@ -126,6 +132,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/dmytrokovalenko',
 		created: '2024-10-22',
 		updated: '2024-10-22',
+		developer: '1357kov',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -146,6 +153,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/taras-bulba.itkamianets.com',
 		created: '2026-03-04',
 		updated: '2026-03-05',
+		developer: 'VadimValcerKN1B22',
 		contributors: [
 			{
 				login: 'VadimValcerKN1B22',
@@ -161,6 +169,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/kof.itkamianets.com',
 		created: '2026-02-25',
 		updated: '2026-03-04',
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -176,6 +185,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/vilen.itkamianets.com',
 		created: '2026-02-21',
 		updated: '2026-03-04',
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -191,6 +201,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/adjanta.itkamianets.com',
 		created: '2026-03-05',
 		updated: '2026-03-07',
+		developer: 'Keyd8n',
 		contributors: [
 			{
 				login: 'Keyd8n',
@@ -206,6 +217,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/pulse-gym-club.itkamianets.com',
 		created: '2026-03-09',
 		updated: '2026-03-13',
+		developer: 'Vyluk',
 		contributors: [
 			{
 				login: 'Vyluk',
@@ -221,6 +233,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/habittracker',
 		created: '2024-10-22',
 		updated: '2024-11-13',
+		developer: 'VladislavKostyniuk',
 		contributors: [
 			{
 				login: 'VladislavKostyniuk',
@@ -246,6 +259,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/theme-tailwind',
 		created: '2026-01-30',
 		updated: '2026-02-28',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -276,6 +290,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/lumore.itkamianets.com',
 		created: '2026-02-24',
 		updated: '2026-03-04',
+		developer: 'Keyd8n',
 		contributors: [
 			{
 				login: 'Keyd8n',
@@ -296,6 +311,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/andronikdmytroivanovich',
 		created: '2024-11-12',
 		updated: '2024-11-12',
+		developer: 'Dmytro-Andronik',
 		contributors: [
 			{
 				login: 'Dmytro-Andronik',
@@ -316,6 +332,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/wProperty-backend',
 		created: '2025-04-14',
 		updated: '2025-04-14',
+		developer: 'nikiquickie',
 		contributors: [
 			{
 				login: 'nikiquickie',
@@ -331,6 +348,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/currencyconverter',
 		created: '2024-10-22',
 		updated: '2024-10-24',
+		developer: 'juliasurzhenko',
 		contributors: [
 			{
 				login: 'juliasurzhenko',
@@ -346,6 +364,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/diary',
 		created: '2024-11-05',
 		updated: '2024-11-11',
+		developer: 'maksimkaSAS',
 		contributors: [
 			{
 				login: 'maksimkaSAS',
@@ -361,6 +380,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/optima-collection.itkamianets.com',
 		created: '2026-03-07',
 		updated: '2026-03-09',
+		developer: 'ValeryMakush',
 		contributors: [
 			{
 				login: 'ValeryMakush',
@@ -376,6 +396,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/bunker-gym.itkamianets.com',
 		created: '2026-03-09',
 		updated: '2026-03-12',
+		developer: 'ValeryMakush',
 		contributors: [
 			{
 				login: 'ValeryMakush',
@@ -391,6 +412,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/baron-munchausen.itkamianets.com',
 		created: '2026-03-03',
 		updated: '2026-03-04',
+		developer: 'VladLevchuk2009',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -406,6 +428,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/maksymsas',
 		created: '2024-10-01',
 		updated: '2025-08-24',
+		developer: 'maksimkaSAS',
 		contributors: [
 			{
 				login: 'maksimkaSAS',
@@ -421,6 +444,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/viktorknyagnickiy',
 		created: '2024-10-08',
 		updated: '2024-10-08',
+		developer: 'ViktorKnyagnickiy',
 		contributors: [
 			{
 				login: 'ViktorKnyagnickiy',
@@ -441,6 +465,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/chatapp',
 		created: '2024-10-22',
 		updated: '2024-10-24',
+		developer: 'juliasurzhenko',
 		contributors: [
 			{
 				login: 'juliasurzhenko',
@@ -456,6 +481,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/uacode',
 		created: '2025-04-16',
 		updated: '2025-04-17',
+		developer: 'nikiquickie',
 		contributors: [
 			{
 				login: 'nikiquickie',
@@ -481,6 +507,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/laznya.itkamianets.com',
 		created: '2026-02-16',
 		updated: '2026-03-04',
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -496,6 +523,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/marlin.itkamianets.com',
 		created: '2026-01-30',
 		updated: '2026-03-04',
+		developer: 'ValeryMakush',
 		contributors: [
 			{
 				login: 'ValeryMakush',
@@ -511,6 +539,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/maksgoretsky',
 		created: '2024-10-08',
 		updated: '2024-10-08',
+		developer: 's1a6ks',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -531,6 +560,7 @@ export const repos = [
 		url: 'https://github.com/IT-Kamianets/bilya-richky.itkamianets.com',
 		created: '2026-01-30',
 		updated: '2026-03-04',
+		developer: 'VladLevchuk2009',
 		contributors: [
 			{
 				login: 's1a6ks',
@@ -558,6 +588,7 @@ export const repos = [
 		created: '2026-02-21',
 		updated: '2026-03-04',
 		language: 'CSS',
+		developer: 'Na1ld',
 		contributors: [
 			{
 				login: 'Na1ld',
@@ -574,6 +605,7 @@ export const repos = [
 		created: '2026-02-25',
 		updated: '2026-03-08',
 		language: 'JavaScript',
+		developer: 's1a6ks',
 		contributors: [
 			{
 				login: 's1a6ks',
@@ -590,6 +622,7 @@ export const repos = [
 		created: '2024-09-30',
 		updated: '2024-10-08',
 		language: 'HTML',
+		developer: 'juliasurzhenko',
 		contributors: [
 			{
 				login: 'juliasurzhenko',
@@ -611,6 +644,7 @@ export const repos = [
 		created: '2024-10-08',
 		updated: '2024-11-19',
 		language: 'HTML',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -627,6 +661,7 @@ export const repos = [
 		created: '2024-10-08',
 		updated: '2024-10-08',
 		language: 'HTML',
+		developer: 'VoloshynVl',
 		contributors: [
 			{
 				login: 'VoloshynVl',
@@ -648,6 +683,7 @@ export const repos = [
 		created: '2024-10-22',
 		updated: '2024-11-19',
 		language: 'JavaScript',
+		developer: 'juliasurzhenko',
 		contributors: [
 			{
 				login: 'juliasurzhenko',
@@ -664,6 +700,7 @@ export const repos = [
 		created: '2024-10-01',
 		updated: '2025-09-09',
 		language: 'HTML',
+		developer: 'MrachkovskyiOleksandr',
 		contributors: [
 			{
 				login: 'MrachkovskyiOleksandr',
@@ -675,12 +712,13 @@ export const repos = [
 	{
 		id: 795406733,
 		name: 'itkamianets.com',
-		company: '',
+		company: 'IT Kamianets',
 		url: 'https://github.com/IT-Kamianets/itkamianets.com',
 		created: '2024-05-03',
 		updated: '2026-03-10',
 		language: 'HTML',
 		description: 'Official website',
+		developer: 'VadimValcerKN1B22',
 		contributors: [
 			{
 				login: 'VadimValcerKN1B22',
@@ -714,6 +752,7 @@ export const repos = [
 		language: 'TypeScript',
 		description:
 			'VoltLab â€“ Ñ†Ðµ ÑÑƒÑ‡Ð°ÑÐ½Ð¸Ð¹ Ð·Ð°ÑÑ‚Ð¾ÑÑƒÐ½Ð¾Ðº Ð´Ð»Ñ Ñ‚Ð¾Ñ‡Ð½Ð¸Ñ… Ñ€Ð¾Ð·Ñ€Ð°Ñ…ÑƒÐ½ÐºÑ–Ð² Ñƒ ÑÑ„ÐµÑ€Ñ– ÑÐ¾Ð½ÑÑ‡Ð½Ð¾Ñ— ÐµÐ½ÐµÑ€Ð³ÐµÑ‚Ð¸ÐºÐ¸, ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð¼Ð¾Ð±Ñ–Ð»Ñ–Ð² Ñ‚Ð° Ð°ÐºÑƒÐ¼ÑƒÐ»ÑÑ‚Ð¾Ñ€Ð½Ð¸Ñ… ÑÐ¸ÑÑ‚ÐµÐ¼',
+		developer: 'OleksandrVolsky',
 		contributors: [
 			{
 				login: 'OleksandrVolsky',
@@ -790,6 +829,7 @@ export const repos = [
 		created: '2024-10-15',
 		updated: '2024-10-22',
 		language: 'TypeScript',
+		developer: 'ViktorKnyagnickiy',
 		contributors: [
 			{
 				login: 'ViktorKnyagnickiy',
@@ -816,6 +856,7 @@ export const repos = [
 		created: '2024-10-01',
 		updated: '2024-10-01',
 		language: 'HTML',
+		developer: 'denisN2102',
 		contributors: [
 			{
 				login: 'denisN2102',
@@ -832,6 +873,7 @@ export const repos = [
 		created: '2024-10-22',
 		updated: '2024-11-19',
 		language: 'HTML',
+		developer: 'MrachkovskyiOleksandr',
 		contributors: [
 			{
 				login: 'MrachkovskyiOleksandr',
@@ -853,6 +895,7 @@ export const repos = [
 		created: '2026-03-07',
 		updated: '2026-03-07',
 		language: null,
+		developer: null,
 		contributors: [],
 	},
 	{
@@ -863,6 +906,7 @@ export const repos = [
 		created: '2026-01-30',
 		updated: '2026-02-21',
 		language: 'HTML',
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -879,6 +923,7 @@ export const repos = [
 		created: '2026-03-07',
 		updated: '2026-03-06',
 		language: 'TypeScript',
+		developer: 'Vyluk',
 		contributors: [
 			{
 				login: 'Vyluk',
@@ -897,6 +942,7 @@ export const repos = [
 		language: 'TypeScript',
 		description:
 			'Starter Angular project with Tailwind and Material Icons for IT Kamianets applications',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -913,6 +959,7 @@ export const repos = [
 		created: '2024-10-15',
 		updated: '2024-10-29',
 		language: 'HTML',
+		developer: 'Stefura',
 		contributors: [
 			{
 				login: 'Stefura',
@@ -934,6 +981,7 @@ export const repos = [
 		created: '2026-02-23',
 		updated: '2026-03-04',
 		language: 'TypeScript',
+		developer: 'Na1ld',
 		contributors: [
 			{
 				login: 'Na1ld',
@@ -955,6 +1003,7 @@ export const repos = [
 		created: '2026-02-16',
 		updated: '2026-02-26',
 		language: 'HTML',
+		developer: 'ValeryMakush',
 		contributors: [
 			{
 				login: 'ValeryMakush',
@@ -971,6 +1020,7 @@ export const repos = [
 		created: '2026-02-16',
 		updated: '2026-02-27',
 		language: 'HTML',
+		developer: 'Vyluk',
 		contributors: [
 			{
 				login: 'Vyluk',
@@ -987,6 +1037,7 @@ export const repos = [
 		created: '2026-02-23',
 		updated: '2026-02-27',
 		language: 'TypeScript',
+		developer: 'VladLevchuk2009',
 		contributors: [],
 	},
 	{
@@ -997,6 +1048,7 @@ export const repos = [
 		created: '2024-10-08',
 		updated: '2024-10-08',
 		language: 'HTML',
+		developer: 'romanstoliar',
 		contributors: [
 			{
 				login: 'romanstoliar',
@@ -1013,6 +1065,7 @@ export const repos = [
 		created: '2024-10-22',
 		updated: '2024-10-22',
 		language: 'HTML',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1029,6 +1082,7 @@ export const repos = [
 		created: '2024-10-08',
 		updated: '2024-12-09',
 		language: 'HTML',
+		developer: 'MaksDarmanskiy',
 		contributors: [
 			{
 				login: 'MaksDarmanskiy',
@@ -1050,6 +1104,7 @@ export const repos = [
 		created: '2026-02-25',
 		updated: '2026-02-27',
 		language: 'HTML',
+		developer: 'Vyluk',
 		contributors: [
 			{
 				login: 'Vyluk',
@@ -1066,6 +1121,7 @@ export const repos = [
 		created: '2026-01-30',
 		updated: '2026-02-27',
 		language: 'TypeScript',
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -1082,6 +1138,7 @@ export const repos = [
 		created: '2026-02-28',
 		updated: '2026-03-05',
 		language: 'HTML',
+		developer: 'Keyd8n',
 		contributors: [
 			{
 				login: 'Keyd8n',
@@ -1099,6 +1156,7 @@ export const repos = [
 		updated: '2026-03-10',
 		language: 'HTML',
 		description: 'theme-bootstrap is a clean, adaptable UI theme powered by Bootstrap',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1125,6 +1183,7 @@ export const repos = [
 		created: '2026-02-28',
 		updated: '2026-03-01',
 		language: 'HTML',
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -1141,6 +1200,7 @@ export const repos = [
 		created: '2026-02-28',
 		updated: '2026-03-03',
 		language: 'TypeScript',
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -1158,6 +1218,7 @@ export const repos = [
 		created: '2026-01-30',
 		updated: '2026-02-14',
 		language: null,
+		developer: 'Vyluk',
 		contributors: [
 			{
 				login: 'Vyluk',
@@ -1179,6 +1240,7 @@ export const repos = [
 		created: '2024-10-01',
 		updated: '2024-11-24',
 		language: null,
+		developer: 'RuslanYaremko',
 		contributors: [
 			{
 				login: 'RuslanYaremko',
@@ -1200,6 +1262,7 @@ export const repos = [
 		created: '2024-10-15',
 		updated: '2024-11-19',
 		language: null,
+		developer: 'Stefura',
 		contributors: [
 			{
 				login: 'Stefura',
@@ -1226,6 +1289,7 @@ export const repos = [
 		created: '2026-02-25',
 		updated: '2026-03-04',
 		language: null,
+		developer: 'ValeryMakush',
 		contributors: [
 			{
 				login: 'ValeryMakush',
@@ -1242,6 +1306,7 @@ export const repos = [
 		created: '2024-11-12',
 		updated: '2024-11-19',
 		language: null,
+		developer: 'ASobachynska',
 		contributors: [
 			{
 				login: 'ASobachynska',
@@ -1263,6 +1328,7 @@ export const repos = [
 		created: '2026-03-04',
 		updated: '2026-03-08',
 		language: null,
+		developer: 'ValeryMakush',
 		contributors: [
 			{
 				login: 'ValeryMakush',
@@ -1279,6 +1345,7 @@ export const repos = [
 		created: '2026-02-28',
 		updated: '2026-03-04',
 		language: null,
+		developer: 'VadimValcerKN1B22',
 		contributors: [
 			{
 				login: 'VadimValcerKN1B22',
@@ -1295,6 +1362,7 @@ export const repos = [
 		created: '2024-11-26',
 		updated: '2024-11-26',
 		language: null,
+		developer: null,
 		contributors: [],
 	},
 	{
@@ -1305,6 +1373,7 @@ export const repos = [
 		created: '2026-03-09',
 		updated: '2026-03-13',
 		language: null,
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -1321,6 +1390,7 @@ export const repos = [
 		created: '2024-10-15',
 		updated: '2024-10-15',
 		language: null,
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1337,6 +1407,7 @@ export const repos = [
 		created: '2026-02-06',
 		updated: '2026-03-04',
 		language: null,
+		developer: 'Keyd8n',
 		contributors: [
 			{
 				login: 'Keyd8n',
@@ -1353,6 +1424,7 @@ export const repos = [
 		created: '2026-03-05',
 		updated: '2026-03-05',
 		language: null,
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -1369,6 +1441,7 @@ export const repos = [
 		created: '2024-10-15',
 		updated: '2024-10-29',
 		language: null,
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1395,6 +1468,7 @@ export const repos = [
 		created: '2024-10-22',
 		updated: '2024-10-22',
 		language: null,
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1411,11 +1485,12 @@ export const repos = [
 	{
 		id: 1153387972,
 		name: 'mc.itkamianets.com',
-		company: 'mc',
+		company: 'Молодіжний Центр',
 		url: 'https://github.com/IT-Kamianets/mc.itkamianets.com',
 		created: '2026-01-30',
 		updated: '2026-03-04',
 		language: null,
+		developer: 'Keyd8n',
 		contributors: [
 			{
 				login: 'Keyd8n',
@@ -1432,6 +1507,7 @@ export const repos = [
 		created: '2026-03-07',
 		updated: '2026-03-07',
 		language: null,
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1448,6 +1524,7 @@ export const repos = [
 		created: '2026-03-04',
 		updated: '2026-03-13',
 		language: null,
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -1469,6 +1546,7 @@ export const repos = [
 		created: '2024-08-07',
 		updated: '2024-08-07',
 		language: null,
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1485,6 +1563,7 @@ export const repos = [
 		created: '2026-03-04',
 		updated: '2026-03-14',
 		language: null,
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -1506,6 +1585,7 @@ export const repos = [
 		created: '2024-11-26',
 		updated: '2024-11-26',
 		language: null,
+		developer: 'Linonst',
 		contributors: [
 			{
 				login: 'Linonst',
@@ -1522,6 +1602,7 @@ export const repos = [
 		created: '2026-02-23',
 		updated: '2026-03-04',
 		language: null,
+		developer: 'Andre123451',
 		contributors: [
 			{
 				login: 'Andre123451',
@@ -1548,6 +1629,7 @@ export const repos = [
 		created: '2026-02-21',
 		updated: '2026-02-28',
 		language: null,
+		developer: 'VladLevchuk2009',
 		contributors: [
 			{
 				login: 's1a6ks',
@@ -1574,6 +1656,7 @@ export const repos = [
 		created: '2026-03-04',
 		updated: '2026-03-13',
 		language: null,
+		developer: 'AnatoliyKN1B22',
 		contributors: [
 			{
 				login: 'AnatoliyKN1B22',
@@ -1590,6 +1673,7 @@ export const repos = [
 		created: '2026-01-30',
 		updated: '2026-03-13',
 		language: null,
+		developer: 's1a6ks',
 		contributors: [
 			{
 				login: 's1a6ks',
@@ -1606,6 +1690,7 @@ export const repos = [
 		created: '2026-03-12',
 		updated: '2026-03-14',
 		language: null,
+		developer: 'SashaLuagutko',
 		contributors: [
 			{
 				login: 'SashaLuagutko',
@@ -1622,6 +1707,7 @@ export const repos = [
 		created: '2026-02-23',
 		updated: '2026-03-04',
 		language: null,
+		developer: 'VadimValcerKN1B22',
 		contributors: [
 			{
 				login: 'VadimValcerKN1B22',
@@ -1643,6 +1729,7 @@ export const repos = [
 		created: '2024-10-08',
 		updated: '2024-11-12',
 		language: null,
+		developer: 'ASobachynska',
 		contributors: [
 			{
 				login: 'ASobachynska',
@@ -1669,6 +1756,7 @@ export const repos = [
 		created: '2024-10-01',
 		updated: '2024-10-01',
 		language: null,
+		developer: 'Sobachynska',
 		contributors: [
 			{
 				login: 'Sobachynska',
@@ -1685,6 +1773,7 @@ export const repos = [
 		created: '2026-03-04',
 		updated: '2026-03-13',
 		language: null,
+		developer: 's1a6ks',
 		contributors: [
 			{
 				login: 's1a6ks',
@@ -1704,6 +1793,7 @@ export const repos = [
 		language: 'HTML',
 		description:
 			'CodeUA â€” Ñ†Ðµ Ð½Ð¾Ð²Ð° Ð¼Ð¾Ð²Ð° Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼ÑƒÐ²Ð°Ð½Ð½Ñ, ÑÑ‚Ð²Ð¾Ñ€ÐµÐ½Ð° Ð´Ð»Ñ Ð´Ñ–Ñ‚ÐµÐ¹, Ñ‰Ð¾ Ð²Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð¾Ð²ÑƒÑ” ÑƒÐºÑ€Ð°Ñ—Ð½ÑÑŒÐºÑ– Ð»Ñ–Ñ‚ÐµÑ€Ð¸. Ð’Ð¾Ð½Ð° Ñ€Ð¾Ð±Ð¸Ñ‚ÑŒ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼ÑƒÐ²Ð°Ð½Ð½ÑŽ Ñ†Ñ–ÐºÐ°Ð²Ð¸Ð¼ Ñ‚Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¼, Ð´Ð¾Ð·Ð²Ð¾Ð»ÑÑŽÑ‡Ð¸ Ð´Ñ–Ñ‚ÑÐ¼ Ð¿Ð¸ÑÐ°Ñ‚Ð¸ ÐºÐ¾Ð´ Ñ€Ñ–Ð´Ð½Ð¾ÑŽ Ð¼Ð¾Ð²Ð¾ÑŽ.',
+		developer: 'nikiquickie',
 		contributors: [
 			{
 				login: 'nikiquickie',
@@ -1730,6 +1820,7 @@ export const repos = [
 		created: '2024-09-30',
 		updated: '2024-10-01',
 		language: 'HTML',
+		developer: 'Angelina2708',
 		contributors: [
 			{
 				login: 'Angelina2708',
@@ -1751,6 +1842,7 @@ export const repos = [
 		created: '2024-10-01',
 		updated: '2024-10-01',
 		language: 'HTML',
+		developer: 'IvanKozlovky',
 		contributors: [
 			{
 				login: 'IvanKozlovky',
@@ -1767,6 +1859,7 @@ export const repos = [
 		created: '2024-10-15',
 		updated: '2024-10-22',
 		language: 'TypeScript',
+		developer: 'romanstoliar',
 		contributors: [
 			{
 				login: 'romanstoliar',
@@ -1794,6 +1887,7 @@ export const repos = [
 		updated: '2024-11-05',
 		language: null,
 		description: 'Default simple html/css/js project with CI/CD for wjst build',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1810,6 +1904,7 @@ export const repos = [
 		created: '2024-11-05',
 		updated: '2024-11-10',
 		language: 'HTML',
+		developer: 'VladShady',
 		contributors: [
 			{
 				login: 'VladShady',
@@ -1826,6 +1921,7 @@ export const repos = [
 		created: '2024-11-11',
 		updated: '2024-11-11',
 		language: 'JavaScript',
+		developer: 'VladShady',
 		contributors: [
 			{
 				login: 'VladShady',
@@ -1845,6 +1941,7 @@ export const repos = [
 		homepage: 'https://bulma.itkamianets.com/',
 		description:
 			'heme-bulma is a lightweight, modern UI theme powered by Bulma for scalable web apps. It includes a simple configuration to switch visual modes (base-light, base-dark, itkp), adjust density (comfortable, compact), and control global radius styles (rounded, square) without touching the core layout.',
+		developer: 'CrackerakiUA',
 		contributors: [
 			{
 				login: 'CrackerakiUA',
@@ -1867,6 +1964,7 @@ export const repos = [
 		updated: '2026-02-23',
 		language: 'CSS',
 		homepage: 'https://monte-kristo.itkamianets.com/',
+		developer: 'Na1ld',
 		contributors: [
 			{
 				login: 'Na1ld',
@@ -1884,6 +1982,7 @@ export const repos = [
 		updated: '2026-03-13',
 		language: 'JavaScript',
 		homepage: 'http://old-town.itkamianets.com/',
+		developer: 's1a6ks',
 		contributors: [
 			{
 				login: 's1a6ks',
@@ -1901,6 +2000,7 @@ export const repos = [
 		updated: '2026-03-06',
 		language: 'TypeScript',
 		homepage: 'https://spadok.itkamianets.com/',
+		developer: 'Na1ld',
 		contributors: [
 			{
 				login: 'Na1ld',

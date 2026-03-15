@@ -13,6 +13,7 @@ interface RepoRecord {
 	url: string;
 	created: string;
 	updated: string;
+	developer?: string | null;
 	contributors?: RepoContributor[];
 }
 
@@ -106,6 +107,10 @@ const formatProjectName = (value: string): string => {
 const getProjectNamesFor = (username: string): { name: string; url: string }[] =>
 	repoRecords
 		.filter((repo) => {
+			if (!repo.company) {
+				return false;
+			}
+
 			const assignedRepoNames = USERNAME_REPO_NAMES[username];
 
 			if (assignedRepoNames?.includes(repo.name)) {
@@ -113,20 +118,8 @@ const getProjectNamesFor = (username: string): { name: string; url: string }[] =
 			}
 
 			const usernames = USERNAME_ALIASES[username] ?? [username];
-			const contributors = repo.contributors ?? [];
-			const contributor = contributors
-				.filter((item) => usernames.includes(item.login))
-				.sort((left, right) => right.contributions - left.contributions)[0];
 
-			if (!contributor) {
-				return false;
-			}
-
-			return contributors.every(
-				(item) =>
-					usernames.includes(item.login) ||
-					item.contributions <= contributor.contributions,
-			);
+			return Boolean(repo.developer && usernames.includes(repo.developer));
 		})
 		.map((repo) => ({
 			name: formatProjectName(repo.company || repo.name),
