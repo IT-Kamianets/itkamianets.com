@@ -194,7 +194,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			id: 'tailwind',
 			name: 'Tailwind team',
 			framework: 'Tailwind CSS',
-			themeRepo: 'theme-tailwind',
+			themeRepo: 'Github theme-tailwind',
 			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-tailwind',
 			themeWebsiteUrl: 'https://tailwind.itkamianets.com/',
 			description:
@@ -225,7 +225,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			id: 'bootstrap',
 			name: 'Bootstrap team',
 			framework: 'Bootstrap',
-			themeRepo: 'theme-bootstrap',
+			themeRepo: 'Github theme-bootstrap',
 			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-bootstrap',
 			themeWebsiteUrl: 'https://bootstrap.itkamianets.com/',
 			description:
@@ -256,7 +256,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			id: 'bulma',
 			name: 'Bulma team',
 			framework: 'Bulma',
-			themeRepo: 'theme-bulma',
+			themeRepo: 'Github theme-bulma',
 			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-bulma',
 			themeWebsiteUrl: 'https://bulma.itkamianets.com/',
 			description:
