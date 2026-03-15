@@ -48,6 +48,9 @@ export interface HackathonTeam {
 	id: string;
 	name: string;
 	framework: string;
+	themeRepo: string;
+	themeRepoUrl: string;
+	themeWebsiteUrl: string;
 	description: string;
 	highlights: string[];
 	developers: HackathonDeveloper[];
@@ -138,8 +141,7 @@ export const HACKATHONS: HackathonCard[] = [
 		format: 'Внутрішній командний хакатон',
 		season: 'Весна 2026',
 		focus: 'Tailwind, Bootstrap та Bulma проти спільного дедлайну',
-		description:
-			'Три внутрішні команди розробників презентують прототипи, робочі демо та стратегію запуску для журі та партнерів.',
+		description: 'Три внутрішні команди розробників презентують прототипи та робочі демо.',
 		stack: ['Tailwind', 'Bootstrap', 'Bulma', 'Demo Day'],
 		period: '2 лютого - 13 березня 2026',
 		cta: '/hackathon',
@@ -172,7 +174,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		},
 		{
 			name: 'Diana Irikova',
-			photo: 'judges/Diana Irikova.png',
+			photo: 'judges/Diana Irikova.jpg',
 			description: 'Senior QA tester з досвідом у QA понад 6 років.',
 		},
 		{
@@ -182,7 +184,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		},
 		{
 			name: 'Vladuslava Dzuryk',
-			photo: 'judges/Vladuslava Dzuryk.png',
+			photo: 'judges/Vladuslava Dzuryk.jpg',
 			description:
 				'QA tester, менеджерка Web Art Work та Молодіжного центру з досвідом понад 2 роки.',
 		},
@@ -192,6 +194,9 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			id: 'tailwind',
 			name: 'Tailwind team',
 			framework: 'Tailwind CSS',
+			themeRepo: 'theme-tailwind',
+			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-tailwind',
+			themeWebsiteUrl: 'https://tailwind.itkamianets.com/',
 			description:
 				'Команда збирає адаптивні лендинги та демо на Tailwind і працює з найбільшою кількістю активних сайтів.',
 			highlights: [
@@ -220,6 +225,9 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			id: 'bootstrap',
 			name: 'Bootstrap team',
 			framework: 'Bootstrap',
+			themeRepo: 'theme-bootstrap',
+			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-bootstrap',
+			themeWebsiteUrl: 'https://bootstrap.itkamianets.com/',
 			description:
 				'Команда працює з класичними багатосторінковими макетами, швидко збирає структуру та доводить сторінки до стабільного демо.',
 			highlights: [
@@ -248,6 +256,9 @@ export const HACKATHON_PAGE: HackathonDetail = {
 			id: 'bulma',
 			name: 'Bulma team',
 			framework: 'Bulma',
+			themeRepo: 'theme-bulma',
+			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-bulma',
+			themeWebsiteUrl: 'https://bulma.itkamianets.com/',
 			description:
 				'Команда веде інтерфейси на Bulma, тримає стабільний темп релізів і показує широкий набір нішевих проєктів.',
 			highlights: [
