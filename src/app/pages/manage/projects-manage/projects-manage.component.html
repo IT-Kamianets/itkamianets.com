@@ -1,0 +1,395 @@
+<section class="projects-manage">
+	<header class="projects-manage__hero">
+		<div class="projects-manage__hero-glow"></div>
+		<p class="projects-manage__eyebrow">Control panel</p>
+		<h1 class="projects-manage__title">Projects</h1>
+		<p class="projects-manage__subtitle">
+			Керуйте публікаціями проєктів: створюйте, переглядайте, редагуйте та видаляйте карточки без
+			змін у коді сторінки.
+		</p>
+	</header>
+
+	<div class="projects-manage__tabs" role="tablist" aria-label="Projects tabs">
+		<button
+			type="button"
+			class="projects-manage__tab"
+			[class.projects-manage__tab--active]="activeTab() === 'create'"
+			(click)="switchTab('create')"
+		>
+			Додавання
+		</button>
+		<button
+			type="button"
+			class="projects-manage__tab"
+			[class.projects-manage__tab--active]="activeTab() === 'publications'"
+			(click)="switchTab('publications')"
+		>
+			Публікації
+		</button>
+	</div>
+
+	@if (activeTab() === 'create') {
+		<form class="project-form" [formGroup]="createForm" (ngSubmit)="publishProject()">
+			<div class="project-form__grid">
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label" for="project-photo">Фото проєкту</label>
+					<label class="project-form__file" for="project-photo">
+						<input
+							id="project-photo"
+							type="file"
+							accept="image/*"
+							(change)="onCreateImageChange($event)"
+						/>
+						<span class="project-form__file-btn">Обрати фото</span>
+						<span class="project-form__file-name">{{ createImageName() }}</span>
+					</label>
+					@if (createSubmitted() && createForm.controls.image.invalid) {
+						<p class="project-form__error">Фото проєкту обов'язкове.</p>
+					}
+				</div>
+
+				<div class="project-form__field">
+					<label class="project-form__label" for="project-title">Назва проєкту</label>
+					<input id="project-title" type="text" formControlName="title" />
+					@if (createSubmitted() && createForm.controls.title.invalid) {
+						<p class="project-form__error">Вкажіть назву проєкту (мінімум 2 символи).</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label" for="project-description">Опис проєкту</label>
+					<textarea
+						id="project-description"
+						rows="4"
+						formControlName="description"
+					></textarea>
+					@if (createSubmitted() && createForm.controls.description.invalid) {
+						<p class="project-form__error">Опис обов'язковий (мінімум 20 символів).</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label">Теги</label>
+					<div class="multi-select">
+						<button
+							type="button"
+							class="multi-select__toggle"
+							(click)="toggleTagsDropdown()"
+						>
+							<span>{{ selectedTagsText() }}</span>
+							<span class="material-symbols-outlined" aria-hidden="true">
+								{{ tagsOpen() ? 'expand_less' : 'expand_more' }}
+							</span>
+						</button>
+						@if (tagsOpen()) {
+							<div class="multi-select__panel">
+								@for (tag of tagOptions; track tag) {
+									<button
+										type="button"
+										class="multi-select__option"
+										(click)="toggleCreateTag(tag)"
+									>
+										<span
+											class="multi-select__square"
+											[class.multi-select__square--checked]="isTagSelected(tag)"
+										></span>
+										{{ tag }}
+									</button>
+								}
+							</div>
+						}
+					</div>
+					@if (createSubmitted() && createForm.controls.tags.invalid) {
+						<p class="project-form__error">Оберіть принаймні один тег.</p>
+					}
+				</div>
+
+				<div class="project-form__field">
+					<label class="project-form__label" for="project-repo">Силка на GitHub</label>
+					<input id="project-repo" type="url" formControlName="repoUrl" />
+					@if (createSubmitted() && createForm.controls.repoUrl.invalid) {
+						<p class="project-form__error">Вкажіть валідну URL-адресу GitHub.</p>
+					}
+				</div>
+
+				<div class="project-form__field">
+					<label class="project-form__label" for="project-live">Силка на сайт</label>
+					<input id="project-live" type="url" formControlName="liveUrl" />
+					@if (createSubmitted() && createForm.controls.liveUrl.invalid) {
+						<p class="project-form__error">Вкажіть валідну URL-адресу сайту.</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label">Люди з команди</label>
+					<div class="multi-select">
+						<button
+							type="button"
+							class="multi-select__toggle"
+							(click)="toggleMembersDropdown()"
+						>
+							<span>{{ selectedMembersText() }}</span>
+							<span class="material-symbols-outlined" aria-hidden="true">
+								{{ membersOpen() ? 'expand_less' : 'expand_more' }}
+							</span>
+						</button>
+						@if (membersOpen()) {
+							<div class="multi-select__panel multi-select__panel--members">
+								@for (member of teamMembers; track member.id) {
+									<button
+										type="button"
+										class="multi-select__option multi-select__option--member"
+										(click)="toggleCreateMember(member.id)"
+									>
+										<span
+											class="multi-select__square"
+											[class.multi-select__square--checked]="isMemberSelected(member.id)"
+										></span>
+										<img
+											[src]="'developer/' + member.avatar + '.png'"
+											[alt]="member.name"
+											class="multi-select__avatar"
+										/>
+										<span>{{ member.name }}</span>
+									</button>
+								}
+							</div>
+						}
+					</div>
+					@if (createSubmitted() && createForm.controls.memberIds.invalid) {
+						<p class="project-form__error">Оберіть хоча б одного учасника.</p>
+					}
+				</div>
+			</div>
+
+			<div class="project-form__actions">
+				<button type="button" class="btn btn--ghost" (click)="clearCreateForm()">Очистити</button>
+				<button type="button" class="btn btn--secondary" (click)="openDraftPreview()">
+					Попередній перегляд
+				</button>
+				<button type="submit" class="btn btn--primary">Опублікувати</button>
+			</div>
+		</form>
+	}
+
+	@if (activeTab() === 'publications') {
+		<section class="publications">
+			<div class="publications__table-wrap">
+				<table class="publications__table">
+					<thead>
+						<tr>
+							<th>Дії</th>
+							<th>Фото</th>
+							<th>Назва</th>
+							<th>Опис</th>
+							<th>Теги</th>
+							<th>Силки</th>
+							<th>Люди</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for (project of projects(); track trackByProjectId($index, project)) {
+							<tr>
+								<td class="publications__actions">
+									<button
+										type="button"
+										class="table-btn"
+										(click)="openProjectPreview(project)"
+									>
+										Попередній
+									</button>
+									<button type="button" class="table-btn" (click)="openEdit(project)">
+										Редагувати
+									</button>
+									<button
+										type="button"
+										class="table-btn table-btn--danger"
+										(click)="askDelete(project)"
+									>
+										Видалити
+									</button>
+								</td>
+								<td>
+									<div class="publications__photo-cell">
+										<img [src]="getImageSrc(project)" [alt]="project.title" class="publications__photo" />
+										<img
+											[src]="getImageSrc(project)"
+											[alt]="project.title"
+											class="publications__photo publications__photo--mini"
+										/>
+									</div>
+								</td>
+								<td>{{ project.title }}</td>
+								<td class="publications__description">{{ project.description }}</td>
+								<td>
+									<div class="publications__tags">
+										@for (tag of project.tags; track tag) {
+											<span class="publications__tag">{{ tag }}</span>
+										}
+									</div>
+								</td>
+								<td>
+									<div class="publications__links">
+										<a [href]="project.repoUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
+										<a [href]="project.liveUrl" target="_blank" rel="noopener noreferrer">Live</a>
+									</div>
+								</td>
+								<td>
+									<div class="publications__members">
+										@for (memberId of project.memberIds; track memberId) {
+											@if (getMemberById(memberId); as member) {
+												<div class="publications__member">
+													<img
+														[src]="'developer/' + member.avatar + '.png'"
+														[alt]="member.name"
+													/>
+													<span>{{ member.name }}</span>
+												</div>
+											}
+										}
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	}
+
+	@if (isPreviewOpen() && previewProject(); as project) {
+		<div class="overlay" (click)="closePreview()">
+			<div class="overlay__dialog overlay__dialog--preview" (click)="$event.stopPropagation()">
+				<button type="button" class="overlay__close" (click)="closePreview()">×</button>
+				<div class="project-card">
+					<div class="project-card__img">
+						<img [src]="getImageSrc(project)" [alt]="project.title" />
+					</div>
+					<div class="project-card__body">
+						<div class="project-card__header">
+							<h3 class="project-card__title">{{ project.title }}</h3>
+							<span class="project-card__badge" [ngClass]="getBadgeClass(project)">
+								{{ getBadgeLabel(project) }}
+							</span>
+						</div>
+						<p class="project-card__desc">{{ project.description }}</p>
+						<div class="project-card__tags">
+							@for (tag of project.tags; track tag) {
+								<span class="project-card__tag">{{ tag }}</span>
+							}
+						</div>
+						<div class="project-card__links">
+							<a [href]="project.repoUrl" target="_blank" rel="noopener noreferrer" class="project-card__link">
+								GitHub
+							</a>
+							<a
+								[href]="project.liveUrl"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="project-card__link project-card__link--live"
+							>
+								Live
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	@if (isEditOpen()) {
+		<div class="overlay" (click)="closeEdit()">
+			<div class="overlay__dialog" (click)="$event.stopPropagation()">
+				<h2>Редагування публікації</h2>
+				<form [formGroup]="editForm" class="edit-form" (ngSubmit)="saveEdit()">
+					<label class="project-form__label" for="edit-photo">Фото</label>
+					<label class="project-form__file" for="edit-photo">
+						<input id="edit-photo" type="file" accept="image/*" (change)="onEditImageChange($event)" />
+						<span class="project-form__file-btn">Оновити фото</span>
+						<span class="project-form__file-name">{{ editImageName() }}</span>
+					</label>
+					@if (editSubmitted() && editForm.controls.image.invalid) {
+						<p class="project-form__error">Фото проєкту обов'язкове.</p>
+					}
+
+					<label class="project-form__label" for="edit-title">Назва</label>
+					<input id="edit-title" type="text" formControlName="title" />
+					@if (editSubmitted() && editForm.controls.title.invalid) {
+						<p class="project-form__error">Вкажіть назву проєкту.</p>
+					}
+
+					<label class="project-form__label" for="edit-description">Опис</label>
+					<textarea id="edit-description" rows="4" formControlName="description"></textarea>
+					@if (editSubmitted() && editForm.controls.description.invalid) {
+						<p class="project-form__error">Опис обов'язковий.</p>
+					}
+
+					<div class="edit-form__chips">
+						@for (tag of tagOptions; track tag) {
+							<button
+								type="button"
+								class="edit-form__chip"
+								[class.edit-form__chip--active]="isEditTagSelected(tag)"
+								(click)="toggleEditTag(tag)"
+							>
+								{{ tag }}
+							</button>
+						}
+					</div>
+					@if (editSubmitted() && editForm.controls.tags.invalid) {
+						<p class="project-form__error">Оберіть хоча б один тег.</p>
+					}
+
+					<label class="project-form__label" for="edit-repo">GitHub URL</label>
+					<input id="edit-repo" type="url" formControlName="repoUrl" />
+					@if (editSubmitted() && editForm.controls.repoUrl.invalid) {
+						<p class="project-form__error">Вкажіть валідну URL-адресу GitHub.</p>
+					}
+
+					<label class="project-form__label" for="edit-live">Live URL</label>
+					<input id="edit-live" type="url" formControlName="liveUrl" />
+					@if (editSubmitted() && editForm.controls.liveUrl.invalid) {
+						<p class="project-form__error">Вкажіть валідну URL-адресу сайту.</p>
+					}
+
+					<div class="edit-form__members">
+						@for (member of teamMembers; track member.id) {
+							<button
+								type="button"
+								class="edit-form__member"
+								[class.edit-form__member--active]="isEditMemberSelected(member.id)"
+								(click)="toggleEditMember(member.id)"
+							>
+								<img [src]="'developer/' + member.avatar + '.png'" [alt]="member.name" />
+								{{ member.name }}
+							</button>
+						}
+					</div>
+					@if (editSubmitted() && editForm.controls.memberIds.invalid) {
+						<p class="project-form__error">Оберіть хоча б одного учасника.</p>
+					}
+
+					<div class="overlay__actions">
+						<button type="button" class="btn btn--ghost" (click)="closeEdit()">Скасувати</button>
+						<button type="submit" class="btn btn--primary">Зберегти</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+
+	@if (deleteCandidate(); as project) {
+		<div class="overlay" (click)="cancelDelete()">
+			<div class="overlay__dialog overlay__dialog--confirm" (click)="$event.stopPropagation()">
+				<h3>Видалити публікацію?</h3>
+				<p>
+					Ви впевнені, що хочете видалити проєкт <strong>{{ project.title }}</strong>?
+				</p>
+				<div class="overlay__actions">
+					<button type="button" class="btn btn--ghost" (click)="cancelDelete()">Ні</button>
+					<button type="button" class="btn btn--danger" (click)="confirmDelete()">Так, видалити</button>
+				</div>
+			</div>
+		</div>
+	}
+</section>
