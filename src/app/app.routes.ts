@@ -154,8 +154,8 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				data: { title: 'Projects' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/projects-manage/projects-manage.component').then(
+						(m) => m.ProjectsManageComponent,
 					),
 			},
 			{
