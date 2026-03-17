@@ -1,0 +1,116 @@
+<section class="education-page">
+	<section class="education-hero">
+		<div class="education-hero__content">
+			<span class="education-hero__eyebrow">Education</span>
+			<h1 class="education-hero__title">Навчальні заклади Камʼянця-Подільського</h1>
+			<p class="education-hero__subtitle">
+				Публічна сторінка автоматично підтягує опубліковані записи з адмін-панелі
+				Shcools. Тут відображається актуальний список закладів і ключові контакти.
+			</p>
+			<div class="education-hero__actions">
+				<a routerLink="/manage/shcools" class="education-hero__link">Відкрити адмінку</a>
+				<a routerLink="/" class="education-hero__link education-hero__link--ghost"
+					>На головну</a
+				>
+			</div>
+		</div>
+	</section>
+
+	<div class="education-page__content">
+		<section class="education-summary">
+			<article class="education-summary__card">
+				<span>Опубліковано закладів</span>
+				<strong>{{ institutions().length }}</strong>
+			</article>
+			<article class="education-summary__card">
+				<span>Рекомендовані</span>
+				<strong>{{ featuredInstitutions().length }}</strong>
+			</article>
+			<article class="education-summary__card">
+				<span>Загальна кількість здобувачів</span>
+				<strong>{{ totalStudents() | number }}</strong>
+			</article>
+		</section>
+
+		@if (featuredInstitutions().length) {
+			<section class="education-featured">
+				<div class="education-featured__header">
+					<div>
+						<p class="education-featured__eyebrow">Featured</p>
+						<h2 class="education-featured__title">Рекомендовані заклади</h2>
+					</div>
+				</div>
+				<div class="education-featured__grid">
+					@for (institution of featuredInstitutions(); track institution.id) {
+						<article class="education-featured__card">
+							<span class="education-featured__type">{{ typeLabel(institution.type) }}</span>
+							<h3>{{ institution.shortName }}</h3>
+							<p>{{ institution.notes }}</p>
+							<ul>
+								<li>{{ institution.address }}</li>
+								<li>{{ institution.principal }}</li>
+								<li>{{ institution.studentsCount | number }} здобувачів</li>
+							</ul>
+						</article>
+					}
+				</div>
+			</section>
+		}
+
+		<section class="education-all">
+			<div class="education-all__header">
+				<div>
+					<p class="education-featured__eyebrow">Featured</p>
+					<h2 class="education-featured__title">Усі заклади</h2>
+				</div>
+				<div class="education-filters">
+					<input
+						type="search"
+						placeholder="Пошук за назвою, директором або адресою"
+						[value]="searchTerm()"
+						(input)="updateSearch(($any($event.target).value ?? '').toString())"
+					/>
+					<select
+						[value]="selectedType()"
+						(change)="selectedType.set(($any($event.target).value ?? 'all').toString())"
+					>
+						<option value="all">Усі типи</option>
+						@for (option of typeOptions; track option.value) {
+							<option [value]="option.value">{{ option.label }}</option>
+						}
+					</select>
+				</div>
+			</div>
+
+			<div class="education-all__grid">
+				@for (institution of filteredInstitutions(); track institution.id) {
+					<article class="education-featured__card education-featured__card--all">
+						<span class="education-featured__type">{{ typeLabel(institution.type) }}</span>
+						<h3>{{ institution.shortName }}</h3>
+						<p>{{ institution.name }}</p>
+						<ul>
+							<li>{{ institution.address }} ({{ institution.district }})</li>
+							<li>{{ institution.principal || 'Керівника не вказано' }}</li>
+							<li>{{ institution.studentsCount | number }} здобувачів</li>
+							<li>{{ institution.phone || 'Телефон не вказано' }}</li>
+						</ul>
+						@if (institution.website) {
+							<a
+								[href]="institution.website"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="education-card__link"
+							>
+								Перейти на сайт
+							</a>
+						}
+					</article>
+				} @empty {
+					<p class="education-all__empty">
+						Немає опублікованих навчальних закладів за вибраними умовами.
+					</p>
+				}
+			</div>
+		</section>
+	</div>
+</section>

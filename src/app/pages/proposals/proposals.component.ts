@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CATEGORIES, PROPOSALS, Proposal } from '../../data/proposals.data';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PROPOSALS, Proposal } from '../../data/proposals.data';
+import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 
 @Component({
 	selector: 'app-proposals',
@@ -12,24 +12,15 @@ import { CATEGORIES, PROPOSALS, Proposal } from '../../data/proposals.data';
 })
 export class ProposalsComponent {
 	readonly proposals: Proposal[] = PROPOSALS;
-	readonly categories: string[] = CATEGORIES;
-	activeCategory = signal<string>('All');
+	readonly team = TEAM_MEMBERS;
 
-	constructor(private route: ActivatedRoute) {
-		this.route.queryParams.subscribe((params) => {
-			if (params['category'] && this.categories.includes(params['category'])) {
-				this.activeCategory.set(params['category']);
-			}
-		});
+	getTeamMember(name: string): TeamMember | undefined {
+		return this.team.find((m) => m.name === name);
 	}
 
-	setFilter(category: string): void {
-		this.activeCategory.set(category);
-	}
-
-	get filteredProposals(): Proposal[] {
-		const cat = this.activeCategory();
-		if (cat === 'All') return this.proposals;
-		return this.proposals.filter((p) => p.category === cat);
+	getMemberAvatar(name: string): string {
+		const member = this.getTeamMember(name);
+		// Відповідно до сторінки Команда, шлях формується як 'developer/' + avatar + '.png'
+		return member ? `developer/${member.avatar}.png` : 'logo.png';
 	}
 }
