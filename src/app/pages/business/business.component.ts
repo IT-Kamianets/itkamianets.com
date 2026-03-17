@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { BUSINESSES, Business } from '../../data/businesses.data';
 import { BreadcrumbComponent, Crumb } from '../../shared/components/breadcrumb.component';
 
 @Component({
 	selector: 'app-business',
-	imports: [RouterLink, BreadcrumbComponent],
+	imports: [BreadcrumbComponent],
 	templateUrl: './business.component.html',
 	styleUrl: './business.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -28,7 +28,7 @@ export class BusinessesComponent {
 		title.setTitle("Бізнеси Кам'янця | IT-Kamianets");
 		meta.updateTag({
 			name: 'description',
-			content: 'Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства. Технології, послуги, контакти.',
+			content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства. Технології, послуги, контакти.",
 		});
 
 		// Restore state from URL on init
