@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UserService } from '../../feature/user/user.service';
 import { ThemeMode, ThemeService } from 'wacom';
 
 @Component({
@@ -11,6 +12,7 @@ import { ThemeMode, ThemeService } from 'wacom';
 })
 export class HeaderComponent {
 	protected readonly theme = inject(ThemeService);
+	protected readonly userService = inject(UserService);
 
 	protected toggleTheme() {
 		const newMode: ThemeMode = this.theme.mode() === 'dark' ? 'light' : 'dark';
@@ -27,5 +29,9 @@ export class HeaderComponent {
 
 	protected get themeLabel(): string {
 		return this.isDark ? 'Switch to light mode' : 'Switch to dark mode';
+	}
+
+	protected get profileLabel(): string {
+		return this.userService.isAuthenticated() ? 'Open profile' : 'Sign in';
 	}
 }

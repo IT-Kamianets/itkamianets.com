@@ -6,8 +6,9 @@ import {
 } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideTranslate } from 'wacom';
+import { provideTranslate, provideWacom } from 'wacom';
 import { routes } from './app.routes';
+import { wacomConfig } from './wacom.config';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
 		provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
 		provideHttpClient(withFetch()),
 		provideClientHydration(withEventReplay()),
+		provideWacom(wacomConfig),
 		provideTranslate(),
 	],
 };

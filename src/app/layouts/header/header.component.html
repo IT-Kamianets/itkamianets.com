@@ -52,6 +52,16 @@
 
 			<!-- Right: Theme Toggle -->
 			<div class="header__actions">
+				<a
+					routerLink="/manage/profile"
+					class="header__icon-link"
+					[attr.aria-label]="profileLabel"
+					routerLinkActive="header__icon-link--active"
+				>
+					<span class="material-symbols-outlined header__icon-link-symbol" aria-hidden="true">
+						account_circle
+					</span>
+				</a>
 				<button
 					type="button"
 					class="theme-toggle"
@@ -78,17 +88,29 @@
 					</div>
 					<span class="header__brand-name">IT-KAMIANETS</span>
 				</div>
-				<button
-					type="button"
-					class="theme-toggle theme-toggle--sm"
-					[class.theme-toggle--dark]="isDark"
-					(click)="toggleTheme()"
-					[attr.aria-label]="themeLabel"
-				>
-					<span class="material-symbols-outlined theme-toggle__icon" aria-hidden="true">
-						{{ themeIcon }}
-					</span>
-				</button>
+				<div class="header__mobile-actions">
+					<a
+						routerLink="/manage/profile"
+						class="header__icon-link header__icon-link--sm"
+						[attr.aria-label]="profileLabel"
+						routerLinkActive="header__icon-link--active"
+					>
+						<span class="material-symbols-outlined header__icon-link-symbol" aria-hidden="true">
+							account_circle
+						</span>
+					</a>
+					<button
+						type="button"
+						class="theme-toggle theme-toggle--sm"
+						[class.theme-toggle--dark]="isDark"
+						(click)="toggleTheme()"
+						[attr.aria-label]="themeLabel"
+					>
+						<span class="material-symbols-outlined theme-toggle__icon" aria-hidden="true">
+							{{ themeIcon }}
+						</span>
+					</button>
+				</div>
 			</div>
 
 			<!-- Row 2: Navigation Links -->

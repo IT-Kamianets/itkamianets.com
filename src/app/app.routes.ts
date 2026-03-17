@@ -1,6 +1,12 @@
 import { Routes } from '@angular/router';
+import { authenticatedGuard } from './feature/user/authenticated.guard';
 
 export const routes: Routes = [
+	{
+		path: 'sign',
+		loadComponent: () =>
+			import('./pages/sign/sign.component').then((m) => m.SignComponent),
+	},
 	{
 		path: '',
 		loadComponent: () =>
@@ -10,6 +16,14 @@ export const routes: Routes = [
 				path: '',
 				loadComponent: () =>
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
+			},
+			{
+				path: 'manage/profile',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/profile/profile.component').then(
+						(m) => m.ProfileComponent,
+					),
 			},
 			{
 				path: 'projects',

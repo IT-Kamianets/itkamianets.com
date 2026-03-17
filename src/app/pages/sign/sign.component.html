@@ -1,0 +1,73 @@
+<div
+	class="sign-page min-h-dvh grid grid-rows-[28dvh_1fr] bg-[var(--c-bg-primary)] p-6 md:grid-cols-2 md:grid-rows-none md:items-stretch md:gap-16 md:p-10"
+>
+	<div class="flex h-full items-center justify-center md:justify-end md:pr-10">
+		<a routerLink="/" class="sign-page__brand" aria-label="Go to home page">
+			<img class="sign-page__logo" src="logo.png" alt="IT-Kamianets logo" />
+		</a>
+	</div>
+
+	<div class="flex items-start justify-center md:items-center md:justify-start md:pl-10">
+		<section class="sign-card">
+			<button
+				type="button"
+				class="sign-card__theme"
+				[class.sign-card__theme--dark]="isDark"
+				(click)="toggleTheme()"
+				[attr.aria-label]="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+			>
+				<span class="material-symbols-outlined" aria-hidden="true">
+					{{ isDark ? 'light_mode' : 'dark_mode' }}
+				</span>
+			</button>
+
+			<p class="sign-card__eyebrow">Imported from `example`</p>
+			<h1 class="sign-card__title">Sign In / Sign Up</h1>
+			<p class="sign-card__subtitle">Sign in or create an account.</p>
+
+			<form class="sign-form" (submit)="onSubmit($event)" novalidate>
+				<label class="sign-form__field">
+					<span class="sign-form__label">Email</span>
+					<input
+						class="sign-form__input"
+						type="email"
+						autocomplete="email"
+						placeholder="Enter your email..."
+						[value]="model().email"
+						(input)="updateField('email', ($any($event.target).value ?? '').toString())"
+						(blur)="markTouched('email')"
+					/>
+					@if (emailError()) {
+						<span class="sign-form__error">{{ emailError() }}</span>
+					}
+				</label>
+
+				<label class="sign-form__field">
+					<span class="sign-form__label">Password</span>
+					<input
+						class="sign-form__input"
+						type="password"
+						autocomplete="current-password"
+						placeholder="Enter your password..."
+						[value]="model().password"
+						(input)="updateField('password', ($any($event.target).value ?? '').toString())"
+						(blur)="markTouched('password')"
+					/>
+					@if (passwordError()) {
+						<span class="sign-form__error">{{ passwordError() }}</span>
+					}
+				</label>
+
+				<button class="sign-form__submit" type="submit" [disabled]="isSubmitDisabled()">
+					Let's go
+				</button>
+			</form>
+
+			@if (submitMessage()) {
+				<p class="sign-card__notice" [class.sign-card__notice--error]="submitTone() === 'error'">
+					{{ submitMessage() }}
+				</p>
+			}
+		</section>
+	</div>
+</div>
