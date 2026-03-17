@@ -30,6 +30,9 @@ export class BusinessesComponent {
 			name: 'description',
 			content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства. Технології, послуги, контакти.",
 		});
+		meta.updateTag({ property: 'og:title', content: "Бізнеси Кам'янця | IT-Kamianets" });
+		meta.updateTag({ property: 'og:description', content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства." });
+		meta.updateTag({ property: 'og:type', content: 'website' });
 
 		// Restore state from URL on init
 		const params = this.route.snapshot.queryParamMap;
@@ -62,6 +65,23 @@ export class BusinessesComponent {
 	setFilter(type: string): void {
 		this.activeType.set(type);
 	}
+
+	readonly typeCounts = computed<Record<string, number>>(() => {
+		const q = this.searchQuery().toLowerCase().trim();
+		return Object.fromEntries(
+			['All', ...BUSINESS_TYPES].map((t) => [
+				t,
+				BUSINESSES.filter(
+					(b) =>
+						(t === 'All' || b.type === t) &&
+						(!q ||
+							b.name.toLowerCase().includes(q) ||
+							b.techStack.some((x) => x.toLowerCase().includes(q)) ||
+							b.services.some((x) => x.toLowerCase().includes(q))),
+				).length,
+			]),
+		);
+	});
 
 	readonly filteredBusinesses = computed<Business[]>(() => {
 		const type = this.activeType();

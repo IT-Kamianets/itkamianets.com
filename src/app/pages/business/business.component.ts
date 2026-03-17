@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { BUSINESSES, Business } from '../../data/businesses.data';
 import { BreadcrumbComponent, Crumb } from '../../shared/components/breadcrumb.component';
@@ -24,6 +24,7 @@ export class BusinessComponent {
 
 	constructor(
 		private route: ActivatedRoute,
+		private router: Router,
 		private title: Title,
 		private meta: Meta,
 	) {
@@ -34,6 +35,12 @@ export class BusinessComponent {
 			if (found) {
 				this.title.setTitle(found.name + ' | IT-Kamianets');
 				this.meta.updateTag({ name: 'description', content: found.shortDescription });
+				this.meta.updateTag({ property: 'og:title', content: found.name + ' | IT-Kamianets' });
+				this.meta.updateTag({ property: 'og:description', content: found.shortDescription });
+				this.meta.updateTag({ property: 'og:image', content: found.logo });
+				this.meta.updateTag({ property: 'og:type', content: 'website' });
+			} else {
+				this.router.navigate(['/businesses'], { replaceUrl: true });
 			}
 		});
 	}
