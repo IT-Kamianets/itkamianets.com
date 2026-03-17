@@ -5,7 +5,7 @@
 		<div class="page-hero__content">
 			<span class="section-label">Послуги</span>
 			<h1 class="page-hero__title">Наші пропозиції</h1>
-			<p class="page-hero__subtitle">Комплексні ІТ-рішення для різних галузей бізнесу</p>
+			<p class="page-hero__subtitle">Комплексні ІТ-рішення для масштабування вашого бізнесу</p>
 		</div>
 
 		<div class="section-divider-bar">
@@ -14,82 +14,57 @@
 	</section>
 
 	<div class="container">
-		<!-- Category Filters -->
-		<div class="proposals-filters">
-			<button
-				class="proposals-filter"
-				[class.proposals-filter--active]="activeCategory() === 'All'"
-				(click)="setFilter('All')"
-			>
-				Усі
-			</button>
-			@for (cat of categories; track cat) {
-				<button
-					class="proposals-filter"
-					[class.proposals-filter--active]="activeCategory() === cat"
-					(click)="setFilter(cat)"
-				>
-					{{ cat }}
-				</button>
-			}
-		</div>
-
-		<!-- Proposals Grid -->
-		<div class="proposals-grid">
-			@for (p of filteredProposals; track p.id) {
+		<!-- Proposals List (Horizontal Cards) -->
+		<div class="proposals-list">
+			@for (p of proposals; track p.id) {
 				<div class="proposal-card">
 					<div class="proposal-card__img">
 						<img [src]="p.image" [alt]="p.title" loading="lazy" />
-						<span class="proposal-card__badge">{{ p.category }}</span>
 					</div>
 					<div class="proposal-card__body">
-						<h3 class="proposal-card__title">{{ p.title }}</h3>
-						<p class="proposal-card__desc">{{ p.shortDescription }}</p>
+						<div class="proposal-card__header">
+							<span class="proposal-card__badge">{{ p.category }}</span>
+							<h3 class="proposal-card__title">{{ p.title }}</h3>
+						</div>
+						
+						<p class="proposal-card__desc">{{ p.fullDescription }}</p>
+						
 						<div class="proposal-card__features">
 							@for (f of p.features; track f) {
-								<span class="proposal-card__feature">{{ f }}</span>
+								<span class="proposal-card__feature">
+									<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+										<polyline points="20 6 9 17 4 12"></polyline>
+									</svg>
+									{{ f }}
+								</span>
 							}
 						</div>
-						<div class="proposal-card__meta">
-							<div class="proposal-card__meta-item">
-								<svg
-									width="14"
-									height="14"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									viewBox="0 0 24 24"
-								>
-									<path
-										d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"
-									/>
-								</svg>
-								<span>{{ p.priceFrom | number }}–{{ p.priceTo | number }} грн</span>
-							</div>
-							<div class="proposal-card__meta-item">
-								<svg
-									width="14"
-									height="14"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									viewBox="0 0 24 24"
-								>
-									<circle cx="12" cy="12" r="10" />
-									<polyline points="12 6 12 12 16 14" />
-								</svg>
-								<span>{{ p.timeFrom }}–{{ p.timeTo }} тижнів</span>
-							</div>
-						</div>
-						<div class="proposal-card__team">
-							@for (member of p.team; track member.name) {
-								<div
-									class="proposal-card__member"
-									[title]="member.name + ' — ' + member.role"
-								>
-									<img [src]="member.avatar" [alt]="member.name" />
+
+						<div class="proposal-card__footer">
+							<div class="proposal-card__meta">
+								<div class="proposal-card__meta-item">
+									<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+										<path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+									</svg>
+									<span>від {{ p.priceFrom | number }} грн</span>
 								</div>
-							}
+								<div class="proposal-card__meta-item">
+									<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+										<circle cx="12" cy="12" r="10" />
+										<polyline points="12 6 12 12 16 14" />
+									</svg>
+									<span>{{ p.timeFrom }}–{{ p.timeTo }} тижнів</span>
+								</div>
+							</div>
+
+							<div class="proposal-card__team">
+								<span class="proposal-card__team-label">Команда:</span>
+								@for (member of p.team; track member.name) {
+									<div class="proposal-card__member" [title]="member.name + ' — ' + member.role">
+										<img [src]="member.avatar" [alt]="member.name" />
+									</div>
+								}
+							</div>
 						</div>
 					</div>
 				</div>
