@@ -48,6 +48,7 @@ export interface HackathonDeveloper {
 export interface HackathonTeam {
 	id: string;
 	name: string;
+	qa: string;
 	framework: string;
 	themeRepo: string;
 	themeRepoUrl: string;
@@ -186,6 +187,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		{
 			id: 'tailwind',
 			name: 'Tailwind team',
+			qa: 'Анна Постой',
 			framework: 'Tailwind CSS',
 			themeRepo: 'Github theme-tailwind',
 			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-tailwind',
@@ -217,6 +219,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		{
 			id: 'bootstrap',
 			name: 'Bootstrap team',
+			qa: '',
 			framework: 'Bootstrap',
 			themeRepo: 'Github theme-bootstrap',
 			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-bootstrap',
@@ -248,6 +251,7 @@ export const HACKATHON_PAGE: HackathonDetail = {
 		{
 			id: 'bulma',
 			name: 'Bulma team',
+			qa: 'Василь Власов',
 			framework: 'Bulma',
 			themeRepo: 'Github theme-bulma',
 			themeRepoUrl: 'https://github.com/IT-Kamianets/theme-bulma',
