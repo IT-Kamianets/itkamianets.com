@@ -1,0 +1,129 @@
+@if (member(); as m) {
+	<div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+		
+		<!-- Hero Section -->
+		<section class="overflow-hidden rounded-[2rem] border border-[var(--c-border)] bg-[linear-gradient(140deg,rgba(30,41,59,0.96),rgba(8,145,178,0.72))] text-white shadow-[var(--shadow-card)]">
+			<div class="flex flex-col items-center gap-6 px-6 py-10 sm:flex-row sm:px-10 sm:py-14">
+				<img
+					[src]="'developer/' + m.avatar + '.png'"
+					[alt]="m.name"
+					class="h-32 w-32 shrink-0 rounded-[1.5rem] object-cover ring-4 ring-white/20 sm:h-48 sm:w-48"
+					style="image-rendering: auto;"
+					loading="eager"
+				/>
+				<div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+					<span class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-200">
+						{{ m.role }}
+					</span>
+					<h1 class="mt-2 text-4xl font-black tracking-tight sm:text-5xl">
+						{{ m.name }}
+					</h1>
+					<div class="mt-4 flex flex-wrap justify-center sm:justify-start gap-4 text-sm font-medium text-cyan-50">
+						<span class="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
+							<span class="material-symbols-outlined text-[1.125rem]">school</span>
+							{{ m.university }}
+						</span>
+						<span class="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
+							<span class="material-symbols-outlined text-[1.125rem]">calendar_today</span>
+							{{ m.internshipDates }}
+						</span>
+					</div>
+					
+					<div class="mt-6 flex flex-wrap gap-3 w-full sm:w-auto text-white">
+						<a [href]="m.socials.github" target="_blank" class="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/10 px-5 py-2.5 text-sm font-medium backdrop-blur transition-colors hover:bg-white/20 sm:flex-none">
+							GitHub
+							<span class="material-symbols-outlined text-[1.125rem]">open_in_new</span>
+						</a>
+						<a [href]="m.socials.linkedin" target="_blank" class="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/10 px-5 py-2.5 text-sm font-medium backdrop-blur transition-colors hover:bg-white/20 sm:flex-none">
+							LinkedIn
+							<span class="material-symbols-outlined text-[1.125rem]">open_in_new</span>
+						</a>
+						<a [href]="m.socials.upwork" target="_blank" class="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/10 px-5 py-2.5 text-sm font-medium backdrop-blur transition-colors hover:bg-white/20 sm:flex-none">
+							Upwork
+							<span class="material-symbols-outlined text-[1.125rem]">open_in_new</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Projects -->
+		<section class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 sm:p-8 shadow-[var(--shadow-card)]">
+			<div class="mb-6 border-b border-[var(--c-border)] pb-4">
+				<h2 class="text-2xl font-black text-[var(--c-text-secondary)] sm:text-3xl">Вибрані Проекти</h2>
+				<p class="mt-1 text-sm text-[var(--c-text-muted)]">Приклади робіт, у яких розробник брав участь.</p>
+			</div>
+			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				@for (project of memberProjects(); track project.id) {
+					<article class="flex flex-col overflow-hidden rounded-[1.5rem] border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] transition-colors hover:border-[var(--c-primary)]/50">
+						<img [src]="'project/' + project.image + '.png'" [alt]="project.title" class="h-48 w-full object-cover border-b border-[var(--c-border)]" style="image-rendering: auto;" />
+						<div class="p-5 flex flex-col flex-1">
+							<div class="flex items-start justify-between gap-2">
+								<h3 class="text-lg font-bold text-[var(--c-text-secondary)]">{{ project.title }}</h3>
+								<a [href]="project.liveUrl" target="_blank" class="text-[var(--c-text-muted)] hover:text-[var(--c-primary)] transition-colors" title="Live Website">
+									<span class="material-symbols-outlined text-[1.25rem]">language</span>
+								</a>
+							</div>
+							<p class="mt-2 text-sm text-[var(--c-text-primary)] flex-1">{{ project.description }}</p>
+							<div class="mt-4 flex flex-wrap gap-2">
+								@for (tag of project.tags; track tag) {
+									<span class="rounded-full bg-[var(--c-bg-secondary)] px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-[var(--c-text-muted)] border border-[var(--c-border)]">{{ tag }}</span>
+								}
+							</div>
+						</div>
+					</article>
+				}
+			</div>
+		</section>
+
+		<div class="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+			<!-- Repomin Activity -->
+			<section class="flex flex-col rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 sm:p-8 shadow-[var(--shadow-card)]">
+				<div class="mb-6 border-b border-[var(--c-border)] pb-4">
+					<h2 class="text-2xl font-black text-[var(--c-text-secondary)]">Активність GitHub</h2>
+					<p class="mt-1 text-sm text-[var(--c-text-muted)]">Останні оновлення в репозиторіях.</p>
+				</div>
+				<div class="grid gap-4 flex-1 content-start sm:grid-cols-2">
+					@for (repo of memberRepos(); track repo.id) {
+						<a [href]="repo.url" target="_blank" class="group flex flex-col rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4 transition-all hover:border-[var(--c-primary)] hover:shadow-sm">
+							<div class="flex items-center justify-between min-w-0">
+								<h3 class="font-bold text-[var(--c-text-secondary)] truncate group-hover:text-[var(--c-primary)]">{{ repo.name }}</h3>
+								<span class="material-symbols-outlined text-[var(--c-text-muted)] transition-colors group-hover:text-[var(--c-primary)] text-sm">open_in_new</span>
+							</div>
+							<p class="mt-2 flex items-center justify-between text-xs text-[var(--c-text-muted)]">
+								<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[1rem]">calendar_month</span> {{ repo.updated | date:'MMM d, yyyy' }}</span>
+								<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[1rem]">group</span> {{ repo.contributors?.length || 1 }}</span>
+							</p>
+						</a>
+					}
+				</div>
+			</section>
+			
+			<!-- Hackathons -->
+			<section class="flex flex-col rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 sm:p-8 shadow-[var(--shadow-card)]">
+				<div class="mb-6 border-b border-[var(--c-border)] pb-4">
+					<h2 class="text-2xl font-black text-[var(--c-text-secondary)]">Змагання</h2>
+					<p class="mt-1 text-sm text-[var(--c-text-muted)]">Участь у хакатонах.</p>
+				</div>
+				<div class="grid gap-4 flex-1 content-start">
+					@for (hack of memberHackathons(); track hack.id) {
+						<div class="rounded-xl border border-[var(--c-border)] bg-[linear-gradient(to_bottom_right,var(--c-bg-tertiary),var(--c-bg-secondary))] p-5 shadow-sm">
+							<div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--c-border)] pb-3">
+								<span class="rounded-full bg-[var(--c-border)]/50 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-[var(--c-text-secondary)]">{{ hack.season }}</span>
+								<span class="text-xs font-mono text-[var(--c-text-muted)] bg-[var(--c-bg-secondary)] rounded px-2 py-1 border border-[var(--c-border)]">{{ hack.period }}</span>
+							</div>
+							<h3 class="mt-4 text-lg font-bold text-[var(--c-text-secondary)]">{{ hack.title }}</h3>
+							<p class="mt-2 text-sm text-[var(--c-text-primary)] leading-6">{{ hack.description }}</p>
+							<div class="mt-5 flex flex-wrap gap-2">
+								@for (tech of hack.stack; track tech) {
+									<span class="rounded-lg bg-[var(--c-bg-secondary)] px-2.5 py-1 text-xs font-medium text-[var(--c-text-muted)] border border-[var(--c-border)] shadow-sm">{{ tech }}</span>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			</section>
+		</div>
+
+	</div>
+}

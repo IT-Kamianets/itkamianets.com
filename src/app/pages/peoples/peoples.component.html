@@ -1,0 +1,37 @@
+<div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+	<!-- Page Hero -->
+	<section class="flex flex-col gap-4">
+		<span class="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--c-primary)]">Спільнота</span>
+		<h1 class="max-w-3xl text-4xl font-black tracking-tight text-[var(--c-text-secondary)] sm:text-5xl">
+			Наші розробники
+		</h1>
+		<p class="max-w-2xl text-base leading-7 text-[var(--c-text-primary)] sm:text-lg">
+			Професіонали, які створюють сучасні веб-додатки та беруть участь у крутих проектах.
+		</p>
+	</section>
+
+	<div class="h-px w-full bg-[var(--c-border)]"></div>
+
+	<!-- Grid -->
+	<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		@for (member of members; track member.id) {
+			<a [routerLink]="['/people']" [queryParams]="{ id: member.id }" class="group flex flex-col items-center rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 text-center shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--c-primary)] hover:shadow-lg">
+				<img
+					[src]="'developer/' + member.avatar + '.png'"
+					[alt]="member.name"
+					class="mb-4 h-28 w-28 rounded-full object-cover shadow-sm ring-4 ring-[var(--c-bg-tertiary)] transition-transform duration-300 group-hover:scale-105"
+					style="image-rendering: auto;"
+					loading="lazy"
+				/>
+				<h3 class="text-xl font-bold text-[var(--c-text-secondary)] transition-colors group-hover:text-[var(--c-primary)]">{{ member.name }}</h3>
+				<p class="mt-1 text-sm font-medium text-[var(--c-primary)]">{{ member.role }}</p>
+				<p class="mt-2 text-xs text-[var(--c-text-muted)]">{{ member.university }}</p>
+				
+				<div class="mt-6 flex w-full justify-between items-center rounded-xl bg-[var(--c-bg-tertiary)] px-4 py-3 text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] border border-[var(--c-border)] transition-colors group-hover:border-[var(--c-primary)]/30 group-hover:text-[var(--c-primary)]">
+					<span>Профіль</span>
+					<span class="material-symbols-outlined text-base">arrow_forward</span>
+				</div>
+			</a>
+		}
+	</div>
+</div>

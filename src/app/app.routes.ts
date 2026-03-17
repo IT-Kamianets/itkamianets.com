@@ -26,6 +26,12 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'manage/users',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/users/users.component').then((m) => m.UsersComponent),
+			},
+			{
 				path: 'projects',
 				loadComponent: () =>
 					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
@@ -43,6 +49,16 @@ export const routes: Routes = [
 					import('./pages/hackathon/hackathon.component').then(
 						(m) => m.HackathonComponent,
 					),
+			},
+			{
+				path: 'peoples',
+				loadComponent: () =>
+					import('./pages/peoples/peoples.component').then((m) => m.PeoplesComponent),
+			},
+			{
+				path: 'people',
+				loadComponent: () =>
+					import('./pages/people/people.component').then((m) => m.PeopleComponent),
 			},
 			{
 				path: 'team',
