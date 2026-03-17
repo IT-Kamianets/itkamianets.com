@@ -1,0 +1,227 @@
+<section class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+	<div
+		class="overflow-hidden rounded-[2rem] border border-[var(--c-border)] bg-[linear-gradient(135deg,rgba(14,165,233,0.16),rgba(15,23,42,0.92))] text-white shadow-[var(--shadow-card)]"
+	>
+		<div class="flex flex-col gap-5 px-6 py-10 sm:px-10 sm:py-14">
+			<span class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
+				ПОДІЇ
+			</span>
+			<h1 class="max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">
+				ЗУСТРІЧІ ТА ЗАХОДИ ДЛЯ ТИХ, ХТО ТВОРИТЬ МАЙБУТНЄ
+			</h1>
+			<p class="max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
+				Відкрийте для себе нові можливості, обмінюйтеся досвідом та ставайте частиною інноваційної спільноти Кам'янця-Подільського.
+			</p>
+		</div>
+	</div>
+
+	<div class="events-filters">
+		@for (type of types(); track type) {
+			<button
+				(click)="selectType(type)"
+				class="events-filter"
+				[class.events-filter--active]="selectedType() === type"
+			>
+				{{ type }}
+			</button>
+		}
+	</div>
+
+	<div class="grid gap-6 lg:grid-cols-3">
+		@for (event of filteredEvents(); track event.id) {
+			<article
+				class="flex h-full flex-col rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1"
+			>
+				<div class="mb-5 flex items-start justify-between gap-4">
+					<div>
+						<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">
+							{{ event.type }}
+						</p>
+						<h2 class="mt-2 text-2xl font-bold text-[var(--c-text-secondary)]">
+							{{ event.title }}
+						</h2>
+					</div>
+					<span
+						class="rounded-full bg-[var(--c-bg-tertiary)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--c-text-muted)]"
+					>
+						{{ event.date }}
+					</span>
+				</div>
+
+				<div class="flex flex-col gap-2 mt-2">
+					<div class="flex items-center gap-2 text-sm text-[var(--c-text-muted)]">
+						<span class="material-symbols-outlined text-base">schedule</span>
+						{{ event.time }}
+					</div>
+					<div class="flex items-center gap-2 text-sm text-[var(--c-text-muted)]">
+						<span class="material-symbols-outlined text-base">location_on</span>
+						{{ event.location }}
+					</div>
+				</div>
+
+				<p class="mt-4 text-sm leading-7 text-[var(--c-text-primary)]">
+					{{ event.description }}
+				</p>
+
+				<div class="mt-auto pt-8 flex flex-col sm:flex-row gap-3">
+					<button
+						(click)="openEvent(event)"
+						class="flex-1 inline-flex items-center justify-center gap-2 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-5 py-3 text-sm font-semibold text-[var(--c-text-secondary)] transition-all duration-200 hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+					>
+						Більше
+					</button>
+					<button
+						(click)="registerForEvent(event)"
+						class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--c-primary)] px-5 py-3 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90 shadow-md shadow-[var(--c-primary)]/10"
+					>
+						Зареєструватись
+					</button>
+				</div>
+			</article>
+		}
+		@empty {
+			<div class="col-span-full py-12 flex flex-col items-center justify-center text-center text-[var(--c-text-muted)] bg-[var(--c-bg-secondary)] rounded-[1.75rem] border border-[var(--c-border)] border-dashed">
+				<span class="material-symbols-outlined text-4xl mb-3">event_busy</span>
+				<p class="text-lg font-medium">На жаль, подій у цій категорії наразі немає.</p>
+				<button (click)="selectType('Усі')" class="mt-4 text-[var(--c-primary)] hover:underline text-sm font-medium">Показати всі події</button>
+			</div>
+		}
+	</div>
+
+	@if (selectedEvent(); as event) {
+		<div
+			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300"
+			(click)="closeEvent()"
+		>
+			<div
+				class="relative w-full max-w-2xl overflow-hidden rounded-[2rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-2xl animate-in zoom-in-95 duration-200"
+				(click)="$event.stopPropagation()"
+			>
+				<button
+					(click)="closeEvent()"
+					class="absolute right-6 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--c-bg-tertiary)] text-[var(--c-text-muted)] hover:text-[var(--c-text-secondary)] transition-colors"
+				>
+					<span class="material-symbols-outlined">close</span>
+				</button>
+
+				<div class="px-8 py-10 sm:px-10">
+					@if (registrationSuccess()) {
+						<div class="text-center py-10 animate-in zoom-in-95">
+							<span class="material-symbols-outlined text-6xl text-green-500 mb-4">check_circle</span>
+							<h2 class="text-3xl font-black text-[var(--c-text-secondary)] mb-2">Дякуємо!</h2>
+							<p class="text-[var(--c-text-muted)] mb-8">Ваша заявка на участь у події "{{ event.title }}" успішно надіслана. Ми зв'яжемося з вами найближчим часом.</p>
+							<button 
+								(click)="closeEvent()"
+								class="rounded-full bg-[var(--c-primary)] px-8 py-3 font-bold text-white hover:opacity-90 transition-opacity"
+							>
+								Закрити
+							</button>
+						</div>
+					} @else if (isRegistering()) {
+						<div class="animate-in zoom-in-95">
+							<div class="mb-6">
+								<button (click)="isRegistering.set(false)" class="flex items-center gap-2 text-sm text-[var(--c-primary)] font-semibold hover:underline mb-2">
+									<span class="material-symbols-outlined text-base">arrow_back</span>
+									Назад до опису
+								</button>
+								<h2 class="text-3xl font-black tracking-tight text-[var(--c-text-secondary)]">Реєстрація</h2>
+								<p class="text-sm text-[var(--c-text-muted)] mt-1">Заповніть анкету для участі у "{{ event.title }}"</p>
+							</div>
+
+							<form (submit)="submitRegistration()" class="space-y-4">
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+									<div>
+										<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-1.5">Ваше ім'я</label>
+										<input type="text" [(ngModel)]="regForm.name" name="name" required placeholder="Іван Іванов"
+											class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors">
+									</div>
+									<div>
+										<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-1.5">Email</label>
+										<input type="email" [(ngModel)]="regForm.email" name="email" required placeholder="example@mail.com"
+											class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors">
+									</div>
+								</div>
+								<div>
+									<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-1.5">Номер телефону</label>
+									<input type="tel" [(ngModel)]="regForm.phone" name="phone" required placeholder="+380..."
+										class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors">
+								</div>
+								<div>
+									<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-1.5">Коментар або запитання</label>
+									<textarea [(ngModel)]="regForm.message" name="message" rows="3" placeholder="Розкажіть трохи про себе..."
+										class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors"></textarea>
+								</div>
+								<button type="submit"
+									class="w-full mt-6 rounded-full bg-[var(--c-primary)] py-4 text-sm font-black text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-opacity">
+									Надіслати заявку
+								</button>
+							</form>
+						</div>
+					} @else {
+						<div class="animate-in zoom-in-95">
+							<div class="mb-6">
+								<p
+									class="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]"
+								>
+									{{ event.type }}
+								</p>
+								<h2 class="mt-2 text-3xl font-black tracking-tight text-[var(--c-text-secondary)]">
+									{{ event.title }}
+								</h2>
+							</div>
+
+							<div class="flex flex-wrap gap-6 mb-8">
+								<div class="flex items-center gap-3 text-sm text-[var(--c-text-muted)]">
+									<span class="material-symbols-outlined text-xl text-[var(--c-primary)]"
+										>calendar_month</span
+									>
+									{{ event.date }}
+								</div>
+								<div class="flex items-center gap-3 text-sm text-[var(--c-text-muted)]">
+									<span class="material-symbols-outlined text-xl text-[var(--c-primary)]"
+										>schedule</span
+									>
+									{{ event.time }}
+								</div>
+								<div class="flex items-center gap-3 text-sm text-[var(--c-text-muted)]">
+									<span class="material-symbols-outlined text-xl text-[var(--c-primary)]"
+										>location_on</span
+									>
+									{{ event.location }}
+								</div>
+							</div>
+
+							<div class="space-y-4">
+								<h3 class="text-lg font-bold text-[var(--c-text-secondary)]">Про подію</h3>
+								<p class="text-base leading-relaxed text-[var(--c-text-primary)]">
+									{{ event.description }}
+								</p>
+								<p class="text-sm text-[var(--c-text-muted)]">
+									Приєднуйтесь до нас для незабутнього досвіду! Ця подія створена для того, щоб об'єднати активну громаду нашого міста та надати платформу для розвитку та спілкування.
+								</p>
+							</div>
+
+							<div class="mt-10 flex gap-4">
+								<button
+									(click)="startRegistration()"
+									class="flex-1 rounded-full bg-[var(--c-primary)] px-6 py-4 text-center text-sm font-bold text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-opacity"
+								>
+									Зареєструватися
+								</button>
+								@if (event.link && event.link !== '#') {
+									<a
+										[href]="event.link"
+										target="_blank"
+										class="flex-1 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-6 py-4 text-center text-sm font-bold text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] transition-colors"
+									>
+										Сайт події
+									</a>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</section>

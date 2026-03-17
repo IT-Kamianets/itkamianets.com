@@ -34,15 +34,21 @@ export const routes: Routes = [
 					),
 			},
 			{
-				path: 'hackathons',
-				loadComponent: () =>
-					import('./pages/hackathons/hackathons.component').then(
-						(m) => m.HackathonsComponent,
-					),
+			        path: 'hackathons',
+			        loadComponent: () =>
+			                import('./pages/hackathons/hackathons.component').then(
+			                        (m) => m.HackathonsComponent,
+			                ),
 			},
 			{
-				path: 'hackathon',
-				loadComponent: () =>
+			        path: 'events',
+			        loadComponent: () =>
+			                import('./pages/events/events.component').then(
+			                        (m) => m.EventsComponent,
+			                ),
+			},
+			{
+			        path: 'hackathon',				loadComponent: () =>
 					import('./pages/hackathon/hackathon.component').then(
 						(m) => m.HackathonComponent,
 					),
@@ -104,6 +110,14 @@ export const routes: Routes = [
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'profile',
+			},
+			{
+				path: 'events',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/events/events.component').then(
+						(m) => m.ManageEventsComponent,
+					),
 			},
 			{
 				path: 'profile',
