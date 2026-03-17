@@ -1,0 +1,82 @@
+<section class="manage-competitions">
+	<div class="manage-competitions__header">
+		<div>
+			<h1 class="manage-competitions__title">Змагання</h1>
+			<p class="manage-competitions__subtitle">
+				Локальне редагування списку змагань, що показуються на публічних сторінках.
+			</p>
+		</div>
+		<button type="button" class="manage-competitions__add" (click)="addCompetition()">
+			<span class="material-symbols-outlined" aria-hidden="true"> add </span>
+			<span>Додати змагання</span>
+		</button>
+	</div>
+
+	<div class="manage-competitions__table-wrapper">
+		<table class="manage-competitions__table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Назва</th>
+					<th>Сезон</th>
+					<th>Формат</th>
+					<th>Період</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (competition of competitions; track competition.id) {
+					<tr>
+						<td>{{ competition.id }}</td>
+						<td>
+							<input
+								type="text"
+								class="manage-competitions__input"
+								[(ngModel)]="competition.title"
+								placeholder="Назва змагання"
+							/>
+						</td>
+						<td>
+							<input
+								type="text"
+								class="manage-competitions__input"
+								[(ngModel)]="competition.season"
+								placeholder="Сезон"
+							/>
+						</td>
+						<td>
+							<input
+								type="text"
+								class="manage-competitions__input"
+								[(ngModel)]="competition.format"
+								placeholder="Формат"
+							/>
+						</td>
+						<td>
+							<input
+								type="text"
+								class="manage-competitions__input"
+								[(ngModel)]="competition.period"
+								placeholder="Період"
+							/>
+						</td>
+						<td class="manage-competitions__actions">
+							<button
+								type="button"
+								class="manage-competitions__icon-button"
+								(click)="removeCompetition(competition.id)"
+								aria-label="Видалити змагання"
+							>
+								<span class="material-symbols-outlined" aria-hidden="true">
+									delete
+								</span>
+							</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</section>
+
+
