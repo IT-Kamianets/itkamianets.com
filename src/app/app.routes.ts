@@ -25,6 +25,14 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
 			},
+			
+			{
+				path: 'education',
+				loadComponent: () =>
+					import('./pages/education/education.component').then(
+						(m) => m.EducationComponent,
+					),
+			},
 			{
 				path: 'hackathons',
 				loadComponent: () =>
@@ -105,6 +113,15 @@ export const routes: Routes = [
 						(m) => m.ProfileComponent,
 					),
 			},
+			
+			{
+				path: 'schools',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/shcools/shcools.component').then(
+						(m) => m.ShcoolsComponent,
+					),
+			},
 			{
 				path: 'merch',
 				canActivate: [authenticatedGuard],
@@ -150,15 +167,7 @@ export const routes: Routes = [
 						(m) => m.SectionComponent,
 					),
 			},
-			{
-				path: 'schools',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Schools' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
+			
 			{
 				path: 'jobs',
 				canActivate: [authenticatedGuard],
