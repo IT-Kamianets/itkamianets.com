@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild, ElementRef, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { JobService } from '../../../feature/job/job.service';
@@ -14,35 +14,55 @@ import { TEAM_MEMBERS } from '../../../data/team.data';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobsComponent {
+	@ViewChild('editorContent') editorContent!: ElementRef;
+
 	protected readonly jobService = inject(JobService);
 	protected readonly jobs = this.jobService.docs;
 	protected readonly authors = TEAM_MEMBERS;
+
+	constructor() {
+		effect(() => {
+			console.log('Component received jobs:', this.jobs());
+		});
+	}
 
 	protected readonly editingJob = signal<Job | null>(null);
 
 	protected create() {
 		this.editingJob.set(this.jobService.new() as Job);
+		setTimeout(() => {
+			if (this.editorContent) this.editorContent.nativeElement.innerHTML = '';
+		});
 	}
 
 	protected edit(job: Job) {
 		this.editingJob.set({ ...job });
+		setTimeout(() => {
+			if (this.editorContent) this.editorContent.nativeElement.innerHTML = job.description || '';
+		});
 	}
 
 	protected save() {
 		const job = this.editingJob();
 		if (!job) return;
 
+		// Отримуємо вміст безпосередньо з DOM перед збереженням
+		job.description = this.editorContent.nativeElement.innerHTML;
+
 		if (job._id) {
-			this.jobService.update(job);
+			this.jobService.update(job).subscribe(() => {
+				this.editingJob.set(null);
+			});
 		} else {
-			this.jobService.create(job);
+			this.jobService.create(job).subscribe(() => {
+				this.editingJob.set(null);
+			});
 		}
-		this.editingJob.set(null);
 	}
 
 	protected delete(job: Job) {
 		if (confirm('Ви впевнені, що хочете видалити цю роботу?')) {
-			this.jobService.delete(job);
+			this.jobService.delete(job).subscribe();
 		}
 	}
 
@@ -52,6 +72,7 @@ export class JobsComponent {
 
 	protected format(command: string, value: string = '') {
 		document.execCommand(command, false, value);
+		this.editorContent.nativeElement.focus();
 	}
 
 	protected insertCustomImage() {
@@ -59,12 +80,6 @@ export class JobsComponent {
 		if (url) {
 			this.format('insertImage', url);
 		}
-	}
-
-	protected updateDescription(event: Event) {
-		const job = this.editingJob();
-		if (!job) return;
-		job.description = (event.target as HTMLElement).innerHTML;
 	}
 
 	protected onImageUpload(event: Event) {
