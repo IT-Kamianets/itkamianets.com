@@ -1,21 +1,23 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	computed,
 	Injector,
 	inject,
 	PLATFORM_ID,
 	signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { form, pattern, required, submit, FormField } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
+import { ButtonDirective } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
 import { ThemeMode, ThemeService } from 'wacom';
 import { HttpService } from 'wacom';
 import { UserService } from '../../feature/user/user.service';
 import { RespStatus, SignModel } from './sign.interface';
 
 @Component({
-	imports: [RouterLink],
+	imports: [RouterLink, InputText, ButtonDirective, FormField],
 	templateUrl: './sign.component.html',
 	styleUrl: './sign.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,64 +32,19 @@ export class SignComponent {
 		email: '',
 		password: '',
 	});
-	protected readonly touched = signal<Record<keyof SignModel, boolean>>({
-		email: false,
-		password: false,
-	});
 	protected readonly submitMessage = signal('');
 	protected readonly submitTone = signal<'info' | 'error'>('info');
-	protected readonly emailError = computed(() => {
-		if (!this.touched().email) {
-			return '';
-		}
-
-		const email = this.model().email.trim();
-		if (!email) {
-			return 'Enter your email.';
-		}
-
-		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Enter a valid email address.';
-	});
-	protected readonly passwordError = computed(() => {
-		if (!this.touched().password) {
-			return '';
-		}
-
-		return this.model().password.trim() ? '' : 'Enter your password.';
-	});
-
-	protected readonly isSubmitDisabled = computed(() => {
-		return Boolean(this.emailError() || this.passwordError())
-			|| !this.model().email.trim()
-			|| !this.model().password.trim();
-	});
-
-	protected updateField(field: keyof SignModel, value: string) {
-		this.model.update((current) => ({
-			...current,
-			[field]: value,
-		}));
-	}
-
-	protected markTouched(field: keyof SignModel) {
-		this.touched.update((current) => ({
-			...current,
-			[field]: true,
-		}));
-	}
-
-	protected onSubmit(event: Event) {
-		event.preventDefault();
-		this.touched.set({
-			email: true,
-			password: true,
+	protected readonly signForm = form(this.model, (s) => {
+		required(s.email, { message: 'Введіть email.' });
+		pattern(s.email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+			message: 'Введіть коректну email-адресу.',
 		});
+		required(s.password, { message: 'Введіть пароль.' });
+	});
 
-		if (this.isSubmitDisabled()) {
-			return;
-		}
-
-		this._submit(this.model());
+	protected async onSubmit(event: Event): Promise<void> {
+		event.preventDefault();
+		await submit(this.signForm, async (field) => this._submit(field().value()));
 	}
 
 	protected toggleTheme() {
@@ -102,7 +59,7 @@ export class SignComponent {
 	private _submit(payload: SignModel) {
 		const http = this._http();
 		if (!http) {
-			this._setStatus('error', 'Auth API is only available in the browser.');
+			this._setStatus('error', 'API авторизації доступне лише у браузері.');
 			return;
 		}
 
@@ -113,25 +70,25 @@ export class SignComponent {
 				this._sign(payload);
 			}
 		}, {
-			err: () => this._setStatus('error', 'Unable to contact the auth API.'),
+			err: () => this._setStatus('error', 'Не вдалося звʼязатися з API авторизації.'),
 		});
 	}
 
 	private _login(payload: SignModel) {
 		this._http()?.post('/api/user/login', payload, (user) => this._set(user), {
-			err: () => this._setStatus('error', 'Sign in failed.'),
+			err: () => this._setStatus('error', 'Не вдалося увійти.'),
 		});
 	}
 
 	private _sign(payload: SignModel) {
 		this._http()?.post('/api/user/sign', payload, (user) => this._set(user), {
-			err: () => this._setStatus('error', 'Sign up failed.'),
+			err: () => this._setStatus('error', 'Не вдалося зареєструватися.'),
 		});
 	}
 
 	private _set(user: unknown) {
 		if (!user || typeof user !== 'object') {
-			this._setStatus('error', 'Something went wrong.');
+			this._setStatus('error', 'Щось пішло не так.');
 			return;
 		}
 

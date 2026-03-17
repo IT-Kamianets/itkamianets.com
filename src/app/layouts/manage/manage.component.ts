@@ -1,11 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { ScrollToTopComponent } from '../shared/scroll-to-top.component';
-import { ManageHeaderComponent } from './manage-header.component';
+import { ScrollToTopComponent } from '../../shared/scroll-to-top.component';
+import { ManageHeaderComponent } from '../manage-header/manage-header.component';
 
 @Component({
 	selector: 'app-manage',
-	imports: [ManageHeaderComponent, RouterLink, RouterLinkActive, RouterOutlet, ScrollToTopComponent],
+	imports: [
+		ManageHeaderComponent,
+		RouterLink,
+		RouterLinkActive,
+		RouterOutlet,
+		ScrollToTopComponent,
+	],
 	templateUrl: './manage.component.html',
 	styleUrl: './manage.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,

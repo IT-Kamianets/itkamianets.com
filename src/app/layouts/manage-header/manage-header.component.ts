@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UserService } from '../feature/user/user.service';
 import { ThemeMode, ThemeService } from 'wacom';
+import { UserService } from '../../feature/user/user.service';
 
 @Component({
 	selector: 'app-manage-header',

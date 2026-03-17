@@ -100,7 +100,8 @@ export const routes: Routes = [
 	},
 	{
 		path: '',
-		loadComponent: () => import('./layouts/guest.component').then((m) => m.GuestComponent),
+		loadComponent: () =>
+			import('./layouts/guest/guest.component').then((m) => m.GuestComponent),
 		children: [
 			{
 				path: 'sign',
@@ -111,7 +112,8 @@ export const routes: Routes = [
 	},
 	{
 		path: 'manage',
-		loadComponent: () => import('./layouts/manage.component').then((m) => m.ManageComponent),
+		loadComponent: () =>
+			import('./layouts/manage/manage.component').then((m) => m.ManageComponent),
 		children: [
 			{
 				path: '',
