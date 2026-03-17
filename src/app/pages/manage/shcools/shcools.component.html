@@ -1,0 +1,66 @@
+<section class="shcools-page">
+	<div class="shcools-page__content">
+			<div class="shcools-table-wrap">
+				<table class="shcools-table">
+					<thead>
+						<tr>
+							<th>Назва</th>
+							<th>Тип</th>
+							<th>Адреса</th>
+							<th>Керівник</th>
+							<th>Контакти</th>
+							<th>Учні</th>
+							<th>Сайт</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for (institution of institutions(); track institution.id) {
+							<tr>
+								<td>
+									<div class="shcools-table__name">
+										<strong>{{ institution.shortName }}</strong>
+										<span>{{ institution.name }}</span>
+									</div>
+								</td>
+								<td>{{ typeLabel(institution.type) }}</td>
+								<td>
+									<div class="shcools-table__meta">
+										<span>{{ institution.address }}</span>
+										<small>{{ institution.district }}</small>
+									</div>
+								</td>
+								<td>{{ institution.principal || '—' }}</td>
+								<td>
+									<div class="shcools-table__meta">
+										<span>{{ institution.phone || '—' }}</span>
+										<small>{{ institution.email || '—' }}</small>
+									</div>
+								</td>
+								<td>{{ institution.studentsCount | number }}</td>
+								<td>
+									@if (institution.website) {
+										<a
+											[href]="institution.website"
+											target="_blank"
+											rel="noopener noreferrer"
+											class="shcools-table__link"
+										>
+											Перейти
+										</a>
+									} @else {
+										<span>—</span>
+									}
+								</td>
+							</tr>
+						} @empty {
+							<tr>
+								<td colspan="7" class="shcools-table__empty">
+									Список навчальних закладів порожній.
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+	</div>
+</section>

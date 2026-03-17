@@ -18,11 +18,26 @@ export const routes: Routes = [
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
+				path: 'education',
+				loadComponent: () =>
+					import('./pages/education/education.component').then(
+						(m) => m.EducationComponent,
+					),
+			},
+			{
 				path: 'manage/profile',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
 					import('./pages/manage/profile/profile.component').then(
 						(m) => m.ProfileComponent,
+					),
+			},
+			{
+				path: 'manage/shcools',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/shcools/shcools.component').then(
+						(m) => m.ShcoolsComponent,
 					),
 			},
 			{
