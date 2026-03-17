@@ -1,13 +1,14 @@
 import { Injectable, signal } from '@angular/core';
-import { EVENTS, EventCard } from '../../data/events.data';
+import { EVENTS } from '../../data/events.data';
+import { Event } from './event.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class EventService {
-	readonly events = signal<EventCard[]>(EVENTS);
+	readonly events = signal<Event[]>(EVENTS as Event[]);
 
-	add(event: Omit<EventCard, 'id'>) {
+	add(event: Omit<Event, 'id'>) {
 		const newEvent = {
 			...event,
 			id: Math.max(0, ...this.events().map(e => e.id)) + 1,
@@ -15,7 +16,7 @@ export class EventService {
 		this.events.update(events => [newEvent, ...events]);
 	}
 
-	update(updatedEvent: EventCard) {
+	update(updatedEvent: Event) {
 		this.events.update(events =>
 			events.map(event => (event.id === updatedEvent.id ? updatedEvent : event))
 		);

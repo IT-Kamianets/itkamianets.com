@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../feature/event/event.service';
-import { EventCard } from '../../../data/events.data';
+import { Event } from '../../../feature/event/event.interface';
 
 @Component({
 	selector: 'app-manage-events',
@@ -16,7 +16,7 @@ export class ManageEventsComponent {
 	protected readonly events = this.eventService.events;
 	
 	protected isModalOpen = signal(false);
-	protected editingEvent = signal<EventCard | null>(null);
+	protected editingEvent = signal<Event | null>(null);
 	
 	protected form = {
 		title: '',
@@ -40,7 +40,7 @@ export class ManageEventsComponent {
 		this.isModalOpen.set(true);
 	}
 
-	openEditModal(event: EventCard) {
+	openEditModal(event: Event) {
 		this.editingEvent.set(event);
 		this.form = {
 			title: event.title,

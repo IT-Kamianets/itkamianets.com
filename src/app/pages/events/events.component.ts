@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../feature/event/event.service';
-import { EventCard } from '../../data/events.data';
+import { Event } from '../../feature/event/event.interface';
 
 @Component({
 	selector: 'app-events',
@@ -16,7 +16,7 @@ export class EventsComponent {
 	protected readonly events = this.eventService.events;
 	protected readonly types = computed(() => ['Усі', ...new Set(this.events().map(e => e.type))]);
 	protected readonly selectedType = signal<string>('Усі');
-	protected readonly selectedEvent = signal<EventCard | null>(null);
+	protected readonly selectedEvent = signal<Event | null>(null);
 	protected readonly isRegistering = signal(false);
 	protected readonly registrationSuccess = signal(false);
 
@@ -40,14 +40,14 @@ export class EventsComponent {
 		this.selectedType.set(type);
 	}
 
-	openEvent(event: EventCard) {
+	openEvent(event: Event) {
 		this.selectedEvent.set(event);
 		this.isRegistering.set(false);
 		this.registrationSuccess.set(false);
 		document.body.style.overflow = 'hidden';
 	}
 
-	registerForEvent(event: EventCard) {
+	registerForEvent(event: Event) {
 		this.selectedEvent.set(event);
 		this.regForm = { name: '', email: '', phone: '', message: '' };
 		this.isRegistering.set(true);
