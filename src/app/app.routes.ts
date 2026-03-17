@@ -110,8 +110,8 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				data: { title: 'Merch' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/merch/merch.component').then(
+						(m) => m.MerchComponent,
 					),
 			},
 			{
