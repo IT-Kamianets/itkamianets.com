@@ -1,22 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UserService } from '../../feature/user/user.service';
+import { UserService } from '../feature/user/user.service';
 import { ThemeMode, ThemeService } from 'wacom';
 
 @Component({
-	selector: 'app-public-header',
+	selector: 'app-manage-header',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [RouterLink, RouterLinkActive],
-	templateUrl: './header.component.html',
-	styleUrl: './header.component.scss',
+	templateUrl: './manage-header.component.html',
+	styleUrl: './manage-header.component.scss',
 })
-export class HeaderComponent {
+export class ManageHeaderComponent {
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
 
 	protected toggleTheme() {
 		const newMode: ThemeMode = this.theme.mode() === 'dark' ? 'light' : 'dark';
 		this.theme.setMode(newMode);
+	}
+
+	protected logout() {
+		this.userService.logout('/sign');
 	}
 
 	protected get isDark(): boolean {
@@ -29,9 +33,5 @@ export class HeaderComponent {
 
 	protected get themeLabel(): string {
 		return this.isDark ? 'Switch to light mode' : 'Switch to dark mode';
-	}
-
-	protected get profileLabel(): string {
-		return this.userService.isAuthenticated() ? 'Open profile' : 'Sign in';
 	}
 }
