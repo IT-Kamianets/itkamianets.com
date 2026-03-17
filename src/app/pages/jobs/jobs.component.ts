@@ -1,12 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { JobService } from '../../feature/job/job.service';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Job } from '../../feature/job/job.interface';
+import { JobService } from '../../feature/job/job.service';
 
 @Component({
 	selector: 'app-jobs',
-	standalone: true,
-	imports: [RouterLink],
 	templateUrl: './jobs.component.html',
 	styleUrl: './jobs.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,33 @@
+<header class="manage-header">
+	<nav class="manage-header__inner">
+		<a routerLink="/" class="manage-header__brand" aria-label="Go to home page">
+			<div class="manage-header__logo-wrap">
+				<img src="logo.png" alt="Logo" class="manage-header__logo" />
+			</div>
+			<div class="manage-header__brand-copy">
+				<span class="manage-header__kicker">Manage</span>
+				<span class="manage-header__name">IT-KAMIANETS</span>
+			</div>
+		</a>
+
+		<div class="manage-header__actions">
+			<a
+				routerLink="/manage/profile"
+				routerLinkActive="manage-header__link--active"
+				class="manage-header__link"
+			>
+				<span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+				<span>Profile</span>
+			</a>
+			<button
+				type="button"
+				class="manage-header__icon-btn"
+				(click)="toggleTheme()"
+				[attr.aria-label]="themeLabel"
+			>
+				<span class="material-symbols-outlined" aria-hidden="true">{{ themeIcon }}</span>
+			</button>
+			<button type="button" class="manage-header__signout" (click)="logout()">Log out</button>
+		</div>
+	</nav>
+</header>

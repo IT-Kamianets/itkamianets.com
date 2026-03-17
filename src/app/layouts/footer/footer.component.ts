@@ -25,8 +25,6 @@ export class FooterComponent {
 	protected readonly navLinks = [
 		{ label: 'Головна', routerLink: '/' },
 		{ label: 'Послуги', routerLink: '/proposals' },
-		{ label: 'Змагання', routerLink: '/hackathons' },
-		{ label: 'Події', routerLink: '/events' },
 		{ label: 'Проєкти', routerLink: '/projects' },
 		{ label: 'Команда', routerLink: '/team' },
 		{ label: 'Новини', routerLink: '/news' },

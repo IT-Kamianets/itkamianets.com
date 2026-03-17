@@ -21,7 +21,6 @@
 				</span>
 			</button>
 
-			<p class="sign-card__eyebrow">Imported from `example`</p>
 			<h1 class="sign-card__title">Sign In / Sign Up</h1>
 			<p class="sign-card__subtitle">Sign in or create an account.</p>
 
@@ -50,7 +49,9 @@
 						autocomplete="current-password"
 						placeholder="Enter your password..."
 						[value]="model().password"
-						(input)="updateField('password', ($any($event.target).value ?? '').toString())"
+						(input)="
+							updateField('password', ($any($event.target).value ?? '').toString())
+						"
 						(blur)="markTouched('password')"
 					/>
 					@if (passwordError()) {
@@ -64,7 +65,10 @@
 			</form>
 
 			@if (submitMessage()) {
-				<p class="sign-card__notice" [class.sign-card__notice--error]="submitTone() === 'error'">
+				<p
+					class="sign-card__notice"
+					[class.sign-card__notice--error]="submitTone() === 'error'"
+				>
 					{{ submitMessage() }}
 				</p>
 			}
