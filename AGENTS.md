@@ -4,7 +4,7 @@ This file defines repo-specific instructions for coding agents working in this p
 
 ## Project Overview
 
-- Stack: Angular 21, TypeScript 5, Angular SSR/prerender, Tailwind CSS v4, SCSS, Express SSR server.
+- Stack: Angular 21, TypeScript 5, Angular SSR/prerender, Tailwind CSS v4, PrimeNG 21, PrimeUIX themes, SCSS, Express SSR server.
 - Package manager: `npm`
 - Formatting: Prettier with tabs, single quotes, and 100 character line width.
 - Primary output: prerendered static site from `dist/app/browser`
@@ -39,6 +39,9 @@ This file defines repo-specific instructions for coding agents working in this p
 ## Styling Rules
 
 - Prefer Tailwind utilities for layout, spacing, typography, colors, borders, sizing, and responsive behavior.
+- PrimeNG is installed; use PrimeNG components where they improve consistency or speed of delivery.
+- PrimeNG global config lives in `src/app/app.config.ts` via `providePrimeNG` and currently uses `@primeuix/themes/aura`.
+- Keep PrimeNG theme usage compatible with app mode switching (`data-mode` / dark mode selector) and existing theme tokens.
 - Use component SCSS for styles that are not ergonomic in Tailwind or need local structure.
 - Reuse theme variables from `src/styles/_theme.scss` before introducing new raw values.
 - Keep selectors shallow and component-local.
