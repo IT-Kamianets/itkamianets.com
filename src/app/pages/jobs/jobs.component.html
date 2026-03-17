@@ -1,0 +1,178 @@
+<div class="jobs-page bg-slate-50 dark:bg-slate-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+	<div class="max-w-7xl mx-auto">
+		<header class="text-center mb-16 relative">
+			<h1 class="text-4xl font-extrabold text-slate-900 dark:text-white sm:text-5xl">Роботи</h1>
+			<p class="mt-4 text-xl text-slate-600 dark:text-slate-400">Наші проєкти та досягнення</p>
+
+			@if (isAdmin()) {
+				<div class="mt-8">
+					<button (click)="create()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all hover:scale-105">
+						+ Додати нову роботу
+					</button>
+				</div>
+			}
+		</header>
+
+		@if (editingJob()) {
+			<div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 mb-16 animate-in fade-in slide-in-from-top-4 duration-300">
+				<h2 class="text-2xl font-bold mb-8 dark:text-white text-center">
+					{{ editingJob()?._id ? 'Редагувати роботу' : 'Створення нової роботи' }}
+				</h2>
+
+				<div class="grid gap-8">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div>
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Назва роботи</label>
+							<input type="text" [(ngModel)]="editingJob()!.title" class="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-blue-500 outline-none transition-all">
+						</div>
+						<div>
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Автор</label>
+							<select [(ngModel)]="editingJob()!.authorName" class="w-full px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-blue-500 outline-none transition-all">
+								<option value="">Оберіть автора</option>
+								@for (author of authors; track author.id) {
+									<option [value]="author.name">{{ author.name }}</option>
+								}
+							</select>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+						<div>
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Прев'ю (обкладинка)</label>
+							<div class="flex items-center gap-4">
+								<label class="flex-1 cursor-pointer bg-slate-50 dark:bg-slate-900 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-4 text-center hover:border-blue-400 transition-all">
+									<span class="text-sm text-slate-500">Натисніть для завантаження</span>
+									<input type="file" (change)="onImageUpload($event)" accept="image/*" class="hidden">
+								</label>
+								@if (editingJob()?.preview) {
+									<img [src]="editingJob()!.preview" class="w-20 h-20 object-cover rounded-xl shadow-sm border border-slate-200">
+								}
+							</div>
+						</div>
+						<div class="flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border-2 border-slate-100 dark:border-slate-700">
+							<label class="flex items-center cursor-pointer group">
+								<input type="checkbox" [(ngModel)]="editingJob()!.published" class="sr-only peer">
+								<div class="w-14 h-7 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+								<span class="ml-4 text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-blue-500 transition-colors">Опублікувати на сайті</span>
+							</label>
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Вміст роботи (редактор)</label>
+						<div class="border-2 border-slate-100 dark:border-slate-700 rounded-2xl overflow-hidden focus-within:border-blue-500 transition-all">
+							<div class="flex flex-wrap gap-2 p-3 bg-slate-100 dark:bg-slate-700/50 border-b dark:border-slate-700">
+								<div class="flex gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg shadow-sm">
+									<button type="button" (click)="format('bold')" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded font-bold" title="Bold">B</button>
+									<button type="button" (click)="format('italic')" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded italic" title="Italic">I</button>
+									<button type="button" (click)="format('underline')" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded underline" title="Underline">U</button>
+								</div>
+								<div class="flex gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg shadow-sm">
+									<button type="button" (click)="format('formatBlock', '<h1>')" class="px-2 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-xs font-bold" title="H1">H1</button>
+									<button type="button" (click)="format('formatBlock', '<h2>')" class="px-2 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-xs font-bold" title="H2">H2</button>
+								</div>
+								<div class="flex gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg shadow-sm">
+									<select (change)="format('fontSize', $any($event.target).value)" class="h-8 text-[10px] bg-transparent outline-none px-1 border-r dark:border-slate-700 dark:text-white">
+										<option value="3">Розмір</option>
+										<option value="1">Small</option>
+										<option value="3">Normal</option>
+										<option value="5">Large</option>
+										<option value="7">Huge</option>
+									</select>
+									<select (change)="format('fontName', $any($event.target).value)" class="h-8 text-[10px] bg-transparent outline-none px-1 dark:text-white">
+										<option value="Arial">Arial</option>
+										<option value="Verdana">Verdana</option>
+										<option value="Courier New">Mono</option>
+									</select>
+								</div>
+								<div class="flex gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg shadow-sm">
+									<button type="button" (click)="insertCustomImage()" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded" title="Image Link">🔗</button>
+									<label class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer" title="Upload Image">
+										🖼️
+										<input type="file" (change)="uploadPostImage($event)" accept="image/*" class="hidden">
+									</label>
+								</div>
+							</div>
+							<div
+								contenteditable="true"
+								class="p-6 min-h-[400px] bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none prose prose-slate dark:prose-invert max-w-none"
+								(input)="updateDescription($event)"
+								[innerHTML]="editingJob()!.description">
+							</div>
+						</div>
+					</div>
+
+					<div class="flex justify-end gap-4 pt-6 border-t dark:border-slate-700">
+						<button (click)="cancel()" class="px-8 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
+							Скасувати
+						</button>
+						<button (click)="save()" class="px-10 py-3 rounded-xl font-bold bg-blue-600 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:-translate-y-0.5 transition-all">
+							Зберегти роботу
+						</button>
+					</div>
+				</div>
+			</div>
+		}
+
+		@if (visibleJobs().length) {
+			<div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+				@for (job of visibleJobs(); track job._id) {
+					<article class="group flex flex-col overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-2xl border border-slate-100 dark:border-slate-700 relative">
+						@if (isAdmin()) {
+							<div class="absolute top-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+								<button (click)="edit(job)" class="w-10 h-10 flex items-center justify-center bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg text-blue-600 hover:bg-blue-600 hover:text-white transition-all" title="Редагувати">
+									✏️
+								</button>
+								<button (click)="delete(job)" class="w-10 h-10 flex items-center justify-center bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg text-red-600 hover:bg-red-600 hover:text-white transition-all" title="Видалити">
+									🗑️
+								</button>
+							</div>
+
+							@if (!job.published) {
+								<div class="absolute top-4 left-4 z-10 bg-yellow-500 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-lg">
+									Чернетка
+								</div>
+							}
+						}
+
+						@if (job.preview) {
+							<div class="aspect-[16/10] w-full overflow-hidden">
+								<img [src]="job.preview" [alt]="job.title" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+							</div>
+						} @else {
+							<div class="aspect-[16/10] w-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+								<span class="text-4xl">📄</span>
+							</div>
+						}
+
+						<div class="flex flex-1 flex-col p-8">
+							<div class="flex-1">
+								<h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4 line-clamp-2 leading-tight">{{ job.title }}</h3>
+								<div class="prose prose-sm prose-slate dark:prose-invert max-w-none line-clamp-3 opacity-70" [innerHTML]="job.description"></div>
+							</div>
+							<div class="mt-8 pt-6 border-t border-slate-50 dark:border-slate-700 flex items-center justify-between">
+								<div>
+									<p class="text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-500 font-bold mb-1">Автор</p>
+									<p class="text-sm font-bold text-slate-900 dark:text-white">
+										{{ job.authorName }}
+									</p>
+								</div>
+								<div class="text-blue-600 dark:text-blue-400 font-bold text-sm group-hover:translate-x-1 transition-transform cursor-pointer">
+									Детальніше →
+								</div>
+							</div>
+						</div>
+					</article>
+				}
+			</div>
+		} @else {
+			<div class="text-center py-32 bg-white dark:bg-slate-800 rounded-[40px] border-4 border-dashed border-slate-100 dark:border-slate-700">
+				<div class="text-6xl mb-6">🏜️</div>
+				<p class="text-xl font-medium text-slate-500 dark:text-slate-400">Наразі немає опублікованих робіт.</p>
+				@if (isAdmin()) {
+					<button (click)="create()" class="mt-6 text-blue-600 font-bold hover:underline">Додайте першу роботу зараз</button>
+				}
+			</div>
+		}
+	</div>
+</div>

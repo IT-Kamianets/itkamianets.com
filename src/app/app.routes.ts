@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authenticatedGuard } from './feature/user/authenticated.guard';
 
+import { adminGuard } from './feature/user/admin.guard';
+
 export const routes: Routes = [
 	{
 		path: 'sign',
@@ -24,6 +26,11 @@ export const routes: Routes = [
 					import('./pages/manage/profile/profile.component').then(
 						(m) => m.ProfileComponent,
 					),
+			},
+			{
+				path: 'jobs',
+				loadComponent: () =>
+					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
 			{
 				path: 'projects',

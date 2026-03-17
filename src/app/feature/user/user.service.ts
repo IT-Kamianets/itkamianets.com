@@ -17,6 +17,7 @@ export class UserService {
 
 	readonly user = signal<User>({ ...NEW_USER });
 	readonly isAuthenticated = computed(() => Boolean(this.user()._id || this.user().token));
+	readonly isAdmin = computed(() => this.user().roles.includes('admin'));
 
 	constructor() {
 		if (!isPlatformBrowser(this._platformId)) {
