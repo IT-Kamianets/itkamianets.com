@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authenticatedGuard } from './feature/user/authenticated.guard';
 
+import { adminGuard } from './feature/user/admin.guard';
+
 export const routes: Routes = [
 	{
 		path: '',
@@ -11,6 +13,12 @@ export const routes: Routes = [
 				path: '',
 				loadComponent: () =>
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
+			},
+			
+			{
+				path: 'jobs',
+				loadComponent: () =>
+					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
 			{
 				path: 'projects',
@@ -154,10 +162,9 @@ export const routes: Routes = [
 			{
 				path: 'jobs',
 				canActivate: [authenticatedGuard],
-				data: { title: 'Jobs' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/jobs/jobs.component').then(
+						(m) => m.JobsComponent,
 					),
 			},
 			{

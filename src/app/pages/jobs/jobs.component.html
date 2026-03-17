@@ -1,0 +1,49 @@
+<div class="jobs-page bg-slate-50 dark:bg-slate-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+	<div class="max-w-7xl mx-auto">
+		<header class="text-center mb-16 relative">
+			<h1 class="text-4xl font-extrabold text-slate-900 dark:text-white sm:text-5xl">Роботи</h1>
+			<p class="mt-4 text-xl text-slate-600 dark:text-slate-400">Наші проєкти та досягнення</p>
+		</header>
+
+		@if (publishedJobs().length) {
+			<div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+				@for (job of publishedJobs(); track job._id) {
+					<article class="group flex flex-col overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-2xl border border-slate-100 dark:border-slate-700 relative">
+						@if (job.preview) {
+							<div class="aspect-[16/10] w-full overflow-hidden">
+								<img [src]="job.preview" [alt]="job.title" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+							</div>
+						} @else {
+							<div class="aspect-[16/10] w-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+								<span class="text-4xl">📄</span>
+							</div>
+						}
+
+						<div class="flex flex-1 flex-col p-8">
+							<div class="flex-1">
+								<h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4 line-clamp-2 leading-tight">{{ job.title }}</h3>
+								<div class="prose prose-sm prose-slate dark:prose-invert max-w-none line-clamp-3 opacity-70" [innerHTML]="job.description"></div>
+							</div>
+							<div class="mt-8 pt-6 border-t border-slate-50 dark:border-slate-700 flex items-center justify-between">
+								<div>
+									<p class="text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-500 font-bold mb-1">Автор</p>
+									<p class="text-sm font-bold text-slate-900 dark:text-white">
+										{{ job.authorName }}
+									</p>
+								</div>
+								<div class="text-blue-600 dark:text-blue-400 font-bold text-sm group-hover:translate-x-1 transition-transform cursor-pointer">
+									Детальніше →
+								</div>
+							</div>
+						</div>
+					</article>
+				}
+			</div>
+		} @else {
+			<div class="text-center py-32 bg-white dark:bg-slate-800 rounded-[40px] border-4 border-dashed border-slate-100 dark:border-slate-700">
+				<div class="text-6xl mb-6">🏜️</div>
+				<p class="text-xl font-medium text-slate-500 dark:text-slate-400">Наразі немає опублікованих робіт.</p>
+			</div>
+		}
+	</div>
+</div>
