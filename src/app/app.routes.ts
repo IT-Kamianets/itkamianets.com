@@ -66,6 +66,20 @@ export const routes: Routes = [
 						(m) => m.ProposalsComponent,
 					),
 			},
+			{
+				path: 'businesses',
+				loadComponent: () =>
+					import('./pages/businesses/businesses.component').then(
+						(m) => m.BusinessesComponent,
+					),
+			},
+			{
+				path: 'businesses/:id',
+				loadComponent: () =>
+					import('./pages/business/business.component').then(
+						(m) => m.BusinessComponent,
+					),
+			},
 		],
 	},
 	{
