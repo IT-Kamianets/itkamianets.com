@@ -4,7 +4,7 @@ import { UserService } from '../../feature/user/user.service';
 import { ThemeMode, ThemeService } from 'wacom';
 
 @Component({
-	selector: 'app-public-header',
+	selector: 'app-header',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [RouterLink, RouterLinkActive],
 	templateUrl: './header.component.html',

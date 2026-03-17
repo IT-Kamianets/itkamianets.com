@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authenticatedGuard } from './feature/user/authenticated.guard';
 
+import { adminGuard } from './feature/user/admin.guard';
+
 export const routes: Routes = [
 	{
 		path: '',
@@ -12,10 +14,24 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
+			
+			{
+				path: 'jobs',
+				loadComponent: () =>
+					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
+			},
 			{
 				path: 'projects',
 				loadComponent: () =>
 					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
+			},
+			
+			{
+				path: 'education',
+				loadComponent: () =>
+					import('./pages/education/education.component').then(
+						(m) => m.EducationComponent,
+					),
 			},
 			{
 			        path: 'hackathons',
@@ -59,6 +75,20 @@ export const routes: Routes = [
 						(m) => m.ProposalsComponent,
 					),
 			},
+			{
+				path: 'businesses',
+				loadComponent: () =>
+					import('./pages/businesses/businesses.component').then(
+						(m) => m.BusinessesComponent,
+					),
+			},
+			{
+				path: 'businesses/:id',
+				loadComponent: () =>
+					import('./pages/business/business.component').then(
+						(m) => m.BusinessComponent,
+					),
+			},
 		],
 	},
 	{
@@ -97,13 +127,22 @@ export const routes: Routes = [
 						(m) => m.ProfileComponent,
 					),
 			},
+			
+			{
+				path: 'schools',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/shcools/shcools.component').then(
+						(m) => m.ShcoolsComponent,
+					),
+			},
 			{
 				path: 'merch',
 				canActivate: [authenticatedGuard],
 				data: { title: 'Merch' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/merch/merch.component').then(
+						(m) => m.MerchComponent,
 					),
 			},
 			{
@@ -129,8 +168,8 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				data: { title: 'Projects' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/projects-manage/projects-manage.component').then(
+						(m) => m.ProjectsManageComponent,
 					),
 			},
 			{
@@ -142,22 +181,13 @@ export const routes: Routes = [
 						(m) => m.SectionComponent,
 					),
 			},
-			{
-				path: 'schools',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Schools' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
+			
 			{
 				path: 'jobs',
 				canActivate: [authenticatedGuard],
-				data: { title: 'Jobs' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/jobs/jobs.component').then(
+						(m) => m.JobsComponent,
 					),
 			},
 			{
