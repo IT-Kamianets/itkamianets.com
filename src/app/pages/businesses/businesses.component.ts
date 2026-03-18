@@ -66,21 +66,38 @@ export class BusinessesComponent {
 		this.activeType.set(type);
 	}
 
-	readonly typeCounts = computed<Record<string, number>>(() => {
-		const q = this.searchQuery().toLowerCase().trim();
-		return Object.fromEntries(
-			['All', ...BUSINESS_TYPES].map((t) => [
-				t,
-				BUSINESSES.filter(
-					(b) =>
-						(t === 'All' || b.type === t) &&
-						(!q ||
-							b.name.toLowerCase().includes(q) ||
-							b.techStack.some((x) => x.toLowerCase().includes(q)) ||
-							b.services.some((x) => x.toLowerCase().includes(q))),
-				).length,
-			]),
+	private matchesQuery(business: Business, query: string): boolean {
+		if (!query) {
+			return true;
+		}
+
+		return (
+			business.name.toLowerCase().includes(query) ||
+			business.techStack.some((t) => t.toLowerCase().includes(query)) ||
+			business.services.some((s) => s.toLowerCase().includes(query))
 		);
+	}
+
+	readonly typeCounts = computed<Record<string, number>>(() => {
+		const query = this.searchQuery().toLowerCase().trim();
+
+		const counts: Record<string, number> = { All: 0 };
+		for (const type of this.types) {
+			counts[type] = 0;
+		}
+
+		for (const business of this.businesses) {
+			if (!this.matchesQuery(business, query)) {
+				continue;
+			}
+
+			counts.All += 1;
+			if (Object.prototype.hasOwnProperty.call(counts, business.type)) {
+				counts[business.type] += 1;
+			}
+		}
+
+		return counts;
 	});
 
 	readonly filteredBusinesses = computed<Business[]>(() => {
@@ -95,12 +112,7 @@ export class BusinessesComponent {
 		}
 
 		if (query) {
-			result = result.filter(
-				(b) =>
-					b.name.toLowerCase().includes(query) ||
-					b.techStack.some((t) => t.toLowerCase().includes(query)) ||
-					b.services.some((s) => s.toLowerCase().includes(query)),
-			);
+			result = result.filter((b) => this.matchesQuery(b, query));
 		}
 
 		return [...result].sort((a, b) => {
