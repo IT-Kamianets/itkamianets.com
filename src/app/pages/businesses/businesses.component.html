@@ -74,7 +74,7 @@
 
 		<!-- Businesses Grid -->
 		@if (filteredBusinesses().length > 0) {
-			<p class="businesses-count">Знайдено {{ filteredBusinesses().length }} компаній</p>
+			<p class="businesses-count">Знайдено компаній: {{ filteredBusinesses().length }}</p>
 			<div class="businesses-grid">
 				@for (b of filteredBusinesses(); track b.id) {
 					<div class="business-card">
