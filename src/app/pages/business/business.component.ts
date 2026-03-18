@@ -1,18 +1,33 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { SlicePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
-import { BUSINESSES, Business } from '../../data/businesses.data';
+import { Business } from '../../feature/business/business.interface';
+import { BusinessService } from '../../feature/business/business.service';
+import { ReviewService } from '../../feature/business/review.service';
 import { BreadcrumbComponent, Crumb } from '../../shared/components/breadcrumb.component';
 
 @Component({
 	selector: 'app-business',
-	imports: [BreadcrumbComponent],
+	imports: [BreadcrumbComponent, FormsModule, SlicePipe],
 	templateUrl: './business.component.html',
 	styleUrl: './business.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BusinessComponent {
+	private businessService = inject(BusinessService);
+	private reviewService = inject(ReviewService);
+
 	business = signal<Business | null>(null);
+
+	reviews = computed(() => {
+		const b = this.business();
+		if (!b) return [];
+		return this.reviewService.getByBusinessId(b.id)();
+	});
+
+	reviewForm = { author: '', rating: 5, text: '' };
 
 	breadcrumbs = computed<Crumb[]>(() => {
 		const b = this.business();
@@ -29,7 +44,7 @@ export class BusinessComponent {
 		private meta: Meta,
 	) {
 		this.route.params.subscribe((params) => {
-			const found = BUSINESSES.find((b) => b.id === params['id']) ?? null;
+			const found = this.businessService.businesses().find((b) => b.id === params['id']) ?? null;
 			this.business.set(found);
 
 			if (found) {
@@ -45,8 +60,24 @@ export class BusinessComponent {
 		});
 	}
 
+	submitReview(): void {
+		const b = this.business();
+		if (!b || !this.reviewForm.author.trim() || !this.reviewForm.text.trim()) return;
+
+		this.reviewService.add({
+			businessId: b.id,
+			author: this.reviewForm.author.trim(),
+			rating: this.reviewForm.rating as 1 | 2 | 3 | 4 | 5,
+			text: this.reviewForm.text.trim(),
+			date: new Date().toISOString(),
+		});
+
+		this.reviewForm = { author: '', rating: 5, text: '' };
+	}
+
+	ratingRange = [1, 2, 3, 4, 5];
+
 	private getOgImageUrl(logoUrl: string): string {
-		// Transform known thumbnail parameters (e.g., w=200&h=200) to a more suitable OG size.
 		try {
 			const url = new URL(logoUrl, window.location.origin);
 			const params = url.searchParams;
@@ -60,7 +91,6 @@ export class BusinessComponent {
 
 			return url.toString();
 		} catch {
-			// If parsing fails or the URL is relative/invalid, fall back to the original logo URL.
 			return logoUrl;
 		}
 	}

@@ -1,0 +1,261 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+	<div class="sm:flex sm:items-center">
+		<div class="sm:flex-auto">
+			<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Компанії</h1>
+			<p class="mt-2 text-sm text-[var(--c-text-muted)]">
+				Список усіх компаній. Ви можете редагувати, додавати та видаляти компанії.
+			</p>
+		</div>
+		<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+			<button
+				(click)="openAddModal()"
+				type="button"
+				class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
+			>
+				Додати компанію
+			</button>
+		</div>
+	</div>
+
+	<div class="mt-8 flow-root">
+		<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+			<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+				<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg border border-[var(--c-border)]">
+					<table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
+						<thead class="bg-[var(--c-bg-tertiary)]">
+							<tr>
+								<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">
+									Лого
+								</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+									Назва
+								</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+									Тип
+								</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+									Співробітники
+								</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+									Верифіковано
+								</th>
+								<th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+									<span class="sr-only">Дії</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[var(--c-border)]">
+							@for (business of businesses(); track business.id) {
+								<tr>
+									<td class="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
+										<img [src]="business.logo" [alt]="business.name" class="h-10 w-10 rounded-lg object-cover" />
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-[var(--c-text-primary)]">
+										{{ business.name }}
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										<span class="inline-flex items-center rounded-md bg-[var(--c-bg-tertiary)] px-2 py-1 text-xs font-medium text-[var(--c-primary)] ring-1 ring-inset ring-[var(--c-border)]">
+											{{ business.type }}
+										</span>
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										{{ business.employees }}
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										@if (business.verified) {
+											<span class="text-emerald-500">
+												<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+													<polyline points="20 6 9 17 4 12"/>
+												</svg>
+											</span>
+										} @else {
+											<span class="text-[var(--c-text-muted)]">—</span>
+										}
+									</td>
+									<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<div class="flex justify-end gap-2">
+											<button
+												(click)="openEditModal(business)"
+												class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+											>
+												<span class="material-symbols-outlined mr-1 text-sm">edit</span>
+												Редагувати
+											</button>
+											<button
+												(click)="delete(business.id)"
+												class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
+											>
+												<span class="material-symbols-outlined mr-1 text-sm">delete</span>
+												Видалити
+											</button>
+										</div>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@if (isModalOpen()) {
+		<div
+			class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+			(click)="closeModal()"
+		>
+			<div
+				class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-2xl p-8"
+				(click)="$event.stopPropagation()"
+			>
+				<h2 class="text-2xl font-black text-[var(--c-text-secondary)] mb-6">
+					{{ editingBusiness() ? 'Редагувати компанію' : 'Додати компанію' }}
+				</h2>
+
+				<form (submit)="save(); $event.preventDefault()" class="space-y-4">
+
+					<div class="grid grid-cols-2 gap-4">
+						<div class="col-span-2">
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Назва</label>
+							<input type="text" [(ngModel)]="form.name" name="name" required
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+
+						<div class="col-span-2">
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">URL лого</label>
+							<input type="text" [(ngModel)]="form.logo" name="logo"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Тип</label>
+							<select [(ngModel)]="form.type" name="type"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none">
+								@for (t of businessTypes; track t) {
+									<option [value]="t">{{ t }}</option>
+								}
+							</select>
+						</div>
+
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Заснована (рік)</label>
+							<input type="number" [(ngModel)]="form.founded" name="founded" required
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Співробітники</label>
+							<input type="number" [(ngModel)]="form.employees" name="employees" required min="1"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Відкриті вакансії</label>
+							<input type="number" [(ngModel)]="form.openPositions" name="openPositions" min="0"
+								placeholder="Не вказано"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+
+						<div class="col-span-2 flex items-center gap-3">
+							<input type="checkbox" [(ngModel)]="form.verified" name="verified" id="verified"
+								class="h-4 w-4 rounded border-[var(--c-border)] text-[var(--c-primary)]" />
+							<label for="verified" class="text-sm font-medium text-[var(--c-text-muted)]">Верифікована компанія</label>
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Короткий опис</label>
+						<input type="text" [(ngModel)]="form.shortDescription" name="shortDescription" required
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Опис</label>
+						<textarea [(ngModel)]="form.description" name="description" rows="4" required
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"></textarea>
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Технологічний стек (через кому)</label>
+						<input type="text" [(ngModel)]="form.techStack" name="techStack"
+							placeholder="Angular, React, Node.js"
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Послуги (через кому)</label>
+						<input type="text" [(ngModel)]="form.services" name="services"
+							placeholder="Веб-розробка, Мобільні застосунки"
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+					</div>
+
+					<p class="text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] pt-2">Контакти</p>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Вебсайт</label>
+							<input type="text" [(ngModel)]="form.website" name="website"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Email</label>
+							<input type="text" [(ngModel)]="form.email" name="email"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">LinkedIn</label>
+							<input type="text" [(ngModel)]="form.linkedin" name="linkedin"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Telegram</label>
+							<input type="text" [(ngModel)]="form.telegram" name="telegram"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">GitHub</label>
+							<input type="text" [(ngModel)]="form.github" name="github"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Twitter / X</label>
+							<input type="text" [(ngModel)]="form.twitter" name="twitter"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Facebook</label>
+							<input type="text" [(ngModel)]="form.facebook" name="facebook"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Instagram</label>
+							<input type="text" [(ngModel)]="form.instagram" name="instagram"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div class="col-span-2">
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Адреса</label>
+							<input type="text" [(ngModel)]="form.address" name="address"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+					</div>
+
+					<div class="flex gap-4 pt-4">
+						<button
+							type="button"
+							(click)="closeModal()"
+							class="flex-1 rounded-full border border-[var(--c-border)] py-3 text-sm font-bold text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-tertiary)] transition-colors"
+						>
+							Скасувати
+						</button>
+						<button
+							type="submit"
+							class="flex-1 rounded-full bg-[var(--c-primary)] py-3 text-sm font-bold text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-opacity"
+						>
+							Зберегти
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+</div>

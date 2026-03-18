@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
-import { BUSINESS_TYPES, BUSINESSES, Business } from '../../data/businesses.data';
+import { BUSINESS_TYPES, Business } from '../../feature/business/business.interface';
+import { BusinessService } from '../../feature/business/business.service';
 
 @Component({
 	selector: 'app-businesses',
@@ -12,7 +13,8 @@ import { BUSINESS_TYPES, BUSINESSES, Business } from '../../data/businesses.data
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BusinessesComponent {
-	readonly businesses: Business[] = BUSINESSES;
+	private businessService = inject(BusinessService);
+	readonly businesses = this.businessService.businesses;
 	readonly types: string[] = BUSINESS_TYPES;
 
 	activeType = signal<string>('All');
@@ -86,12 +88,12 @@ export class BusinessesComponent {
 			counts[type] = 0;
 		}
 
-		for (const business of this.businesses) {
+		for (const business of this.businesses()) {
 			if (!this.matchesQuery(business, query)) {
 				continue;
 			}
 
-			counts.All += 1;
+			counts['All'] += 1;
 			if (Object.prototype.hasOwnProperty.call(counts, business.type)) {
 				counts[business.type] += 1;
 			}
@@ -105,7 +107,7 @@ export class BusinessesComponent {
 		const query = this.searchQuery().toLowerCase().trim();
 		const sort = this.sortBy();
 
-		let result = this.businesses;
+		let result = this.businesses();
 
 		if (type !== 'All') {
 			result = result.filter((b) => b.type === type);

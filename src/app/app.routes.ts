@@ -173,6 +173,14 @@ export const routes: Routes = [
 						(m) => m.ManageCompetitionsComponent,
 					),
 			},
+			{
+				path: 'companies',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/businesses/businesses.component').then(
+						(m) => m.ManageBusinessesComponent,
+					),
+			},
 		],
 	},
 	{
