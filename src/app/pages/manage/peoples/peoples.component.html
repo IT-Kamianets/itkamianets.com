@@ -1,0 +1,132 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+	<div class="sm:flex sm:items-center">
+		<div class="sm:flex-auto">
+			<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Люди</h1>
+			<p class="mt-2 text-sm text-[var(--c-text-muted)]">
+				Список усіх учасників екосистеми. Ви можете редагувати, додавати та видаляти користувачів.
+			</p>
+		</div>
+		<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+			<button
+				(click)="openAddModal()"
+				type="button"
+				class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
+			>
+				Додати учасника
+			</button>
+		</div>
+	</div>
+
+	<div class="mt-8 flow-root">
+		<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+			<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+				<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg border border-[var(--c-border)]">
+					<table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
+						<thead class="bg-[var(--c-bg-tertiary)]">
+							<tr>
+								<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">Фото</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Ім'я</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Роль</th>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Навчання</th>
+								<th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+									<span class="sr-only">Дії</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[var(--c-border)]">
+							@for (person of peoples(); track person.id) {
+								<tr>
+									<td class="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
+										<img [src]="'developer/' + person.avatar + '.png'" [alt]="person.name" class="h-10 w-10 rounded-full object-cover ring-1 ring-[var(--c-border)]" />
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-[var(--c-text-secondary)]">
+										{{ person.name }}
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										<span class="inline-flex items-center rounded-md bg-[var(--c-bg-tertiary)] px-2 py-1 text-xs font-medium text-[var(--c-primary)] ring-1 ring-inset ring-[var(--c-border)]">
+											{{ person.role }}
+										</span>
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										{{ person.university }}
+									</td>
+									<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<div class="flex justify-end gap-2">
+											<button (click)="openEditModal(person)" class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]">
+												<span class="material-symbols-outlined mr-1 text-sm">edit</span> Редагувати
+											</button>
+											<button (click)="delete(person.id)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white">
+												<span class="material-symbols-outlined mr-1 text-sm">delete</span> Видалити
+											</button>
+										</div>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@if (isModalOpen()) {
+		<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm shadow-xl" (click)="closeModal()">
+			<div class="relative w-full max-w-lg overflow-y-auto max-h-[90vh] rounded-[2rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-2xl p-8" (click)="$event.stopPropagation()">
+				<h2 class="text-2xl font-black text-[var(--c-text-secondary)] mb-6">
+					{{ editingPerson() ? 'Редагувати користувача' : 'Додати користувача' }}
+				</h2>
+
+				<form (submit)="save()" class="space-y-4">
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Ім'я</label>
+						<input type="text" [(ngModel)]="form.name" name="name" required class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Роль</label>
+							<input type="text" [(ngModel)]="form.role" name="role" required class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Файл/ID Аватара</label>
+							<input type="text" [(ngModel)]="form.avatar" name="avatar" required class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Навчальний заклад</label>
+						<input type="text" [(ngModel)]="form.university" name="university" required class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+					</div>
+					
+					<div>
+						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Період стажування</label>
+						<input type="text" [(ngModel)]="form.internshipDates" name="internshipDates" class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+					</div>
+					
+					<div class="flex items-center gap-2 mt-2">
+						<input type="checkbox" [(ngModel)]="form.isHead" name="isHead" id="isHead" class="rounded border-[var(--c-border)] text-[var(--c-primary)] focus:ring-[var(--c-primary)] w-5 h-5 cursor-pointer" />
+						<label for="isHead" class="text-sm font-medium text-[var(--c-text-secondary)] cursor-pointer">Керівник (Team Lead)</label>
+					</div>
+
+					<!-- Socials -->
+					<div class="pt-2">
+						<h3 class="text-sm font-semibold text-[var(--c-text-secondary)] mb-2">Соціальні мережі</h3>
+						<div class="grid grid-cols-1 gap-3">
+							<input type="text" [(ngModel)]="form.socials.linkedin" name="socialLinkedIn" placeholder="LinkedIn URL" class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none text-sm" />
+							<input type="text" [(ngModel)]="form.socials.github" name="socialGithub" placeholder="GitHub URL" class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none text-sm" />
+						</div>
+					</div>
+
+					<div class="flex gap-4 pt-6">
+						<button type="button" (click)="closeModal()" class="flex-1 rounded-full border border-[var(--c-border)] py-3 text-sm font-bold text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-tertiary)] transition-colors">
+							Скасувати
+						</button>
+						<button type="submit" class="flex-1 rounded-full bg-[var(--c-primary)] py-3 text-sm font-bold text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-opacity">
+							Зберегти
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+</div>
