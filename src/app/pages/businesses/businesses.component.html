@@ -59,7 +59,7 @@
 				[class.businesses-filter--active]="activeType() === 'All'"
 				(click)="setFilter('All')"
 			>
-				Усі
+				Усі <span class="businesses-filter__count">{{ typeCounts()['All'] }}</span>
 			</button>
 			@for (t of types; track t) {
 				<button
@@ -67,13 +67,14 @@
 					[class.businesses-filter--active]="activeType() === t"
 					(click)="setFilter(t)"
 				>
-					{{ t }}
+					{{ t }} <span class="businesses-filter__count">{{ typeCounts()[t] }}</span>
 				</button>
 			}
 		</div>
 
 		<!-- Businesses Grid -->
 		@if (filteredBusinesses().length > 0) {
+			<p class="businesses-count">Знайдено компаній: {{ filteredBusinesses().length }}</p>
 			<div class="businesses-grid">
 				@for (b of filteredBusinesses(); track b.id) {
 					<div class="business-card">
