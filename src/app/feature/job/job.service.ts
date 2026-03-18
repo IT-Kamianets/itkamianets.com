@@ -13,7 +13,7 @@ export class JobService extends CrudService<Job> {
 
 		this.get().subscribe((items) => {
 			// Якщо немає жодного айтема з типом job, створюємо демо
-			const jobs = items.filter(i => (i as any).type === 'job');
+			const jobs = items.filter((i): i is Job => (i as Job).type === 'job');
 			if (jobs.length === 0) {
 				this._seedDemoJobs();
 			}
