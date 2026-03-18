@@ -37,11 +37,31 @@ export class BusinessComponent {
 				this.meta.updateTag({ name: 'description', content: found.shortDescription });
 				this.meta.updateTag({ property: 'og:title', content: found.name + ' | IT-Kamianets' });
 				this.meta.updateTag({ property: 'og:description', content: found.shortDescription });
-				this.meta.updateTag({ property: 'og:image', content: found.logo });
+				this.meta.updateTag({ property: 'og:image', content: this.getOgImageUrl(found.logo) });
 				this.meta.updateTag({ property: 'og:type', content: 'website' });
 			} else {
 				this.router.navigate(['/businesses'], { replaceUrl: true });
 			}
 		});
+	}
+
+	private getOgImageUrl(logoUrl: string): string {
+		// Transform known thumbnail parameters (e.g., w=200&h=200) to a more suitable OG size.
+		try {
+			const url = new URL(logoUrl, window.location.origin);
+			const params = url.searchParams;
+
+			if (params.has('w')) {
+				params.set('w', '1200');
+			}
+			if (params.has('h')) {
+				params.set('h', '630');
+			}
+
+			return url.toString();
+		} catch {
+			// If parsing fails or the URL is relative/invalid, fall back to the original logo URL.
+			return logoUrl;
+		}
 	}
 }
