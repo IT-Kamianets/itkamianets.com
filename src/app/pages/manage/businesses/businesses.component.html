@@ -129,12 +129,15 @@
 
 						<div>
 							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Тип</label>
-							<select [(ngModel)]="form.type" name="type"
-								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none">
+							<input type="text" [(ngModel)]="form.type" name="type" required
+								list="business-types-list"
+								placeholder="Студія, Ресторан, Кафе…"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+							<datalist id="business-types-list">
 								@for (t of businessTypes; track t) {
 									<option [value]="t">{{ t }}</option>
 								}
-							</select>
+							</datalist>
 						</div>
 
 						<div>

@@ -2,7 +2,7 @@ export interface Business {
 	id: string;
 	name: string;
 	logo: string;
-	type: 'Студія' | 'Аутсорс' | 'Продукт' | 'Агентство';
+	type: string;
 	shortDescription: string;
 	description: string;
 	techStack: string[];
@@ -24,4 +24,4 @@ export interface Business {
 	};
 }
 
-export const BUSINESS_TYPES = ['Студія', 'Аутсорс', 'Продукт', 'Агентство'];
+export const BUSINESS_TYPES = ['Студія', 'Аутсорс', 'Продукт', 'Агентство', 'Ресторан', 'Кафе', 'Освіта', 'Медицина', 'Рітейл', 'Сервіс'];

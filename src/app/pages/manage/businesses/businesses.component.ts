@@ -25,7 +25,7 @@ export class ManageBusinessesComponent {
 		return {
 			name: '',
 			logo: '',
-			type: 'Студія' as Business['type'],
+			type: 'Студія',
 			shortDescription: '',
 			description: '',
 			techStack: '',
