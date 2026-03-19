@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../feature/user/user.service';
 import { ThemeMode, ThemeService } from 'wacom';
+import { MenuItem } from '../../feature/item/item.interface';
 
 @Component({
 	selector: 'app-public-header',
@@ -13,6 +14,51 @@ import { ThemeMode, ThemeService } from 'wacom';
 export class HeaderComponent {
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
+	protected readonly menuItems: MenuItem[] = [
+		{
+			_id: 'menu-home',
+			type: 'menu',
+			title: 'Головна',
+			href: '/',
+			options: { menu: { exact: true } },
+		},
+		{
+			_id: 'menu-proposals',
+			type: 'menu',
+			title: 'Послуги',
+			href: '/proposals',
+		},
+		{
+			_id: 'menu-hackathons',
+			type: 'menu',
+			title: 'Змагання',
+			href: '/hackathons',
+		},
+		{
+			_id: 'menu-projects',
+			type: 'menu',
+			title: 'Проєкти',
+			href: '/projects',
+		},
+		{
+			_id: 'menu-team',
+			type: 'menu',
+			title: 'Команда',
+			href: '/team',
+		},
+		{
+			_id: 'menu-news',
+			type: 'menu',
+			title: 'Новини',
+			href: '/news',
+		},
+		{
+			_id: 'menu-merch',
+			type: 'menu',
+			title: 'Мерч',
+			href: '/merch',
+		},
+	];
 
 	protected toggleTheme() {
 		const newMode: ThemeMode = this.theme.mode() === 'dark' ? 'light' : 'dark';
