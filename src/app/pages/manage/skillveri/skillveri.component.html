@@ -1,0 +1,184 @@
+<section class="skillveri">
+	<header class="skillveri__hero">
+		<div class="skillveri__hero-glow"></div>
+		<p class="skillveri__eyebrow">Control panel</p>
+		<div class="skillveri__hero-content">
+			<div>
+				<h1 class="skillveri__title">{{ model().title }}</h1>
+				<p class="skillveri__subtitle">{{ model().description }}</p>
+			</div>
+			<div class="skillveri__hero-actions">
+				<button type="button" class="btn btn--primary">���� ����</button>
+				<button type="button" class="btn btn--ghost">�������</button>
+			</div>
+		</div>
+		<div class="skillveri__stats">
+			@for (stat of stats; track stat.label) {
+				<div class="skillveri__stat">
+					<p class="skillveri__stat-label">{{ stat.label }}</p>
+					<p class="skillveri__stat-value">{{ stat.value }}</p>
+					<p class="skillveri__stat-hint">{{ stat.hint }}</p>
+				</div>
+			}
+		</div>
+	</header>
+
+	<div class="skillveri__grid">
+		<section class="skillveri__panel">
+			<div class="skillveri__panel-header">
+				<div>
+					<h2 class="skillveri__panel-title">��������� ��������</h2>
+					<p class="skillveri__panel-subtitle">
+						������ ���� �������� �� ����� ������ ��������� ��� ������� ��� ������.
+					</p>
+				</div>
+				<span class="skillveri__status">{{ model().status  }}</span>
+			</div>
+
+			<form class="skillveri-form">
+				<div class="skillveri-form__grid">
+					<div class="skillveri-form__field">
+						<label for="skillveri-title">����� ��������</label>
+						<input id="skillveri-title" type="text" placeholder="SkillVeri ��� Frontend" />
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-level">г����</label>
+						<select id="skillveri-level">
+							<option>Junior</option>
+							<option>Middle</option>
+							<option>Senior</option>
+						</select>
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-lang">���� ����������</label>
+						<select id="skillveri-lang">
+							<option>���������</option>
+							<option>English</option>
+							<option>Polish</option>
+						</select>
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-duration">���������</label>
+						<input id="skillveri-duration" type="text" placeholder="60 ��" />
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-format">������ ��������</label>
+						<select id="skillveri-format">
+							<option>������ � ������������</option>
+							<option>���������</option>
+							<option>���-������'�</option>
+						</select>
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-team">���������</label>
+						<input id="skillveri-team" type="number" placeholder="25" />
+					</div>
+					<div class="skillveri-form__field skillveri-form__field--wide">
+						<label for="skillveri-notes">�������� ����</label>
+						<textarea
+							id="skillveri-notes"
+							rows="3"
+							placeholder="�����, �� ����������� ������� ���������."
+						></textarea>
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-email">Email ��� ����</label>
+						<input id="skillveri-email" type="email" placeholder="hr@skillveri.com" />
+					</div>
+					<div class="skillveri-form__field">
+						<label for="skillveri-url">��������� �� �������</label>
+						<input id="skillveri-url" type="url" placeholder="https://company.com/jobs/" />
+					</div>
+				</div>
+
+				<div class="skillveri-form__checks">
+					<label class="skillveri-form__check">
+						<input type="checkbox" checked />
+						<span>����� ������ �� ������</span>
+					</label>
+					<label class="skillveri-form__check">
+						<input type="checkbox" checked />
+						<span>��������� �������� ����������</span>
+					</label>
+					<label class="skillveri-form__check">
+						<input type="checkbox" />
+						<span>������������ ���� ����������� 75%</span>
+					</label>
+				</div>
+
+				<div class="skillveri-form__actions">
+					<button type="button" class="btn btn--secondary">�������� �� ������</button>
+					<button type="button" class="btn btn--primary">����������� ��������</button>
+				</div>
+			</form>
+		</section>
+
+		<aside class="skillveri__panel skillveri__panel--side">
+			<h2 class="skillveri__panel-title">����� �������</h2>
+			<div class="skillveri__steps">
+				@for (step of steps; track step.title) {
+					<div class="skillveri__step">
+						<span class="material-symbols-outlined" aria-hidden="true">{{ step.icon }}</span>
+						<div>
+							<h3>{{ step.title }}</h3>
+							<p>{{ step.description }}</p>
+						</div>
+					</div>
+				}
+			</div>
+			<div class="skillveri__requirements">
+				<h3>������� � ���������</h3>
+				<ul class="skillveri__list">
+					@for (item of requirements; track item) {
+						<li>{{ item }}</li>
+					}
+				</ul>
+			</div>
+		</aside>
+	</div>
+
+	<section class="skillveri__panel">
+		<div class="skillveri__panel-header">
+			<div>
+				<h2 class="skillveri__panel-title">������� SkillVeri</h2>
+				<p class="skillveri__panel-subtitle">
+					����� ������ ��� �������� ������ �� ������������ ��������.
+				</p>
+			</div>
+			<button type="button" class="btn btn--ghost">����������� ��</button>
+		</div>
+		<div class="skillveri__cards">
+			@for (template of templates; track template.title) {
+				<article class="skillveri__card">
+					<div class="skillveri__card-header">
+						<h3>{{ template.title }}</h3>
+						<span class="skillveri__pill">{{ template.level }}</span>
+					</div>
+					<p class="skillveri__card-meta">
+						<span>{{ template.duration }}</span>
+						<span>{{ template.roles }}</span>
+					</p>
+					<div class="skillveri__tags">
+						@for (tag of template.tags; track tag) {
+							<span>{{ tag }}</span>
+						}
+					</div>
+					<button type="button" class="btn btn--secondary">������ ������</button>
+				</article>
+			}
+		</div>
+	</section>
+
+	<section class="skillveri__panel skillveri__panel--note">
+		<div class="skillveri__note">
+			<span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+			<div>
+				<h3>����������</h3>
+				<p>
+					ϳ������� SkillVeri �� ATS, Slack � ������������ CRM, ��� ���������� ���������� �� ������� ������.
+				</p>
+			</div>
+			<button type="button" class="btn btn--primary">����������� API</button>
+		</div>
+	</section>
+</section>
