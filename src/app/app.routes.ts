@@ -96,6 +96,16 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/business/business.component').then((m) => m.BusinessComponent),
 			},
+			{
+				path: 'profiles',
+				loadComponent: () =>
+					import('./pages/profiles/profiles.component').then((m) => m.ProfilesComponent),
+			},
+			{
+				path: 'profile/:id',
+				loadComponent: () =>
+					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
+			},
 		],
 	},
 	{
@@ -173,6 +183,15 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/manage/competitions/competitions.component').then(
 						(m) => m.ManageCompetitionsComponent,
+					),
+			},
+			{
+				path: 'people',
+				canActivate: [authenticatedGuard],
+				data: { title: 'People' },
+				loadComponent: () =>
+					import('./pages/manage/people/people.component').then(
+						(m) => m.ManagePeopleComponent,
 					),
 			},
 			{
