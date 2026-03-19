@@ -27,7 +27,7 @@ export class ManageComponent {
 		{ label: 'Schools', path: '/manage/schools', icon: 'school' },
 		{ label: 'Jobs', path: '/manage/jobs', icon: 'work' },
 		{ label: 'Events', path: '/manage/events', icon: 'event' },
-		{ label: 'Competitions', path: '/manage/competitions', icon: 'emoji_events' },
+		{ label: 'Competitions', path: '/manage/competitions', icon: 'emoji_events'},
 		{ label: 'SkillVeri', path: '/manage/skillveri', icon: 'verified' },
 	];
 }
