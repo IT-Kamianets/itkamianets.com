@@ -1,0 +1,305 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+	<div class="sm:flex sm:items-center">
+		<div class="sm:flex-auto">
+			<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Quests</h1>
+			<p class="mt-2 text-sm text-[var(--c-text-muted)]">
+				Список усіх квестів. Ви можете редагувати, додавати та видаляти квести.
+			</p>
+		</div>
+		<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+			<button
+				(click)="openAddModal()"
+				type="button"
+				class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+			>
+				Додати квест
+			</button>
+		</div>
+	</div>
+
+	<div class="mt-8 flow-root">
+		<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+			<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+				<div
+					class="overflow-hidden rounded-lg border border-[var(--c-border)] shadow ring-1 ring-black ring-opacity-5"
+				>
+					<table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
+						<thead class="bg-[var(--c-bg-tertiary)]">
+							<tr>
+								<th
+									scope="col"
+									class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6"
+								>
+									Назва
+								</th>
+								<th
+									scope="col"
+									class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]"
+								>
+									Категорія
+								</th>
+								<th
+									scope="col"
+									class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]"
+								>
+									Складність
+								</th>
+								<th
+									scope="col"
+									class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]"
+								>
+									Тривалість
+								</th>
+								<th
+									scope="col"
+									class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]"
+								>
+									Активний
+								</th>
+								<th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+									<span class="sr-only">Дії</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[var(--c-border)]">
+							@for (quest of quests(); track quest.id) {
+								<tr>
+									<td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-[var(--c-text-primary)] sm:pl-6">
+										{{ quest.title }}
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										<span
+											class="inline-flex items-center rounded-md bg-[var(--c-bg-tertiary)] px-2 py-1 text-xs font-medium text-[var(--c-primary)] ring-1 ring-inset ring-[var(--c-border)]"
+										>
+											{{ quest.category }}
+										</span>
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										{{ quest.difficulty }}
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										{{ quest.duration }}
+									</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+										@if (quest.active) {
+											<span class="text-emerald-500">
+												<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+													<polyline points="20 6 9 17 4 12" />
+												</svg>
+											</span>
+										} @else {
+											<span class="text-[var(--c-text-muted)]">—</span>
+										}
+									</td>
+									<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<div class="flex justify-end gap-2">
+											<button
+												(click)="openEditModal(quest)"
+												class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+											>
+												<span class="material-symbols-outlined mr-1 text-sm" aria-hidden="true">edit</span>
+												Редагувати
+											</button>
+											<button
+												(click)="delete(quest.id)"
+												class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
+											>
+												<span class="material-symbols-outlined mr-1 text-sm" aria-hidden="true">delete</span>
+												Видалити
+											</button>
+										</div>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@if (isModalOpen()) {
+		<div
+			class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+			(click)="closeModal()"
+		>
+			<div
+				class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-8 shadow-2xl"
+				(click)="$event.stopPropagation()"
+			>
+				<h2 class="mb-6 text-2xl font-black text-[var(--c-text-secondary)]">
+					{{ editingQuest() ? 'Редагувати квест' : 'Додати квест' }}
+				</h2>
+
+				<form (submit)="save(); $event.preventDefault()" class="space-y-4">
+					<div class="grid grid-cols-2 gap-4">
+						<div class="col-span-2">
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Назва</label>
+							<input
+								type="text"
+								[(ngModel)]="form.title"
+								name="title"
+								required
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+
+						<div>
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Категорія</label>
+							<input
+								type="text"
+								[(ngModel)]="form.category"
+								name="category"
+								required
+								list="quest-categories-list"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+							<datalist id="quest-categories-list">
+								@for (category of categories; track category) {
+									<option [value]="category">{{ category }}</option>
+								}
+							</datalist>
+						</div>
+
+						<div>
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Складність</label>
+							<input
+								type="text"
+								[(ngModel)]="form.difficulty"
+								name="difficulty"
+								required
+								list="quest-difficulties-list"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+							<datalist id="quest-difficulties-list">
+								@for (difficulty of difficulties; track difficulty) {
+									<option [value]="difficulty">{{ difficulty }}</option>
+								}
+							</datalist>
+						</div>
+
+						<div>
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Тривалість</label>
+							<input
+								type="text"
+								[(ngModel)]="form.duration"
+								name="duration"
+								required
+								placeholder="3 дні"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+
+						<div>
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Формат</label>
+							<input
+								type="text"
+								[(ngModel)]="form.format"
+								name="format"
+								required
+								placeholder="Онлайн"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+
+						<div class="col-span-2 flex items-center gap-3">
+							<input
+								type="checkbox"
+								[(ngModel)]="form.active"
+								name="active"
+								id="active"
+								class="h-4 w-4 rounded border-[var(--c-border)] text-[var(--c-primary)]"
+							/>
+							<label for="active" class="text-sm font-medium text-[var(--c-text-muted)]">
+								Активний квест
+							</label>
+						</div>
+					</div>
+
+					<div>
+						<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Короткий опис</label>
+						<input
+							type="text"
+							[(ngModel)]="form.shortDescription"
+							name="shortDescription"
+							required
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+						/>
+					</div>
+
+					<div>
+						<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Опис</label>
+						<textarea
+							[(ngModel)]="form.description"
+							name="description"
+							rows="4"
+							required
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+						></textarea>
+					</div>
+
+					<div>
+						<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Нагорода</label>
+						<input
+							type="text"
+							[(ngModel)]="form.reward"
+							name="reward"
+							required
+							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+						/>
+					</div>
+
+					<p class="pt-2 text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)]">
+						Додаткова інформація
+					</p>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Посилання</label>
+							<input
+								type="text"
+								[(ngModel)]="form.link"
+								name="link"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+						<div>
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Куратор</label>
+							<input
+								type="text"
+								[(ngModel)]="form.curator"
+								name="curator"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+						<div class="col-span-2">
+							<label class="mb-1 block text-sm font-medium text-[var(--c-text-muted)]">Локація</label>
+							<input
+								type="text"
+								[(ngModel)]="form.location"
+								name="location"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+					</div>
+
+					<div class="flex gap-4 pt-4">
+						<button
+							type="button"
+							(click)="closeModal()"
+							class="flex-1 rounded-full border border-[var(--c-border)] py-3 text-sm font-bold text-[var(--c-text-secondary)] transition-colors hover:bg-[var(--c-bg-tertiary)]"
+						>
+							Скасувати
+						</button>
+						<button
+							type="submit"
+							class="flex-1 rounded-full bg-[var(--c-primary)] py-3 text-sm font-bold text-white shadow-lg shadow-[var(--c-primary)]/20 transition-opacity hover:opacity-90"
+						>
+							Зберегти
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+</div>
