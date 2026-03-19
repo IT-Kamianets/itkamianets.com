@@ -26,6 +26,7 @@ export class FooterComponent {
 		{ label: 'Головна', routerLink: '/' },
 		{ label: 'Послуги', routerLink: '/proposals' },
 		{ label: 'Проєкти', routerLink: '/projects' },
+		{ label: 'Квести', routerLink: '/quests' },
 		{ label: 'Команда', routerLink: '/team' },
 		{ label: 'Новини', routerLink: '/news' },
 		{ label: 'Мерч', routerLink: '/merch' },

@@ -1,0 +1,59 @@
+<div class="projects-page">
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Квести</span>
+			<h1 class="page-hero__title">Наші квести</h1>
+			<p class="page-hero__subtitle">
+				Добірка квестів, оформлена на базі сторінки проєктів і готова для окремого маршруту
+			</p>
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<div class="projects-grid projects-grid--top-space">
+			@if (!quests().length) {
+				<p class="projects-empty">Поки що немає опублікованих квестів.</p>
+			}
+
+			@for (q of quests(); track q.id) {
+				<div class="project-card">
+					<div class="project-card__img">
+						<img [src]="getImageSrc(q)" [alt]="q.title" loading="eager" />
+					</div>
+					<div class="project-card__body">
+						<div class="project-card__header">
+							<h3 class="project-card__title">{{ q.title }}</h3>
+							<span class="project-card__badge" [ngClass]="getBadgeClass(q)">
+								{{ getBadgeLabel(q) }}
+							</span>
+						</div>
+						<p class="project-card__desc">{{ q.description }}</p>
+						<div class="project-card__tags">
+							@for (tag of q.tags; track tag) {
+								<span class="project-card__tag">{{ tag }}</span>
+							}
+						</div>
+						<div class="project-card__links">
+							<a [href]="q.repoUrl" target="_blank" rel="noopener noreferrer" class="project-card__link">
+								GitHub
+							</a>
+							<a
+								[href]="q.liveUrl"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="project-card__link project-card__link--live"
+							>
+								Live
+							</a>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>

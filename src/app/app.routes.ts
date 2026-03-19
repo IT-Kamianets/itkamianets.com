@@ -23,6 +23,11 @@ export const routes: Routes = [
 					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
 			},
 			{
+				path: 'quests',
+				loadComponent: () =>
+					import('./pages/quests/quests.component').then((m) => m.QuestsComponent),
+			},
+			{
 				path: 'education',
 				loadComponent: () =>
 					import('./pages/education/education.component').then(
