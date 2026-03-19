@@ -183,6 +183,14 @@ export const routes: Routes = [
 						(m) => m.ManageBusinessesComponent,
 					),
 			},
+			{
+				path: 'quests',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/quests/quests.component').then(
+						(m) => m.ManageQuestsComponent,
+					),
+			},
 		],
 	},
 	{
