@@ -194,6 +194,14 @@ export const routes: Routes = [
 						(m) => m.ManagePeoplesComponent,
 					),
 			},
+			{
+				path: 'companies',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/businesses/businesses.component').then(
+						(m) => m.ManageBusinessesComponent,
+					),
+			},
 		],
 	},
 	{

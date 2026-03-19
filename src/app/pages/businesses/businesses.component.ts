@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
-import { BUSINESS_TYPES, BUSINESSES, Business } from '../../data/businesses.data';
+import { BUSINESS_TYPES, Business } from '../../feature/business/business.interface';
+import { BusinessService } from '../../feature/business/business.service';
 
 @Component({
 	selector: 'app-businesses',
@@ -12,7 +13,8 @@ import { BUSINESS_TYPES, BUSINESSES, Business } from '../../data/businesses.data
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BusinessesComponent {
-	readonly businesses: Business[] = BUSINESSES;
+	private businessService = inject(BusinessService);
+	readonly businesses = this.businessService.businesses;
 	readonly types: string[] = BUSINESS_TYPES;
 
 	activeType = signal<string>('All');
@@ -30,6 +32,9 @@ export class BusinessesComponent {
 			name: 'description',
 			content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства. Технології, послуги, контакти.",
 		});
+		meta.updateTag({ property: 'og:title', content: "Бізнеси Кам'янця | IT-Kamianets" });
+		meta.updateTag({ property: 'og:description', content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства." });
+		meta.updateTag({ property: 'og:type', content: 'website' });
 
 		// Restore state from URL on init
 		const params = this.route.snapshot.queryParamMap;
@@ -63,24 +68,53 @@ export class BusinessesComponent {
 		this.activeType.set(type);
 	}
 
+	private matchesQuery(business: Business, query: string): boolean {
+		if (!query) {
+			return true;
+		}
+
+		return (
+			business.name.toLowerCase().includes(query) ||
+			business.techStack.some((t) => t.toLowerCase().includes(query)) ||
+			business.services.some((s) => s.toLowerCase().includes(query))
+		);
+	}
+
+	readonly typeCounts = computed<Record<string, number>>(() => {
+		const query = this.searchQuery().toLowerCase().trim();
+
+		const counts: Record<string, number> = { All: 0 };
+		for (const type of this.types) {
+			counts[type] = 0;
+		}
+
+		for (const business of this.businesses()) {
+			if (!this.matchesQuery(business, query)) {
+				continue;
+			}
+
+			counts['All'] += 1;
+			if (Object.prototype.hasOwnProperty.call(counts, business.type)) {
+				counts[business.type] += 1;
+			}
+		}
+
+		return counts;
+	});
+
 	readonly filteredBusinesses = computed<Business[]>(() => {
 		const type = this.activeType();
 		const query = this.searchQuery().toLowerCase().trim();
 		const sort = this.sortBy();
 
-		let result = this.businesses;
+		let result = this.businesses();
 
 		if (type !== 'All') {
 			result = result.filter((b) => b.type === type);
 		}
 
 		if (query) {
-			result = result.filter(
-				(b) =>
-					b.name.toLowerCase().includes(query) ||
-					b.techStack.some((t) => t.toLowerCase().includes(query)) ||
-					b.services.some((s) => s.toLowerCase().includes(query)),
-			);
+			result = result.filter((b) => this.matchesQuery(b, query));
 		}
 
 		return [...result].sort((a, b) => {
