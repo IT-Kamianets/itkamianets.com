@@ -28,6 +28,6 @@ export class ManageComponent {
 		{ label: 'Jobs', path: '/manage/jobs', icon: 'work' },
 		{ label: 'Events', path: '/manage/events', icon: 'event' },
 		{ label: 'Competitions', path: '/manage/competitions', icon: 'emoji_events' },
-		{ label: 'People', path: '/manage/peoples', icon: 'group' },
+		{ label: 'People', path: '/manage/people', icon: 'group' },
 	];
 }

@@ -3,12 +3,12 @@ import { RouterLink } from '@angular/router';
 import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 
 @Component({
-	selector: 'app-peoples',
+	selector: 'app-profiles',
 	imports: [RouterLink],
-	templateUrl: './peoples.component.html',
-	styleUrl: './peoples.component.scss',
+	templateUrl: './profiles.component.html',
+	styleUrl: './profiles.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PeoplesComponent {
-	protected readonly peoples = signal<TeamMember[]>(TEAM_MEMBERS);
+export class ProfilesComponent {
+	protected readonly people = signal<TeamMember[]>(TEAM_MEMBERS);
 }

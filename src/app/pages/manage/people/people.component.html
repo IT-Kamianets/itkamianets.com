@@ -34,7 +34,7 @@
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-[var(--c-border)]">
-							@for (person of peoples(); track person.id) {
+							@for (person of people(); track person.id) {
 								<tr>
 									<td class="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
 										<img [src]="'developer/' + person.avatar + '.png'" [alt]="person.name" class="h-10 w-10 rounded-full object-cover ring-1 ring-[var(--c-border)]" />
@@ -76,7 +76,7 @@
 					{{ editingPerson() ? 'Редагувати користувача' : 'Додати користувача' }}
 				</h2>
 
-				<form (submit)="save()" class="space-y-4">
+				<form (ngSubmit)="save()" class="space-y-4">
 					<div>
 						<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Ім'я</label>
 						<input type="text" [(ngModel)]="form.name" name="name" required class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
@@ -114,6 +114,7 @@
 						<div class="grid grid-cols-1 gap-3">
 							<input type="text" [(ngModel)]="form.socials.linkedin" name="socialLinkedIn" placeholder="LinkedIn URL" class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none text-sm" />
 							<input type="text" [(ngModel)]="form.socials.github" name="socialGithub" placeholder="GitHub URL" class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none text-sm" />
+							<input type="text" [(ngModel)]="form.socials.upwork" name="socialUpwork" placeholder="Upwork URL" class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none text-sm" />
 						</div>
 					</div>
 

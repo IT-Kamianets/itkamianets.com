@@ -9,9 +9,9 @@
 	</div>
 
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-		@for (person of peoples(); track person.id) {
+		@for (person of people(); track person.id) {
 			<a
-				[routerLink]="['/people', person.id]"
+				[routerLink]="['/profile', person.id]"
 				class="person-card group flex flex-col items-center p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 text-center cursor-pointer"
 				style="background-color: var(--c-bg-secondary)"
 			>
@@ -19,6 +19,8 @@
 					[src]="'developer/' + person.avatar + '.png'"
 					[alt]="person.name"
 					class="w-32 h-32 rounded-full object-cover mb-4 transition-all"
+					loading="lazy"
+					decoding="async"
 				/>
 				<h3 class="text-xl font-bold mb-1" style="color: var(--c-text-secondary)">
 					{{ person.name }}

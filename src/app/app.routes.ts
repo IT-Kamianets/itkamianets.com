@@ -97,14 +97,14 @@ export const routes: Routes = [
 					import('./pages/business/business.component').then((m) => m.BusinessComponent),
 			},
 			{
-				path: 'peoples',
+				path: 'profiles',
 				loadComponent: () =>
-					import('./pages/peoples/peoples.component').then((m) => m.PeoplesComponent),
+					import('./pages/profiles/profiles.component').then((m) => m.ProfilesComponent),
 			},
 			{
-				path: 'people/:id',
+				path: 'profile/:id',
 				loadComponent: () =>
-					import('./pages/people/people.component').then((m) => m.PeopleComponent),
+					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
 			},
 		],
 	},
@@ -186,12 +186,12 @@ export const routes: Routes = [
 					),
 			},
 			{
-				path: 'peoples',
+				path: 'people',
 				canActivate: [authenticatedGuard],
 				data: { title: 'People' },
 				loadComponent: () =>
-					import('./pages/manage/peoples/peoples.component').then(
-						(m) => m.ManagePeoplesComponent,
+					import('./pages/manage/people/people.component').then(
+						(m) => m.ManagePeopleComponent,
 					),
 			},
 			{

@@ -2,9 +2,8 @@
 	<div class="py-12 px-4 max-w-4xl mx-auto">
 		<!-- Navigation back -->
 		<a
-			routerLink="/peoples"
-			class="inline-flex items-center gap-2 mb-8 text-sm font-medium transition-colors hover:text-blue-500"
-			style="color: var(--c-text-muted)"
+			routerLink="/profiles"
+			class="inline-flex items-center gap-2 mb-8 text-sm font-medium transition-colors text-[var(--c-text-muted)] hover:text-blue-500"
 		>
 			<span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_back</span>
 			Всі учасники
@@ -50,10 +49,40 @@
 			<!-- Social Links -->
 			<div class="relative z-10 flex gap-3 mt-4 md:mt-0">
 				@if (p.socials.linkedin && p.socials.linkedin !== '#') {
-					<a [href]="p.socials.linkedin" target="_blank" class="social-btn" title="LinkedIn">Li</a>
+					<a
+						[href]="p.socials.linkedin"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="social-btn"
+						title="LinkedIn"
+						aria-label="LinkedIn profile of {{ p.name }}"
+					>
+						LinkedIn
+					</a>
 				}
 				@if (p.socials.github && p.socials.github !== '#') {
-					<a [href]="p.socials.github" target="_blank" class="social-btn" title="GitHub">Gh</a>
+					<a
+						[href]="p.socials.github"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="social-btn"
+						title="GitHub"
+						aria-label="GitHub profile of {{ p.name }}"
+					>
+						GitHub
+					</a>
+				}
+				@if (p.socials.upwork && p.socials.upwork !== '#') {
+					<a
+						[href]="p.socials.upwork"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="social-btn"
+						title="Upwork"
+						aria-label="Upwork profile of {{ p.name }}"
+					>
+						Upwork
+					</a>
 				}
 			</div>
 		</div>
@@ -120,7 +149,7 @@
 		<h2 class="text-2xl font-bold mb-4" style="color: var(--c-text-secondary)">
 			Користувача не знайдено
 		</h2>
-		<a routerLink="/peoples" class="text-blue-500 hover:underline">
+		<a routerLink="/profiles" class="text-blue-500 hover:underline">
 			Повернутися до списку
 		</a>
 	</div>

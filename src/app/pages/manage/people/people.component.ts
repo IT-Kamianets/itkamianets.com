@@ -3,15 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { TEAM_MEMBERS, TeamMember } from '../../../data/team.data';
 
 @Component({
-	selector: 'app-manage-peoples',
+	selector: 'app-manage-people',
 	standalone: true,
 	imports: [FormsModule],
-	templateUrl: './peoples.component.html',
-	styleUrl: './peoples.component.scss',
+	templateUrl: './people.component.html',
+	styleUrl: './people.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManagePeoplesComponent {
-	protected readonly peoples = signal<TeamMember[]>([...TEAM_MEMBERS]);
+export class ManagePeopleComponent {
+	protected readonly people = signal<TeamMember[]>([...TEAM_MEMBERS]);
 	
 	protected isModalOpen = signal(false);
 	protected editingPerson = signal<TeamMember | null>(null);
@@ -65,10 +65,10 @@ export class ManagePeoplesComponent {
 
 	save() {
 		const editing = this.editingPerson();
-		const currentPeoples = this.peoples();
+		const currentPeople = this.people();
 		
 		if (editing) {
-			const updated = currentPeoples.map((p) => {
+			const updated = currentPeople.map((p) => {
 				if (p.id === editing.id) {
 					return {
 						...p,
@@ -78,10 +78,10 @@ export class ManagePeoplesComponent {
 				}
 				return p;
 			});
-			this.peoples.set(updated);
+			this.people.set(updated);
 		} else {
-			const newId = currentPeoples.length > 0 ? Math.max(...currentPeoples.map((p) => p.id)) + 1 : 1;
-			this.peoples.set([...currentPeoples, {
+			const newId = currentPeople.length > 0 ? Math.max(...currentPeople.map((p) => p.id)) + 1 : 1;
+			this.people.set([...currentPeople, {
 				id: newId,
 				...this.form,
 				socials: { ...this.form.socials }
@@ -92,7 +92,7 @@ export class ManagePeoplesComponent {
 
 	delete(id: number) {
 		if (confirm('Ви впевнені, що хочете видалити цього учасника?')) {
-			this.peoples.set(this.peoples().filter((p) => p.id !== id));
+			this.people.set(this.people().filter((p) => p.id !== id));
 		}
 	}
 }

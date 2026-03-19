@@ -5,13 +5,13 @@ import { map } from 'rxjs';
 import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 
 @Component({
-	selector: 'app-people',
+	selector: 'app-member-profile',
 	imports: [RouterLink],
-	templateUrl: './people.component.html',
-	styleUrl: './people.component.scss',
+	templateUrl: './profile.component.html',
+	styleUrl: './profile.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PeopleComponent {
+export class MemberProfileComponent {
 	private readonly route = inject(ActivatedRoute);
 
 	private readonly routeId = toSignal(this.route.paramMap.pipe(map((p) => p.get('id'))));
