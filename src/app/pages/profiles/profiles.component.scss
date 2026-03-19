@@ -1,0 +1,15 @@
+:host {
+	display: block;
+}
+
+.person-card {
+	box-shadow: var(--shadow-card);
+
+	&:hover {
+		box-shadow: var(--shadow-card-hover);
+		
+		img {
+			transform: scale(1.05);
+		}
+	}
+}
