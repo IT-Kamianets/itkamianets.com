@@ -17,8 +17,11 @@ export interface Service {
 	image: string;
 	features: string[];
 	provider: ServiceProvider;
+	/** One-time price. 0 means free. */
 	priceFrom: number;
 	currency: 'UAH' | 'USD' | 'EUR';
+	/** Monthly subscription fee, if any */
+	subscriptionFee?: number;
 	timeFrom: number;
 	timeTo: number;
 	timeUnit: 'days' | 'weeks' | 'months';
