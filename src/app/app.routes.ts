@@ -106,6 +106,91 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
 			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/article/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/merch/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/project/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/school/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/job/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/competition/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/event/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/profile/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/course/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/item/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/test/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/startup/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/quest/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/notification/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/company/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/review/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/certificate/public.routes').then((m) => m.routes),
+			},
 		],
 	},
 	{
@@ -201,6 +286,91 @@ export const routes: Routes = [
 					import('./pages/manage/businesses/businesses.component').then(
 						(m) => m.ManageBusinessesComponent,
 					),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/article/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/merch/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/project/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/school/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/job/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/competition/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/event/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/profile/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/course/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/item/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/test/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/startup/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/quest/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/notification/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/company/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/review/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/certificate/manage.routes').then((m) => m.routes),
 			},
 		],
 	},
