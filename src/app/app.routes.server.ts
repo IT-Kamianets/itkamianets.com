@@ -1,5 +1,6 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { BUSINESSES } from './data/businesses.data';
+import { TEAM_MEMBERS } from './data/team.data';
 
 export const serverRoutes: ServerRoute[] = [
 	{
@@ -14,6 +15,11 @@ export const serverRoutes: ServerRoute[] = [
 		path: 'businesses/:id',
 		renderMode: RenderMode.Prerender,
 		getPrerenderParams: async () => BUSINESSES.map((b) => ({ id: b.id })),
+	},
+	{
+		path: 'profile/:id',
+		renderMode: RenderMode.Prerender,
+		getPrerenderParams: async () => TEAM_MEMBERS.map((p) => ({ id: p.id.toString() })),
 	},
 	{
 		path: '**',

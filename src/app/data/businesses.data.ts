@@ -1,24 +1,6 @@
-export interface Business {
-	id: string;
-	name: string;
-	logo: string;
-	type: 'Студія' | 'Аутсорс' | 'Продукт' | 'Агентство';
-	shortDescription: string;
-	description: string;
-	techStack: string[];
-	services: string[];
-	employees: number;
-	founded: number;
-	contacts: {
-		website?: string;
-		email?: string;
-		linkedin?: string;
-		telegram?: string;
-		address?: string;
-	};
-}
-
-export const BUSINESS_TYPES = ['Студія', 'Аутсорс', 'Продукт', 'Агентство'];
+export type { Business } from '../feature/business/business.interface';
+export { BUSINESS_TYPES } from '../feature/business/business.interface';
+import { Business } from '../feature/business/business.interface';
 
 export const BUSINESSES: Business[] = [
 	{
