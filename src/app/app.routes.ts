@@ -78,10 +78,17 @@ export const routes: Routes = [
 					import('./pages/merch/merch.component').then((m) => m.MerchComponent),
 			},
 			{
-				path: 'proposals',
+				path: 'services',
 				loadComponent: () =>
-					import('./pages/proposals/proposals.component').then(
-						(m) => m.ProposalsComponent,
+					import('./pages/services/services.component').then(
+						(m) => m.ServicesComponent,
+					),
+			},
+			{
+				path: 'services/:id',
+				loadComponent: () =>
+					import('./pages/service-detail/service-detail.component').then(
+						(m) => m.ServiceDetailComponent,
 					),
 			},
 			{
