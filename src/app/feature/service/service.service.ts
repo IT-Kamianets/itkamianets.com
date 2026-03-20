@@ -1,6 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { Service } from './service.interface';
 
+export const SERVICE_IDS = ['it-kamianets', 'web-art-work'] as const;
+
 @Injectable({
 	providedIn: 'root',
 })
