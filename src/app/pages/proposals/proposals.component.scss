@@ -2,6 +2,17 @@
 	border-color: #cbd5e1 !important;
 }
 
+/* Вирівнюємо section-label під стиль сторінки Послуги */
+.page-hero .section-label {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	color: var(--c-primary);
+	margin-bottom: 12px;
+}
+
 .proposals-page {
 	min-height: 100vh;
 	background: var(--c-bg-primary);
@@ -41,12 +52,11 @@
 /* ── Page Hero ── */
 .page-hero {
 	position: relative;
-	padding: 80px 0 60px;
+	padding: 62px 0 50px;
 	text-align: center;
-	background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1920&h=600&fit=crop');
+	background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&h=600&fit=crop');
 	background-size: cover;
 	background-position: center;
-	margin-bottom: 60px;
 }
 
 .page-hero .section-divider-bar {
@@ -59,252 +69,334 @@
 .page-hero__overlay {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(37, 110, 255, 0.4) 100%);
+	background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(37, 110, 255, 0.55) 100%);
 }
 
 .page-hero__content {
 	position: relative;
 	z-index: 1;
-	max-width: 800px;
+	max-width: 700px;
 	margin: 0 auto;
 	padding: 0 24px;
 }
 
 .page-hero__title {
-	font-size: clamp(2rem, 5vw, 3rem);
+	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
 	font-weight: 800;
 	color: #fff;
-	line-height: 1.1;
-	margin-bottom: 16px;
-	text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+	line-height: 1.2;
+	margin-bottom: 12px;
 }
 
 .page-hero__subtitle {
-	font-size: 1.2rem;
-	color: rgba(255, 255, 255, 0.9);
-	line-height: 1.6;
+	font-size: 1.05rem;
+	color: rgba(255, 255, 255, 0.85);
+	line-height: 1.7;
 	max-width: 600px;
 	margin: 0 auto;
 }
 
-.section-label {
-	display: inline-block;
-	font-size: 14px;
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 3px;
-	color: var(--c-primary);
-	margin-bottom: 16px;
-}
-
-/* ── Proposals List (Horizontal) ── */
+/* ── Group ── */
 .proposals-list {
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+	gap: 24px;
+	padding: 32px 0;
 }
 
+@media (max-width: 640px) {
+	.proposals-list {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ── Card ── */
 .proposal-card {
 	display: flex;
+	flex-direction: column;
 	background: var(--c-bg-secondary);
 	border: 1px solid var(--c-border);
 	border-radius: var(--radius-card);
 	overflow: hidden;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
-	min-height: 320px;
 
 	&:hover {
 		transform: translateY(-5px);
 		box-shadow: var(--shadow-card-hover);
 	}
-}
 
-.proposal-card__img {
-	flex: 0 0 400px;
-	position: relative;
-	overflow: hidden;
+	&__img {
+		height: 180px;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
 
-	img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transition: transform 0.5s ease;
+	&__body {
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		gap: 12px;
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__badge {
+		display: inline-block;
+		width: fit-content;
+		padding: 3px 10px;
+		background: rgba(37, 110, 255, 0.1);
+		color: var(--c-primary);
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+
+	&__title {
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--c-text-secondary);
+		margin: 0;
+	}
+
+	&__desc {
+		font-size: 0.92rem;
+		color: var(--c-text-muted);
+		line-height: 1.6;
+		margin: 0 0 12px;
+		flex: 1;
+	}
+
+	&__footer {
+		margin-top: auto;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-top: 16px;
+		border-top: 1px solid var(--c-border);
+	}
+
+	&__meta {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
 	}
 }
 
-.proposal-card:hover .proposal-card__img img {
-	transform: scale(1.05);
-}
-
-.proposal-card__body {
-	flex: 1;
-	padding: 40px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
-
-.proposal-card__header {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.proposal-card__badge {
-	align-self: flex-start;
-	padding: 4px 14px;
-	font-size: 0.75rem;
-	font-weight: 700;
-	background: rgba(var(--c-primary-rgb, 37, 110, 255), 0.1);
-	color: var(--c-primary);
-	border-radius: 999px;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-}
-
-.proposal-card__title {
-	font-size: 1.75rem;
-	font-weight: 800;
-	color: var(--c-text-secondary);
-	line-height: 1.2;
-}
-
-.proposal-card__desc {
-	font-size: 1rem;
-	color: var(--c-text-muted);
-	line-height: 1.7;
-	margin: 0;
-}
-
-.proposal-card__features {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 12px;
-	margin-top: 10px;
-}
-
-.proposal-card__feature {
+.provider-profile {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	font-size: 0.85rem;
-	font-weight: 600;
-	color: var(--c-text-primary);
-	background: var(--c-bg-tertiary, var(--c-bg-primary));
-	padding: 6px 14px;
-	border-radius: 8px;
+	gap: 12px;
+	margin-bottom: 12px;
+	padding: 12px;
+	background: var(--c-bg-tertiary);
+	border-radius: var(--radius-card);
 	border: 1px solid var(--c-border);
 
-	svg {
-		color: var(--c-primary);
-		flex-shrink: 0;
+	&__avatar {
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__info {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__name {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--c-text-secondary);
+	}
+
+	&__role {
+		font-size: 0.75rem;
+		color: var(--c-text-muted);
+	}
+
+	&__rating {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #f59e0b;
 	}
 }
 
-.proposal-card__footer {
-	margin-top: auto;
-	padding-top: 24px;
-	border-top: 1px solid var(--c-border);
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 20px;
+.price-label {
+	font-weight: 700;
+	color: var(--c-primary);
+	font-size: 1rem;
 }
 
-.proposal-card__meta {
-	display: flex;
-	gap: 24px;
-}
-
-.proposal-card__meta-item {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	font-size: 0.9rem;
-	font-weight: 600;
-	color: var(--c-text-secondary);
-
-	svg {
-		color: var(--c-primary);
-	}
-}
-
-.proposal-card__team {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-}
-
-.proposal-card__team-label {
-	font-size: 0.85rem;
-	font-weight: 600;
+.time-label {
+	font-size: 0.8rem;
 	color: var(--c-text-muted);
 }
 
-.proposal-card__member {
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
-	overflow: hidden;
-	border: 2px solid var(--c-bg-secondary);
-	margin-left: -12px;
-	transition: transform 0.2s ease, z-index 0s;
-	position: relative;
-
-	&:first-of-type {
-		margin-left: 0;
-	}
+.book-button {
+	padding: 8px 20px;
+	background: var(--c-primary);
+	color: white;
+	border: none;
+	border-radius: var(--radius-btn);
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: background 0.25s ease, transform 0.15s ease;
 
 	&:hover {
-		transform: translateY(-4px);
-		z-index: 10;
+		background: var(--c-primary-hover);
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+}
+
+/* ── Overlay & Dialog (Modal) ── */
+.overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(4px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+
+.overlay__dialog {
+	background: var(--c-bg-secondary);
+	width: 100%;
+	max-width: 500px;
+	border-radius: var(--radius-card);
+	padding: 32px;
+	position: relative;
+	box-shadow: var(--shadow-lg);
+	border: 1px solid var(--c-border);
+}
+
+.overlay__close {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	color: var(--c-text-muted);
+	cursor: pointer;
+	line-height: 1;
+	transition: color 0.2s;
+	&:hover { color: var(--c-text-secondary); }
+}
+
+.booking-header {
+	margin-bottom: 24px;
+}
+
+.booking-title {
+	font-size: 1.5rem;
+	font-weight: 800;
+	color: var(--c-text-secondary);
+	margin-bottom: 4px;
+}
+
+.booking-service-name {
+	color: var(--c-primary);
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.booking-provider {
+	font-size: 0.9rem;
+	color: var(--c-text-muted);
+}
+
+.booking-form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	
+	label {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--c-text-secondary);
+	}
+}
+
+.form-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+.form-input, .form-textarea {
+	padding: 12px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	background: var(--c-bg-tertiary);
+	color: var(--c-text-primary);
+	font-family: inherit;
+	&:focus {
+		outline: none;
 		border-color: var(--c-primary);
-	}
-
-	img {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		box-shadow: var(--focus-ring);
 	}
 }
 
-/* ── Responsive ── */
-@media (max-width: 1024px) {
-	.proposal-card__img {
-		flex: 0 0 320px;
-	}
-	.proposal-card__body {
-		padding: 30px;
-	}
+.error-msg {
+	font-size: 0.75rem;
+	color: #ef4444;
+	margin-top: 4px;
 }
 
-@media (max-width: 860px) {
-	.proposal-card {
-		flex-direction: column;
-	}
-	.proposal-card__img {
-		flex: 0 0 240px;
-	}
-	.proposal-card__title {
-		font-size: 1.5rem;
-	}
-	.proposal-card__footer {
-		flex-direction: column;
-		align-items: flex-start;
-	}
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 24px;
 }
 
-@media (max-width: 480px) {
-	.proposal-card__body {
-		padding: 20px;
+.btn {
+	padding: 12px 24px;
+	border-radius: var(--radius-btn);
+	font-weight: 600;
+	cursor: pointer;
+	border: none;
+	transition: all 0.25s;
+	
+	&--primary {
+		background: var(--c-primary);
+		color: white;
+		&:hover { background: var(--c-primary-hover); }
+		&:disabled { opacity: 0.6; cursor: not-allowed; }
 	}
-	.proposal-card__meta {
-		flex-direction: column;
-		gap: 10px;
-	}
-	.page-hero {
-		padding: 60px 0 40px;
+	
+	&--secondary {
+		background: var(--c-bg-tertiary);
+		color: var(--c-text-secondary);
+		border: 1px solid var(--c-border);
+		&:hover { background: var(--c-border); }
 	}
 }
