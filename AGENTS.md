@@ -25,12 +25,26 @@ This file defines repo-specific instructions for coding agents working in this p
 - Do not introduce changes that break prerendering or require a browser-only runtime during build unless clearly isolated.
 - When adding a page, make it compatible with prerendering by default.
 
+## Wacom Usage
+
+- `wacom` is installed and configured in `src/app/app.config.ts` via `provideWacom(wacomConfig)` and `provideTranslate()`.
+- Repo-level `wacom` config lives in `src/app/wacom.config.ts`. Extend that file when adding shared `wacom` configuration instead of scattering setup across features.
+- Use `wacom` services directly through Angular DI. Do not wrap `HttpService`, `CrudService`, `ThemeService`, `TranslateService`, or other SSR-safe `wacom` services in `isPlatformBrowser` guards or lazy `Injector.get(...)` access just for SSR.
+- Keep SSR guards focused on actual browser APIs such as `localStorage`, `window`, `document`, `navigator`, WebRTC, or other DOM-only behavior.
+- Prefer existing `wacom` primitives when they fit the task:
+  `HttpService` for API calls and shared headers,
+  `CrudService` for CRUD-style feature data,
+  `ThemeService` for mode switching,
+  `TranslateService` and app translations for localized UI.
+- If a feature needs browser-only `wacom` behavior such as realtime, RTC, or DOM interaction, isolate the browser-specific calls without blocking server rendering of the rest of the feature.
+
 ## File Placement
 
 - App-level pages: `src/app/pages/<page-name>/`
 - Layout components: `src/app/layouts/`
 - Shared generic UI/components/services/pipes/directives/interfaces: `src/app/<type>/`
 - Feature-specific business logic: `src/app/feature/<feature-name>/`
+- Feature-owned startup or preload logic should live under `src/app/feature/<feature-name>/` and be registered from app config, not implemented directly in `main.ts`
 - Translation entries: `src/app/app.translates.ts`
 - Language feature metadata: `src/app/feature/language/language.type.ts`, `language.interface.ts`, `language.const.ts`
 - Global theme tokens: `src/styles/_theme.scss`
@@ -67,8 +81,12 @@ This file defines repo-specific instructions for coding agents working in this p
 
 - Make the smallest coherent change that solves the task.
 - Preserve existing naming, structure, and visual language unless the task explicitly asks for redesign.
+- Prefix private class members with `_`, including variables, injected fields, and methods
+- Omit explicit function and method return types; rely on TypeScript inference unless a specific edge case forces an explicit annotation
+- Order class members consistently: injected fields, public state, private state, constructor, public methods, private methods
 - Avoid introducing new dependencies unless necessary.
 - If adding browser APIs, guard them for SSR compatibility.
+- Guard actual browser-only APIs such as `localStorage`, not SSR-safe Angular or `wacom` services.
 - Keep comments sparse and only where logic is not obvious.
 
 ## Verification

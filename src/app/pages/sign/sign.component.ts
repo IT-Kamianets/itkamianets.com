@@ -1,18 +1,9 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	Injector,
-	inject,
-	PLATFORM_ID,
-	signal,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, pattern, required, submit, FormField } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { ThemeMode, ThemeService } from 'wacom';
-import { HttpService } from 'wacom';
+import { HttpService, ThemeMode, ThemeService } from 'wacom';
 import { UserService } from '../../feature/user/user.service';
 import { RespStatus, SignModel } from './sign.interface';
 
@@ -25,8 +16,7 @@ import { RespStatus, SignModel } from './sign.interface';
 export class SignComponent {
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
-	private readonly _injector = inject(Injector);
-	private readonly _platformId = inject(PLATFORM_ID);
+	private readonly _http = inject(HttpService);
 	private readonly _router = inject(Router);
 	protected readonly model = signal<SignModel>({
 		email: '',
@@ -57,13 +47,7 @@ export class SignComponent {
 	}
 
 	private _submit(payload: SignModel) {
-		const http = this._http();
-		if (!http) {
-			this._setStatus('error', 'API авторизації доступне лише у браузері.');
-			return;
-		}
-
-		http.post('/api/user/status?test=test', payload, (resp: RespStatus) => {
+		this._http.post('/api/user/status?test=test', payload, (resp: RespStatus) => {
 			if (resp?.email && resp?.pass) {
 				this._login(payload);
 			} else {
@@ -75,13 +59,13 @@ export class SignComponent {
 	}
 
 	private _login(payload: SignModel) {
-		this._http()?.post('/api/user/login', payload, (user) => this._set(user), {
+		this._http.post('/api/user/login', payload, (user) => this._set(user), {
 			err: () => this._setStatus('error', 'Не вдалося увійти.'),
 		});
 	}
 
 	private _sign(payload: SignModel) {
-		this._http()?.post('/api/user/sign', payload, (user) => this._set(user), {
+		this._http.post('/api/user/sign', payload, (user) => this._set(user), {
 			err: () => this._setStatus('error', 'Не вдалося зареєструватися.'),
 		});
 	}
@@ -99,13 +83,5 @@ export class SignComponent {
 	private _setStatus(tone: 'info' | 'error', message: string) {
 		this.submitTone.set(tone);
 		this.submitMessage.set(message);
-	}
-
-	private _http(): HttpService | null {
-		if (!isPlatformBrowser(this._platformId)) {
-			return null;
-		}
-
-		return this._injector.get(HttpService);
 	}
 }
