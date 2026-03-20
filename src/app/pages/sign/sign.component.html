@@ -2,7 +2,7 @@
 	class="sign-page min-h-dvh grid grid-rows-[28dvh_1fr] bg-[var(--c-bg-primary)] p-6 md:grid-cols-2 md:grid-rows-none md:items-stretch md:gap-16 md:p-10"
 >
 	<div class="flex h-full items-center justify-center md:justify-end md:pr-10">
-		<a routerLink="/" class="sign-page__brand" aria-label="Go to home page">
+		<a routerLink="/" class="sign-page__brand" aria-label="Перейти на головну сторінку">
 			<img class="sign-page__logo" src="logo.png" alt="IT-Kamianets logo" />
 		</a>
 	</div>
@@ -10,57 +10,61 @@
 	<div class="flex items-start justify-center md:items-center md:justify-start md:pl-10">
 		<section class="sign-card">
 			<button
+				pButton
 				type="button"
 				class="sign-card__theme"
 				[class.sign-card__theme--dark]="isDark"
 				(click)="toggleTheme()"
-				[attr.aria-label]="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+				[attr.aria-label]="isDark ? 'Перемкнути на світлу тему' : 'Перемкнути на темну тему'"
 			>
 				<span class="material-symbols-outlined" aria-hidden="true">
 					{{ isDark ? 'light_mode' : 'dark_mode' }}
 				</span>
 			</button>
 
-			<h1 class="sign-card__title">Sign In / Sign Up</h1>
-			<p class="sign-card__subtitle">Sign in or create an account.</p>
+			<h1 class="sign-card__title">Вхід / Реєстрація</h1>
 
 			<form class="sign-form" (submit)="onSubmit($event)" novalidate>
 				<label class="sign-form__field">
-					<span class="sign-form__label">Email</span>
+					<span class="sign-form__label">Електронна пошта</span>
 					<input
-						class="sign-form__input"
+						pInputText
+						class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-3 py-2 text-[var(--c-text-primary)]"
 						type="email"
 						autocomplete="email"
-						placeholder="Enter your email..."
-						[value]="model().email"
-						(input)="updateField('email', ($any($event.target).value ?? '').toString())"
-						(blur)="markTouched('email')"
+						placeholder="Введіть email..."
+						[formField]="signForm.email"
 					/>
-					@if (emailError()) {
-						<span class="sign-form__error">{{ emailError() }}</span>
+					@if (signForm.email().touched() && signForm.email().invalid()) {
+						<span class="sign-form__error">{{
+							signForm.email().errors()[0]?.message
+						}}</span>
 					}
 				</label>
 
 				<label class="sign-form__field">
-					<span class="sign-form__label">Password</span>
+					<span class="sign-form__label">Пароль</span>
 					<input
-						class="sign-form__input"
+						pInputText
+						class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-3 py-2 text-[var(--c-text-primary)]"
 						type="password"
 						autocomplete="current-password"
-						placeholder="Enter your password..."
-						[value]="model().password"
-						(input)="
-							updateField('password', ($any($event.target).value ?? '').toString())
-						"
-						(blur)="markTouched('password')"
+						placeholder="Введіть пароль..."
+						[formField]="signForm.password"
 					/>
-					@if (passwordError()) {
-						<span class="sign-form__error">{{ passwordError() }}</span>
+					@if (signForm.password().touched() && signForm.password().invalid()) {
+						<span class="sign-form__error">{{
+							signForm.password().errors()[0]?.message
+						}}</span>
 					}
 				</label>
 
-				<button class="sign-form__submit" type="submit" [disabled]="isSubmitDisabled()">
-					Let's go
+				<button
+					pButton
+					class="rounded-xl bg-[var(--c-primary)] px-5 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+					type="submit"
+				>
+					Продовжити
 				</button>
 			</form>
 

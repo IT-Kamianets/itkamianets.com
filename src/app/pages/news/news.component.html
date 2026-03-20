@@ -40,7 +40,7 @@
 
 		<!-- News Grid -->
 		<div class="news-grid">
-			@for (item of filteredNews; track item.id) {
+			@for (item of filteredNews; track item._id) {
 				<article class="news-card">
 					<div class="news-card__img">
 						<img [src]="item.image" [alt]="item.title" loading="lazy" />

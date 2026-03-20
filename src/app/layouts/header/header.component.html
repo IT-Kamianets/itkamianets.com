@@ -14,43 +14,16 @@
 
 			<!-- Center: Navigation Links -->
 			<div class="header__nav-pill">
-				<a
-					[routerLinkActiveOptions]="{ exact: true }"
-					routerLinkActive="header__link--active"
-					class="header__link"
-					routerLink="/"
-					>Головна</a
-				>
-				<a
-					routerLinkActive="header__link--active"
-					routerLink="/proposals"
-					class="header__link"
-					>Послуги</a
-				>
-				<a
-					routerLinkActive="header__link--active"
-					routerLink="/hackathons"
-					class="header__link"
-					>Змагання</a
-				>
-				<a
-					routerLinkActive="header__link--active"
-					routerLink="/projects"
-					class="header__link"
-					>Проєкти</a
-				>
-				<a routerLink="/team" routerLinkActive="header__link--active" class="header__link"
-					>Команда</a
-				>
-				<a routerLink="/news" routerLinkActive="header__link--active" class="header__link"
-					>Новини</a
-				>
-				<a routerLink="/businesses" routerLinkActive="header__link--active" class="header__link"
-					>Бізнеси</a
-				>
-			<a routerLink="/merch" routerLinkActive="header__link--active" class="header__link"
-					>Мерч</a
-				>
+				@for (item of menuItems; track item._id) {
+					<a
+						[routerLink]="item.href"
+						[routerLinkActiveOptions]="{ exact: item.options?.menu?.exact ?? false }"
+						routerLinkActive="header__link--active"
+						class="header__link"
+					>
+						{{ item.title }}
+					</a>
+				}
 			</div>
 
 			<!-- Right: Theme Toggle -->
@@ -118,37 +91,16 @@
 
 			<!-- Row 2: Navigation Links -->
 			<div class="header__nav-pill header__nav-pill--mobile">
-				<a
-					routerLink="/"
-					[routerLinkActiveOptions]="{ exact: true }"
-					routerLinkActive="header__link--active"
-					class="header__link"
-					>Головна</a
-				>
-				<a
-					routerLink="/proposals"
-					routerLinkActive="header__link--active"
-					class="header__link"
-					>Послуги</a
-				>
-				<a
-					routerLink="/projects"
-					routerLinkActive="header__link--active"
-					class="header__link"
-					>Проєкти</a
-				>
-				<a routerLink="/team" routerLinkActive="header__link--active" class="header__link"
-					>Команда</a
-				>
-				<a routerLink="/news" routerLinkActive="header__link--active" class="header__link"
-					>Новини</a
-				>
-				<a routerLink="/businesses" routerLinkActive="header__link--active" class="header__link"
-					>Бізнеси</a
-				>
-			<a routerLink="/merch" routerLinkActive="header__link--active" class="header__link"
-					>Мерч</a
-				>
+				@for (item of menuItems; track item._id) {
+					<a
+						[routerLink]="item.href"
+						[routerLinkActiveOptions]="{ exact: item.options?.menu?.exact ?? false }"
+						routerLinkActive="header__link--active"
+						class="header__link"
+					>
+						{{ item.title }}
+					</a>
+				}
 			</div>
 		</div>
 	</nav>

@@ -1,6 +1,6 @@
 # Contributing
 
-This project is an Angular 21 landing page template built around SSR prerendering, TailwindCSS v4, shared theme variables, and a minimal project structure.
+This project is an Angular 21 landing page template built around SSR prerendering, TailwindCSS v4, PrimeNG 21, shared theme variables, and a minimal project structure.
 
 Keep contributions aligned with the current template conventions described in [README.md](/c:/Users/crack/work/itkp.ngx-default/README.md).
 
@@ -18,6 +18,9 @@ Keep contributions aligned with the current template conventions described in [R
 ## Styling
 
 - Use **TailwindCSS first** for normal UI work
+- PrimeNG is available; prefer PrimeNG components when they provide a better baseline for forms and interactive UI
+- Keep PrimeNG usage aligned with global config in `src/app/app.config.ts` (`providePrimeNG` with `@primeuix/themes/aura`)
+- Keep component-level overrides scoped; avoid broad global overrides of PrimeNG classes
 - Use shared theme variables from `src/styles/_theme.scss` for colors, surfaces, spacing, radius, motion, and typography
 - Use component `.scss` files for local styling only when Tailwind is not the right tool
 - Avoid hard-coded hex colors and random pixel values when a theme token already exists
