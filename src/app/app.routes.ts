@@ -92,6 +92,13 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'businesses/map',
+				loadComponent: () =>
+					import('./pages/businesses-map/businesses-map.component').then(
+						(m) => m.BusinessesMapComponent,
+					),
+			},
+			{
 				path: 'businesses/:id',
 				loadComponent: () =>
 					import('./pages/business/business.component').then((m) => m.BusinessComponent),

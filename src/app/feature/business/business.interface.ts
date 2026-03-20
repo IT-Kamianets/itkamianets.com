@@ -11,6 +11,8 @@ export interface Business {
 	founded: number;
 	openPositions?: number;
 	verified?: boolean;
+	lat?: number;
+	lng?: number;
 	contacts: {
 		website?: string;
 		email?: string;

@@ -15,6 +15,8 @@ export const BUSINESSES: Business[] = [
 		services: ['Веб-дизайн', 'Брендинг', 'UX/UI аудит', 'Фронтенд-розробка'],
 		employees: 12,
 		founded: 2018,
+		lat: 48.6731,
+		lng: 26.5645,
 		contacts: {
 			website: 'https://pixelcraft.example.com',
 			email: 'hello@pixelcraft.example.com',
@@ -40,6 +42,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 45,
 		founded: 2015,
+		lat: 48.6718,
+		lng: 26.5672,
 		contacts: {
 			website: 'https://devbridge.example.com',
 			email: 'contact@devbridge.example.com',
@@ -60,6 +64,8 @@ export const BUSINESSES: Business[] = [
 		services: ['SaaS-підписка', 'Впровадження та навчання', 'API-інтеграції', 'Аналітика даних'],
 		employees: 28,
 		founded: 2019,
+		lat: 48.6743,
+		lng: 26.5661,
 		contacts: {
 			website: 'https://agrotech.example.com',
 			email: 'info@agrotech.example.com',
@@ -86,6 +92,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 18,
 		founded: 2017,
+		lat: 48.6709,
+		lng: 26.5638,
 		contacts: {
 			website: 'https://digitalwave.example.com',
 			email: 'hello@digitalwave.example.com',
@@ -112,6 +120,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 20,
 		founded: 2020,
+		lat: 48.6756,
+		lng: 26.5650,
 		contacts: {
 			website: 'https://mobilemind.example.com',
 			email: 'dev@mobilemind.example.com',
@@ -138,6 +148,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 32,
 		founded: 2016,
+		lat: 48.6722,
+		lng: 26.5683,
 		contacts: {
 			website: 'https://cloudnine.example.com',
 			email: 'ops@cloudnine.example.com',
@@ -163,6 +175,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 22,
 		founded: 2021,
+		lat: 48.6698,
+		lng: 26.5669,
 		contacts: {
 			website: 'https://eduflow.example.com',
 			email: 'hello@eduflow.example.com',
@@ -188,6 +202,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 14,
 		founded: 2014,
+		lat: 48.6737,
+		lng: 26.5628,
 		contacts: {
 			website: 'https://brandcraft.example.com',
 			email: 'brand@brandcraft.example.com',
@@ -213,6 +229,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 19,
 		founded: 2020,
+		lat: 48.6712,
+		lng: 26.5696,
 		contacts: {
 			website: 'https://datastream.example.com',
 			email: 'info@datastream.example.com',
@@ -239,6 +257,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 16,
 		founded: 2013,
+		lat: 48.6748,
+		lng: 26.5641,
 		contacts: {
 			website: 'https://webforce.example.com',
 			email: 'studio@webforce.example.com',
@@ -264,6 +284,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 11,
 		founded: 2018,
+		lat: 48.6704,
+		lng: 26.5655,
 		contacts: {
 			website: 'https://secureops.example.com',
 			email: 'security@secureops.example.com',
@@ -289,6 +311,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 9,
 		founded: 2019,
+		lat: 48.6762,
+		lng: 26.5667,
 		contacts: {
 			website: 'https://medialab.example.com',
 			email: 'content@medialab.example.com',
@@ -313,6 +337,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 37,
 		founded: 2017,
+		lat: 48.6726,
+		lng: 26.5710,
 		contacts: {
 			website: 'https://fintech42.example.com',
 			email: 'partners@fintech42.example.com',
@@ -338,6 +364,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 55,
 		founded: 2012,
+		lat: 48.6715,
+		lng: 26.5624,
 		contacts: {
 			website: 'https://softlabs.example.com',
 			email: 'sales@softlabs.example.com',
@@ -363,6 +391,8 @@ export const BUSINESSES: Business[] = [
 		],
 		employees: 7,
 		founded: 2022,
+		lat: 48.6740,
+		lng: 26.5680,
 		contacts: {
 			website: 'https://greencode.example.com',
 			email: 'green@greencode.example.com',
