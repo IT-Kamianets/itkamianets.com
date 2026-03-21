@@ -31,7 +31,9 @@
 				</button>
 
 				<div class="map-preview__header">
-					<img [src]="b.logo" [alt]="b.name" class="map-preview__logo" />
+					@if (b.logo) {
+						<img [src]="b.logo" [alt]="b.name" class="map-preview__logo" />
+					}
 					<div>
 						<h3 class="map-preview__name">{{ b.name }}</h3>
 						<span class="map-preview__badge">{{ b.type }}</span>
