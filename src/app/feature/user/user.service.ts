@@ -1,16 +1,15 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, Injector, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { HttpService } from 'wacom';
 import { NEW_USER } from './user.const';
 import { User } from './user.interface';
-import { HttpService } from 'wacom';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class UserService {
-	private readonly _injector = inject(Injector);
+	private readonly _http = inject(HttpService);
 	private readonly _router = inject(Router);
 	private readonly _platformId = inject(PLATFORM_ID);
 	private readonly _storageKey = 'waw_user';
@@ -53,7 +52,7 @@ export class UserService {
 		this.user.set(nextUser);
 
 		if (nextUser.token) {
-			this._http()?.set('token', nextUser.token);
+			this._http.set('token', nextUser.token);
 		}
 
 		if (isPlatformBrowser(this._platformId)) {
@@ -63,7 +62,7 @@ export class UserService {
 
 	clearUser() {
 		this.user.set(this.new());
-		this._http()?.remove('token');
+		this._http.remove('token');
 
 		if (isPlatformBrowser(this._platformId)) {
 			localStorage.removeItem(this._storageKey);
@@ -72,17 +71,9 @@ export class UserService {
 
 	logout(redirectTo = '/sign') {
 		this.clearUser();
-		this._http()?.get('/api/user/logout', undefined, {
+		this._http.get('/api/user/logout', undefined, {
 			err: () => undefined,
 		});
 		this._router.navigateByUrl(redirectTo);
-	}
-
-	private _http(): HttpService | null {
-		if (!isPlatformBrowser(this._platformId)) {
-			return null;
-		}
-
-		return this._injector.get(HttpService);
 	}
 }

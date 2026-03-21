@@ -23,10 +23,10 @@ export class HeaderComponent {
 			options: { menu: { exact: true } },
 		},
 		{
-			_id: 'menu-proposals',
+			_id: 'menu-services',
 			type: 'menu',
 			title: 'Послуги',
-			href: '/proposals',
+			href: '/services',
 		},
 		{
 			_id: 'menu-hackathons',
