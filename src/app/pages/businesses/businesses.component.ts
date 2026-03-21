@@ -73,10 +73,10 @@ export class BusinessesComponent {
 			return true;
 		}
 
-		return (
+		return !!(
 			business.name.toLowerCase().includes(query) ||
-			business.techStack.some((t) => t.toLowerCase().includes(query)) ||
-			business.services.some((s) => s.toLowerCase().includes(query))
+			business.techStack?.some((t) => t.toLowerCase().includes(query)) ||
+			business.services?.some((s) => s.toLowerCase().includes(query))
 		);
 	}
 
@@ -119,8 +119,8 @@ export class BusinessesComponent {
 
 		return [...result].sort((a, b) => {
 			if (sort === 'name') return a.name.localeCompare(b.name, 'uk');
-			if (sort === 'founded') return a.founded - b.founded;
-			if (sort === 'employees') return b.employees - a.employees;
+			if (sort === 'founded') return (a.founded ?? 0) - (b.founded ?? 0);
+			if (sort === 'employees') return (b.employees ?? 0) - (a.employees ?? 0);
 			return 0;
 		});
 	});
