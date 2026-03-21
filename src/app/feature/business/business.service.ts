@@ -1,100 +1,147 @@
-import { Injectable, signal } from '@angular/core';
-import { CrudDocument, CrudService } from 'wacom';
-import { BUSINESSES } from '../../data/businesses.data';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { Business } from './business.interface';
 
-interface BusinessDoc extends CrudDocument<BusinessDoc> {
-	name: string;
-	description: string;
-	data: Partial<Omit<Business, 'id' | 'name' | 'description'>>;
-}
+const API = `${environment.apiUrl}/api/itcompany`;
+
+const STATIC_BUSINESSES: Business[] = [
+	{
+		id: 'static-1',
+		name: 'WebArtWork',
+		logo: '',
+		type: 'Студія',
+		shortDescription: 'Веб-студія повного циклу з Кам\'янця-Подільського',
+		description: 'WebArtWork — команда досвідчених розробників, що створює сучасні веб-застосунки та цифрові продукти для бізнесу. Понад 10 років на ринку.',
+		techStack: ['Angular', 'Node.js', 'MongoDB', 'TypeScript'],
+		services: ['Веб-розробка', 'Мобільні застосунки', 'UI/UX дизайн', 'Технічна підтримка'],
+		employees: 25,
+		founded: 2013,
+		openPositions: 2,
+		verified: true,
+		lat: 48.6726,
+		lng: 26.5657,
+		contacts: {
+			website: 'https://webart.work',
+			email: 'info@webart.work',
+			telegram: 'https://t.me/webartwork',
+		},
+	},
+	{
+		id: 'static-empty',
+		lat: 48.6700,
+		lng: 26.5700,
+		name: 'Мінімальна компанія',
+		logo: '',
+		type: 'Продукт',
+		shortDescription: '',
+		description: '',
+		techStack: [],
+		services: [],
+		employees: 0,
+		founded: 0,
+		contacts: {},
+	},
+	{
+		id: 'static-2',
+		name: 'SoftCraft',
+		lat: 48.6758,
+		lng: 26.5612,
+		logo: '',
+		type: 'Аутсорс',
+		shortDescription: 'Аутсорсингова IT-компанія, спеціалізація — фінтех та e-commerce',
+		description: 'SoftCraft надає послуги аутсорсингової розробки для міжнародних клієнтів. Основні напрямки: фінансові технології, електронна комерція та корпоративні системи.',
+		techStack: ['React', 'Python', 'PostgreSQL', 'Docker', 'AWS'],
+		services: ['Аутсорс розробка', 'Консалтинг', 'DevOps', 'QA тестування'],
+		employees: 40,
+		founded: 2017,
+		openPositions: 5,
+		verified: true,
+		contacts: {
+			website: 'https://softcraft.ua',
+			email: 'hr@softcraft.ua',
+			linkedin: 'https://linkedin.com/company/softcraft',
+		},
+	},
+	...Array.from({ length: 13 }, (_, i) => ({
+		id: `mock-${i + 1}`,
+		name: `IT Компанія ${i + 1}`,
+		logo: '',
+		type: ['Студія', 'Аутсорс', 'Продукт', 'Агентство'][i % 4],
+		shortDescription: `Короткий опис компанії ${i + 1}`,
+		description: `Детальний опис компанії ${i + 1}`,
+		techStack: ['Angular', 'Node.js', 'TypeScript'],
+		services: ['Розробка', 'Консалтинг'],
+		employees: 10 + i * 5,
+		founded: 2010 + (i % 10),
+		openPositions: i % 3,
+		verified: i % 2 === 0,
+		contacts: { website: `https://company${i + 1}.ua` },
+	})),
+];
 
 @Injectable({ providedIn: 'root' })
-export class BusinessService extends CrudService<BusinessDoc> {
-	readonly businesses = signal<Business[]>([]);
+export class BusinessService {
+	private http = inject(HttpClient);
+	private platformId = inject(PLATFORM_ID);
 
-	private _businessDocs: BusinessDoc[] = [];
+	readonly businesses = signal<Business[]>(STATIC_BUSINESSES);
 
 	constructor() {
-		super({ name: 'regionitcompany', unauthorized: true });
-
-		this.filteredDocuments(this._businessDocs, {
-			filtered: () => {
-				this.businesses.set(this._businessDocs.map((d) => this._fromDoc(d)));
-			},
-		});
-
-		this.get().subscribe({
-			next: (docs) => {
-				console.log('[BusinessService] GET відповідь, кількість:', docs.length, docs);
-				if (docs.length === 0) {
-					this._seed();
-				}
-			},
-			error: (err) => console.error('[BusinessService] GET помилка:', err),
-		});
+		if (isPlatformBrowser(this.platformId)) {
+			this.http.get<any[]>(`${API}/get`).subscribe({
+				next: (docs) => {
+					if (Array.isArray(docs)) {
+						this.businesses.set(docs.map((d) => this._fromDoc(d)));
+					}
+				},
+			});
+		}
 	}
 
 	add(business: Omit<Business, 'id'>): void {
-		this.create(this._toDoc(business)).subscribe({
-			next: (doc) => console.log('[BusinessService] CREATE успіх, _id:', doc?._id),
-			error: (err) => console.error('[BusinessService] CREATE помилка:', err),
+		this.http.post<any>(`${API}/create`, this._toPayload(business)).subscribe({
+			next: (doc) => {
+				if (doc?._id) {
+					this.businesses.update((list) => [this._fromDoc(doc), ...list]);
+				} else {
+					const id = crypto.randomUUID();
+					this.businesses.update((list) => [{ ...business, id }, ...list]);
+				}
+			},
 		});
 	}
 
 	updateBusiness(business: Business): void {
-		const doc = this._businessDocs.find((d) => d._id === business.id);
-		if (!doc) return;
-		doc.name = business.name;
-		doc.description = business.description;
-		doc.data = this._toData(business);
-		super.update(doc).subscribe();
+		this.http
+			.post<any>(`${API}/update`, { _id: business.id, ...this._toPayload(business) })
+			.subscribe({
+				next: (doc) =>
+					this.businesses.update((list) =>
+						list.map((b) => (b.id === business.id ? (doc?._id ? this._fromDoc(doc) : business) : b)),
+					),
+			});
 	}
 
 	deleteBusiness(id: string): void {
-		const doc = this._businessDocs.find((d) => d._id === id);
-		if (!doc) return;
-		super.delete(doc).subscribe();
+		this.http.post<any>(`${API}/delete`, { _id: id }).subscribe({
+			next: () => this.businesses.update((list) => list.filter((b) => b.id !== id)),
+			error: () => this.businesses.update((list) => list.filter((b) => b.id !== id)),
+		});
 	}
 
-	private _fromDoc(doc: BusinessDoc): Business {
+	private _toPayload(business: Omit<Business, 'id'>) {
+		const { name, shortDescription, ...rest } = business;
+		return { name, description: shortDescription, data: rest };
+	}
+
+	private _fromDoc(doc: any): Business {
 		return {
-			id: doc._id ?? '',
+			id: doc._id,
 			name: doc.name ?? '',
-			description: doc.description ?? '',
-			logo: doc.data?.logo ?? '',
-			type: doc.data?.type ?? '',
-			shortDescription: doc.data?.shortDescription ?? '',
-			techStack: doc.data?.techStack ?? [],
-			services: doc.data?.services ?? [],
-			employees: doc.data?.employees ?? 0,
-			founded: doc.data?.founded ?? new Date().getFullYear(),
-			openPositions: doc.data?.openPositions,
-			verified: doc.data?.verified,
-			lat: doc.data?.lat,
-			lng: doc.data?.lng,
-			contacts: doc.data?.contacts ?? {},
-		};
-	}
-
-	private _toDoc(business: Omit<Business, 'id'>): BusinessDoc {
-		const { name, description, ...rest } = business;
-		return { name, description, data: rest } as BusinessDoc;
-	}
-
-	private _toData(business: Business): Omit<Business, 'id' | 'name' | 'description'> {
-		const { id, name, description, ...rest } = business;
-		return rest;
-	}
-
-	private _seed(): void {
-		console.log('[BusinessService] Запускаю сідінг...');
-		for (const b of BUSINESSES) {
-			const { id, ...rest } = b;
-			this.create(this._toDoc(rest)).subscribe({
-				next: (doc) => console.log('[BusinessService] SEED успіх:', b.name, '_id:', doc?._id),
-				error: (err) => console.error('[BusinessService] SEED помилка:', b.name, err),
-			});
-		}
+			shortDescription: doc.description ?? '',
+			...(doc.data ?? {}),
+		} as Business;
 	}
 }

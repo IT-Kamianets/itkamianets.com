@@ -98,9 +98,12 @@ export class BusinessesMapComponent implements AfterViewInit, OnDestroy {
 
 			const icon = L.divIcon({
 				className: '',
-				html: `<span class="map-marker"></span>`,
+				html: `<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+					<span style="display:block;width:18px;height:18px;border-radius:50%;background:#6366f1;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35)"></span>
+					<span style="background:rgba(0,0,0,0.7);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none">${b.name}</span>
+				</div>`,
 				iconSize: [18, 18],
-				iconAnchor: [9, 9],
+				iconAnchor: [9, 0],
 			});
 
 			const marker = L.marker([b.lat, b.lng], { icon });

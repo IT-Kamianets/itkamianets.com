@@ -5,10 +5,10 @@ export interface Business {
 	type: string;
 	shortDescription: string;
 	description: string;
-	techStack: string[];
-	services: string[];
-	employees: number;
-	founded: number;
+	techStack?: string[];
+	services?: string[];
+	employees?: number;
+	founded?: number;
 	openPositions?: number;
 	verified?: boolean;
 	lat?: number;
