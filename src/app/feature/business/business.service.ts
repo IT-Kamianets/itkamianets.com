@@ -86,18 +86,22 @@ export class BusinessService {
 	private http = inject(HttpClient);
 	private platformId = inject(PLATFORM_ID);
 
-	readonly businesses = signal<Business[]>(STATIC_BUSINESSES);
+	readonly businesses = signal<Business[]>([]);
 
 	constructor() {
 		if (isPlatformBrowser(this.platformId)) {
-			this.http.get<any[]>(`${API}/get`).subscribe({
-				next: (docs) => {
-					if (Array.isArray(docs)) {
-						this.businesses.set(docs.map((d) => this._fromDoc(d)));
-					}
-				},
-			});
+			// Use static businesses as a fast placeholder only in the browser.
+			this.businesses.set(STATIC_BUSINESSES);
 		}
+
+		// Always fetch real data so both browser and server share the same source of truth.
+		this.http.get<any[]>(`${API}/get`).subscribe({
+			next: (docs) => {
+				if (Array.isArray(docs)) {
+					this.businesses.set(docs.map((d) => this._fromDoc(d)));
+				}
+			},
+		});
 	}
 
 	add(business: Omit<Business, 'id'>): void {
