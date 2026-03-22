@@ -1,30 +1,29 @@
-export type ProjectCategory = 'theme-tailwind' | 'theme-bulma' | 'theme-bootstrap' | 'custom';
+export type ProjectCategory =
+	| 'hotel-business'
+	| 'retail-business'
+	| 'restaurant-business'
+	| 'coffee-business'
+	| 'salon-business';
 
-export type ProjectImageKind = 'asset' | 'upload';
-
-export interface ManagedProject {
-	id: string;
-	title: string;
-	description: string;
-	tags: string[];
-	repoUrl: string;
-	liveUrl: string;
-	image: string;
-	imageKind: ProjectImageKind;
-	memberIds: number[];
-	category: ProjectCategory;
-	createdAt: string;
-	updatedAt: string;
+export interface ProjectData {
+	category?: string;
+	completionDate?: string;
+	description?: string;
+	githubLink?: string;
+	imageKind?: string;
+	liveUrl?: string;
+	memberIds?: number[];
+	photo?: string;
+	title?: string;
+	tags?: string[];
+	websiteLink?: string;
+	team?: number[];
+	[key: string]: unknown;
 }
 
-export interface ManagedProjectDraft {
-	title: string;
-	description: string;
-	tags: string[];
-	repoUrl: string;
-	liveUrl: string;
-	image: string;
-	imageKind: ProjectImageKind;
-	memberIds: number[];
-	category: ProjectCategory;
+export interface Project {
+	_id?: string;
+	data: ProjectData;
+	createdAt?: string;
+	updatedAt?: string;
 }

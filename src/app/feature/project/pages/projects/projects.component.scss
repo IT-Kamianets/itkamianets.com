@@ -1,5 +1,17 @@
 :host-context(html[data-mode='light']) .project-card {
-	border-color: #cbd5e1 !important;
+	border-color: #94a3b8 !important;
+}
+
+:host-context(html[data-mode='light']) .project-card__tag {
+	border-color: #94a3b8 !important;
+}
+
+:host-context(html[data-mode='light']) .project-card__link:not(.project-card__link--live) {
+	border-color: #94a3b8 !important;
+}
+
+:host-context(html[data-mode='light']) .projects-filter:not(.projects-filter--active) {
+	border-color: #94a3b8 !important;
 }
 /* Вирівнюємо section-label під стиль сторінки Послуги */
 .page-hero .section-label {
@@ -101,17 +113,78 @@
 	gap: 24px;
 }
 
+.projects-filters {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin: 32px 0 8px;
+	flex-wrap: wrap;
+}
+
+.projects-filter {
+	padding: 8px 20px;
+	font-size: 0.88rem;
+	font-weight: 600;
+	border-radius: var(--radius-btn);
+	border: 1.5px solid var(--c-border);
+	background: transparent;
+	color: var(--c-text-muted);
+	cursor: pointer;
+	transition:
+		background 0.25s ease,
+		color 0.25s ease,
+		border-color 0.25s ease,
+		transform 0.15s ease;
+}
+
+@media (hover: hover) {
+	.projects-filter:hover {
+		border-color: var(--c-primary);
+		color: var(--c-primary);
+	}
+}
+
+.projects-filter--active {
+	background: var(--c-primary);
+	color: #fff;
+	border-color: var(--c-primary);
+}
+
+.projects-filter:disabled,
+.projects-filter--active:disabled {
+	cursor: default;
+	pointer-events: none;
+	transform: none;
+}
+
+@media (hover: hover) {
+	.projects-filter:disabled:hover,
+	.projects-filter--active:disabled:hover {
+		background: var(--c-primary);
+		color: #fff;
+		border-color: var(--c-primary);
+	}
+}
+
 .projects-grid--top-space {
 	margin-top: 32px;
 }
 
 .projects-empty {
 	margin: 0;
+	grid-column: 1 / -1;
+	width: min(100%, 560px);
+	justify-self: center;
+	text-align: center;
 	padding: 1.5rem;
 	border: 1px dashed var(--c-border);
 	border-radius: var(--radius-card);
 	background: var(--c-bg-secondary);
 	color: var(--c-text-muted);
+}
+
+:host-context(html[data-mode='light']) .projects-empty {
+	border-color: #94a3b8;
 }
 
 @media (max-width: 640px) {
@@ -169,12 +242,21 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--c-border);
+}
+
+:host-context(html[data-mode='light']) .project-card__header {
+	border-bottom-color: #94a3b8;
 }
 
 .project-card__title {
 	font-size: 1.15rem;
 	font-weight: 700;
 	color: var(--c-text-secondary);
+	word-wrap: break-word;
+	overflow-wrap: anywhere;
+	white-space: normal;
 }
 
 .project-card__badge {
@@ -190,6 +272,31 @@
 .project-card__badge--tailwind {
 	background: rgba(6, 182, 212, 0.12);
 	color: #06b6d4;
+}
+
+.project-card__badge--hotel {
+	background: rgb(34 197 94 / 14%);
+	color: #15803d;
+}
+
+.project-card__badge--retail {
+	background: rgb(59 130 246 / 14%);
+	color: #1d4ed8;
+}
+
+.project-card__badge--restaurant {
+	background: rgb(251 146 60 / 15%);
+	color: #c2410c;
+}
+
+.project-card__badge--coffee {
+	background: rgb(120 53 15 / 14%);
+	color: #78350f;
+}
+
+.project-card__badge--salon {
+	background: rgb(236 72 153 / 14%);
+	color: #be185d;
 }
 
 .project-card__badge--bulma {
@@ -212,6 +319,54 @@
 	color: var(--c-text-muted);
 	line-height: 1.6;
 	flex: 1;
+	word-wrap: break-word;
+	overflow-wrap: anywhere;
+	white-space: normal;
+}
+
+.project-card__meta {
+	margin: -2px 0 2px;
+	font-size: 0.78rem;
+	color: var(--c-text-muted);
+}
+
+.project-card__meta--team {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-top: 2px;
+}
+
+.project-card__meta-label {
+	font-weight: 600;
+	color: var(--c-text-primary);
+}
+
+.project-card__team-avatars {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.project-card__member-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	transition: transform 0.2s ease;
+}
+
+.project-card__member-link:hover {
+	transform: translateY(-1px);
+}
+
+.project-card__member-avatar {
+	width: 24px;
+	height: 24px;
+	object-fit: cover;
+	border-radius: 999px;
+	border: 1px solid var(--c-border);
 }
 
 .project-card__tags {
@@ -237,9 +392,14 @@
 	border-top: 1px solid var(--c-border);
 }
 
+:host-context(html[data-mode='light']) .project-card__links {
+	border-top-color: #94a3b8;
+}
+
 .project-card__link {
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	gap: 6px;
 	padding: 8px 16px;
 	font-size: 0.85rem;
@@ -256,12 +416,50 @@
 		transform 0.15s ease;
 }
 
+.project-card__link-icon {
+	font-size: 1.02rem;
+	line-height: 1;
+	display: block;
+}
+
+.project-card__link-icon--github {
+	width: 1.1rem;
+	height: 1.1rem;
+	fill: currentColor;
+}
+
+.project-card__link:not(.project-card__link--live) {
+	color: #fff;
+	border-color: rgb(255 255 255 / 52%);
+}
+
+:host-context(html[data-mode='light']) .project-card__link:not(.project-card__link--live) {
+	color: #000;
+	border-color: rgb(0 0 0 / 45%);
+}
+
 @media (hover: hover) {
-	.project-card__link:hover {
-		border-color: var(--c-text-muted);
-		color: var(--c-text-secondary);
-		background: var(--c-bg-tertiary);
+	.project-card__link:not(.project-card__link--live):hover {
+		border-color: rgb(255 255 255 / 75%);
+		background: rgb(255 255 255 / 7%);
 	}
+}
+
+@media (hover: hover) {
+	:host-context(html[data-mode='light']) .project-card__link:not(.project-card__link--live):hover {
+		border-color: rgb(0 0 0 / 66%);
+		background: rgb(0 0 0 / 7%);
+	}
+}
+
+.project-card__link:active {
+	transform: scale(0.95);
+	transition-duration: 0.08s;
+}
+
+.project-card__link--live {
+	border-color: var(--c-primary);
+	color: var(--c-primary);
 }
 
 @media (hover: hover) {
@@ -272,20 +470,7 @@
 	}
 }
 
-.project-card__link:active {
-	transform: scale(0.95);
-	background: var(--c-bg-tertiary);
-	transition-duration: 0.08s;
-}
-
-.project-card__link--live {
-	border-color: var(--c-primary);
-	color: var(--c-primary);
-}
-
 .project-card__link--live:active {
-	background: var(--c-primary);
-	color: #fff;
 	transform: scale(0.95);
 }
 
