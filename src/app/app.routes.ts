@@ -18,11 +18,6 @@ export const routes: Routes = [
 					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
 			{
-				path: 'projects',
-				loadComponent: () =>
-					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
-			},
-			{
 				path: 'education',
 				loadComponent: () =>
 					import('./pages/education/education.component').then(
@@ -252,15 +247,6 @@ export const routes: Routes = [
 				data: { title: 'Merch' },
 				loadComponent: () =>
 					import('./pages/manage/merch/merch.component').then((m) => m.MerchComponent),
-			},
-			{
-				path: 'projects',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Projects' },
-				loadComponent: () =>
-					import('./pages/manage/projects-manage/projects-manage.component').then(
-						(m) => m.ProjectsManageComponent,
-					),
 			},
 			{
 				path: 'jobs',
