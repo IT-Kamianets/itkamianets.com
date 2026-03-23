@@ -83,7 +83,7 @@
 					<div class="multi-select">
 						<button
 							type="button"
-							class="multi-select__toggle"
+							class="multi-select__toggle multi-select__toggle--wrap"
 							(click)="toggleTagsDropdown()"
 						>
 							<span class="multi-select__value">{{ createForm.controls.tags.value.length ? createForm.controls.tags.value.join(', ') : 'Оберіть теги проєкту' }}</span>
@@ -136,7 +136,7 @@
 					<div class="multi-select">
 						<button
 							type="button"
-							class="multi-select__toggle"
+							class="multi-select__toggle multi-select__toggle--wrap"
 							(click)="toggleMembersDropdown()"
 						>
 							<span class="multi-select__value">{{ getSelectedMembersText(createForm.controls.team.value) }}</span>
@@ -291,6 +291,28 @@
 							<h3 class="project-card__title">{{ project.data.title }}</h3>
 						</div>
 						<p class="project-card__desc">{{ project.data.description }}</p>
+						<div class="project-card__meta project-card__meta--team">
+							<span class="project-card__meta-label">Команда:</span>
+							<div class="project-card__team-avatars">
+								@for (memberId of project.data.team; track memberId) {
+									@if (getMemberById(memberId); as member) {
+										<a
+											[href]="member.socials.github"
+											target="_blank"
+											rel="noopener noreferrer"
+											class="project-card__member-link"
+											[title]="member.name"
+										>
+											<img
+												[src]="'developer/' + member.avatar + '.png'"
+												[alt]="member.name"
+												class="project-card__member-avatar"
+											/>
+										</a>
+									}
+								}
+							</div>
+						</div>
 						<div class="project-card__tags">
 							@for (tag of project.data.tags; track tag) {
 								<span class="project-card__tag">{{ tag }}</span>
@@ -367,7 +389,7 @@
 							<div class="multi-select">
 								<button
 									type="button"
-									class="multi-select__toggle"
+									class="multi-select__toggle multi-select__toggle--wrap"
 									(click)="toggleTagsDropdown()"
 								>
 									<span class="multi-select__value">{{ editForm.controls.tags.value.length ? editForm.controls.tags.value.join(', ') : 'Оберіть теги проєкту' }}</span>
@@ -419,7 +441,7 @@
 							<div class="multi-select">
 								<button
 									type="button"
-									class="multi-select__toggle"
+									class="multi-select__toggle multi-select__toggle--wrap"
 									(click)="toggleMembersDropdown()"
 								>
 									<span class="multi-select__value">{{ getSelectedMembersText(editForm.controls.team.value) }}</span>
