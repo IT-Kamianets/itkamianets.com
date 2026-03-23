@@ -14,6 +14,24 @@
 	</section>
 
 	<div class="container">
+		<!-- View Toggle -->
+		<div class="businesses-view-toggle">
+			<a routerLink="/businesses" class="businesses-view-toggle__btn businesses-view-toggle__btn--active">
+				<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+					<rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+				</svg>
+				Список
+			</a>
+			<a routerLink="/businesses/map" class="businesses-view-toggle__btn">
+				<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+					<circle cx="12" cy="10" r="3"/>
+				</svg>
+				Карта
+			</a>
+		</div>
+
 		<!-- Search & Sort -->
 		<div class="businesses-toolbar">
 			<div class="businesses-search">
@@ -80,7 +98,15 @@
 					<div class="business-card">
 						<div class="business-card__header">
 							<div class="business-card__logo-wrap">
-								<img [src]="b.logo" [alt]="b.name" loading="lazy" class="business-card__logo" />
+								@if (b.logo) {
+									<img [src]="b.logo" [alt]="b.name" loading="lazy" class="business-card__logo" />
+								} @else {
+									<div class="business-card__logo-placeholder">
+										<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+											<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/><path d="M2 12h20"/>
+										</svg>
+									</div>
+								}
 							</div>
 							<div class="business-card__info">
 								<h3 class="business-card__name">{{ b.name }}</h3>

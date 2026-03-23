@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { SlicePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 import { Meta, Title } from '@angular/platform-browser';
 import { Business } from '../../feature/business/business.interface';
 import { BusinessService } from '../../feature/business/business.service';
@@ -18,8 +20,13 @@ import { BreadcrumbComponent, Crumb } from '../../shared/components/breadcrumb.c
 export class BusinessComponent {
 	private businessService = inject(BusinessService);
 	private reviewService = inject(ReviewService);
+	private route = inject(ActivatedRoute);
 
-	business = signal<Business | null>(null);
+	private routeId = toSignal(this.route.params.pipe(map((p) => p['id'] as string)), { initialValue: '' });
+
+	business = computed(() =>
+		this.businessService.businesses().find((b) => b.id === this.routeId()) ?? null,
+	);
 
 	reviews = computed(() => {
 		const b = this.business();
@@ -37,28 +44,7 @@ export class BusinessComponent {
 		];
 	});
 
-	constructor(
-		private route: ActivatedRoute,
-		private router: Router,
-		private title: Title,
-		private meta: Meta,
-	) {
-		this.route.params.subscribe((params) => {
-			const found = this.businessService.businesses().find((b) => b.id === params['id']) ?? null;
-			this.business.set(found);
-
-			if (found) {
-				this.title.setTitle(found.name + ' | IT-Kamianets');
-				this.meta.updateTag({ name: 'description', content: found.shortDescription });
-				this.meta.updateTag({ property: 'og:title', content: found.name + ' | IT-Kamianets' });
-				this.meta.updateTag({ property: 'og:description', content: found.shortDescription });
-				this.meta.updateTag({ property: 'og:image', content: this.getOgImageUrl(found.logo) });
-				this.meta.updateTag({ property: 'og:type', content: 'website' });
-			} else {
-				this.router.navigate(['/businesses'], { replaceUrl: true });
-			}
-		});
-	}
+	constructor() {}
 
 	submitReview(): void {
 		const b = this.business();

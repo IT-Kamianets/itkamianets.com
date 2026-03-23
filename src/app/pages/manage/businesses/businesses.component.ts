@@ -34,6 +34,8 @@ export class ManageBusinessesComponent {
 			founded: new Date().getFullYear(),
 			openPositions: '' as number | '',
 			verified: false,
+			lat: '' as number | '',
+			lng: '' as number | '',
 			website: '',
 			email: '',
 			linkedin: '',
@@ -60,21 +62,23 @@ export class ManageBusinessesComponent {
 			type: b.type,
 			shortDescription: b.shortDescription,
 			description: b.description,
-			techStack: b.techStack.join(', '),
-			services: b.services.join(', '),
-			employees: b.employees,
-			founded: b.founded,
+			techStack: (b.techStack ?? []).join(', '),
+			services: (b.services ?? []).join(', '),
+			employees: b.employees ?? 0,
+			founded: b.founded ?? new Date().getFullYear(),
 			openPositions: b.openPositions ?? '',
 			verified: b.verified ?? false,
-			website: b.contacts.website ?? '',
-			email: b.contacts.email ?? '',
-			linkedin: b.contacts.linkedin ?? '',
-			telegram: b.contacts.telegram ?? '',
-			github: b.contacts.github ?? '',
-			twitter: b.contacts.twitter ?? '',
-			facebook: b.contacts.facebook ?? '',
-			instagram: b.contacts.instagram ?? '',
-			address: b.contacts.address ?? '',
+			lat: b.lat ?? '',
+			lng: b.lng ?? '',
+			website: b.contacts?.website ?? '',
+			email: b.contacts?.email ?? '',
+			linkedin: b.contacts?.linkedin ?? '',
+			telegram: b.contacts?.telegram ?? '',
+			github: b.contacts?.github ?? '',
+			twitter: b.contacts?.twitter ?? '',
+			facebook: b.contacts?.facebook ?? '',
+			instagram: b.contacts?.instagram ?? '',
+			address: b.contacts?.address ?? '',
 		};
 		this.isModalOpen.set(true);
 	}
@@ -97,6 +101,8 @@ export class ManageBusinessesComponent {
 			founded: Number(this.form.founded),
 			openPositions: this.form.openPositions !== '' ? Number(this.form.openPositions) : undefined,
 			verified: this.form.verified || undefined,
+			lat: this.form.lat !== '' ? Number(this.form.lat) : undefined,
+			lng: this.form.lng !== '' ? Number(this.form.lng) : undefined,
 			contacts: {
 				website: this.form.website || undefined,
 				email: this.form.email || undefined,
@@ -112,7 +118,7 @@ export class ManageBusinessesComponent {
 
 		const editing = this.editingBusiness();
 		if (editing) {
-			this.businessService.update({ ...data, id: editing.id });
+			this.businessService.updateBusiness({ ...data, id: editing.id });
 		} else {
 			this.businessService.add(data);
 		}
@@ -121,7 +127,7 @@ export class ManageBusinessesComponent {
 
 	delete(id: string) {
 		if (confirm('Ви впевнені, що хочете видалити цю компанію?')) {
-			this.businessService.delete(id);
+			this.businessService.deleteBusiness(id);
 		}
 	}
 }
