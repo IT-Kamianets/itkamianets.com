@@ -1,0 +1,160 @@
+::host {
+	display: block;
+	background: var(--c-bg-primary);
+	color: var(--c-text-primary);
+}
+
+.manage-competitions {
+	max-width: 72rem;
+	margin-inline: auto;
+	padding: 2.5rem 1rem;
+}
+
+.manage-competitions > * + * {
+	margin-top: 1.25rem;
+}
+
+.manage-competitions__header {
+	margin-bottom: 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+}
+
+.manage-competitions__title {
+	font-size: 1.875rem;
+	font-weight: 800;
+	color: var(--c-text-secondary);
+	margin: 0 0 0.5rem;
+}
+
+.manage-competitions__subtitle {
+	font-size: 0.95rem;
+	color: var(--c-text-muted);
+	margin: 0;
+}
+
+.manage-competitions__error {
+	color: #fca5a5;
+	font-size: 0.9rem;
+}
+
+.manage-competitions__checkbox {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.9rem;
+	color: var(--c-text-secondary);
+}
+
+.manage-competitions__add {
+	border-radius: 999px;
+	font-weight: 600;
+}
+
+.manage-competitions__add:hover {
+	opacity: 0.9;
+}
+
+.manage-competitions__table-wrapper {
+	border-radius: 1.5rem;
+	border: 1px solid var(--c-border);
+	background: var(--c-bg-secondary);
+	box-shadow: var(--shadow-card);
+	overflow-x: auto;
+	padding: 0.5rem;
+}
+
+.manage-competitions__input,
+.manage-competitions__textarea {
+	width: 100%;
+	background: transparent;
+	border-radius: 999px;
+	border: 1px solid var(--c-border);
+	padding: 0.4rem 0.8rem;
+	font-size: 0.85rem;
+	color: var(--c-text-primary);
+}
+
+.manage-competitions__textarea {
+	min-height: 7.5rem;
+	resize: vertical;
+	border-radius: 0.75rem;
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+.manage-competitions__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.manage-competitions__actions-column {
+	width: 13rem;
+}
+
+.manage-competitions__truncate {
+	max-width: 14rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.manage-competitions__icon-button {
+	white-space: nowrap;
+}
+
+.manage-competitions__icon-button--danger:hover {
+	background: rgba(248, 113, 113, 0.12);
+	color: #fecaca;
+}
+
+.manage-competitions__dialog-content {
+	display: grid;
+	gap: 1rem;
+}
+
+.manage-competitions__field {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.manage-competitions__grid-3 {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.75rem;
+}
+
+.manage-competitions__grid-2 {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+}
+
+.manage-competitions__label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-text-muted);
+}
+
+.manage-competitions__dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.manage-competitions__primary,
+.manage-competitions__secondary {
+	border-radius: 999px;
+}
+
+@media (max-width: 992px) {
+	.manage-competitions__grid-3,
+	.manage-competitions__grid-2 {
+		grid-template-columns: 1fr;
+	}
+}

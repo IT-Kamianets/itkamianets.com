@@ -1,5 +1,5 @@
 export interface Competition {
 	_id: string;
-	name: string;
+	data: Record<string, unknown>;
 }
 

@@ -44,20 +44,6 @@ export const routes: Routes = [
 					),
 			},
 			{
-				path: 'competitions',
-				loadComponent: () =>
-					import('./pages/competitions/competitions.component').then(
-						(m) => m.CompetitionsComponent,
-					),
-			},
-			{
-				path: 'competition',
-				loadComponent: () =>
-					import('./pages/competition/competition.component').then(
-						(m) => m.CompetitionComponent,
-					),
-			},
-			{
 				path: 'team',
 				loadComponent: () =>
 					import('./pages/team/team.component').then((m) => m.TeamComponent),
@@ -260,15 +246,6 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
 					import('./pages/manage/jobs/jobs.component').then((m) => m.JobsComponent),
-			},
-			{
-				path: 'competitions',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Competitions' },
-				loadComponent: () =>
-					import('./pages/manage/competitions/competitions.component').then(
-						(m) => m.ManageCompetitionsComponent,
-					),
 			},
 			{
 				path: 'people',
