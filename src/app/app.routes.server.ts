@@ -1,7 +1,7 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { BUSINESSES } from './data/businesses.data';
 import { TEAM_MEMBERS } from './data/team.data';
-import { COURSES } from './feature/course/course.data';
+import { COURSE_LESSON_PARAMS, COURSES } from './feature/course/course.data';
 import { SERVICE_IDS } from './feature/service/service.service';
 
 export const serverRoutes: ServerRoute[] = [
@@ -32,6 +32,11 @@ export const serverRoutes: ServerRoute[] = [
 		path: 'courses/:slug',
 		renderMode: RenderMode.Prerender,
 		getPrerenderParams: async () => COURSES.map((course) => ({ slug: course.slug })),
+	},
+	{
+		path: 'courses/:courseSlug/lessons/:lessonSlug',
+		renderMode: RenderMode.Prerender,
+		getPrerenderParams: async () => COURSE_LESSON_PARAMS,
 	},
 	{
 		path: '**',

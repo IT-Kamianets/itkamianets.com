@@ -1,0 +1,109 @@
+@if (_entry(); as entry) {
+	<section
+		class="relative overflow-hidden border-b-2 border-[var(--c-border)] bg-[linear-gradient(135deg,rgba(8,15,29,0.92)_0%,rgba(26,91,187,0.7)_100%)]"
+	>
+		<div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+			<a
+				[routerLink]="['/courses', entry.course.slug]"
+				class="inline-flex items-center gap-2 text-sm font-medium text-white/75 transition-colors hover:text-white"
+			>
+				<span class="material-symbols-outlined text-base" aria-hidden="true">arrow_back</span>
+				До курсу
+			</a>
+			<div class="mt-6 flex flex-wrap items-start justify-between gap-4">
+				<div class="max-w-3xl">
+					<p class="text-sm font-semibold uppercase tracking-[0.24em] text-white/70">
+						Lesson
+					</p>
+					<h1 class="mt-3 text-4xl font-black leading-tight text-white sm:text-5xl">
+						{{ entry.lesson.title }}
+					</h1>
+					<p class="mt-4 text-base leading-7 text-white/85">
+						{{ entry.lesson.summary }}
+					</p>
+				</div>
+				<div
+					class="rounded-2xl border border-white/15 bg-white/8 px-4 py-3 text-sm text-white/90 backdrop-blur"
+				>
+					<div class="text-xs uppercase tracking-wide text-white/60">Тривалість</div>
+					<div class="mt-1 font-semibold">{{ entry.lesson.duration }}</div>
+				</div>
+			</div>
+		</div>
+		<span
+			class="absolute bottom-[-2px] left-1/2 block h-1 w-[60px] -translate-x-1/2 rounded-sm bg-[var(--c-primary)]"
+		></span>
+	</section>
+
+	<section class="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
+		<div class="space-y-8">
+			<div class="overflow-hidden rounded-3xl border border-[var(--c-border)] bg-black shadow-xl shadow-black/10">
+				<div class="aspect-video">
+					<iframe
+						class="h-full w-full"
+						[src]="_videoUrl()"
+						[title]="entry.lesson.title"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						allowfullscreen
+					></iframe>
+				</div>
+			</div>
+
+			<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6">
+				<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">Зміст уроку</h2>
+				<div class="mt-5 space-y-4">
+					@for (paragraph of entry.lesson.content; track paragraph) {
+						<p class="text-sm leading-7 text-[var(--c-text-muted)]">
+							{{ paragraph }}
+						</p>
+					}
+				</div>
+			</div>
+		</div>
+
+		<aside class="space-y-6">
+			<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] p-6">
+				<h2 class="text-xl font-bold text-[var(--c-text-secondary)]">Що ви опануєте</h2>
+				<ul class="mt-5 space-y-3">
+					@for (objective of entry.lesson.objectives; track objective) {
+						<li class="flex items-start gap-3 text-sm leading-6 text-[var(--c-text-muted)]">
+							<span class="material-symbols-outlined text-[var(--c-primary)]" aria-hidden="true">
+								play_lesson
+							</span>
+							<span>{{ objective }}</span>
+						</li>
+					}
+				</ul>
+			</div>
+
+			<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6">
+				<div class="text-xs uppercase tracking-wide text-[var(--c-text-muted)]">Курс</div>
+				<div class="mt-2 text-lg font-semibold text-[var(--c-text-secondary)]">
+					{{ entry.course.title }}
+				</div>
+				<div class="mt-4 text-sm leading-6 text-[var(--c-text-muted)]">
+					{{ entry.course.description }}
+				</div>
+				<a
+					[routerLink]="['/courses', entry.course.slug]"
+					class="mt-5 inline-flex rounded-full border border-[var(--c-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--c-primary)] transition-colors hover:bg-[var(--c-primary)] hover:text-white"
+				>
+					Перейти до курсу
+				</a>
+			</div>
+		</aside>
+	</section>
+} @else {
+	<section class="mx-auto flex min-h-[60vh] max-w-4xl flex-col items-center justify-center gap-5 px-4 py-12 text-center sm:px-6 lg:px-8">
+		<h1 class="text-3xl font-black text-[var(--c-text-secondary)]">Урок не знайдено</h1>
+		<p class="max-w-xl text-sm leading-7 text-[var(--c-text-muted)]">
+			Сторінка уроку недоступна або маршрут містить некоректний ідентифікатор.
+		</p>
+		<a
+			routerLink="/courses"
+			class="inline-flex rounded-full border border-[var(--c-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--c-primary)] transition-colors hover:bg-[var(--c-primary)] hover:text-white"
+		>
+			Повернутися до курсів
+		</a>
+	</section>
+}

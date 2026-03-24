@@ -1,3 +1,13 @@
+export interface Lesson {
+	slug: string;
+	title: string;
+	duration: string;
+	summary: string;
+	youtubeId: string;
+	objectives: string[];
+	content: string[];
+}
+
 export interface Course {
 	slug: string;
 	title: string;
@@ -8,6 +18,7 @@ export interface Course {
 	format: string;
 	modules: string[];
 	results: string[];
+	lessons: Lesson[];
 }
 
 export const COURSES: Course[] = [
@@ -32,6 +43,44 @@ export const COURSES: Course[] = [
 			'Зберете навчальний проєкт у портфоліо',
 			'Прокачаєте роботу з сучасним UI стеком',
 		],
+		lessons: [
+			{
+				slug: 'angular-architecture-basics',
+				title: 'Angular Architecture Basics',
+				duration: '24 хв',
+				summary:
+					'Огляд структури Angular застосунку, ролей компонентів, маршрутів і розділення відповідальності.',
+				youtubeId: 'jNCevxohh4k',
+				objectives: [
+					'Зрозуміти, як організовується feature-based структура',
+					'Побачити різницю між layout, page і shared елементами',
+					'Підготувати основу для масштабованого курсового проєкту',
+				],
+				content: [
+					'Урок пояснює, як розкладати застосунок на фічі, сторінки та перевикористовувані блоки без хаотичного росту директорій.',
+					'Окремий акцент зроблено на standalone components, lazy-loaded routes та практиці, яка не ламає SSR і prerender.',
+					'Наприкінці є короткий розбір того, як вибирати місце для сервісів, типів і UI-складників у реальному проєкті.',
+				],
+			},
+			{
+				slug: 'signals-and-state',
+				title: 'Signals and UI State',
+				duration: '31 хв',
+				summary:
+					'Практика роботи з signals, computed-значеннями та локальним станом у сучасному Angular UI.',
+				youtubeId: 'kY4FTWzQmYw',
+				objectives: [
+					'Освоїти базові сценарії використання signal і computed',
+					'Навчитися тримати стан близько до шаблону',
+					'Зменшити потребу в зайвій імперативній логіці',
+				],
+				content: [
+					'Урок починається з простих state-сценаріїв у компоненті, а далі показує, як не перетворити signals на ще одну складну абстракцію.',
+					'Розглядається, коли вистачає локального сигналу, а коли варто піднімати стан у сервіс або feature-рівень.',
+					'У фіналі є приклад UI-потоку з фільтрами, computed даними і мінімальною кількістю ручних оновлень.',
+				],
+			},
+		],
 	},
 	{
 		slug: 'backend-nodejs',
@@ -53,6 +102,26 @@ export const COURSES: Course[] = [
 			'Навчитеся будувати бекенд для вебзастосунків',
 			'Розберетеся з типовими production-патернами',
 			'Підготуєте API-проєкт для портфоліо',
+		],
+		lessons: [
+			{
+				slug: 'express-routing-foundation',
+				title: 'Express Routing Foundation',
+				duration: '27 хв',
+				summary:
+					'Побудова чистої структури роутів, контролерів і сервісів для підтримуваного backend-коду.',
+				youtubeId: 'SccSCuHhOw0',
+				objectives: [
+					'Розібрати базову архітектуру Express сервісу',
+					'Навчитися відокремлювати transport layer від бізнес-логіки',
+					'Підготувати основу для CRUD API',
+				],
+				content: [
+					'Урок показує, як організувати backend так, щоб логіка не розмазувалася по middleware та route handlers.',
+					'Розглядається мінімальний набір шарів: routes, controllers, services, validation.',
+					'Окремий блок присвячено помилкам структури, які ускладнюють тестування та розширення API.',
+				],
+			},
 		],
 	},
 	{
@@ -76,5 +145,32 @@ export const COURSES: Course[] = [
 			'Навчитеся проєктувати тестові сценарії',
 			'Зрозумієте, як автоматизація вбудовується в командну розробку',
 		],
+		lessons: [
+			{
+				slug: 'test-case-design',
+				title: 'Test Case Design',
+				duration: '22 хв',
+				summary:
+					'Структурування тест-кейсів, пріоритизація перевірок і базові евристики для якісного покриття.',
+				youtubeId: 'u6QfIXgjwGQ',
+				objectives: [
+					'Зрозуміти, що робить тест-кейс корисним для команди',
+					'Відпрацювати підхід до пріоритезації сценаріїв',
+					'Підготуватися до переходу від ручних тестів до автоматизації',
+				],
+				content: [
+					'Урок розбирає, як писати тест-кейси так, щоб ними могли користуватися не лише QA, а й розробники та менеджери.',
+					'Пояснюється, як відбирати критичні сценарії, уникати дублювання та тримати документацію актуальною.',
+					'Останній блок зводить це до практики автоматизації: що варто переводити в автотести в першу чергу.',
+				],
+			},
+		],
 	},
 ];
+
+export const COURSE_LESSON_PARAMS = COURSES.flatMap((course) =>
+	course.lessons.map((lesson) => ({
+		courseSlug: course.slug,
+		lessonSlug: lesson.slug,
+	})),
+);
