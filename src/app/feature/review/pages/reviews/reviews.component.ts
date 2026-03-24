@@ -23,7 +23,7 @@ export class ReviewsComponent {
 	];
 
 	protected readonly reviews = computed(() =>
-		[...this._reviewService.reviews()].sort(
+		[...this._reviewService.publishedReviews()].sort(
 			(left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
 		),
 	);

@@ -7,13 +7,8 @@ export const routes: Routes = [
 		canActivate: [authenticatedGuard],
 		data: { title: 'Reviews' },
 		loadComponent: () =>
-			import('./pages/reviews/reviews.component').then((m) => m.ReviewsComponent),
-	},
-	{
-		path: 'reviews/:id',
-		canActivate: [authenticatedGuard],
-		data: { title: 'Review' },
-		loadComponent: () =>
-			import('./pages/review/review.component').then((m) => m.ReviewComponent),
+			import('./pages/manage-reviews/manage-reviews.component').then(
+				(m) => m.ManageReviewsComponent,
+			),
 	},
 ];

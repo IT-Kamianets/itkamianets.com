@@ -25,7 +25,9 @@ export class ReviewComponent {
 	);
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
-	protected readonly review = computed(() => this._reviewService.getById(this._reviewId())());
+	protected readonly review = computed(() =>
+		this._reviewService.getPublishedById(this._reviewId())(),
+	);
 	protected readonly business = computed(() => {
 		const review = this.review();
 		if (!review) {
