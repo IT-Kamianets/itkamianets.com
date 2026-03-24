@@ -5,23 +5,23 @@ import {
 	EDUCATION_STATUS_OPTIONS,
 	EDUCATION_TYPE_OPTIONS,
 	createEmptyEducationInstitutionDraft,
-} from '../../../feature/education/education.const';
-import { EducationService } from '../../../feature/education/education.service';
+} from '../../../education/education.const';
+import { EducationService } from '../../../education/education.service';
 import {
 	EducationInstitution,
 	EducationInstitutionDraft,
 	EducationInstitutionOwnership,
 	EducationInstitutionStatus,
 	EducationInstitutionType,
-} from '../../../feature/education/education.interface';
+} from '../../../education/education.interface';
 
 @Component({
 	imports: [DecimalPipe],
-	templateUrl: './shcools.component.html',
-	styleUrl: './shcools.component.scss',
+	templateUrl: './manage-schools.component.html',
+	styleUrl: './manage-schools.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShcoolsComponent {
+export class ManageSchoolsComponent {
 	protected readonly educationService = inject(EducationService);
 	protected readonly institutions = this.educationService.institutions;
 	protected readonly typeOptions = EDUCATION_TYPE_OPTIONS;
@@ -49,18 +49,18 @@ export class ShcoolsComponent {
 			shortName: institution.shortName,
 			type: institution.type,
 			ownership: institution.ownership,
+			status: institution.status,
 			address: institution.address,
 			district: institution.district,
 			phone: institution.phone,
 			email: institution.email,
 			website: institution.website,
 			principal: institution.principal,
-			studentsCount: institution.studentsCount,
 			foundedYear: institution.foundedYear,
-			status: institution.status,
+			notes: institution.notes,
+			studentsCount: institution.studentsCount,
 			featured: institution.featured,
 			published: institution.published,
-			notes: institution.notes,
 		});
 		this.isModalOpen.set(true);
 	}
@@ -68,49 +68,38 @@ export class ShcoolsComponent {
 	protected closeModal() {
 		this.isModalOpen.set(false);
 		this.editingId.set(null);
-	}
-
-	protected updateDraft(field: keyof EducationInstitutionDraft, value: string | number | boolean) {
-		this.draft.update((draft) => ({
-			...draft,
-			[field]: value as never,
-		}));
+		this.draft.set(createEmptyEducationInstitutionDraft());
 	}
 
 	protected saveInstitution() {
 		const draft = this.draft();
-		if (!draft.name.trim() || !draft.shortName.trim() || !draft.address.trim()) {
-			return;
-		}
+		const editingId = this.editingId();
 
-		this.educationService.upsertInstitution(
-			{
-				...draft,
-				name: draft.name.trim(),
-				shortName: draft.shortName.trim(),
-				address: draft.address.trim(),
-				district: draft.district.trim(),
-				phone: draft.phone.trim(),
-				email: draft.email.trim(),
-				website: draft.website.trim(),
-				principal: draft.principal.trim(),
-				notes: draft.notes.trim(),
-			},
-			this.editingId(),
-		);
+		this.educationService.upsertInstitution(draft, editingId);
 
 		this.closeModal();
 	}
 
-	protected typeLabel(value: EducationInstitutionType) {
-		return this.typeOptions.find((option) => option.value === value)?.label || value;
+	protected deleteInstitution(id: string) {
+		if (!confirm('Ви впевнені, що хочете видалити цей заклад?')) {
+			return;
+		}
+
+		this.educationService.removeInstitution(id);
 	}
 
-	protected ownershipLabel(value: EducationInstitutionOwnership) {
-		return this.ownershipOptions.find((option) => option.value === value)?.label || value;
+	protected updateDraft(key: keyof EducationInstitutionDraft, value: unknown) {
+		this.draft.update((draft) => ({
+			...draft,
+			[key]: value,
+		}));
 	}
 
-	protected statusLabel(value: EducationInstitutionStatus) {
-		return this.statusOptions.find((option) => option.value === value)?.label || value;
+	protected typeLabel(value: EducationInstitutionType): string {
+		return EDUCATION_TYPE_OPTIONS.find((option) => option.value === value)?.label || value;
+	}
+
+	protected ownershipLabel(value: EducationInstitutionOwnership): string {
+		return EDUCATION_OWNERSHIP_OPTIONS.find((option) => option.value === value)?.label || value;
 	}
 }

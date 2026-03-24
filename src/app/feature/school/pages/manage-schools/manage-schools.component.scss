@@ -1,4 +1,4 @@
- .shcools-page {
+.schools-page {
 	min-height: 100vh;
 	background:
 		linear-gradient(180deg, rgba(37, 110, 255, 0.08), transparent 26%),
@@ -6,22 +6,22 @@
 	padding: 2rem 0 4rem;
 }
 
-.shcools-page__content {
+.schools-page__content {
 	max-width: 1220px;
 	margin: 0 auto;
 	padding: 0 1.25rem;
 }
 
-.shcools-toolbar {
+.schools-toolbar {
 	display: flex;
 	justify-content: flex-end;
 	margin-bottom: 1rem;
 }
 
-.shcools-toolbar__button,
-.shcools-table__edit,
-.shcools-modal__button,
-.shcools-modal__close {
+.schools-toolbar__button,
+.schools-table__edit,
+.schools-modal__button,
+.schools-modal__close {
 	border: 0;
 	border-radius: 0.9rem;
 	padding: 0.78rem 1rem;
@@ -30,13 +30,13 @@
 	cursor: pointer;
 }
 
-.shcools-toolbar__button,
-.shcools-modal__button {
+.schools-toolbar__button,
+.schools-modal__button {
 	background: linear-gradient(135deg, var(--c-primary), var(--c-primary-hover));
 	color: #fff;
 }
 
-.shcools-table-wrap {
+.schools-table-wrap {
 	overflow-x: auto;
 	border-radius: 1rem;
 	border: 1px solid var(--c-border);
@@ -44,22 +44,22 @@
 	box-shadow: var(--shadow-card);
 }
 
-.shcools-table {
+.schools-table {
 	width: 100%;
 	min-width: 980px;
 	border-collapse: collapse;
 	background: var(--c-bg-secondary);
 }
 
-.shcools-table th,
-.shcools-table td {
+.schools-table th,
+.schools-table td {
 	padding: 1rem;
 	border-bottom: 1px solid var(--c-border);
 	text-align: left;
 	vertical-align: top;
 }
 
-.shcools-table th {
+.schools-table th {
 	font-size: 0.78rem;
 	font-weight: 800;
 	letter-spacing: 0.08em;
@@ -68,46 +68,46 @@
 	background: color-mix(in srgb, var(--c-bg-tertiary) 80%, white);
 }
 
-.shcools-table__name,
-.shcools-table__meta {
+.schools-table__name,
+.schools-table__meta {
 	display: grid;
 	gap: 0.3rem;
 }
 
-.shcools-table__name strong {
+.schools-table__name strong {
 	color: var(--c-text-secondary);
 }
 
-.shcools-table__name span,
-.shcools-table__meta span,
-.shcools-table__meta small {
+.schools-table__name span,
+.schools-table__meta span,
+.schools-table__meta small {
 	color: var(--c-text-primary);
 	line-height: 1.55;
 }
 
-.shcools-table__meta small {
+.schools-table__meta small {
 	color: var(--c-text-muted);
 }
 
-.shcools-table__link {
+.schools-table__link {
 	color: var(--c-primary);
 	font-weight: 700;
 	text-decoration: none;
 }
 
-.shcools-table__edit,
-.shcools-modal__button--ghost,
-.shcools-modal__close {
+.schools-table__edit,
+.schools-modal__button--ghost,
+.schools-modal__close {
 	background: color-mix(in srgb, var(--c-primary) 8%, var(--c-bg-primary));
 	color: var(--c-primary);
 }
 
-.shcools-table__empty {
+.schools-table__empty {
 	text-align: center;
 	color: var(--c-text-muted);
 }
 
-.shcools-modal-backdrop {
+.schools-modal-backdrop {
 	position: fixed;
 	inset: 0;
 	z-index: 80;
@@ -119,7 +119,7 @@
 	backdrop-filter: blur(8px);
 }
 
-.shcools-modal {
+.schools-modal {
 	width: min(100%, 980px);
 	max-height: calc(100vh - 5rem);
 	overflow: auto;
@@ -130,7 +130,7 @@
 	padding: 1.25rem;
 }
 
-.shcools-modal__header {
+.schools-modal__header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -138,36 +138,36 @@
 	margin-bottom: 1rem;
 }
 
-.shcools-modal__header h2 {
+.schools-modal__header h2 {
 	margin: 0;
 	color: var(--c-text-secondary);
 	font-size: 1.6rem;
 }
 
-.shcools-modal__grid {
+.schools-modal__grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 0.9rem;
 }
 
-.shcools-modal__field {
+.schools-modal__field {
 	display: grid;
 	gap: 0.45rem;
 }
 
-.shcools-modal__field--wide {
+.schools-modal__field--wide {
 	grid-column: 1 / -1;
 }
 
-.shcools-modal__field span {
+.schools-modal__field span {
 	font-size: 0.85rem;
 	font-weight: 700;
 	color: var(--c-text-secondary);
 }
 
-.shcools-modal__field input,
-.shcools-modal__field select,
-.shcools-modal__field textarea {
+.schools-modal__field input,
+.schools-modal__field select,
+.schools-modal__field textarea {
 	width: 100%;
 	border: 1px solid var(--c-border);
 	border-radius: 0.95rem;
@@ -177,21 +177,21 @@
 	font: inherit;
 }
 
-.shcools-modal__field input:focus,
-.shcools-modal__field select:focus,
-.shcools-modal__field textarea:focus {
+.schools-modal__field input:focus,
+.schools-modal__field select:focus,
+.schools-modal__field textarea:focus {
 	outline: none;
 	box-shadow: var(--focus-ring);
 	border-color: color-mix(in srgb, var(--c-primary) 45%, var(--c-border));
 }
 
-.shcools-modal__toggles {
+.schools-modal__toggles {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
 }
 
-.shcools-modal__toggle {
+.schools-modal__toggle {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.55rem;
@@ -199,7 +199,7 @@
 	color: var(--c-text-secondary);
 }
 
-.shcools-modal__actions {
+.schools-modal__actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.75rem;
@@ -207,17 +207,17 @@
 }
 
 @media (max-width: 720px) {
-	.shcools-modal__header,
-	.shcools-modal__actions {
+	.schools-modal__header,
+	.schools-modal__actions {
 		flex-direction: column;
 		align-items: stretch;
 	}
 
-	.shcools-modal__grid {
+	.schools-modal__grid {
 		grid-template-columns: 1fr;
 	}
 
-	.shcools-modal-backdrop {
+	.schools-modal-backdrop {
 		padding-top: 1rem;
 	}
 }

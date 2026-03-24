@@ -1,17 +1,17 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EDUCATION_TYPE_OPTIONS } from '../../feature/education/education.const';
-import { EducationService } from '../../feature/education/education.service';
-import { EducationInstitutionType } from '../../feature/education/education.interface';
+import { EDUCATION_TYPE_OPTIONS } from '../../../education/education.const';
+import { EducationService } from '../../../education/education.service';
+import { EducationInstitutionType } from '../../../education/education.interface';
 
 @Component({
 	imports: [RouterLink, DecimalPipe],
-	templateUrl: './education.component.html',
-	styleUrl: './education.component.scss',
+	templateUrl: './schools.component.html',
+	styleUrl: './schools.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EducationComponent {
+export class SchoolsComponent {
 	protected readonly educationService = inject(EducationService);
 	protected readonly institutions = this.educationService.publishedInstitutions;
 	protected readonly typeOptions = EDUCATION_TYPE_OPTIONS;
@@ -44,7 +44,7 @@ export class EducationComponent {
 		this.searchTerm.set(value);
 	}
 
-	protected typeLabel(value: EducationInstitutionType) {
+	protected typeLabel(value: EducationInstitutionType): string {
 		return this.typeOptions.find((option) => option.value === value)?.label || value;
 	}
 }

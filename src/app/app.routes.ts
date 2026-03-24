@@ -18,13 +18,6 @@ export const routes: Routes = [
 					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
 			{
-				path: 'education',
-				loadComponent: () =>
-					import('./pages/education/education.component').then(
-						(m) => m.EducationComponent,
-					),
-			},
-			{
 				path: 'hackathons',
 				loadComponent: () =>
 					import('./pages/hackathons/hackathons.component').then(
@@ -238,14 +231,6 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/manage/profile/profile.component').then(
 						(m) => m.ProfileComponent,
-					),
-			},
-			{
-				path: 'schools',
-				canActivate: [authenticatedGuard],
-				loadComponent: () =>
-					import('./pages/manage/shcools/shcools.component').then(
-						(m) => m.ShcoolsComponent,
 					),
 			},
 			{
