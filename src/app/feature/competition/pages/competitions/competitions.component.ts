@@ -38,6 +38,13 @@ export class CompetitionsComponent implements OnInit {
 		this._pickString(item.data, ['prize', 'reward']);
 	protected readonly getTags = (_index: number, item: Competition) =>
 		this._pickStringArray(item.data, ['tags', 'stack', 'topics']);
+	protected readonly getParticipants = (_index: number, item: Competition) =>
+		this._pickNumber(item.data, ['participants', 'teamsCount', 'membersCount']);
+	protected readonly getDeadline = (_index: number, item: Competition) =>
+		this._pickString(item.data, ['deadline', 'registrationDeadline', 'date']);
+	protected readonly activeCount = computed(() => this.activeCompetitions().length);
+	protected readonly inactiveCount = computed(() => this.inactiveCompetitions().length);
+	protected readonly totalCount = computed(() => this.competitions().length);
 
 	async ngOnInit() {
 		this.competitions.set(await this._competitionService.getAll());
@@ -64,5 +71,20 @@ export class CompetitionsComponent implements OnInit {
 		}
 
 		return [];
+	}
+
+	private _pickNumber(data: Record<string, unknown>, keys: string[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (typeof value === 'number' && Number.isFinite(value)) {
+				return value;
+			}
+
+			if (typeof value === 'string' && value.trim() && !Number.isNaN(Number(value))) {
+				return Number(value);
+			}
+		}
+
+		return null;
 	}
 }

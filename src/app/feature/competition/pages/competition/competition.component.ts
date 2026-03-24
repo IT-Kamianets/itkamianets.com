@@ -59,6 +59,78 @@ export class CompetitionComponent implements OnInit {
 
 		return this._pickStringArray(current.data, ['tags', 'stack', 'topics']);
 	});
+	protected readonly stages = computed(() => {
+		const current = this.competition();
+		if (!current) {
+			return [];
+		}
+
+		const direct = this._pickStringList(current.data, ['stages', 'timeline', 'steps', 'roadmap']);
+		if (direct.length) {
+			return direct;
+		}
+
+		const period = this._pickString(current.data, ['period', 'deadline', 'date']);
+		if (period) {
+			return ['Реєстрація та відбір', 'Розробка рішення', `Фінал (${period})`];
+		}
+
+		return ['Реєстрація', 'Розробка', 'Фінальна презентація'];
+	});
+	protected readonly requirements = computed(() => {
+		const current = this.competition();
+		if (!current) {
+			return [];
+		}
+
+		const direct = this._pickStringList(current.data, [
+			'requirements',
+			'criteria',
+			'conditions',
+			'rules',
+		]);
+		if (direct.length) {
+			return direct;
+		}
+
+		return [
+			'Наявність команди або готовність працювати в команді',
+			'Дотримання дедлайнів подання матеріалів',
+			'Презентація рішення у фіналі',
+		];
+	});
+	protected readonly benefits = computed(() => {
+		const current = this.competition();
+		if (!current) {
+			return [];
+		}
+
+		const direct = this._pickStringList(current.data, ['benefits', 'highlights', 'outcomes', 'whatYouGet']);
+		if (direct.length) {
+			return direct;
+		}
+
+		const prize = this._pickString(current.data, ['prize', 'reward']);
+		const fallback = ['Практичний досвід у реальному кейсі', 'Нетворкінг з учасниками та менторами'];
+		if (prize) {
+			fallback.unshift(`Можливість отримати приз: ${prize}`);
+		}
+
+		return fallback;
+	});
+	protected readonly heroStats = computed(() => {
+		const current = this.competition();
+		if (!current) {
+			return [];
+		}
+
+		return [
+			{ label: 'Сезон', value: this._pickString(current.data, ['season', 'year']) },
+			{ label: 'Формат', value: this._pickString(current.data, ['format', 'mode']) },
+			{ label: 'Період', value: this._pickString(current.data, ['period', 'deadline', 'date']) },
+			{ label: 'Приз', value: this._pickString(current.data, ['prize', 'reward']) },
+		].filter((item) => item.value);
+	});
 	protected readonly extraEntries = computed(() => {
 		const current = this.competition();
 		if (!current) {
@@ -89,6 +161,18 @@ export class CompetitionComponent implements OnInit {
 			'topics',
 			'active',
 			'status',
+			'stages',
+			'timeline',
+			'steps',
+			'roadmap',
+			'requirements',
+			'criteria',
+			'conditions',
+			'rules',
+			'benefits',
+			'highlights',
+			'outcomes',
+			'whatYouGet',
 		]);
 
 		return Object.entries(current.data)
@@ -126,6 +210,24 @@ export class CompetitionComponent implements OnInit {
 			const value = data[key];
 			if (Array.isArray(value)) {
 				return value.map((item) => String(item)).filter((item) => item.trim());
+			}
+		}
+
+		return [];
+	}
+
+	private _pickStringList(data: Record<string, unknown>, keys: string[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (Array.isArray(value)) {
+				return value.map((item) => String(item).trim()).filter((item) => item);
+			}
+
+			if (typeof value === 'string' && value.trim()) {
+				return value
+					.split(/[\n,;]+/)
+					.map((item) => item.trim())
+					.filter((item) => item);
 			}
 		}
 

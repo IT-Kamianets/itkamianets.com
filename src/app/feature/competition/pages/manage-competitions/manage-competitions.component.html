@@ -178,6 +178,41 @@
 					/>
 				</div>
 			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-stages" class="manage-competitions__label">Етапи</label>
+					<textarea
+						id="competition-stages"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formStages()"
+						(ngModelChange)="formStages.set($event)"
+						placeholder="Кожен етап з нового рядка"
+					></textarea>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-requirements" class="manage-competitions__label">Вимоги</label>
+					<textarea
+						id="competition-requirements"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formRequirements()"
+						(ngModelChange)="formRequirements.set($event)"
+						placeholder="Кожну вимогу з нового рядка"
+					></textarea>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-benefits" class="manage-competitions__label">Переваги</label>
+					<textarea
+						id="competition-benefits"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formBenefits()"
+						(ngModelChange)="formBenefits.set($event)"
+						placeholder="Кожну перевагу з нового рядка"
+					></textarea>
+				</div>
+			</div>
 			<div class="manage-competitions__field">
 				<label for="competition-active" class="manage-competitions__label">Статус</label>
 				<div class="manage-competitions__checkbox">

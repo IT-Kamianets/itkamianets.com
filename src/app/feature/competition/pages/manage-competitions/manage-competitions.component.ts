@@ -45,6 +45,9 @@ export class ManageCompetitionsComponent implements OnInit {
 	protected readonly formPeriod = signal('');
 	protected readonly formPrize = signal('');
 	protected readonly formTags = signal('');
+	protected readonly formStages = signal('');
+	protected readonly formRequirements = signal('');
+	protected readonly formBenefits = signal('');
 	protected readonly formIsActive = signal(true);
 
 	async ngOnInit() {
@@ -68,6 +71,9 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formPeriod.set('');
 		this.formPrize.set('');
 		this.formTags.set('');
+		this.formStages.set('');
+		this.formRequirements.set('');
+		this.formBenefits.set('');
 		this.formIsActive.set(true);
 		this.error.set('');
 		this.isDialogVisible.set(true);
@@ -83,6 +89,13 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formPeriod.set(row.period);
 		this.formPrize.set(row.prize);
 		this.formTags.set(row.tags);
+		this.formStages.set(this._pickStringList(row.rawData, ['stages', 'timeline', 'steps']).join('\n'));
+		this.formRequirements.set(
+			this._pickStringList(row.rawData, ['requirements', 'criteria', 'conditions']).join('\n'),
+		);
+		this.formBenefits.set(
+			this._pickStringList(row.rawData, ['benefits', 'highlights', 'outcomes']).join('\n'),
+		);
 		this.formIsActive.set(row.isActive);
 		this.error.set('');
 		this.isDialogVisible.set(true);
@@ -175,6 +188,9 @@ export class ManageCompetitionsComponent implements OnInit {
 			.split(',')
 			.map((tag) => tag.trim())
 			.filter((tag) => tag);
+		data['stages'] = this._parseMultiline(this.formStages());
+		data['requirements'] = this._parseMultiline(this.formRequirements());
+		data['benefits'] = this._parseMultiline(this.formBenefits());
 
 		return data;
 	}
@@ -199,5 +215,23 @@ export class ManageCompetitionsComponent implements OnInit {
 		}
 
 		return [];
+	}
+
+	private _pickStringList(data: Record<string, unknown>, keys: string[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (Array.isArray(value)) {
+				return value.map((item) => String(item).trim()).filter((item) => item);
+			}
+		}
+
+		return [];
+	}
+
+	private _parseMultiline(raw: string) {
+		return raw
+			.split(/[\n,;]+/)
+			.map((item) => item.trim())
+			.filter((item) => item);
 	}
 }

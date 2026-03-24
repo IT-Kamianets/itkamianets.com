@@ -85,6 +85,10 @@
 		ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
+.manage-competitions__textarea--list {
+	min-height: 6rem;
+}
+
 .manage-competitions__actions {
 	display: flex;
 	flex-wrap: wrap;
