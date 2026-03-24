@@ -14,6 +14,15 @@ export class ManageHeaderComponent {
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
 
+	protected onProfileClick(event: Event, isActive: boolean): void {
+		if (!isActive) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+	}
+
 	protected toggleTheme() {
 		const newMode: ThemeMode = this.theme.mode() === 'dark' ? 'light' : 'dark';
 		this.theme.setMode(newMode);
