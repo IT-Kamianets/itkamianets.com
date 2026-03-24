@@ -1,0 +1,130 @@
+.articles-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem 5rem;
+}
+
+.articles-header {
+    margin-bottom: 2rem;
+    color: var(--c-text-secondary, #333);
+}
+
+// Форма
+.articles-form {
+    width: min(100%, 32rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    border: 1px solid var(--c-border, #ccc);
+    border-radius: var(--radius-card, 8px);
+    background: var(--c-bg-secondary, #f9f9f9);
+    box-shadow: var(--shadow-card, 0 2px 4px rgba(0,0,0,0.1));
+
+    &__input,
+    &__textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--c-border, #ccc);
+        border-radius: var(--radius-btn, 4px);
+        font-family: inherit;
+        background: var(--c-bg-primary, #fff);
+        color: var(--c-text-primary, #000);
+    }
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.85rem 1.1rem;
+        border: 0;
+        border-radius: var(--radius-btn, 4px);
+        background: linear-gradient(135deg, var(--c-primary, #007bff), var(--c-primary-hover, #0056b3));
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+}
+
+// Сітка
+.articles-grid {
+    display: grid;
+    // Максимум 3 елементи в лінію
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: min(100%, 75rem);
+    justify-content: center;
+
+    // Адаптив
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Картка новини
+.articles-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: 1px solid var(--c-border, #ccc);
+    border-radius: var(--radius-card, 8px);
+    background: var(--c-bg-secondary, #fff);
+    box-shadow: var(--shadow-card, 0 2px 4px rgba(0,0,0,0.05));
+    text-align: center;
+
+    &__title {
+        margin: 0 0 1rem;
+        color: var(--c-text-secondary, #222);
+        font-size: 1.25rem;
+    }
+
+    &__content {
+        margin: 0 0 1.5rem;
+        color: var(--c-text-muted, #666);
+        flex-grow: 1; // Завдяки цьому кнопки завжди будуть внизу
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    &__btn-edit,
+    &__btn-delete {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: var(--radius-btn, 4px);
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    &__btn-edit {
+        background: #ffc107;
+        color: #000;
+    }
+
+    &__btn-delete {
+        background: #dc3545;
+        color: #fff;
+    }
+}
+
+.articles-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--c-text-muted, #666);
+}
