@@ -26,6 +26,7 @@ export class ManageComponent {
 		{ label: 'Profiles', path: '/manage/profile', icon: 'account_circle' },
 		{ label: 'Schools', path: '/manage/schools', icon: 'school' },
 		{ label: 'Jobs', path: '/manage/jobs', icon: 'work' },
+		{ label: 'Applications', path: '/manage/applications', icon: 'description' },
 		{ label: 'Events', path: '/manage/events', icon: 'event' },
 		{ label: 'Competitions', path: '/manage/competitions', icon: 'emoji_events' },
 		{ label: 'People', path: '/manage/people', icon: 'group' },

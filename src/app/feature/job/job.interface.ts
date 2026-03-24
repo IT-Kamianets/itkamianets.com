@@ -1,13 +1,18 @@
 import { CrudDocument } from 'wacom';
-import { ItemOptions } from '../item/item.interface';
 
-export interface Job extends CrudDocument<Job> {
-	type?: 'job';
-	options?: ItemOptions;
+export interface JobData {
 	title: string;
 	description: string;
 	authorName: string;
-	authorId?: string;
 	published: boolean;
 	preview: string;
+}
+
+export interface Job extends CrudDocument<Job> {
+	title: string;
+	description: string;
+	authorName: string;
+	published: boolean;
+	preview: string;
+	data: JobData;
 }

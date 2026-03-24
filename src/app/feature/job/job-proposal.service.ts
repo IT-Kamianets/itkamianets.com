@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CrudService } from 'wacom';
-import { Job } from './job.interface';
+import { JobProposal } from './job-proposal.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class JobService extends CrudService<Job> {
+export class JobProposalService extends CrudService<JobProposal> {
 	constructor() {
 		super({
-			name: 'itjob',
+			name: 'itjobproposal',
 		});
 	}
 }

@@ -1,0 +1,240 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+	<!-- Header -->
+	<div class="sm:flex sm:items-center mb-10">
+		<div class="sm:flex-auto">
+			<div class="flex items-center gap-3">
+				<a routerLink="/manage" class="inline-flex items-center justify-center rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-2 text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] hover:text-[var(--c-primary)] transition-all">
+					<span class="material-symbols-outlined text-xl">arrow_back</span>
+				</a>
+				<h1 class="text-2xl font-black leading-tight text-[var(--c-text-secondary)] sm:text-4xl">Роботи</h1>
+			</div>
+			<p class="mt-2 text-sm text-[var(--c-text-muted)] max-w-2xl">
+				Керуйте вакансіями та проєктами. Ви можете додавати нові позиції, редагувати існуючі та відстежувати їх статус на сайті.
+			</p>
+		</div>
+		<div class="mt-6 sm:ml-16 sm:mt-0 sm:flex-none">
+			<button
+				(click)="create()"
+				type="button"
+				class="inline-flex items-center rounded-2xl bg-[var(--c-primary)] px-6 py-3 text-sm font-bold text-white shadow-xl shadow-[var(--c-primary)]/20 hover:opacity-90 hover:scale-[1.02] transition-all active:scale-95"
+			>
+				<span class="material-symbols-outlined mr-2 text-xl">add_circle</span>
+				Створити роботу
+			</button>
+		</div>
+	</div>
+
+	<!-- Jobs Grid -->
+	<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+		@for (job of jobs(); track job._id) {
+			<div class="group relative flex flex-col overflow-hidden rounded-[2.5rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+				<!-- Image Preview -->
+				<div class="aspect-video relative overflow-hidden bg-[var(--c-bg-primary)]">
+					@if (job.preview || job.data?.preview) {
+						<img [src]="job.preview || job.data?.preview" [alt]="job.title || job.data?.title" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+					} @else {
+						<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--c-bg-primary)] to-[var(--c-bg-tertiary)]">
+							<span class="material-symbols-outlined text-5xl text-[var(--c-text-muted)] opacity-20">landscape</span>
+						</div>
+					}
+					
+					<!-- Status Badge -->
+					<div class="absolute top-5 left-5">
+						<span [class]="(job.published || job.data?.published) ? 'bg-emerald-500' : 'bg-amber-500'" class="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-black/10">
+							<span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+							{{ (job.published || job.data?.published) ? 'Опубліковано' : 'Чернетка' }}
+						</span>
+					</div>
+
+					<!-- Actions Overlay -->
+					<div class="absolute inset-0 flex items-center justify-center gap-4 bg-black/40 opacity-0 transition-all duration-300 backdrop-blur-[2px] group-hover:opacity-100">
+						<button (click)="edit(job)" class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[var(--c-text-secondary)] hover:bg-[var(--c-primary)] hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 delay-75">
+							<span class="material-symbols-outlined">edit</span>
+						</button>
+						<button (click)="delete(job)" class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-rose-500 hover:bg-rose-500 hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 delay-150">
+							<span class="material-symbols-outlined">delete</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Content -->
+				<div class="flex flex-1 flex-col p-8">
+					<h3 class="line-clamp-2 text-xl font-black text-[var(--c-text-secondary)] group-hover:text-[var(--c-primary)] transition-colors leading-snug">
+						{{ job.title || job.data?.title }}
+					</h3>
+					
+					<div class="mt-4 flex items-center gap-3">
+						<div class="h-8 w-8 rounded-full bg-[var(--c-bg-primary)] flex items-center justify-center overflow-hidden border border-[var(--c-border)]">
+							<span class="material-symbols-outlined text-lg text-[var(--c-text-muted)]">person</span>
+						</div>
+						<span class="text-sm font-bold text-[var(--c-text-muted)]">
+							{{ (job.authorName || job.data?.authorName) || 'Команда ITK' }}
+						</span>
+					</div>
+					
+					<div class="mt-6 pt-6 border-t border-[var(--c-border)]">
+						<button (click)="edit(job)" class="w-full rounded-2xl border-2 border-[var(--c-border)] py-3 text-sm font-black text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] hover:text-[var(--c-primary)] hover:bg-[var(--c-primary)]/5 transition-all">
+							РЕДАГУВАТИ
+						</button>
+					</div>
+				</div>
+			</div>
+		} @empty {
+			<div class="col-span-full flex flex-col items-center justify-center py-32 text-center bg-[var(--c-bg-secondary)] rounded-[3rem] border-2 border-dashed border-[var(--c-border)]">
+				<div class="rounded-full bg-[var(--c-bg-primary)] p-8 mb-6">
+					<span class="material-symbols-outlined text-7xl text-[var(--c-text-muted)] opacity-20">work_history</span>
+				</div>
+				<h3 class="text-2xl font-black text-[var(--c-text-secondary)]">Список робіт порожній</h3>
+				<p class="mt-3 text-[var(--c-text-muted)] max-w-sm mx-auto font-medium">
+					Створіть свою першу вакансію або проєкт, щоб почати наповнювати портфоліо.
+				</p>
+				<button (click)="create()" class="mt-8 text-[var(--c-primary)] font-black hover:underline underline-offset-8">
+					+ ДОДАТИ ПЕРШУ РОБОТУ
+				</button>
+			</div>
+		}
+	</div>
+
+	<!-- Edit/Create Modal -->
+	@if (editingJob(); as current) {
+		<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md" (click)="cancel()">
+			<div class="relative w-full max-w-3xl max-h-[95vh] overflow-y-auto rounded-[3rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-2xl transition-all animate-in fade-in zoom-in-95 duration-300" (click)="$event.stopPropagation()">
+				
+				<!-- Modal Header -->
+				<div class="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--c-border)] bg-[var(--c-bg-secondary)]/80 p-8 backdrop-blur-md">
+					<div>
+						<h2 class="text-3xl font-black text-[var(--c-text-secondary)]">
+							{{ current._id ? 'Редагування' : 'Створення' }}
+						</h2>
+						<p class="text-sm font-bold text-[var(--c-primary)]">ДЕТАЛІ РОБОТИ</p>
+					</div>
+					<button (click)="cancel()" class="group flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-primary)] transition-all hover:bg-rose-500 hover:text-white">
+						<span class="material-symbols-outlined transition-transform group-hover:rotate-90">close</span>
+					</button>
+				</div>
+
+				<!-- Modal Body -->
+				<div class="p-8 space-y-8">
+					@if (current.data) {
+						<!-- Title -->
+						<div class="space-y-3">
+							<label class="text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)] ml-1">Назва проєкту / вакансії</label>
+							<input 
+								type="text" 
+								[(ngModel)]="current.data.title" 
+								placeholder="Введіть вражаючу назву..."
+								class="w-full rounded-2xl border-2 border-[var(--c-border)] bg-[var(--c-bg-primary)] px-6 py-4 text-lg font-bold text-[var(--c-text-primary)] outline-none focus:border-[var(--c-primary)] transition-all"
+							/>
+						</div>
+
+						<div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+							<!-- Author -->
+							<div class="space-y-3">
+								<label class="text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)] ml-1">Відповідальний</label>
+								<div class="relative">
+									<select 
+										[(ngModel)]="current.data.authorName"
+										class="w-full rounded-2xl border-2 border-[var(--c-border)] bg-[var(--c-bg-primary)] px-6 py-4 font-bold text-[var(--c-text-primary)] outline-none focus:border-[var(--c-primary)] transition-all appearance-none cursor-pointer"
+									>
+										<option value="">Оберіть зі списку...</option>
+										@for (author of authors; track author.id) {
+											<option [value]="author.name">{{ author.name }}</option>
+										}
+									</select>
+									<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--c-text-muted)]">expand_more</span>
+								</div>
+							</div>
+
+							<!-- Status Toggle -->
+							<div class="space-y-3">
+								<label class="text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)] ml-1">Статус публікації</label>
+								<label class="flex h-[60px] items-center justify-between cursor-pointer rounded-2xl border-2 border-[var(--c-border)] bg-[var(--c-bg-primary)] px-6 transition-all hover:border-[var(--c-primary)]/30 group">
+									<span class="text-sm font-black text-[var(--c-text-secondary)] group-hover:text-[var(--c-primary)] transition-colors">
+										{{ current.data.published ? 'ПУБЛІЧНО' : 'ПРИХОВАНО' }}
+									</span>
+									<div class="relative inline-flex items-center">
+										<input type="checkbox" [(ngModel)]="current.data.published" class="sr-only peer">
+										<div class="w-12 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--c-primary)]"></div>
+									</div>
+								</label>
+							</div>
+						</div>
+
+						<!-- Preview Image -->
+						<div class="space-y-3">
+							<label class="text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)] ml-1">Головне зображення</label>
+							<div class="group relative flex aspect-[21/9] w-full flex-col items-center justify-center overflow-hidden rounded-[2.5rem] border-2 border-dashed border-[var(--c-border)] bg-[var(--c-bg-primary)] transition-all hover:border-[var(--c-primary)] hover:bg-[var(--c-primary)]/5">
+								@if (current.data.preview) {
+									<img [src]="current.data.preview" class="h-full w-full object-cover" />
+									<div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 backdrop-blur-sm">
+										<button (click)="current.data.preview = ''" class="flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-xl hover:scale-110 transition-transform">
+											<span class="material-symbols-outlined text-3xl">delete_forever</span>
+										</button>
+									</div>
+								} @else {
+									<label class="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-4">
+										<div class="rounded-full bg-white p-4 shadow-sm group-hover:scale-110 transition-transform">
+											<span class="material-symbols-outlined text-4xl text-[var(--c-primary)]">cloud_upload</span>
+										</div>
+										<div class="text-center">
+											<p class="text-sm font-black text-[var(--c-text-secondary)]">Натисніть для завантаження</p>
+											<p class="text-xs font-bold text-[var(--c-text-muted)] mt-1">PNG, JPG до 5MB (Рекомендовано 16:9)</p>
+										</div>
+										<input type="file" (change)="onImageUpload($event)" accept="image/*" class="hidden" />
+									</label>
+								}
+							</div>
+						</div>
+
+						<!-- Description Editor -->
+						<div class="space-y-3">
+							<label class="text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)] ml-1">Детальний опис</label>
+							<div class="overflow-hidden rounded-[2rem] border-2 border-[var(--c-border)] bg-[var(--c-bg-primary)]">
+								<!-- Toolbar -->
+								<div class="flex flex-wrap gap-2 border-b-2 border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-3">
+									<div class="flex gap-1 rounded-xl bg-[var(--c-bg-secondary)] p-1.5 shadow-sm">
+										<button (click)="format('bold')" class="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-[var(--c-primary)] hover:text-white transition-all" title="Жирний">
+											<span class="material-symbols-outlined">format_bold</span>
+										</button>
+										<button (click)="format('italic')" class="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-[var(--c-primary)] hover:text-white transition-all" title="Курсив">
+											<span class="material-symbols-outlined">format_italic</span>
+										</button>
+									</div>
+									<div class="flex gap-1 rounded-xl bg-[var(--c-bg-secondary)] p-1.5 shadow-sm">
+										<button (click)="format('formatBlock', '<h1>')" class="flex h-10 w-10 items-center justify-center rounded-lg font-black hover:bg-[var(--c-primary)] hover:text-white transition-all">H1</button>
+										<button (click)="format('formatBlock', '<h2>')" class="flex h-10 w-10 items-center justify-center rounded-lg font-black hover:bg-[var(--c-primary)] hover:text-white transition-all">H2</button>
+									</div>
+									<div class="flex gap-1 rounded-xl bg-[var(--c-bg-secondary)] p-1.5 shadow-sm">
+										<button (click)="insertCustomImage()" class="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-[var(--c-primary)] hover:text-white transition-all" title="Додати зображення за посиланням">
+											<span class="material-symbols-outlined">link</span>
+										</button>
+										<label class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg hover:bg-[var(--c-primary)] hover:text-white transition-all" title="Завантажити зображення">
+											<span class="material-symbols-outlined">image</span>
+											<input type="file" (change)="uploadPostImage($event)" accept="image/*" class="hidden" />
+										</label>
+									</div>
+								</div>
+								<!-- Editable Area -->
+								<div
+									#editorContent
+									contenteditable="true"
+									class="editor-content prose prose-lg prose-blue max-w-none p-8 min-h-[300px] outline-none text-[var(--c-text-primary)] dark:prose-invert"
+								></div>
+							</div>
+						</div>
+					}
+				</div>
+
+				<!-- Modal Footer -->
+				<div class="sticky bottom-0 z-10 flex gap-4 border-t border-[var(--c-border)] bg-[var(--c-bg-secondary)]/80 p-8 backdrop-blur-md">
+					<button (click)="cancel()" class="flex-1 rounded-2xl border-2 border-[var(--c-border)] py-4 text-sm font-black text-[var(--c-text-secondary)] hover:bg-white hover:border-[var(--c-text-secondary)] transition-all active:scale-95">
+						СКАСУВАТИ
+					</button>
+					<button (click)="save()" class="flex-1 rounded-2xl bg-[var(--c-primary)] py-4 text-sm font-black text-white shadow-xl shadow-[var(--c-primary)]/20 hover:opacity-90 hover:scale-[1.02] transition-all active:scale-95">
+						ЗБЕРЕГТИ ЗМІНИ
+					</button>
+				</div>
+			</div>
+		</div>
+	}
+</div>
