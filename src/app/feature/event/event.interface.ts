@@ -1,11 +1,30 @@
-export interface Event {
-	id: number;
-	title: string;
-	description: string;
-	date: string;
-	time: string;
-	location: string;
-	image?: string;
-	link?: string;
-	type: string;
+import { CrudDocument } from 'wacom';
+
+export interface Event extends CrudDocument<Event> {
+	data: {
+		title: string;
+		description: string;
+		date: string;
+		time: string;
+		location: string;
+		image?: string;
+		link?: string;
+		type: string;
+		price?: number;
+		maxSeats?: number;
+		bookedSeats?: number;
+	};
+}
+
+export interface EventBooking extends CrudDocument<EventBooking> {
+	data: {
+		eventId: string;
+		userId?: string;
+		userName: string;
+		userEmail: string;
+		userPhone: string;
+		message?: string;
+		status: 'pending' | 'confirmed' | 'cancelled';
+		seats: number;
+	};
 }

@@ -1,9 +1,0 @@
-:host {
-	display: block;
-	min-height: 100vh;
-	background: var(--c-bg-primary);
-}
-
-tr:hover {
-	background-color: color-mix(in srgb, var(--c-primary) 5%, var(--c-bg-secondary));
-}

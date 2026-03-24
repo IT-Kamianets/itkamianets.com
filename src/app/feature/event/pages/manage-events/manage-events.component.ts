@@ -1,19 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EventService } from '../../../feature/event/event.service';
-import { Event } from '../../../feature/event/event.interface';
+import { EventService } from '../../event.service';
+import { Event } from '../../event.interface';
+import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
 	selector: 'app-manage-events',
 	standalone: true,
-	imports: [FormsModule],
-	templateUrl: './events.component.html',
-	styleUrl: './events.component.scss',
+	imports: [FormsModule, CommonModule],
+	templateUrl: './manage-events.component.html',
+	styleUrl: './manage-events.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageEventsComponent {
 	protected readonly eventService = inject(EventService);
-	protected readonly events = this.eventService.events;
+	protected readonly events = toSignal(this.eventService.events, { initialValue: [] });
 	
 	protected isModalOpen = signal(false);
 	protected editingEvent = signal<Event | null>(null);
@@ -43,12 +45,12 @@ export class ManageEventsComponent {
 	openEditModal(event: Event) {
 		this.editingEvent.set(event);
 		this.form = {
-			title: event.title,
-			description: event.description,
-			date: event.date,
-			time: event.time,
-			location: event.location,
-			type: event.type
+			title: event.data.title,
+			description: event.data.description,
+			date: event.data.date,
+			time: event.data.time,
+			location: event.data.location,
+			type: event.data.type
 		};
 		this.isModalOpen.set(true);
 	}
@@ -63,20 +65,25 @@ export class ManageEventsComponent {
 		if (editing) {
 			this.eventService.update({
 				...editing,
-				...this.form
+				data: {
+					...editing.data,
+					...this.form
+				}
 			});
 		} else {
-			this.eventService.add({
-				...this.form,
-				link: '#'
-			});
+			this.eventService.create({
+				data: {
+					...this.form,
+					link: '#'
+				}
+			} as Event);
 		}
 		this.closeModal();
 	}
 
-	delete(id: number) {
+	delete(event: Event) {
 		if (confirm('Ви впевнені, що хочете видалити цю подію?')) {
-			this.eventService.delete(id);
+			this.eventService.delete(event);
 		}
 	}
 }

@@ -1,0 +1,142 @@
+@if (event(); as event) {
+<section class="mx-auto flex w-full max-w-4xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+	<nav class="flex items-center gap-2 text-sm text-[var(--c-text-muted)]">
+		<a routerLink="/events" class="hover:text-[var(--c-primary)] transition-colors">Всі події</a>
+		<span class="material-symbols-outlined text-base">chevron_right</span>
+		<span class="text-[var(--c-text-secondary)]">{{ event.data.title }}</span>
+	</nav>
+
+	<div class="overflow-hidden rounded-[2rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-[var(--shadow-card)]">
+		@if (event.data.image) {
+			<div class="aspect-[21/9] w-full overflow-hidden">
+				<img [src]="event.data.image" [alt]="event.data.title" class="h-full w-full object-cover">
+			</div>
+		}
+
+		<div class="px-8 py-10 sm:px-12 sm:py-14">
+			@if (registrationSuccess()) {
+				<div class="text-center py-10 animate-in zoom-in-95">
+					<span class="material-symbols-outlined text-6xl text-green-500 mb-4">check_circle</span>
+					<h2 class="text-4xl font-black text-[var(--c-text-secondary)] mb-4">Ви зареєстровані!</h2>
+					<p class="text-lg text-[var(--c-text-muted)] mb-8">Ми надіслали підтвердження на вашу електронну адресу. До зустрічі на події!</p>
+					<a routerLink="/events" class="rounded-full bg-[var(--c-primary)] px-8 py-4 font-bold text-white hover:opacity-90 transition-opacity">
+						Повернутися до списку
+					</a>
+				</div>
+			} @else if (isRegistering()) {
+				<div class="animate-in slide-in-from-bottom-5 duration-300">
+					<button (click)="isRegistering.set(false)" class="flex items-center gap-2 text-sm text-[var(--c-primary)] font-semibold hover:underline mb-8">
+						<span class="material-symbols-outlined text-base">arrow_back</span>
+						Назад до опису
+					</button>
+					
+					<h2 class="text-3xl font-black tracking-tight text-[var(--c-text-secondary)] mb-2">Реєстрація</h2>
+					<p class="text-[var(--c-text-muted)] mb-10">Будь ласка, заповніть форму нижче для участі у "{{ event.data.title }}"</p>
+
+					<form (submit)="submitRegistration()" class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+						<div class="sm:col-span-2">
+							<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-2">ПІБ</label>
+							<input type="text" [(ngModel)]="regForm.name" name="name" required placeholder="Ваше повне ім'я"
+								class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-5 py-4 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors">
+						</div>
+						
+						<div>
+							<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-2">Email</label>
+							<input type="email" [(ngModel)]="regForm.email" name="email" required placeholder="email@example.com"
+								class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-5 py-4 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors">
+						</div>
+
+						<div>
+							<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-2">Телефон</label>
+							<input type="tel" [(ngModel)]="regForm.phone" name="phone" required placeholder="+380..."
+								class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-5 py-4 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors">
+						</div>
+
+						<div class="sm:col-span-2">
+							<label class="block text-xs font-semibold uppercase tracking-wider text-[var(--c-text-muted)] mb-2">Коментар</label>
+							<textarea [(ngModel)]="regForm.message" name="message" rows="4" placeholder="Чи є у вас особливі побажання або запитання?"
+								class="w-full rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-5 py-4 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none transition-colors"></textarea>
+						</div>
+
+						<div class="sm:col-span-2 mt-4">
+							<button type="submit"
+								class="w-full rounded-full bg-[var(--c-primary)] py-5 text-base font-black text-white shadow-xl shadow-[var(--c-primary)]/20 hover:scale-[1.02] transition-transform active:scale-95">
+								Підтвердити реєстрацію
+							</button>
+						</div>
+					</form>
+				</div>
+			} @else {
+				<div class="animate-in fade-in duration-500">
+					<div class="mb-10">
+						<span class="inline-block rounded-full bg-[var(--c-primary)]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[var(--c-primary)]">
+							{{ event.data.type }}
+						</span>
+						<h1 class="mt-4 text-4xl font-black tracking-tight text-[var(--c-text-secondary)] sm:text-5xl">
+							{{ event.data.title }}
+						</h1>
+					</div>
+
+					<div class="grid grid-cols-1 gap-8 mb-12 sm:grid-cols-3">
+						<div class="flex items-center gap-4">
+							<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-tertiary)] text-[var(--c-primary)]">
+								<span class="material-symbols-outlined">calendar_month</span>
+							</div>
+							<div>
+								<p class="text-xs font-bold text-[var(--c-text-muted)] uppercase tracking-wider">Дата</p>
+								<p class="font-semibold text-[var(--c-text-secondary)]">{{ event.data.date }}</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-4">
+							<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-tertiary)] text-[var(--c-primary)]">
+								<span class="material-symbols-outlined">schedule</span>
+							</div>
+							<div>
+								<p class="text-xs font-bold text-[var(--c-text-muted)] uppercase tracking-wider">Час</p>
+								<p class="font-semibold text-[var(--c-text-secondary)]">{{ event.data.time }}</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-4">
+							<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-tertiary)] text-[var(--c-primary)]">
+								<span class="material-symbols-outlined">location_on</span>
+							</div>
+							<div>
+								<p class="text-xs font-bold text-[var(--c-text-muted)] uppercase tracking-wider">Локація</p>
+								<p class="font-semibold text-[var(--c-text-secondary)]">{{ event.data.location }}</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="prose prose-slate max-w-none text-lg leading-relaxed text-[var(--c-text-primary)]">
+						<p>{{ event.data.description }}</p>
+					</div>
+
+					<div class="mt-14 flex flex-col gap-4 sm:flex-row">
+						<button
+							(click)="startRegistration()"
+							class="flex-1 rounded-full bg-[var(--c-primary)] py-5 text-center text-base font-black text-white shadow-xl shadow-[var(--c-primary)]/20 hover:scale-[1.02] transition-transform active:scale-95"
+						>
+							Зареєструватися зараз
+						</button>
+						@if (event.data.link && event.data.link !== '#') {
+							<a
+								[href]="event.data.link"
+								target="_blank"
+								class="flex-1 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] py-5 text-center text-base font-black text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] transition-all"
+							>
+								Офіційний сайт
+							</a>
+						}
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</section>
+} @else {
+	<div class="flex h-[60vh] flex-col items-center justify-center text-center">
+		<span class="material-symbols-outlined text-6xl text-[var(--c-text-muted)] mb-4">search_off</span>
+		<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">Подію не знайдено</h2>
+		<a routerLink="/events" class="mt-4 text-[var(--c-primary)] hover:underline">Повернутися до списку</a>
+	</div>
+}

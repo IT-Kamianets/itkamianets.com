@@ -29,6 +29,12 @@ export class HeaderComponent {
 			href: '/services',
 		},
 		{
+			_id: 'menu-events',
+			type: 'menu',
+			title: 'Події',
+			href: '/events',
+		},
+		{
 			_id: 'menu-hackathons',
 			type: 'menu',
 			title: 'Змагання',
