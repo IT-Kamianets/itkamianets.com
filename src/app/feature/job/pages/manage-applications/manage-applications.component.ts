@@ -16,20 +16,19 @@ export class ManageApplicationsComponent {
 	private readonly jobProposalService = inject(JobProposalService);
 	private readonly jobService = inject(JobService);
 
-	protected readonly proposals = computed(() => this.jobProposalService.getSignals('', undefined)().map(s => s()));
+	protected readonly proposals = computed(() => this.jobProposalService.proposals());
 	protected readonly jobs = computed(() => {
 		const jobsMap: Record<string, string> = {};
-		this.jobService.getSignals('', undefined)().forEach(s => {
-			const j = s();
+		this.jobService.jobs().forEach(j => {
 			if (j._id) {
-				jobsMap[j._id] = j.data?.title || j.title || 'Без назви';
+				jobsMap[j._id] = j.data?.title || 'Без назви';
 			}
 		});
 		return jobsMap;
 	});
 
 	protected deleteProposal(proposal: any) {
-		if (confirm('Ви впевнені, що хочете видалити цю заявку?')) {
+		if (confirm('Ви впевнені?')) {
 			this.jobProposalService.delete(proposal).subscribe();
 		}
 	}

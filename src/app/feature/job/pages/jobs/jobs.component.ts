@@ -14,9 +14,9 @@ import { JobService } from '../../job.service';
 })
 export class JobsComponent {
 	protected readonly jobService = inject(JobService);
-	protected readonly jobs = computed(() => this.jobService.getSignals('', undefined)().map(s => s()));
+	protected readonly jobs = computed(() => this.jobService.jobs());
 
 	protected readonly publishedJobs = computed(() => {
-		return this.jobs().filter((job: Job) => job.data?.published || job.published);
+		return this.jobs().filter((job: Job) => job.data?.published);
 	});
 }

@@ -230,8 +230,8 @@
 					<button (click)="cancel()" class="flex-1 rounded-2xl border-2 border-[var(--c-border)] py-4 text-sm font-black text-[var(--c-text-secondary)] hover:bg-white hover:border-[var(--c-text-secondary)] transition-all active:scale-95">
 						СКАСУВАТИ
 					</button>
-					<button (click)="save()" class="flex-1 rounded-2xl bg-[var(--c-primary)] py-4 text-sm font-black text-white shadow-xl shadow-[var(--c-primary)]/20 hover:opacity-90 hover:scale-[1.02] transition-all active:scale-95">
-						ЗБЕРЕГТИ ЗМІНИ
+					<button (click)="save()" [disabled]="isSaving()" class="flex-1 rounded-2xl bg-[var(--c-primary)] py-4 text-sm font-black text-white shadow-xl shadow-[var(--c-primary)]/20 hover:opacity-90 hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50">
+						{{ isSaving() ? 'ЗБЕРЕЖЕННЯ...' : 'ЗБЕРЕГТИ ЗМІНИ' }}
 					</button>
 				</div>
 			</div>

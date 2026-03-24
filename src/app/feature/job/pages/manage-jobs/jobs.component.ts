@@ -18,16 +18,11 @@ export class JobsComponent {
 	@ViewChild('editorContent') editorContent!: ElementRef;
 
 	protected readonly jobService = inject(JobService);
-	protected readonly jobs = computed(() => this.jobService.getSignals('', undefined)().map(s => {
-		const job = s();
-		if (job.data) {
-			return { ...job, ...job.data };
-		}
-		return job;
-	}));
+	protected readonly jobs = computed(() => this.jobService.jobs());
 	protected readonly authors = TEAM_MEMBERS;
 
 	protected readonly editingJob = signal<Job | null>(null);
+	protected readonly isSaving = signal(false);
 
 	private _newJobData(): JobData {
 		return {
@@ -40,8 +35,7 @@ export class JobsComponent {
 	}
 
 	protected create() {
-		const job = this.jobService.new() as Job;
-		job.data = this._newJobData();
+		const job = { data: this._newJobData() } as Job;
 		this.editingJob.set(job);
 		setTimeout(() => {
 			if (this.editorContent) this.editorContent.nativeElement.innerHTML = '';
@@ -49,50 +43,42 @@ export class JobsComponent {
 	}
 
 	protected edit(job: Job) {
-		const toEdit = { ...job };
-		if (!toEdit.data) {
-			toEdit.data = {
-				title: job.title || '',
-				description: job.description || '',
-				authorName: job.authorName || '',
-				published: !!job.published,
-				preview: job.preview || ''
-			};
-		}
+		const toEdit = JSON.parse(JSON.stringify(job));
 		this.editingJob.set(toEdit);
 		setTimeout(() => {
 			if (this.editorContent) {
-				this.editorContent.nativeElement.innerHTML = toEdit.data.description || toEdit.description || '';
+				this.editorContent.nativeElement.innerHTML = toEdit.data?.description || '';
 			}
 		});
 	}
 
 	protected save() {
 		const job = this.editingJob();
-		if (!job) return;
+		if (!job || this.isSaving()) return;
+
+		this.isSaving.set(true);
 
 		if (this.editorContent) {
-			const html = this.editorContent.nativeElement.innerHTML;
-			if (job.data) job.data.description = html;
-			job.description = html;
-		}
-
-		if (job.data) {
-			job.title = job.data.title;
-			job.authorName = job.data.authorName;
-			job.published = job.data.published;
-			job.preview = job.data.preview;
+			job.data.description = this.editorContent.nativeElement.innerHTML;
 		}
 
 		const obs = job._id ? this.jobService.update(job) : this.jobService.create(job);
 		
-		obs.subscribe(() => {
-			this.editingJob.set(null);
+		obs.subscribe({
+			next: () => {
+				this.isSaving.set(false);
+				this.editingJob.set(null);
+			},
+			error: (err) => {
+				console.error('Save error:', err);
+				this.isSaving.set(false);
+				alert('Помилка при збереженні');
+			}
 		});
 	}
 
 	protected delete(job: Job) {
-		if (confirm('Ви впевнені, що хочете видалити цю роботу?')) {
+		if (confirm('Ви впевнені?')) {
 			this.jobService.delete(job).subscribe();
 		}
 	}
@@ -103,16 +89,12 @@ export class JobsComponent {
 
 	protected format(command: string, value: string = '') {
 		document.execCommand(command, false, value);
-		if (this.editorContent) {
-			this.editorContent.nativeElement.focus();
-		}
+		if (this.editorContent) this.editorContent.nativeElement.focus();
 	}
 
 	protected insertCustomImage() {
-		const url = prompt('Введіть URL зображення:');
-		if (url) {
-			this.format('insertImage', url);
-		}
+		const url = prompt('URL:');
+		if (url) this.format('insertImage', url);
 	}
 
 	protected onImageUpload(event: Event) {
@@ -121,10 +103,7 @@ export class JobsComponent {
 			const reader = new FileReader();
 			reader.onload = (e) => {
 				const job = this.editingJob();
-				if (job && job.data) {
-					job.data.preview = e.target?.result as string;
-					job.preview = job.data.preview;
-				}
+				if (job) job.data.preview = e.target?.result as string;
 			};
 			reader.readAsDataURL(file);
 		}
@@ -135,8 +114,7 @@ export class JobsComponent {
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
-				const url = e.target?.result as string;
-				this.format('insertImage', url);
+				this.format('insertImage', e.target?.result as string);
 			};
 			reader.readAsDataURL(file);
 		}

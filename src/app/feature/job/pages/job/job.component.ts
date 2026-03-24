@@ -5,7 +5,6 @@ import { RouterLink } from '@angular/router';
 import { JobService } from '../../job.service';
 import { JobProposalService } from '../../job-proposal.service';
 import { Job } from '../../job.interface';
-import { JobProposal } from '../../job-proposal.interface';
 
 @Component({
 	selector: 'app-job-detail',
@@ -24,6 +23,7 @@ export class JobComponent implements OnInit {
 	protected readonly job = signal<Job | null>(null);
 	protected readonly isApplying = signal(false);
 	protected readonly isSubmitted = signal(false);
+	protected readonly isSending = signal(false);
 
 	protected proposal = {
 		applicantName: '',
@@ -34,8 +34,9 @@ export class JobComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.id) {
-			this.jobService.fetch({ _id: this.id }).subscribe((job) => {
-				this.job.set(job);
+			this.jobService.fetch(this.id).subscribe({
+				next: (job) => this.job.set(job),
+				error: (err) => console.error('Error fetching job:', err)
 			});
 		}
 	}
@@ -50,22 +51,30 @@ export class JobComponent implements OnInit {
 
 	protected submitApplication() {
 		const currentJob = this.job();
-		if (!currentJob?._id) return;
+		if (!currentJob?._id || this.isSending()) return;
 
-		const newProposal = this.jobProposalService.new() as JobProposal;
-		newProposal.jobId = currentJob._id;
-		newProposal.data = { ...this.proposal };
+		this.isSending.set(true);
 
-		this.jobProposalService.create(newProposal).subscribe(() => {
-			this.isSubmitted.set(true);
-			this.isApplying.set(false);
-			// Reset form
-			this.proposal = {
-				applicantName: '',
-				applicantEmail: '',
-				applicantPhone: '',
-				message: ''
-			};
+		this.jobProposalService.create({
+			jobId: currentJob._id,
+			data: { ...this.proposal }
+		}).subscribe({
+			next: () => {
+				this.isSending.set(false);
+				this.isSubmitted.set(true);
+				this.isApplying.set(false);
+				this.proposal = {
+					applicantName: '',
+					applicantEmail: '',
+					applicantPhone: '',
+					message: ''
+				};
+			},
+			error: (err) => {
+				this.isSending.set(false);
+				console.error('Apply error:', err);
+				alert('Помилка при відправці заявки');
+			}
 		});
 	}
 }
