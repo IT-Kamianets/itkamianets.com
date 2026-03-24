@@ -12,6 +12,7 @@ export class CompanyService {
 	private http = inject(HttpClient);
 	private platformId = inject(PLATFORM_ID);
 
+	readonly company = signal<Company>(environment.company);
 	readonly companies = signal<Company[]>([]);
 
 	constructor() {

@@ -15,7 +15,16 @@ export const environment: {
 	items: [],
 	companyId: '',
 	company: {
-		_id: '',
+		id: '',
 		name: '',
+		logo: '',
+		type: '',
+		shortDescription: '',
+		description: '',
+		techStack: [],
+		services: [],
+		employees: 0,
+		founded: 0,
+		contacts: {},
 	},
 };
