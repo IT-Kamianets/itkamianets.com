@@ -18,6 +18,12 @@
 	margin-bottom: 1rem;
 }
 
+.schools-toolbar__actions {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
 .schools-toolbar__button,
 .schools-table__edit,
 .schools-modal__button,
@@ -34,6 +40,20 @@
 .schools-modal__button {
 	background: linear-gradient(135deg, var(--c-primary), var(--c-primary-hover));
 	color: #fff;
+}
+
+.schools-toolbar__button--ghost {
+	background: color-mix(in srgb, var(--c-primary) 8%, var(--c-bg-primary));
+	color: var(--c-primary);
+}
+
+.schools-alert {
+	margin: 0 0 1rem;
+	padding: 0.9rem 1rem;
+	border: 1px solid color-mix(in srgb, #ef4444 35%, var(--c-border));
+	border-radius: 1rem;
+	background: color-mix(in srgb, #ef4444 8%, var(--c-bg-secondary));
+	color: var(--c-text-secondary);
 }
 
 .schools-table-wrap {
@@ -72,6 +92,12 @@
 .schools-table__meta {
 	display: grid;
 	gap: 0.3rem;
+}
+
+.schools-table__actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
 }
 
 .schools-table__name strong {
@@ -175,6 +201,12 @@
 	color: var(--c-text-secondary);
 	padding: 0.9rem 1rem;
 	font: inherit;
+}
+
+.schools-modal__button[disabled],
+.schools-modal__close[disabled] {
+	opacity: 0.6;
+	cursor: not-allowed;
 }
 
 .schools-modal__field input:focus,

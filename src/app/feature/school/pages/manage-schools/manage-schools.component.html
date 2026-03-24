@@ -1,94 +1,87 @@
 <section class="schools-page">
 	<div class="schools-page__content">
 		<div class="schools-toolbar">
-			<button type="button" class="schools-toolbar__button" (click)="openCreateModal()">
-				Додати заклад
-			</button>
+			<div class="schools-toolbar__actions">
+				<button pButton type="button" label="Оновити" severity="secondary" (click)="loadSchools()"></button>
+				<button pButton type="button" label="Додати заклад" (click)="openCreateModal()"></button>
+			</div>
 		</div>
 
+		@if (error()) {
+			<p class="schools-alert">{{ error() }}</p>
+		}
+
 		<div class="schools-table-wrap">
-			<table class="schools-table">
-				<thead>
+			<p-table
+				[value]="schools()"
+				[loading]="loading()"
+				styleClass="schools-table"
+				[tableStyle]="{ 'min-width': '980px' }"
+				responsiveLayout="scroll"
+				emptyMessage="Список навчальних закладів порожній."
+			>
+				<ng-template pTemplate="header">
 					<tr>
 						<th>Назва</th>
 						<th>Тип</th>
-						<th>Адреса</th>
-						<th>Керівник</th>
+						<th>Опис</th>
+						<th>Курси</th>
+						<th>Уроки</th>
 						<th>Контакти</th>
-						<th>Учні</th>
-						<th>Редагувати</th>
+						<th>ID</th>
+						<th>Дії</th>
 					</tr>
-				</thead>
-				<tbody>
-					@for (institution of institutions(); track institution.id) {
-						<tr>
-							<td>
-								<div class="schools-table__name">
-									<strong>{{ institution.shortName }}</strong>
-									<span>{{ institution.name }}</span>
-								</div>
-							</td>
-							<td>{{ typeLabel(institution.type) }}</td>
-							<td>
-								<div class="schools-table__meta">
-									<span>{{ institution.address }}</span>
-									<small>
-										{{ institution.district }} · {{ ownershipLabel(institution.ownership) }}
-									</small>
-								</div>
-							</td>
-							<td>{{ institution.principal || '—' }}</td>
-							<td>
-								<div class="schools-table__meta">
-									<span>{{ institution.phone || '—' }}</span>
-									<small>{{ institution.email || '—' }}</small>
-								</div>
-							</td>
-							<td>{{ institution.studentsCount | number }}</td>
-							<td>
-								<button
-									type="button"
-									class="schools-table__edit"
-									(click)="openEditModal(institution)"
-								>
-									Редагувати
-								</button>
-							</td>
-						</tr>
-					} @empty {
-						<tr>
-							<td colspan="7" class="schools-table__empty">
-								Список навчальних закладів порожній.
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
+				</ng-template>
+				<ng-template pTemplate="body" let-school>
+					<tr>
+						<td>
+							<div class="schools-table__name">
+								<strong>{{ school.data.shortName || schoolTitle(school) }}</strong>
+								<span>{{ schoolTitle(school) }}</span>
+							</div>
+						</td>
+						<td>{{ schoolType(school) }}</td>
+						<td>{{ schoolDescriptionPreview(school) }}</td>
+						<td>{{ schoolCourses(school).length ? schoolCourses(school).join(', ') : '—' }}</td>
+						<td>{{ schoolLessons(school).length ? schoolLessons(school).join(', ') : '—' }}</td>
+						<td>{{ schoolContact(school) }}</td>
+						<td><small>{{ school._id || '—' }}</small></td>
+						<td>
+							<div class="schools-table__actions">
+								<button pButton type="button" label="Редагувати" severity="secondary" size="small" (click)="openEditModal(school)"></button>
+								<button pButton type="button" label="Видалити" severity="danger" size="small" (click)="deleteSchool(school)"></button>
+							</div>
+						</td>
+					</tr>
+				</ng-template>
+			</p-table>
 		</div>
 
-		@if (isModalOpen()) {
-			<div class="schools-modal-backdrop" (click)="closeModal()">
-				<div class="schools-modal" (click)="$event.stopPropagation()">
-					<div class="schools-modal__header">
-						<h2>{{ modalTitle() }}</h2>
-						<button type="button" class="schools-modal__close" (click)="closeModal()">
-							Закрити
-						</button>
-					</div>
-
-					<div class="schools-modal__grid">
+		<p-dialog
+			[header]="modalTitle()"
+			[visible]="isModalOpen()"
+			(visibleChange)="onDialogVisibleChange($event)"
+			[modal]="true"
+			[draggable]="false"
+			[resizable]="false"
+			[dismissableMask]="true"
+			[style]="{ width: 'min(980px, 95vw)' }"
+		>
+			<div class="schools-modal__grid">
 						<label class="schools-modal__field schools-modal__field--wide">
-							<span>Повна назва</span>
+							<span>Назва</span>
 							<input
+								pInputText
 								type="text"
-								[value]="draft().name"
-								(input)="updateDraft('name', ($any($event.target).value ?? '').toString())"
+								[value]="draft().title"
+								(input)="updateDraft('title', ($any($event.target).value ?? '').toString())"
 							/>
 						</label>
 
 						<label class="schools-modal__field">
 							<span>Коротка назва</span>
 							<input
+								pInputText
 								type="text"
 								[value]="draft().shortName"
 								(input)="updateDraft('shortName', ($any($event.target).value ?? '').toString())"
@@ -97,43 +90,26 @@
 
 						<label class="schools-modal__field">
 							<span>Тип</span>
-							<select
+							<input
+								pInputText
+								type="text"
 								[value]="draft().type"
-								(change)="updateDraft('type', ($any($event.target).value ?? '').toString())"
-							>
-								@for (option of typeOptions; track option.value) {
-									<option [value]="option.value">{{ option.label }}</option>
-								}
-							</select>
+								(input)="updateDraft('type', ($any($event.target).value ?? '').toString())"
+							/>
 						</label>
 
-						<label class="schools-modal__field">
-							<span>Форма власності</span>
-							<select
-								[value]="draft().ownership"
-								(change)="updateDraft('ownership', ($any($event.target).value ?? '').toString())"
-							>
-								@for (option of ownershipOptions; track option.value) {
-									<option [value]="option.value">{{ option.label }}</option>
-								}
-							</select>
-						</label>
-
-						<label class="schools-modal__field">
-							<span>Статус</span>
-							<select
-								[value]="draft().status"
-								(change)="updateDraft('status', ($any($event.target).value ?? '').toString())"
-							>
-								@for (option of statusOptions; track option.value) {
-									<option [value]="option.value">{{ option.label }}</option>
-								}
-							</select>
+						<label class="schools-modal__field schools-modal__field--wide">
+							<span>Опис</span>
+							<textarea
+								rows="4"
+								(input)="updateDraft('description', ($any($event.target).value ?? '').toString())"
+							>{{ draft().description }}</textarea>
 						</label>
 
 						<label class="schools-modal__field schools-modal__field--wide">
 							<span>Адреса</span>
 							<input
+								pInputText
 								type="text"
 								[value]="draft().address"
 								(input)="updateDraft('address', ($any($event.target).value ?? '').toString())"
@@ -141,17 +117,9 @@
 						</label>
 
 						<label class="schools-modal__field">
-							<span>Район</span>
-							<input
-								type="text"
-								[value]="draft().district"
-								(input)="updateDraft('district', ($any($event.target).value ?? '').toString())"
-							/>
-						</label>
-
-						<label class="schools-modal__field">
 							<span>Керівник</span>
 							<input
+								pInputText
 								type="text"
 								[value]="draft().principal"
 								(input)="updateDraft('principal', ($any($event.target).value ?? '').toString())"
@@ -161,6 +129,7 @@
 						<label class="schools-modal__field">
 							<span>Телефон</span>
 							<input
+								pInputText
 								type="text"
 								[value]="draft().phone"
 								(input)="updateDraft('phone', ($any($event.target).value ?? '').toString())"
@@ -170,6 +139,7 @@
 						<label class="schools-modal__field">
 							<span>Email</span>
 							<input
+								pInputText
 								type="email"
 								[value]="draft().email"
 								(input)="updateDraft('email', ($any($event.target).value ?? '').toString())"
@@ -179,6 +149,7 @@
 						<label class="schools-modal__field">
 							<span>Кількість учнів</span>
 							<input
+								pInputText
 								type="number"
 								min="0"
 								[value]="draft().studentsCount"
@@ -186,19 +157,10 @@
 							/>
 						</label>
 
-						<label class="schools-modal__field">
-							<span>Рік заснування</span>
-							<input
-								type="number"
-								min="1800"
-								[value]="draft().foundedYear"
-								(input)="updateDraft('foundedYear', +(($any($event.target).value ?? 0).toString()))"
-							/>
-						</label>
-
 						<label class="schools-modal__field schools-modal__field--wide">
 							<span>Сайт</span>
 							<input
+								pInputText
 								type="url"
 								[value]="draft().website"
 								(input)="updateDraft('website', ($any($event.target).value ?? '').toString())"
@@ -206,11 +168,19 @@
 						</label>
 
 						<label class="schools-modal__field schools-modal__field--wide">
-							<span>Нотатки</span>
+							<span>Курси</span>
 							<textarea
 								rows="4"
-								(input)="updateDraft('notes', ($any($event.target).value ?? '').toString())"
-							>{{ draft().notes }}</textarea>
+								(input)="updateStringList('courses', ($any($event.target).value ?? '').toString())"
+							>{{ stringListValue('courses') }}</textarea>
+						</label>
+
+						<label class="schools-modal__field schools-modal__field--wide">
+							<span>Уроки</span>
+							<textarea
+								rows="4"
+								(input)="updateStringList('lessons', ($any($event.target).value ?? '').toString())"
+							>{{ stringListValue('lessons') }}</textarea>
 						</label>
 
 						<div class="schools-modal__toggles schools-modal__field--wide">
@@ -233,20 +203,10 @@
 						</div>
 
 						<div class="schools-modal__actions schools-modal__field--wide">
-							<button type="button" class="schools-modal__button" (click)="saveInstitution()">
-								Зберегти
-							</button>
-							<button
-								type="button"
-								class="schools-modal__button schools-modal__button--ghost"
-								(click)="closeModal()"
-							>
-								Скасувати
-							</button>
+							<button pButton type="button" label="Зберегти" [loading]="saving()" (click)="saveSchool()"></button>
+							<button pButton type="button" label="Скасувати" severity="secondary" [disabled]="saving()" (click)="closeModal()"></button>
 						</div>
-					</div>
-				</div>
 			</div>
-		}
+		</p-dialog>
 	</div>
 </section>

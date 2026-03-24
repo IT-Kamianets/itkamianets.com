@@ -1,4 +1,4 @@
-.education-page {
+.schools-page {
 	min-height: 100vh;
 	background:
 		linear-gradient(180deg, rgba(37, 110, 255, 0.08), transparent 26%),
@@ -6,13 +6,13 @@
 	padding-bottom: 4rem;
 }
 
-.education-hero {
+.schools-hero {
 	position: relative;
 	padding: 4.75rem 1.25rem 3rem;
 	overflow: hidden;
 }
 
-.education-hero::before {
+.schools-hero::before {
 	content: '';
 	position: absolute;
 	inset: 0;
@@ -23,19 +23,19 @@
 	background-position: center;
 }
 
-.education-hero__content,
-.education-page__content {
+.schools-hero__content,
+.schools-page__content {
 	position: relative;
 	max-width: 1200px;
 	margin: 0 auto;
 }
 
-.education-hero__content {
+.schools-hero__content {
 	color: #fff;
 }
 
-.education-hero__eyebrow,
-.education-featured__eyebrow {
+.schools-hero__eyebrow,
+.schools-featured__eyebrow {
 	display: inline-flex;
 	padding: 0.35rem 0.75rem;
 	border-radius: 999px;
@@ -46,18 +46,18 @@
 	text-transform: uppercase;
 }
 
-.education-featured__eyebrow {
+.schools-featured__eyebrow {
 	background: rgba(37, 110, 255, 0.1);
 	color: var(--c-primary);
 }
 
-.education-hero__title {
+.schools-hero__title {
 	margin: 1rem 0 0;
 	font-size: clamp(2rem, 4vw, 3.4rem);
 	line-height: 1.06;
 }
 
-.education-hero__subtitle {
+.schools-hero__subtitle {
 	max-width: 44rem;
 	margin-top: 1rem;
 	font-size: 1.05rem;
@@ -65,14 +65,14 @@
 	color: rgba(255, 255, 255, 0.88);
 }
 
-.education-hero__actions {
+.schools-hero__actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.85rem;
 	margin-top: 1.5rem;
 }
 
-.education-hero__link {
+.schools-hero__link {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -84,27 +84,27 @@
 	text-decoration: none;
 }
 
-.education-hero__link--ghost {
+.schools-hero__link--ghost {
 	background: rgba(255, 255, 255, 0.14);
 	border: 1px solid rgba(255, 255, 255, 0.22);
 	color: #fff;
 }
 
-.education-page__content {
+.schools-page__content {
 	padding: 0 1.25rem;
 	margin-top: -1.5rem;
 	z-index: 1;
 }
 
-.education-summary {
+.schools-summary {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1rem;
 }
 
-.education-summary__card,
-.education-featured__card,
-.education-all {
+.schools-summary__card,
+.schools-featured__card,
+.schools-catalog {
 	background: color-mix(in srgb, var(--c-bg-secondary) 92%, white);
 	border: 1px solid var(--c-border);
 	border-radius: 1.5rem;
@@ -112,13 +112,13 @@
 	backdrop-filter: blur(14px);
 }
 
-.education-summary__card {
+.schools-summary__card {
 	display: grid;
 	gap: 0.4rem;
 	padding: 1.2rem;
 }
 
-.education-summary__card span {
+.schools-summary__card span {
 	font-size: 0.8rem;
 	font-weight: 700;
 	letter-spacing: 0.08em;
@@ -126,61 +126,61 @@
 	color: var(--c-text-muted);
 }
 
-.education-summary__card strong {
+.schools-summary__card strong {
 	font-size: clamp(1.5rem, 3vw, 2.25rem);
 	color: var(--c-text-secondary);
 }
 
-.education-featured,
-.education-all {
+.schools-featured,
+.schools-catalog {
 	margin-top: 1.25rem;
 	padding: 1.25rem;
 }
 
-.education-featured__title {
+.schools-featured__title {
 	margin: 0.4rem 0 0;
 	font-size: 1.35rem;
 	color: var(--c-text-secondary);
 }
 
-.education-featured__grid {
+.schools-featured__grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1rem;
 	margin-top: 1rem;
 }
 
-.education-featured__card {
+.schools-featured__card {
 	padding: 1.2rem;
 	display: grid;
 	gap: 0.75rem;
 }
 
-.education-featured__card h3 {
+.schools-featured__card h3 {
 	margin: 0;
 	color: var(--c-text-secondary);
 	font-size: 1.2rem;
 }
 
-.education-featured__card p,
-.education-featured__card li {
+.schools-featured__card p,
+.schools-featured__card li {
 	margin: 0;
 	color: var(--c-text-primary);
 	line-height: 1.65;
 }
 
-.education-featured__card ul {
+.schools-featured__card ul {
 	margin: 0;
 	padding-left: 1.1rem;
 	display: grid;
 	gap: 0.3rem;
 }
 
-.education-featured__card--all {
+.schools-featured__card--all {
 	height: 100%;
 }
 
-.education-featured__type {
+.schools-featured__type {
 	display: inline-flex;
 	justify-self: start;
 	padding: 0.35rem 0.7rem;
@@ -191,7 +191,7 @@
 	font-weight: 700;
 }
 
-.education-all__header {
+.schools-catalog__header {
 	display: flex;
 	align-items: start;
 	justify-content: space-between;
@@ -199,15 +199,15 @@
 	margin-bottom: 1rem;
 }
 
-.education-filters {
+.schools-filters {
 	display: grid;
 	grid-template-columns: minmax(280px, 1fr) minmax(180px, 220px);
 	gap: 0.75rem;
 	width: min(100%, 520px);
 }
 
-.education-filters input,
-.education-filters select {
+.schools-filters input,
+.schools-filters select {
 	width: 100%;
 	border: 1px solid var(--c-border);
 	border-radius: 1rem;
@@ -217,20 +217,20 @@
 	font: inherit;
 }
 
-.education-filters input:focus,
-.education-filters select:focus {
+.schools-filters input:focus,
+.schools-filters select:focus {
 	outline: none;
 	box-shadow: var(--focus-ring);
 	border-color: color-mix(in srgb, var(--c-primary) 45%, var(--c-border));
 }
 
-.education-all__grid {
+.schools-catalog__grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1rem;
 }
 
-.education-card__link {
+.schools-card__link {
 	justify-self: start;
 	display: inline-flex;
 	align-items: center;
@@ -240,7 +240,7 @@
 	text-decoration: none;
 }
 
-.education-all__empty {
+.schools-catalog__empty {
 	grid-column: 1 / -1;
 	margin: 0;
 	padding: 1rem;
@@ -251,34 +251,34 @@
 }
 
 @media (max-width: 980px) {
-	.education-summary,
-	.education-featured__grid,
-	.education-all__grid {
+	.schools-summary,
+	.schools-featured__grid,
+	.schools-catalog__grid {
 		grid-template-columns: 1fr;
 	}
 
-	.education-all__header {
+	.schools-catalog__header {
 		flex-direction: column;
 	}
 
-	.education-filters {
+	.schools-filters {
 		width: 100%;
 		grid-template-columns: 1fr;
 	}
 }
 
 @media (max-width: 720px) {
-	.education-hero {
+	.schools-hero {
 		padding-top: 3.25rem;
 	}
 
-	.education-page__content {
+	.schools-page__content {
 		margin-top: -1rem;
 	}
 
-	.education-summary__card,
-	.education-featured__card,
-	.education-all {
+	.schools-summary__card,
+	.schools-featured__card,
+	.schools-catalog {
 		border-radius: 1.2rem;
 	}
 }

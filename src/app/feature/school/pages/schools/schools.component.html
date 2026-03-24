@@ -1,116 +1,148 @@
-<section class="education-page">
-	<section class="education-hero">
-		<div class="education-hero__content">
-			<span class="education-hero__eyebrow">Education</span>
-			<h1 class="education-hero__title">Навчальні заклади Камʼянця-Подільського</h1>
-			<p class="education-hero__subtitle">
+<section class="schools-page">
+	<section class="schools-hero">
+		<div class="schools-hero__content">
+			<span class="schools-hero__eyebrow">Schools</span>
+			<h1 class="schools-hero__title">Навчальні заклади Камʼянця-Подільського</h1>
+			<p class="schools-hero__subtitle">
 				Публічна сторінка автоматично підтягує опубліковані записи з адмін-панелі
-			Schools. Тут відображається актуальний список закладів і ключові контакти.
-		</p>
-		<div class="education-hero__actions">
-			<a routerLink="/manage/schools" class="education-hero__link">Відкрити адмінку</a>
-				<a routerLink="/" class="education-hero__link education-hero__link--ghost"
+				Schools. Тут відображається актуальний список закладів, курсів і контактів.
+			</p>
+			<div class="schools-hero__actions">
+				<a routerLink="/manage/schools" class="schools-hero__link">Відкрити адмінку</a>
+				<a routerLink="/" class="schools-hero__link schools-hero__link--ghost"
 					>На головну</a
 				>
 			</div>
 		</div>
 	</section>
 
-	<div class="education-page__content">
-		<section class="education-summary">
-			<article class="education-summary__card">
-				<span>Опубліковано закладів</span>
-				<strong>{{ institutions().length }}</strong>
-			</article>
-			<article class="education-summary__card">
-				<span>Рекомендовані</span>
-				<strong>{{ featuredInstitutions().length }}</strong>
-			</article>
-			<article class="education-summary__card">
-				<span>Загальна кількість здобувачів</span>
-				<strong>{{ totalStudents() | number }}</strong>
-			</article>
-		</section>
+	<div class="schools-page__content">
+		@if (loading()) {
+			<section class="schools-catalog">
+				<p class="schools-catalog__empty">Завантаження шкіл...</p>
+			</section>
+		} @else if (error()) {
+			<section class="schools-catalog">
+				<p class="schools-catalog__empty">{{ error() }}</p>
+				<div class="schools-hero__actions">
+					<button type="button" class="schools-hero__link" (click)="reload()">Оновити</button>
+				</div>
+			</section>
+		} @else {
+			<section class="schools-summary">
+				<article class="schools-summary__card">
+					<span>Опубліковано закладів</span>
+					<strong>{{ visibleSchools().length }}</strong>
+				</article>
+				<article class="schools-summary__card">
+					<span>Рекомендовані</span>
+					<strong>{{ featuredSchools().length }}</strong>
+				</article>
+				<article class="schools-summary__card">
+					<span>Загальна кількість здобувачів</span>
+					<strong>{{ totalStudents() | number }}</strong>
+				</article>
+			</section>
 
-		@if (featuredInstitutions().length) {
-			<section class="education-featured">
-				<div class="education-featured__header">
+			@if (featuredSchools().length) {
+			<section class="schools-featured">
+				<div class="schools-featured__header">
 					<div>
-						<p class="education-featured__eyebrow">Featured</p>
-						<h2 class="education-featured__title">Рекомендовані заклади</h2>
+						<p class="schools-featured__eyebrow">Featured</p>
+						<h2 class="schools-featured__title">Рекомендовані заклади</h2>
 					</div>
 				</div>
-				<div class="education-featured__grid">
-					@for (institution of featuredInstitutions(); track institution.id) {
-						<article class="education-featured__card">
-							<span class="education-featured__type">{{ typeLabel(institution.type) }}</span>
-							<h3>{{ institution.shortName }}</h3>
-							<p>{{ institution.notes }}</p>
+				<div class="schools-featured__grid">
+					@for (school of featuredSchools(); track school._id) {
+						<article class="schools-featured__card">
+							<span class="schools-featured__type">{{ typeLabel(schoolType(school)) }}</span>
+							<h3>{{ schoolShortTitle(school) }}</h3>
+							<p>{{ schoolDescription(school) }}</p>
 							<ul>
-								<li>{{ institution.address }}</li>
-								<li>{{ institution.principal }}</li>
-								<li>{{ institution.studentsCount | number }} здобувачів</li>
+								@if (schoolAddress(school)) {
+									<li>{{ schoolAddress(school) }}</li>
+								}
+								@if (schoolPrincipal(school)) {
+									<li>{{ schoolPrincipal(school) }}</li>
+								}
+								@if (schoolStudentsCount(school)) {
+									<li>{{ schoolStudentsCount(school) | number }} здобувачів</li>
+								}
+								@if (schoolCourses(school).length) {
+									<li>Курси: {{ schoolCourses(school).slice(0, 3).join(', ') }}</li>
+								}
 							</ul>
 						</article>
 					}
 				</div>
 			</section>
+			}
+
+			<section class="schools-catalog">
+				<div class="schools-catalog__header">
+					<div>
+						<p class="schools-featured__eyebrow">Catalog</p>
+						<h2 class="schools-featured__title">Усі заклади</h2>
+					</div>
+					<div class="schools-filters">
+						<input
+							type="search"
+							placeholder="Пошук за назвою, директором, адресою або курсом"
+							[value]="searchTerm()"
+							(input)="updateSearch(($any($event.target).value ?? '').toString())"
+						/>
+						<select
+							[value]="selectedType()"
+							(change)="selectedType.set(($any($event.target).value ?? 'all').toString())"
+						>
+							<option value="all">Усі типи</option>
+							@for (option of typeOptions(); track option.value) {
+								<option [value]="option.value">{{ option.label }}</option>
+							}
+						</select>
+					</div>
+				</div>
+
+				<div class="schools-catalog__grid">
+					@for (school of filteredSchools(); track school._id) {
+						<article class="schools-featured__card schools-featured__card--all">
+							<span class="schools-featured__type">{{ typeLabel(schoolType(school)) }}</span>
+							<h3>{{ schoolShortTitle(school) }}</h3>
+							<p>{{ schoolTitle(school) }}</p>
+							<ul>
+								@if (schoolAddress(school)) {
+									<li>{{ schoolAddress(school) }}</li>
+								}
+								<li>{{ schoolPrincipal(school) || 'Керівника не вказано' }}</li>
+								@if (schoolStudentsCount(school)) {
+									<li>{{ schoolStudentsCount(school) | number }} здобувачів</li>
+								}
+								<li>{{ schoolContact(school) || 'Телефон не вказано' }}</li>
+								@if (schoolCourses(school).length) {
+									<li>Курси: {{ schoolCourses(school).join(', ') }}</li>
+								}
+								@if (schoolLessons(school).length) {
+									<li>Уроки: {{ schoolLessons(school).join(', ') }}</li>
+								}
+							</ul>
+							@if (schoolWebsite(school)) {
+								<a
+									[href]="schoolWebsite(school)"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="schools-card__link"
+								>
+									Перейти на сайт
+								</a>
+							}
+						</article>
+					} @empty {
+						<p class="schools-catalog__empty">
+							Немає опублікованих навчальних закладів за вибраними умовами.
+						</p>
+					}
+				</div>
+			</section>
 		}
-
-		<section class="education-all">
-			<div class="education-all__header">
-				<div>
-					<p class="education-featured__eyebrow">Featured</p>
-					<h2 class="education-featured__title">Усі заклади</h2>
-				</div>
-				<div class="education-filters">
-					<input
-						type="search"
-						placeholder="Пошук за назвою, директором або адресою"
-						[value]="searchTerm()"
-						(input)="updateSearch(($any($event.target).value ?? '').toString())"
-					/>
-					<select
-						[value]="selectedType()"
-						(change)="selectedType.set(($any($event.target).value ?? 'all').toString())"
-					>
-						<option value="all">Усі типи</option>
-						@for (option of typeOptions; track option.value) {
-							<option [value]="option.value">{{ option.label }}</option>
-						}
-					</select>
-				</div>
-			</div>
-
-			<div class="education-all__grid">
-				@for (institution of filteredInstitutions(); track institution.id) {
-					<article class="education-featured__card education-featured__card--all">
-						<span class="education-featured__type">{{ typeLabel(institution.type) }}</span>
-						<h3>{{ institution.shortName }}</h3>
-						<p>{{ institution.name }}</p>
-						<ul>
-							<li>{{ institution.address }} ({{ institution.district }})</li>
-							<li>{{ institution.principal || 'Керівника не вказано' }}</li>
-							<li>{{ institution.studentsCount | number }} здобувачів</li>
-							<li>{{ institution.phone || 'Телефон не вказано' }}</li>
-						</ul>
-						@if (institution.website) {
-							<a
-								[href]="institution.website"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="education-card__link"
-							>
-								Перейти на сайт
-							</a>
-						}
-					</article>
-				} @empty {
-					<p class="education-all__empty">
-						Немає опублікованих навчальних закладів за вибраними умовами.
-					</p>
-				}
-			</div>
-		</section>
 	</div>
 </section>

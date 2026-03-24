@@ -1,66 +1,65 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import {
-	EDUCATION_OWNERSHIP_OPTIONS,
-	EDUCATION_STATUS_OPTIONS,
-	EDUCATION_TYPE_OPTIONS,
-	createEmptyEducationInstitutionDraft,
-} from '../../../education/education.const';
-import { EducationService } from '../../../education/education.service';
-import {
-	EducationInstitution,
-	EducationInstitutionDraft,
-	EducationInstitutionOwnership,
-	EducationInstitutionStatus,
-	EducationInstitutionType,
-} from '../../../education/education.interface';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { finalize } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { School, SchoolData, SchoolService, createEmptySchoolData } from '../../school.service';
 
 @Component({
-	imports: [DecimalPipe],
+	imports: [CommonModule, TableModule, DialogModule, InputTextModule, ButtonModule],
 	templateUrl: './manage-schools.component.html',
 	styleUrl: './manage-schools.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageSchoolsComponent {
-	protected readonly educationService = inject(EducationService);
-	protected readonly institutions = this.educationService.institutions;
-	protected readonly typeOptions = EDUCATION_TYPE_OPTIONS;
-	protected readonly ownershipOptions = EDUCATION_OWNERSHIP_OPTIONS;
-	protected readonly statusOptions = EDUCATION_STATUS_OPTIONS;
+export class ManageSchoolsComponent implements OnInit {
+	private readonly _schoolService = inject(SchoolService);
+
+	protected readonly schools = signal<School[]>([]);
+	protected readonly loading = signal(true);
+	protected readonly saving = signal(false);
+	protected readonly error = signal<string | null>(null);
 	protected readonly isModalOpen = signal(false);
 	protected readonly editingId = signal<string | null>(null);
-	protected readonly draft = signal<EducationInstitutionDraft>(
-		createEmptyEducationInstitutionDraft(),
-	);
+	protected readonly draft = signal<SchoolData>(createEmptySchoolData());
 	protected readonly modalTitle = computed(() => {
 		return this.editingId() ? 'Редагувати заклад' : 'Додати новий заклад';
 	});
 
+	ngOnInit() {
+		this.loadSchools();
+	}
+
+	protected loadSchools() {
+		this.loading.set(true);
+		this.error.set(null);
+
+		this._schoolService
+			.getSchools()
+			.pipe(finalize(() => this.loading.set(false)))
+			.subscribe({
+				next: (schools) => this.schools.set(schools),
+				error: (error: Error) => {
+					this.error.set(error.message || 'Не вдалося завантажити школи.');
+					this.schools.set([]);
+				},
+			});
+	}
+
 	protected openCreateModal() {
 		this.editingId.set(null);
-		this.draft.set(createEmptyEducationInstitutionDraft());
+		this.draft.set(createEmptySchoolData());
 		this.isModalOpen.set(true);
 	}
 
-	protected openEditModal(institution: EducationInstitution) {
-		this.editingId.set(institution.id);
+	protected openEditModal(school: School) {
+		this.editingId.set(school._id);
 		this.draft.set({
-			name: institution.name,
-			shortName: institution.shortName,
-			type: institution.type,
-			ownership: institution.ownership,
-			status: institution.status,
-			address: institution.address,
-			district: institution.district,
-			phone: institution.phone,
-			email: institution.email,
-			website: institution.website,
-			principal: institution.principal,
-			foundedYear: institution.foundedYear,
-			notes: institution.notes,
-			studentsCount: institution.studentsCount,
-			featured: institution.featured,
-			published: institution.published,
+			...createEmptySchoolData(),
+			...school.data,
+			courses: this.schoolCourses(school),
+			lessons: this.schoolLessons(school),
 		});
 		this.isModalOpen.set(true);
 	}
@@ -68,38 +67,128 @@ export class ManageSchoolsComponent {
 	protected closeModal() {
 		this.isModalOpen.set(false);
 		this.editingId.set(null);
-		this.draft.set(createEmptyEducationInstitutionDraft());
+		this.draft.set(createEmptySchoolData());
 	}
 
-	protected saveInstitution() {
+	protected onDialogVisibleChange(visible: boolean) {
+		if (!visible) {
+			this.closeModal();
+		}
+	}
+
+	protected saveSchool() {
 		const draft = this.draft();
+		if (!draft.title?.trim()) {
+			this.error.set('Вкажіть назву закладу.');
+			return;
+		}
+
 		const editingId = this.editingId();
+		const request = editingId
+			? this._schoolService.updateSchool(editingId, draft)
+			: this._schoolService.createSchool(draft);
 
-		this.educationService.upsertInstitution(draft, editingId);
+		this.saving.set(true);
+		this.error.set(null);
 
-		this.closeModal();
+		request.pipe(finalize(() => this.saving.set(false))).subscribe({
+			next: (result) => {
+				if (!result) {
+					this.error.set('Не вдалося зберегти школу. Перевірте авторизацію та дані форми.');
+					return;
+				}
+
+				this.closeModal();
+				this.loadSchools();
+			},
+			error: (error: Error) => {
+				this.error.set(error.message || 'Не вдалося зберегти школу.');
+			},
+		});
 	}
 
-	protected deleteInstitution(id: string) {
+	protected deleteSchool(school: School) {
 		if (!confirm('Ви впевнені, що хочете видалити цей заклад?')) {
 			return;
 		}
 
-		this.educationService.removeInstitution(id);
+		this.loading.set(true);
+		this.error.set(null);
+
+		this._schoolService
+			.deleteSchool(school._id)
+			.pipe(finalize(() => this.loading.set(false)))
+			.subscribe({
+				next: (deleted) => {
+					if (!deleted) {
+						this.error.set('Не вдалося видалити школу.');
+						return;
+					}
+
+					this.loadSchools();
+				},
+				error: (error: Error) => {
+					this.error.set(error.message || 'Не вдалося видалити школу.');
+				},
+			});
 	}
 
-	protected updateDraft(key: keyof EducationInstitutionDraft, value: unknown) {
+	protected updateDraft(key: keyof SchoolData, value: unknown) {
 		this.draft.update((draft) => ({
 			...draft,
 			[key]: value,
 		}));
 	}
 
-	protected typeLabel(value: EducationInstitutionType): string {
-		return EDUCATION_TYPE_OPTIONS.find((option) => option.value === value)?.label || value;
+	protected updateStringList(key: 'courses' | 'lessons', value: string) {
+		this.updateDraft(
+			key,
+			value
+				.split(/\r?\n|,/)
+				.map((item) => item.trim())
+				.filter(Boolean),
+		);
 	}
 
-	protected ownershipLabel(value: EducationInstitutionOwnership): string {
-		return EDUCATION_OWNERSHIP_OPTIONS.find((option) => option.value === value)?.label || value;
+	protected stringListValue(key: 'courses' | 'lessons') {
+		const value = this.draft()[key];
+
+		return Array.isArray(value) ? value.join('\n') : '';
+	}
+
+	protected schoolTitle(school: School) {
+		return school.data.title || 'Без назви';
+	}
+
+	protected schoolDescription(school: School) {
+		return school.data.description || 'Опис не вказано';
+	}
+
+	protected schoolDescriptionPreview(school: School) {
+		const description = this.schoolDescription(school);
+
+		return description.length > 140 ? `${description.slice(0, 140)}...` : description;
+	}
+
+	protected schoolType(school: School) {
+		return typeof school.data.type === 'string' && school.data.type.trim()
+			? school.data.type.trim()
+			: 'school';
+	}
+
+	protected schoolContact(school: School) {
+		const contact = [school.data.phone, school.data.email].filter(
+			(value): value is string => typeof value === 'string' && Boolean(value.trim()),
+		);
+
+		return contact.length ? contact.join(' / ') : '—';
+	}
+
+	protected schoolCourses(school: School) {
+		return Array.isArray(school.data.courses) ? school.data.courses : [];
+	}
+
+	protected schoolLessons(school: School) {
+		return Array.isArray(school.data.lessons) ? school.data.lessons : [];
 	}
 }
