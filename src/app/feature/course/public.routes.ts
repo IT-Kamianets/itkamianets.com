@@ -6,4 +6,9 @@ export const routes: Routes = [
 		loadComponent: () =>
 			import('./pages/courses/courses.component').then((m) => m.CoursesComponent),
 	},
+	{
+		path: 'courses/:slug',
+		loadComponent: () =>
+			import('./pages/course/course.component').then((m) => m.CourseComponent),
+	},
 ];

@@ -1,0 +1,104 @@
+@if (_course(); as course) {
+	<section
+		class="relative overflow-hidden border-b-2 border-[var(--c-border)] bg-[linear-gradient(135deg,rgba(0,0,0,0.82)_0%,rgba(37,110,255,0.55)_100%)]"
+	>
+		<div class="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-14 sm:px-6 lg:px-8">
+			<p class="text-sm font-semibold uppercase tracking-[0.24em] text-white/70">
+				Course
+			</p>
+			<div class="flex flex-wrap items-center gap-3">
+				<h1 class="text-4xl font-black leading-tight text-white sm:text-5xl">
+					{{ course.title }}
+				</h1>
+				<span
+					class="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
+				>
+					{{ course.level }}
+				</span>
+			</div>
+			<p class="max-w-3xl text-base leading-7 text-white/85">
+				{{ course.description }}
+			</p>
+		</div>
+		<span
+			class="absolute bottom-[-2px] left-1/2 block h-1 w-[60px] -translate-x-1/2 rounded-sm bg-[var(--c-primary)]"
+		></span>
+	</section>
+
+	<section class="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
+		<div class="space-y-8">
+			<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6">
+				<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">Про курс</h2>
+				<p class="mt-4 text-sm leading-7 text-[var(--c-text-muted)]">
+					{{ course.about }}
+				</p>
+			</div>
+
+			<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6">
+				<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">Програма</h2>
+				<ul class="mt-4 space-y-3">
+					@for (module of course.modules; track module) {
+						<li class="flex items-start gap-3 text-sm leading-6 text-[var(--c-text-muted)]">
+							<span
+								class="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--c-primary)]"
+							></span>
+							<span>{{ module }}</span>
+						</li>
+					}
+				</ul>
+			</div>
+
+			<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6">
+				<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">Після курсу</h2>
+				<ul class="mt-4 space-y-3">
+					@for (result of course.results; track result) {
+						<li class="flex items-start gap-3 text-sm leading-6 text-[var(--c-text-muted)]">
+							<span class="material-symbols-outlined text-[var(--c-primary)]" aria-hidden="true">
+								check_circle
+							</span>
+							<span>{{ result }}</span>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+
+		<aside class="h-fit rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] p-6">
+			<h2 class="text-xl font-bold text-[var(--c-text-secondary)]">Деталі</h2>
+			<div class="mt-5 space-y-4 text-sm text-[var(--c-text-primary)]">
+				<div class="rounded-2xl bg-[var(--c-bg-secondary)] px-4 py-3">
+					<div class="text-xs uppercase tracking-wide text-[var(--c-text-muted)]">Рівень</div>
+					<div class="mt-1 font-semibold">{{ course.level }}</div>
+				</div>
+				<div class="rounded-2xl bg-[var(--c-bg-secondary)] px-4 py-3">
+					<div class="text-xs uppercase tracking-wide text-[var(--c-text-muted)]">Тривалість</div>
+					<div class="mt-1 font-semibold">{{ course.duration }}</div>
+				</div>
+				<div class="rounded-2xl bg-[var(--c-bg-secondary)] px-4 py-3">
+					<div class="text-xs uppercase tracking-wide text-[var(--c-text-muted)]">Формат</div>
+					<div class="mt-1 font-semibold">{{ course.format }}</div>
+				</div>
+			</div>
+
+			<a
+				routerLink="/courses"
+				class="mt-6 inline-flex rounded-full border border-[var(--c-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--c-primary)] transition-colors hover:bg-[var(--c-primary)] hover:text-white"
+			>
+				До всіх курсів
+			</a>
+		</aside>
+	</section>
+} @else {
+	<section class="mx-auto flex min-h-[60vh] max-w-4xl flex-col items-center justify-center gap-5 px-4 py-12 text-center sm:px-6 lg:px-8">
+		<h1 class="text-3xl font-black text-[var(--c-text-secondary)]">Курс не знайдено</h1>
+		<p class="max-w-xl text-sm leading-7 text-[var(--c-text-muted)]">
+			Сторінка курсу недоступна або маршрут містить некоректний ідентифікатор.
+		</p>
+		<a
+			routerLink="/courses"
+			class="inline-flex rounded-full border border-[var(--c-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--c-primary)] transition-colors hover:bg-[var(--c-primary)] hover:text-white"
+		>
+			Повернутися до курсів
+		</a>
+	</section>
+}
