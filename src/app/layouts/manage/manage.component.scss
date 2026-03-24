@@ -9,6 +9,9 @@
 	top: 73px;
 	align-self: start;
 	height: calc(100vh - 73px);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 	padding: 1.5rem 1rem;
 	border-right: 1px solid var(--c-border);
 	background:
@@ -27,6 +30,9 @@
 .manage-sidebar__nav {
 	display: grid;
 	gap: 0.45rem;
+	min-height: 0;
+	overflow-y: auto;
+	padding-right: 0.25rem;
 }
 
 .manage-sidebar__link {

@@ -1,33 +1,16 @@
 <section class="projects-manage">
-	<header class="projects-manage__hero">
-		<div class="projects-manage__hero-glow"></div>
-		<p class="projects-manage__eyebrow">Control panel</p>
-		<h1 class="projects-manage__title">Projects</h1>
-		<p class="projects-manage__subtitle">
-			Керуйте публікаціями проєктів: створюйте, переглядайте, редагуйте та видаляйте карточки без
-			змін у коді сторінки.
-		</p>
-	</header>
-
-	<div class="projects-manage__tabs" role="tablist" aria-label="Projects tabs">
-		<button
-			type="button"
-			class="projects-manage__tab"
-			[class.projects-manage__tab--active]="activeTab() === 'create'"
-			[disabled]="activeTab() === 'create'"
-			(click)="switchTab('create')"
-		>
-			Додавання
-		</button>
-		<button
-			type="button"
-			class="projects-manage__tab"
-			[class.projects-manage__tab--active]="activeTab() === 'publications'"
-			[disabled]="activeTab() === 'publications'"
-			(click)="switchTab('publications')"
-		>
-			Публікації
-		</button>
+	<div class="projects-manage__topbar">
+		<div class="projects-manage__heading">
+			<h1 class="projects-manage__title">Projects</h1>
+			<p class="projects-manage__subtitle">
+				Керуйте публікаціями проєктів: створюйте, переглядайте, редагуйте та видаляйте записи.
+			</p>
+		</div>
+		<div class="projects-manage__actions">
+			<button pButton type="button" class="projects-manage__add-btn" (click)="openCreateDialog()">
+				Додати проєкт
+			</button>
+		</div>
 	</div>
 
 	@if (toastMessage()) {
@@ -38,169 +21,21 @@
 		<p class="project-form__error projects-manage__api-error">{{ apiError() }}</p>
 	}
 
-	@if (activeTab() === 'create') {
-		<form class="project-form" [formGroup]="createForm" (ngSubmit)="publishProject()">
-			<div class="project-form__grid">
-				<div class="project-form__field project-form__field--wide">
-					<label class="project-form__label" for="project-photo">Фото проєкту</label>
-					<label class="project-form__file" for="project-photo">
-						<input
-							id="project-photo"
-							type="file"
-							accept="image/*"
-							(change)="onCreateImageChange($event)"
-						/>
-						<span class="project-form__file-btn">Обрати фото</span>
-						<span class="project-form__file-name">{{ createImageName() }}</span>
-					</label>
-					@if (createSubmitted() && createForm.controls.photo.invalid) {
-						<p class="project-form__error">Фото проєкту обов'язкове.</p>
-					}
-				</div>
-
-				<div class="project-form__field project-form__field--wide">
-					<label class="project-form__label" for="project-title">Назва проєкту</label>
-					<input id="project-title" type="text" formControlName="title" />
-					@if (createSubmitted() && createForm.controls.title.invalid) {
-						<p class="project-form__error">Вкажіть назву проєкту (мінімум 2 символи).</p>
-					}
-				</div>
-
-				<div class="project-form__field project-form__field--wide">
-					<label class="project-form__label" for="project-description">Опис проєкту</label>
-					<textarea
-						id="project-description"
-						rows="4"
-						formControlName="description"
-					></textarea>
-					@if (createSubmitted() && createForm.controls.description.invalid) {
-						<p class="project-form__error">Опис обов'язковий (мінімум 20 символів).</p>
-					}
-				</div>
-
-				<div class="project-form__field project-form__field--wide">
-					<label class="project-form__label">Теги проєкту</label>
-					<div class="multi-select">
-						<button
-							type="button"
-							class="multi-select__toggle multi-select__toggle--wrap"
-							(click)="toggleTagsDropdown()"
-						>
-							<span class="multi-select__value">{{ createForm.controls.tags.value.length ? createForm.controls.tags.value.join(', ') : 'Оберіть теги проєкту' }}</span>
-							<span class="material-symbols-outlined" aria-hidden="true">
-								{{ tagsOpen() ? 'expand_less' : 'expand_more' }}
-							</span>
-						</button>
-						@if (tagsOpen()) {
-							<div class="multi-select__panel">
-								@for (tag of tagOptions; track tag) {
-									<button
-										type="button"
-										class="multi-select__option"
-										(click)="toggleCreateTag(tag)"
-									>
-										<span
-											class="multi-select__square"
-											[class.multi-select__square--checked]="isTagSelected(tag)"
-										></span>
-										{{ tag }}
-									</button>
-								}
-							</div>
-						}
-					</div>
-					@if (createSubmitted() && createForm.controls.tags.invalid) {
-						<p class="project-form__error">Оберіть принаймні один тег.</p>
-					}
-				</div>
-
-
-				<div class="project-form__field">
-					<label class="project-form__label" for="project-github">Посилання на GitHub проєкту</label>
-					<input id="project-github" type="url" formControlName="githubLink" />
-					@if (createSubmitted() && createForm.controls.githubLink.invalid) {
-						<p class="project-form__error">Вкажіть валідну URL-адресу GitHub.</p>
-					}
-				</div>
-
-				<div class="project-form__field">
-					<label class="project-form__label" for="project-website">Посилання на сайт проєкту</label>
-					<input id="project-website" type="url" formControlName="websiteLink" />
-					@if (createSubmitted() && createForm.controls.websiteLink.invalid) {
-						<p class="project-form__error">Вкажіть валідну URL-адресу сайту.</p>
-					}
-				</div>
-
-				<div class="project-form__field project-form__field--wide">
-					<label class="project-form__label">Команда проєкту</label>
-					<div class="multi-select">
-						<button
-							type="button"
-							class="multi-select__toggle multi-select__toggle--wrap"
-							(click)="toggleMembersDropdown()"
-						>
-							<span class="multi-select__value">{{ getSelectedMembersText(createForm.controls.team.value) }}</span>
-							<span class="material-symbols-outlined" aria-hidden="true">
-								{{ membersOpen() ? 'expand_less' : 'expand_more' }}
-							</span>
-						</button>
-						@if (membersOpen()) {
-							<div class="multi-select__panel multi-select__panel--members">
-								@for (member of teamMembers; track member.id) {
-									<button
-										type="button"
-										class="multi-select__option multi-select__option--member"
-										(click)="toggleCreateMember(member.id)"
-									>
-										<span
-											class="multi-select__square"
-											[class.multi-select__square--checked]="isMemberSelected(member.id)"
-										></span>
-										<img
-											[src]="'developer/' + member.avatar + '.png'"
-											[alt]="member.name"
-											class="multi-select__avatar"
-										/>
-										<span>{{ member.name }}</span>
-									</button>
-								}
-							</div>
-						}
-					</div>
-					@if (createSubmitted() && createForm.controls.team.invalid) {
-						<p class="project-form__error">Оберіть хоча б одного учасника команди.</p>
-					}
-				</div>
-			</div>
-
-			<div class="project-form__actions">
-				<button type="button" class="btn btn--ghost" (click)="clearCreateForm()">Очистити</button>
-				<button type="button" class="btn btn--secondary" (click)="openDraftPreview()">
-					Попередній перегляд
-				</button>
-				<button type="submit" class="btn btn--primary">Опублікувати</button>
-			</div>
-		</form>
-	}
-
-	@if (activeTab() === 'publications') {
-		<section class="publications">
-			<div class="publications__table-wrap">
-				<table class="publications__table">
-					<thead>
-						<tr>
-							<th>Фото</th>
-							<th>Назва</th>
-							<th>Опис</th>
-							<th>Теги</th>
-							<th>Посилання</th>
-							<th>Команда</th>
-							<th>Дії</th>
-						</tr>
-					</thead>
-					<tbody>
-						@for (project of projects(); track trackByProjectId($index, project)) {
-							<tr>
+	<section class="publications">
+		<p-table [value]="projects()" [dataKey]="'_id'" styleClass="publications__p-table">
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Фото</th>
+					<th>Назва</th>
+					<th>Опис</th>
+					<th>Теги</th>
+					<th>Посилання</th>
+					<th>Команда</th>
+					<th>Дії</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-project>
+				<tr>
 								<td>
 									<div class="publications__photo-cell">
 										<button type="button" class="publications__photo-button" (click)="openPhotoPreview(project)">
@@ -270,13 +105,130 @@
 										</button>
 									</div>
 								</td>
-							</tr>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="7" class="publications__empty">Поки що немає опублікованих проєктів.</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</section>
+
+	<p-dialog
+		[visible]="isCreateDialogOpen()"
+		(visibleChange)="onCreateDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(720px, 96vw)' }"
+		styleClass="project-dialog"
+	>
+		<ng-template pTemplate="header">
+			<h2 class="project-dialog__title">Додати проєкт</h2>
+		</ng-template>
+
+		<form class="project-form project-form--dialog" [formGroup]="createForm" (ngSubmit)="publishProject()">
+			<div class="project-form__grid">
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label" for="project-photo">Фото проєкту</label>
+					<label class="project-form__file" for="project-photo">
+						<input id="project-photo" type="file" accept="image/*" (change)="onCreateImageChange($event)" />
+						<span class="project-form__file-btn">Обрати фото</span>
+						<span class="project-form__file-name">{{ createImageName() }}</span>
+					</label>
+					@if (createSubmitted() && createForm.controls.photo.invalid) {
+						<p class="project-form__error">Фото проєкту обов'язкове.</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label" for="project-title">Назва проєкту</label>
+					<input id="project-title" pInputText type="text" formControlName="title" />
+					@if (createSubmitted() && createForm.controls.title.invalid) {
+						<p class="project-form__error">Вкажіть назву проєкту (мінімум 2 символи).</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label" for="project-description">Опис проєкту</label>
+					<textarea id="project-description" rows="4" formControlName="description"></textarea>
+					@if (createSubmitted() && createForm.controls.description.invalid) {
+						<p class="project-form__error">Опис обов'язковий (мінімум 20 символів).</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label">Теги проєкту</label>
+					<div class="multi-select">
+						<button type="button" class="multi-select__toggle multi-select__toggle--wrap" (click)="toggleTagsDropdown()">
+							<span class="multi-select__value">{{ createForm.controls.tags.value.length ? createForm.controls.tags.value.join(', ') : 'Оберіть теги проєкту' }}</span>
+							<span class="material-symbols-outlined" aria-hidden="true">{{ tagsOpen() ? 'expand_less' : 'expand_more' }}</span>
+						</button>
+						@if (tagsOpen()) {
+							<div class="multi-select__panel">
+								@for (tag of tagOptions; track tag) {
+									<button type="button" class="multi-select__option" (click)="toggleCreateTag(tag)">
+										<span class="multi-select__square" [class.multi-select__square--checked]="isTagSelected(tag)"></span>
+										{{ tag }}
+									</button>
+								}
+							</div>
 						}
-					</tbody>
-				</table>
+					</div>
+					@if (createSubmitted() && createForm.controls.tags.invalid) {
+						<p class="project-form__error">Оберіть принаймні один тег.</p>
+					}
+				</div>
+
+				<div class="project-form__field">
+					<label class="project-form__label" for="project-github">Посилання на GitHub проєкту</label>
+					<input id="project-github" pInputText type="url" formControlName="githubLink" />
+					@if (createSubmitted() && createForm.controls.githubLink.invalid) {
+						<p class="project-form__error">Вкажіть валідну URL-адресу GitHub.</p>
+					}
+				</div>
+
+				<div class="project-form__field">
+					<label class="project-form__label" for="project-website">Посилання на сайт проєкту</label>
+					<input id="project-website" pInputText type="url" formControlName="websiteLink" />
+					@if (createSubmitted() && createForm.controls.websiteLink.invalid) {
+						<p class="project-form__error">Вкажіть валідну URL-адресу сайту.</p>
+					}
+				</div>
+
+				<div class="project-form__field project-form__field--wide">
+					<label class="project-form__label">Команда проєкту</label>
+					<div class="multi-select">
+						<button type="button" class="multi-select__toggle multi-select__toggle--wrap" (click)="toggleMembersDropdown()">
+							<span class="multi-select__value">{{ getSelectedMembersText(createForm.controls.team.value) }}</span>
+							<span class="material-symbols-outlined" aria-hidden="true">{{ membersOpen() ? 'expand_less' : 'expand_more' }}</span>
+						</button>
+						@if (membersOpen()) {
+							<div class="multi-select__panel multi-select__panel--members">
+								@for (member of teamMembers; track member.id) {
+									<button type="button" class="multi-select__option multi-select__option--member" (click)="toggleCreateMember(member.id)">
+										<span class="multi-select__square" [class.multi-select__square--checked]="isMemberSelected(member.id)"></span>
+										<img [src]="'developer/' + member.avatar + '.png'" [alt]="member.name" class="multi-select__avatar" />
+										<span>{{ member.name }}</span>
+									</button>
+								}
+							</div>
+						}
+					</div>
+					@if (createSubmitted() && createForm.controls.team.invalid) {
+						<p class="project-form__error">Оберіть хоча б одного учасника команди.</p>
+					}
+				</div>
 			</div>
-		</section>
-	}
+
+			<div class="project-form__actions">
+				<button pButton type="button" class="btn btn--ghost" (click)="clearCreateForm()">Очистити</button>
+				<button pButton type="button" class="btn btn--secondary" (click)="openDraftPreview()">Попередній перегляд</button>
+				<button pButton type="submit" class="btn btn--primary">Опублікувати</button>
+			</div>
+		</form>
+	</p-dialog>
 
 	@if (isPreviewOpen() && previewProject(); as project) {
 		<div class="overlay" (click)="closePreview()">
@@ -350,12 +302,21 @@
 		</div>
 	}
 
-	@if (isEditOpen()) {
-		<div class="overlay" (click)="closeEdit()">
-			<div class="overlay__dialog" (click)="$event.stopPropagation()">
-				<h2>Редагування публікації</h2>
-				<form [formGroup]="editForm" class="edit-form" (ngSubmit)="saveEdit()">
-					<div class="edit-form__grid">
+	<p-dialog
+		[visible]="isEditOpen()"
+		(visibleChange)="onEditDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(720px, 96vw)' }"
+		styleClass="project-dialog"
+	>
+		<ng-template pTemplate="header">
+			<h2 class="project-dialog__title">Редагування публікації</h2>
+		</ng-template>
+
+		<form [formGroup]="editForm" class="project-form project-form--dialog" (ngSubmit)="saveEdit()">
+			<div class="project-form__grid">
 						<div class="project-form__field project-form__field--wide">
 							<label class="project-form__label" for="edit-photo">Фото проєкту</label>
 							<label class="project-form__file" for="edit-photo">
@@ -370,7 +331,7 @@
 
 						<div class="project-form__field project-form__field--wide">
 							<label class="project-form__label" for="edit-title">Назва проєкту</label>
-							<input id="edit-title" type="text" formControlName="title" />
+							<input id="edit-title" pInputText type="text" formControlName="title" />
 							@if (editSubmitted() && editForm.controls.title.invalid) {
 								<p class="project-form__error">Вкажіть назву проєкту.</p>
 							}
@@ -422,7 +383,7 @@
 
 						<div class="project-form__field">
 							<label class="project-form__label" for="edit-github">Посилання на GitHub проєкту</label>
-							<input id="edit-github" type="url" formControlName="githubLink" />
+							<input id="edit-github" pInputText type="url" formControlName="githubLink" />
 							@if (editSubmitted() && editForm.controls.githubLink.invalid) {
 								<p class="project-form__error">Вкажіть валідну URL-адресу GitHub.</p>
 							}
@@ -430,7 +391,7 @@
 
 						<div class="project-form__field">
 							<label class="project-form__label" for="edit-website">Посилання на сайт проєкту</label>
-							<input id="edit-website" type="url" formControlName="websiteLink" />
+							<input id="edit-website" pInputText type="url" formControlName="websiteLink" />
 							@if (editSubmitted() && editForm.controls.websiteLink.invalid) {
 								<p class="project-form__error">Вкажіть валідну URL-адресу сайту.</p>
 							}
@@ -472,16 +433,14 @@
 								<p class="project-form__error">Оберіть хоча б одного учасника команди.</p>
 							}
 						</div>
-					</div>
-
-					<div class="overlay__actions">
-						<button type="button" class="btn btn--ghost" (click)="closeEdit()">Скасувати</button>
-						<button type="submit" class="btn btn--primary">Зберегти</button>
-					</div>
-				</form>
 			</div>
-		</div>
-	}
+
+			<div class="project-form__actions">
+				<button type="button" class="btn btn--ghost" (click)="closeEdit()">Скасувати</button>
+				<button type="submit" class="btn btn--primary">Зберегти</button>
+			</div>
+		</form>
+	</p-dialog>
 
 	@if (deleteCandidate(); as project) {
 		<div class="overlay" (click)="cancelDelete()">
