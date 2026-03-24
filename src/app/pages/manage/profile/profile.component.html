@@ -1,27 +1,89 @@
-<section class="profile-page">
-	<div class="profile-card">
-		<p class="profile-card__eyebrow">User</p>
-		<h1 class="profile-card__title">{{ displayName() }}</h1>
-		<dl class="profile-card__meta">
-			<div>
-				<dt>Email</dt>
-				<dd>{{ user().email || 'Not provided' }}</dd>
-			</div>
-			<div>
-				<dt>Phone</dt>
-				<dd>{{ user().phone || 'Not provided' }}</dd>
-			</div>
-			<div>
-				<dt>Roles</dt>
-				<dd>{{ user().roles.length ? user().roles.join(', ') : 'No roles' }}</dd>
-			</div>
-		</dl>
-
-		<div class="profile-card__actions">
-			<a routerLink="/" class="profile-card__link">Home</a>
-			<button type="button" class="profile-card__button" (click)="userService.logout()">
-				Log out
-			</button>
+<section class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+	<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-sm sm:p-8">
+		<div class="mb-8">
+			<p class="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--c-primary)]">Керування профілем</p>
+			<h1 class="mt-2 text-2xl font-semibold text-[var(--c-text-secondary)] sm:text-3xl">Особиста інформація</h1>
+			<p class="mt-2 text-sm text-[var(--c-text-muted)]">Оновіть дані профілю, які відображаються у вашому акаунті.</p>
 		</div>
+
+		<form class="space-y-6" (submit)="onSubmit($event)" novalidate>
+			<div class="grid gap-6 sm:grid-cols-2">
+				<div class="sm:col-span-1">
+					<label for="profile-name" class="mb-2 block text-sm font-semibold text-[var(--c-text-secondary)]">Імʼя</label>
+					<input
+						id="profile-name"
+						pInputText
+						class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-3 py-2 text-[var(--c-text-primary)]"
+						[formField]="profileForm.name"
+						autocomplete="name"
+					/>
+					@if (profileForm.name().touched() && profileForm.name().invalid()) {
+						<p class="mt-2 text-sm text-rose-600">{{ profileForm.name().errors()[0]?.message }}</p>
+					}
+				</div>
+
+				<div class="sm:col-span-1">
+					<label for="profile-phone" class="mb-2 block text-sm font-semibold text-[var(--c-text-secondary)]">Телефон</label>
+					<input
+						id="profile-phone"
+						pInputText
+						class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-3 py-2 text-[var(--c-text-primary)]"
+						[formField]="profileForm.phone"
+						autocomplete="tel"
+					/>
+					@if (profileForm.phone().touched() && profileForm.phone().invalid()) {
+						<p class="mt-2 text-sm text-rose-600">{{ profileForm.phone().errors()[0]?.message }}</p>
+					}
+				</div>
+
+				<div class="sm:col-span-2">
+					<label for="profile-bio" class="mb-2 block text-sm font-semibold text-[var(--c-text-secondary)]">Про себе</label>
+					<textarea
+						id="profile-bio"
+						pTextarea
+						[autoResize]="true"
+						class="min-h-36 w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-3 py-2 text-[var(--c-text-primary)]"
+						[formField]="profileForm.bio"
+					></textarea>
+					@if (profileForm.bio().touched() && profileForm.bio().invalid()) {
+						<p class="mt-2 text-sm text-rose-600">{{ profileForm.bio().errors()[0]?.message }}</p>
+					}
+				</div>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-3">
+				<button
+					pButton
+					type="submit"
+					class="rounded-xl bg-[var(--c-primary)] px-5 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+					[disabled]="isFetching() || isSaving()"
+				>
+					Зберегти профіль
+				</button>
+				@if (isFetching()) {
+					<span class="text-sm text-[var(--c-text-muted)]">Завантаження профілю...</span>
+				}
+				@if (isSaving()) {
+					<span class="text-sm text-[var(--c-text-muted)]">Збереження...</span>
+				}
+			</div>
+
+			@if (submitMessage()) {
+				<div
+					class="rounded-xl border px-3 py-2 text-sm"
+					[class.border-emerald-300]="submitTone() === 'success'"
+					[class.bg-emerald-50]="submitTone() === 'success'"
+					[class.text-emerald-800]="submitTone() === 'success'"
+					[class.border-rose-300]="submitTone() === 'error'"
+					[class.bg-rose-50]="submitTone() === 'error'"
+					[class.text-rose-800]="submitTone() === 'error'"
+					[class.border-slate-300]="submitTone() === 'info'"
+					[class.bg-slate-50]="submitTone() === 'info'"
+					[class.text-slate-700]="submitTone() === 'info'"
+				>
+					{{ submitMessage() }}
+				</div>
+			}
+		</form>
 	</div>
 </section>

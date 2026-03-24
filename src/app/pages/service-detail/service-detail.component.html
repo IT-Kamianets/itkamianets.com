@@ -1,0 +1,111 @@
+@if (service(); as s) {
+	<div class="detail-page">
+
+		<!-- Hero -->
+		<section class="detail-hero" [style.background-image]="'url(' + s.image + ')'">
+			<div class="detail-hero__overlay"></div>
+			<div class="detail-hero__content">
+				<span class="section-label">{{ s.category }}</span>
+				<h1 class="detail-hero__title">{{ s.title }}</h1>
+				<p class="detail-hero__subtitle">{{ s.shortDescription }}</p>
+			</div>
+			<div class="section-divider-bar">
+				<span class="section-divider-bar__line"></span>
+			</div>
+		</section>
+
+		<div class="container">
+			<button class="back-btn" (click)="goBack()" aria-label="Назад до послуг">
+				<span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+				Назад до послуг
+			</button>
+
+			<div class="detail-layout">
+
+				<!-- Main content -->
+				<div class="detail-main">
+					<section class="detail-section">
+						<h2 class="section-title">Про послугу</h2>
+						<p class="detail-desc">{{ s.fullDescription }}</p>
+					</section>
+
+					<section class="detail-section">
+						<h2 class="section-title">Що входить</h2>
+						<ul class="features-list">
+							@for (f of s.features; track f) {
+								<li class="features-list__item">
+									<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+									{{ f }}
+								</li>
+							}
+						</ul>
+					</section>
+				</div>
+
+				<!-- Sidebar -->
+				<aside class="detail-sidebar">
+					<div class="sidebar-card">
+
+						<!-- Price block -->
+						@if (s.priceFrom === 0) {
+							<div class="sidebar-card__price sidebar-card__price--free">
+								Безкоштовно
+							</div>
+						} @else {
+							<div class="sidebar-card__price">
+								<strong>{{ s.priceFrom | number }} {{ s.currency }}</strong>
+								<span class="sidebar-card__price-label">одноразово</span>
+							</div>
+							@if (s.subscriptionFee) {
+								<div class="sidebar-card__subscription">
+									<span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
+									+ {{ s.subscriptionFee }} {{ s.currency }} / міс
+								</div>
+							}
+						}
+
+						<div class="sidebar-card__time">
+							<span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+							{{ s.timeFrom }}–{{ s.timeTo }} {{ s.timeUnit === 'weeks' ? 'тижнів' : 'днів' }}
+						</div>
+
+						<div class="provider-block">
+							<img
+								[src]="getProviderAvatar(s.provider.avatar)"
+								[alt]="s.provider.name"
+								class="provider-block__avatar"
+							/>
+							<div class="provider-block__info">
+								<span class="provider-block__name">{{ s.provider.name }}</span>
+								<span class="provider-block__role">{{ s.provider.role }}</span>
+								@if (s.provider.rating) {
+									<span class="provider-block__rating">
+										<span class="material-symbols-outlined" aria-hidden="true">star</span>
+										{{ s.provider.rating }}
+									</span>
+								}
+							</div>
+						</div>
+
+						<a
+							class="cta-btn"
+							href="mailto:info@itkamianets.com?subject=Замовлення: {{ s.title }}"
+							aria-label="Замовити послугу {{ s.title }}"
+						>
+							Замовити
+						</a>
+					</div>
+				</aside>
+
+			</div>
+		</div>
+	</div>
+} @else {
+	<div class="not-found">
+		<p>Послугу не знайдено.</p>
+		<button class="back-btn" (click)="goBack()">
+			<span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+			До списку послуг
+		</button>
+	</div>
+}

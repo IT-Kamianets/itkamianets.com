@@ -1,0 +1,101 @@
+<section class="manage-merch">
+	<div class="manage-merch__card">
+		<header class="manage-merch__header">
+			<div>
+				<p class="manage-merch__eyebrow">Manage</p>
+				<h1 class="manage-merch__title">Merch Management</h1>
+			</div>
+			<button class="manage-merch__button" (click)="toggleForm()">
+				<span class="material-symbols-outlined">{{ isFormVisible() ? 'close' : 'add' }}</span>
+				{{ isFormVisible() && editingId() === null ? 'Close Form' : 'Add Merch' }}
+			</button>
+		</header>
+
+		@if (isFormVisible()) {
+			<div class="manage-merch__add-form" [class.manage-merch__add-form--editing]="editingId() !== null">
+				<h2 class="manage-merch__subtitle">
+					{{ editingId() !== null ? 'Edit Item' : 'Add New Item' }}
+				</h2>
+				<div class="manage-merch__form-grid">
+					<div class="manage-merch__field">
+						<label for="name">Name</label>
+						<input id="name" type="text" [(ngModel)]="newItem.name" placeholder="Item name" />
+					</div>
+					<div class="manage-merch__field">
+						<label for="price">Price (₴)</label>
+						<input id="price" type="number" [(ngModel)]="newItem.price" placeholder="0" />
+					</div>
+					<div class="manage-merch__field">
+						<label for="image">Photo</label>
+						<div class="manage-merch__file-input">
+							<input id="image" type="file" (change)="onFileSelected($event)" accept="image/*" />
+							@if (newItem.image) {
+								<div class="manage-merch__form-preview">
+									<img [src]="newItem.image" alt="Preview" />
+								</div>
+							}
+						</div>
+					</div>
+					<div class="manage-merch__field manage-merch__field--full">
+						<label for="description">Description</label>
+						<textarea
+							id="description"
+							[(ngModel)]="newItem.description"
+							placeholder="Brief description"
+						></textarea>
+					</div>
+					<div class="manage-merch__form-actions">
+						<button class="manage-merch__button" (click)="saveItem()" [disabled]="!newItem.name || newItem.price <= 0">
+							{{ editingId() !== null ? 'Save Changes' : 'Create Merch' }}
+						</button>
+						<button class="manage-merch__button manage-merch__button--outline" (click)="cancelEdit()">
+							Cancel
+						</button>
+					</div>
+				</div>
+			</div>
+		}
+
+		<div class="manage-merch__table-container">
+			<table class="manage-merch__table">
+				<thead>
+					<tr>
+						<th>Image</th>
+						<th>Name</th>
+						<th>Price</th>
+						<th>Description</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (item of products(); track item.id) {
+						<tr [class.manage-merch__row--active]="editingId() === item.id">
+							<td>
+								<div class="manage-merch__img-preview">
+									<img [src]="item.image" [alt]="item.name" />
+								</div>
+							</td>
+							<td>{{ item.name }}</td>
+							<td>{{ item.price }} ₴</td>
+							<td>{{ item.description }}</td>
+							<td>
+								<div class="manage-merch__actions">
+									<button class="manage-merch__edit-btn" (click)="startEdit(item)" title="Edit">
+										<span class="material-symbols-outlined">edit</span>
+									</button>
+									<button class="manage-merch__delete-btn" (click)="removeItem(item.id)" title="Delete">
+										<span class="material-symbols-outlined">delete</span>
+									</button>
+								</div>
+							</td>
+						</tr>
+					} @empty {
+						<tr>
+							<td colspan="5" class="manage-merch__empty">No items found.</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,252 @@
+<section class="shcools-page">
+	<div class="shcools-page__content">
+		<div class="shcools-toolbar">
+			<button type="button" class="shcools-toolbar__button" (click)="openCreateModal()">
+				Додати заклад
+			</button>
+		</div>
+
+			<div class="shcools-table-wrap">
+				<table class="shcools-table">
+					<thead>
+						<tr>
+							<th>Назва</th>
+							<th>Тип</th>
+							<th>Адреса</th>
+							<th>Керівник</th>
+							<th>Контакти</th>
+							<th>Учні</th>
+							<th>Редагувати</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for (institution of institutions(); track institution.id) {
+							<tr>
+								<td>
+									<div class="shcools-table__name">
+										<strong>{{ institution.shortName }}</strong>
+										<span>{{ institution.name }}</span>
+									</div>
+								</td>
+								<td>{{ typeLabel(institution.type) }}</td>
+								<td>
+									<div class="shcools-table__meta">
+										<span>{{ institution.address }}</span>
+										<small>
+											{{ institution.district }} · {{ ownershipLabel(institution.ownership) }}
+										</small>
+									</div>
+								</td>
+								<td>{{ institution.principal || '—' }}</td>
+								<td>
+									<div class="shcools-table__meta">
+										<span>{{ institution.phone || '—' }}</span>
+										<small>{{ institution.email || '—' }}</small>
+									</div>
+								</td>
+								<td>{{ institution.studentsCount | number }}</td>
+								<td>
+									<button
+										type="button"
+										class="shcools-table__edit"
+										(click)="openEditModal(institution)"
+									>
+										Редагувати
+									</button>
+								</td>
+							</tr>
+						} @empty {
+							<tr>
+								<td colspan="7" class="shcools-table__empty">
+									Список навчальних закладів порожній.
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+
+		@if (isModalOpen()) {
+			<div class="shcools-modal-backdrop" (click)="closeModal()">
+				<div class="shcools-modal" (click)="$event.stopPropagation()">
+					<div class="shcools-modal__header">
+						<h2>{{ modalTitle() }}</h2>
+						<button type="button" class="shcools-modal__close" (click)="closeModal()">
+							Закрити
+						</button>
+					</div>
+
+					<div class="shcools-modal__grid">
+						<label class="shcools-modal__field shcools-modal__field--wide">
+							<span>Повна назва</span>
+							<input
+								type="text"
+								[value]="draft().name"
+								(input)="updateDraft('name', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Коротка назва</span>
+							<input
+								type="text"
+								[value]="draft().shortName"
+								(input)="updateDraft('shortName', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Тип</span>
+							<select
+								[value]="draft().type"
+								(change)="updateDraft('type', ($any($event.target).value ?? '').toString())"
+							>
+								@for (option of typeOptions; track option.value) {
+									<option [value]="option.value">{{ option.label }}</option>
+								}
+							</select>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Форма власності</span>
+							<select
+								[value]="draft().ownership"
+								(change)="updateDraft('ownership', ($any($event.target).value ?? '').toString())"
+							>
+								@for (option of ownershipOptions; track option.value) {
+									<option [value]="option.value">{{ option.label }}</option>
+								}
+							</select>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Статус</span>
+							<select
+								[value]="draft().status"
+								(change)="updateDraft('status', ($any($event.target).value ?? '').toString())"
+							>
+								@for (option of statusOptions; track option.value) {
+									<option [value]="option.value">{{ option.label }}</option>
+								}
+							</select>
+						</label>
+
+						<label class="shcools-modal__field shcools-modal__field--wide">
+							<span>Адреса</span>
+							<input
+								type="text"
+								[value]="draft().address"
+								(input)="updateDraft('address', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Район</span>
+							<input
+								type="text"
+								[value]="draft().district"
+								(input)="updateDraft('district', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Керівник</span>
+							<input
+								type="text"
+								[value]="draft().principal"
+								(input)="updateDraft('principal', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Телефон</span>
+							<input
+								type="text"
+								[value]="draft().phone"
+								(input)="updateDraft('phone', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Email</span>
+							<input
+								type="email"
+								[value]="draft().email"
+								(input)="updateDraft('email', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Кількість учнів</span>
+							<input
+								type="number"
+								min="0"
+								[value]="draft().studentsCount"
+								(input)="updateDraft('studentsCount', +(($any($event.target).value ?? 0).toString()))"
+							/>
+						</label>
+
+						<label class="shcools-modal__field">
+							<span>Рік заснування</span>
+							<input
+								type="number"
+								min="1800"
+								[value]="draft().foundedYear"
+								(input)="updateDraft('foundedYear', +(($any($event.target).value ?? 0).toString()))"
+							/>
+						</label>
+
+						<label class="shcools-modal__field shcools-modal__field--wide">
+							<span>Сайт</span>
+							<input
+								type="url"
+								[value]="draft().website"
+								(input)="updateDraft('website', ($any($event.target).value ?? '').toString())"
+							/>
+						</label>
+
+						<label class="shcools-modal__field shcools-modal__field--wide">
+							<span>Нотатки</span>
+							<textarea
+								rows="4"
+								(input)="updateDraft('notes', ($any($event.target).value ?? '').toString())"
+							>{{ draft().notes }}</textarea>
+						</label>
+
+						<div class="shcools-modal__toggles shcools-modal__field--wide">
+							<label class="shcools-modal__toggle">
+								<input
+									type="checkbox"
+									[checked]="draft().published"
+									(change)="updateDraft('published', $any($event.target).checked === true)"
+								/>
+								<span>Опубліковано</span>
+							</label>
+							<label class="shcools-modal__toggle">
+								<input
+									type="checkbox"
+									[checked]="draft().featured"
+									(change)="updateDraft('featured', $any($event.target).checked === true)"
+								/>
+								<span>Рекомендований</span>
+							</label>
+						</div>
+
+						<div class="shcools-modal__actions shcools-modal__field--wide">
+							<button type="button" class="shcools-modal__button" (click)="saveInstitution()">
+								Зберегти
+							</button>
+							<button
+								type="button"
+								class="shcools-modal__button shcools-modal__button--ghost"
+								(click)="closeModal()"
+							>
+								Скасувати
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</section>

@@ -1,6 +1,6 @@
 # Contributing
 
-This project is an Angular 21 landing page template built around SSR prerendering, TailwindCSS v4, shared theme variables, and a minimal project structure.
+This project is an Angular 21 landing page template built around SSR prerendering, TailwindCSS v4, PrimeNG 21, shared theme variables, and a minimal project structure.
 
 Keep contributions aligned with the current template conventions described in [README.md](/c:/Users/crack/work/itkp.ngx-default/README.md).
 
@@ -18,6 +18,9 @@ Keep contributions aligned with the current template conventions described in [R
 ## Styling
 
 - Use **TailwindCSS first** for normal UI work
+- PrimeNG is available; prefer PrimeNG components when they provide a better baseline for forms and interactive UI
+- Keep PrimeNG usage aligned with global config in `src/app/app.config.ts` (`providePrimeNG` with `@primeuix/themes/aura`)
+- Keep component-level overrides scoped; avoid broad global overrides of PrimeNG classes
 - Use shared theme variables from `src/styles/_theme.scss` for colors, surfaces, spacing, radius, motion, and typography
 - Use component `.scss` files for local styling only when Tailwind is not the right tool
 - Avoid hard-coded hex colors and random pixel values when a theme token already exists
@@ -35,6 +38,7 @@ Keep contributions aligned with the current template conventions described in [R
 - App-level pages belong in `src/app/pages`
 - Layout components belong in `src/app/layouts`
 - Feature-specific business logic can live in `src/app/feature/<name>`
+- Feature-owned startup or preload logic should live in `src/app/feature/<name>` and be registered from app config instead of being implemented in `main.ts`
 - Generic shared code can live in `src/app/components`, `directives`, `pipes`, `services`, and `interfaces`
 - Public front-end runtime config belongs in `src/environments`
 - Do not place secrets in Angular environment files
@@ -54,6 +58,9 @@ Keep contributions aligned with the current template conventions described in [R
 - If the same signal read, computed value, or method call is used multiple times in a template, assign it with `@let`
 - Prefer short, clear comments only where intent is not obvious
 - Keep naming consistent with the existing codebase
+- Prefix private class members with `_`, including fields and methods
+- Omit explicit function and method return types; prefer inferred return types unless a specific edge case needs an annotation
+- Order class members consistently: injected fields, public state, private state, constructor, public methods, private methods
 - Respect `.editorconfig` and `.prettierrc`
 
 ## Before opening a PR
