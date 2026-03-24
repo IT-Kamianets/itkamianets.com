@@ -1,0 +1,80 @@
+<section class="manage-jobs-page min-h-screen bg-white dark:bg-slate-900 py-12 px-4">
+	<div class="max-w-4xl mx-auto">
+		<header class="flex flex-wrap justify-between items-center gap-4 mb-10">
+			<div class="flex items-center gap-4">
+				<a routerLink="/manage/profile" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" title="Назад до профілю">
+					⬅️
+				</a>
+				<h1 class="text-3xl font-bold text-slate-900 dark:text-white">Керування шаблонами сертифікатів</h1>
+			</div>
+			<button (click)="create()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition-all">
+				+ Створити шаблон
+			</button>
+		</header>
+
+		@if (editingOption()) {
+			<div class="job-form bg-slate-50 dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 mb-10 shadow-lg">
+				<h2 class="text-xl font-bold mb-6 dark:text-white">
+					{{ editingOption()?._id ? 'Редагувати шаблон' : 'Новий шаблон' }}
+				</h2>
+
+				<div class="grid gap-6">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Назва шаблону (Title)</label>
+							<input type="text" [(ngModel)]="editingOption()!.data['title']" (ngModelChange)="editingDataStr.set(stringify(editingOption()!.data))" placeholder="Наприклад: Випускник курсу..." class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+						</div>
+
+						<div>
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Дизайн (Стиль)</label>
+							<select [(ngModel)]="editingOption()!.data['templateStyle']" (ngModelChange)="editingDataStr.set(stringify(editingOption()!.data))" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+								<option value="classic">Класичний (Classic)</option>
+								<option value="modern">Сучасний (Modern)</option>
+								<option value="minimalist">Мінімалістичний (Minimalist)</option>
+							</select>
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">JSON Дані (гнучкі)</label>
+						<textarea [(ngModel)]="editingDataStr" rows="10" placeholder='{"title": "My Title", "description": "...", "backgroundUrl": "..."}' class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all font-mono text-sm"></textarea>
+						<p class="text-xs text-slate-500 mt-2">Ви можете додавати будь-які поля у JSON форматі. Це збережеться у поле 'data'.</p>
+					</div>
+
+					<div class="flex justify-end gap-4 mt-6 border-t dark:border-slate-700 pt-6">
+						<button (click)="cancel()" class="px-8 py-3 rounded-xl font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
+							Скасувати
+						</button>
+						<button (click)="save()" class="px-10 py-3 rounded-xl font-bold bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all">
+							Зберегти
+						</button>
+					</div>
+				</div>
+			</div>
+		}
+
+		<div class="jobs-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			@for (opt of options(); track opt._id) {
+				<div class="job-item flex flex-col bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-white dark:border-slate-700 shadow-sm overflow-hidden group">
+					<div class="p-5 flex flex-col flex-1">
+						<h3 class="font-bold text-lg text-slate-900 dark:text-white mb-1 truncate">{{ opt.data['title'] || 'Без назви' }}</h3>
+						<p class="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-3 break-all">{{ stringify(opt.data) }}</p>
+						
+						<div class="mt-auto flex justify-between gap-2 border-t dark:border-slate-700 pt-4">
+							<button (click)="edit(opt)" class="flex-1 py-2 bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 font-bold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+								Редагувати
+							</button>
+							<button (click)="delete(opt)" class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
+								🗑️
+							</button>
+						</div>
+					</div>
+				</div>
+			} @empty {
+				<div class="col-span-full text-center py-20 bg-slate-100 dark:bg-slate-800/50 rounded-3xl border-4 border-dashed border-slate-200 dark:border-slate-700">
+					<p class="text-slate-500 dark:text-slate-400 font-medium">Шаблонів поки не додано</p>
+				</div>
+			}
+		</div>
+	</div>
+</section>
