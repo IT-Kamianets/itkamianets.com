@@ -53,10 +53,10 @@ export class HeaderComponent {
 			href: '/news',
 		},
 		{
-			_id: 'menu-businesses',
+			_id: 'menu-companies',
 			type: 'menu',
-			title: 'Бізнеси',
-			href: '/businesses',
+			title: 'Компанії',
+			href: '/companies',
 		},
 		{
 			_id: 'menu-merch',

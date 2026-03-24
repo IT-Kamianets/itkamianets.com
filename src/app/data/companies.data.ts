@@ -1,8 +1,8 @@
-export type { Business } from '../feature/business/business.interface';
-export { BUSINESS_TYPES } from '../feature/business/business.interface';
-import { Business } from '../feature/business/business.interface';
+export type { Company } from '../feature/company/company.interface';
+export { COMPANY_TYPES } from '../feature/company/company.interface';
+import { Company } from '../feature/company/company.interface';
 
-export const BUSINESSES: Business[] = [
+export const COMPANIES: Company[] = [
 	{
 		id: 'pixelcraft',
 		name: 'PixelCraft Studio',

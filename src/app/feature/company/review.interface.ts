@@ -1,6 +1,6 @@
 export interface Review {
 	id: number;
-	businessId: string;
+	companyId: string;
 	author: string;
 	rating: 1 | 2 | 3 | 4 | 5;
 	text: string;

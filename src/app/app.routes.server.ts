@@ -1,5 +1,4 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
-import { BUSINESSES } from './data/businesses.data';
 import { TEAM_MEMBERS } from './data/team.data';
 import { SERVICE_IDS } from './feature/service/service.service';
 
@@ -13,9 +12,8 @@ export const serverRoutes: ServerRoute[] = [
 		renderMode: RenderMode.Client,
 	},
 	{
-		path: 'businesses/:id',
-		renderMode: RenderMode.Prerender,
-		getPrerenderParams: async () => BUSINESSES.map((b) => ({ id: b.id })),
+		path: 'company/:id',
+		renderMode: RenderMode.Client,
 	},
 	{
 		path: 'profile/:id',

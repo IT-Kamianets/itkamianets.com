@@ -2,20 +2,20 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
-import { BUSINESS_TYPES, Business } from '../../feature/business/business.interface';
-import { BusinessService } from '../../feature/business/business.service';
+import { COMPANY_TYPES, Company } from '../../company.interface';
+import { CompanyService } from '../../company.service';
 
 @Component({
-	selector: 'app-businesses',
+	selector: 'app-companies',
 	imports: [RouterLink, FormsModule],
-	templateUrl: './businesses.component.html',
-	styleUrl: './businesses.component.scss',
+	templateUrl: './companies.component.html',
+	styleUrl: './companies.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BusinessesComponent {
-	private businessService = inject(BusinessService);
-	readonly businesses = this.businessService.businesses;
-	readonly types: string[] = BUSINESS_TYPES;
+export class CompaniesComponent {
+	private companyService = inject(CompanyService);
+	readonly companies = this.companyService.companies;
+	readonly types: string[] = COMPANY_TYPES;
 
 	activeType = signal<string>('All');
 	searchQuery = signal<string>('');
@@ -27,26 +27,24 @@ export class BusinessesComponent {
 		title: Title,
 		meta: Meta,
 	) {
-		title.setTitle("Бізнеси Кам'янця | IT-Kamianets");
+		title.setTitle("Компанії Кам'янця | IT-Kamianets");
 		meta.updateTag({
 			name: 'description',
 			content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства. Технології, послуги, контакти.",
 		});
-		meta.updateTag({ property: 'og:title', content: "Бізнеси Кам'янця | IT-Kamianets" });
+		meta.updateTag({ property: 'og:title', content: "Компанії Кам'янця | IT-Kamianets" });
 		meta.updateTag({ property: 'og:description', content: "Каталог IT-компаній Кам'янця-Подільського — студії, аутсорс, продуктові та агентства." });
 		meta.updateTag({ property: 'og:type', content: 'website' });
 
-		// Restore state from URL on init
 		const params = this.route.snapshot.queryParamMap;
 		const type = params.get('type');
 		const q = params.get('q');
 		const sort = params.get('sort') as 'name' | 'founded' | 'employees' | null;
 
-		if (type && [...BUSINESS_TYPES, 'All'].includes(type)) this.activeType.set(type);
+		if (type && [...COMPANY_TYPES, 'All'].includes(type)) this.activeType.set(type);
 		if (q) this.searchQuery.set(q);
 		if (sort && ['name', 'founded', 'employees'].includes(sort)) this.sortBy.set(sort);
 
-		// Sync signals → URL
 		effect(() => {
 			const type = this.activeType();
 			const q = this.searchQuery();
@@ -68,15 +66,15 @@ export class BusinessesComponent {
 		this.activeType.set(type);
 	}
 
-	private matchesQuery(business: Business, query: string): boolean {
+	private matchesQuery(company: Company, query: string): boolean {
 		if (!query) {
 			return true;
 		}
 
 		return !!(
-			business.name.toLowerCase().includes(query) ||
-			business.techStack?.some((t) => t.toLowerCase().includes(query)) ||
-			business.services?.some((s) => s.toLowerCase().includes(query))
+			company.name.toLowerCase().includes(query) ||
+			company.techStack?.some((t) => t.toLowerCase().includes(query)) ||
+			company.services?.some((s) => s.toLowerCase().includes(query))
 		);
 	}
 
@@ -88,33 +86,33 @@ export class BusinessesComponent {
 			counts[type] = 0;
 		}
 
-		for (const business of this.businesses()) {
-			if (!this.matchesQuery(business, query)) {
+		for (const company of this.companies()) {
+			if (!this.matchesQuery(company, query)) {
 				continue;
 			}
 
 			counts['All'] += 1;
-			if (Object.prototype.hasOwnProperty.call(counts, business.type)) {
-				counts[business.type] += 1;
+			if (Object.prototype.hasOwnProperty.call(counts, company.type)) {
+				counts[company.type] += 1;
 			}
 		}
 
 		return counts;
 	});
 
-	readonly filteredBusinesses = computed<Business[]>(() => {
+	readonly filteredCompanies = computed<Company[]>(() => {
 		const type = this.activeType();
 		const query = this.searchQuery().toLowerCase().trim();
 		const sort = this.sortBy();
 
-		let result = this.businesses();
+		let result = this.companies();
 
 		if (type !== 'All') {
-			result = result.filter((b) => b.type === type);
+			result = result.filter((c) => c.type === type);
 		}
 
 		if (query) {
-			result = result.filter((b) => this.matchesQuery(b, query));
+			result = result.filter((c) => this.matchesQuery(c, query));
 		}
 
 		return [...result].sort((a, b) => {
