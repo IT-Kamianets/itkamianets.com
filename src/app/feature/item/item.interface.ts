@@ -31,10 +31,6 @@ export interface ItemOptions {
 		alt?: string;
 		caption?: string;
 	};
-	news?: {
-		category?: string;
-		date?: string;
-	};
 	landing?: {
 		section?: string;
 		tags?: string[];
@@ -66,7 +62,7 @@ export interface GalleryItem extends ItemBase {
 
 export interface NewsItem extends ItemBase {
 	type: 'news';
-	excerpt: string;
+	summary: string;
 	date: string;
 	category: 'events' | 'updates' | 'articles';
 }
