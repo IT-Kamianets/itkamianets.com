@@ -1,0 +1,115 @@
+<section class="reviews-page">
+	<div class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+		<app-breadcrumb [crumbs]="breadcrumbs" />
+
+		<div
+			class="mt-6 overflow-hidden rounded-[var(--radius-card)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)]"
+		>
+			<div
+				class="flex flex-col gap-5 border-b border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-6 py-8 lg:flex-row lg:items-end lg:justify-between"
+			>
+				<div class="max-w-3xl">
+					<p class="reviews-page__eyebrow">Reviews</p>
+					<h1 class="text-3xl font-black text-[var(--c-text-secondary)] sm:text-4xl">
+						Всі опубліковані відгуки
+					</h1>
+					<p class="mt-3 text-sm leading-7 text-[var(--c-text-muted)] sm:text-base">
+						Тут зібрані відгуки користувачів про компанії з каталогу. Сторінка
+						автоматично оновлюється, коли з’являються нові публікації.
+					</p>
+				</div>
+
+				<div
+					class="grid min-w-[220px] grid-cols-2 gap-3 rounded-[var(--radius-card)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-4"
+				>
+					<div>
+						<p class="text-xs uppercase tracking-[0.24em] text-[var(--c-text-muted)]">
+							Відгуків
+						</p>
+						<p class="mt-2 text-2xl font-black text-[var(--c-text-secondary)]">
+							{{ reviews().length }}
+						</p>
+					</div>
+					<div>
+						<p class="text-xs uppercase tracking-[0.24em] text-[var(--c-text-muted)]">
+							Середній рейтинг
+						</p>
+						<p class="mt-2 text-2xl font-black text-[var(--c-text-secondary)]">
+							{{ averageRating() | number: '1.1-1' }}
+						</p>
+					</div>
+				</div>
+			</div>
+
+			@if (reviews().length) {
+				<div class="grid gap-4 px-6 py-6">
+					@for (review of reviews(); track review.id) {
+						<article
+							class="rounded-[var(--radius-card)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-5 shadow-sm"
+						>
+							<div
+								class="flex flex-col gap-4 border-b border-[var(--c-border)] pb-4 sm:flex-row sm:items-start sm:justify-between"
+							>
+								<div>
+									<p class="text-lg font-bold text-[var(--c-text-secondary)]">
+										<a
+											[routerLink]="['/reviews', review.id]"
+											class="transition-colors hover:text-[var(--c-primary)]"
+										>
+											{{ review.author }}
+										</a>
+									</p>
+									<a
+										[routerLink]="['/businesses', review.businessId]"
+										class="mt-1 inline-flex text-sm font-medium text-[var(--c-primary)] transition-colors hover:text-[var(--c-primary-hover)]"
+									>
+										{{ getBusinessName(review.businessId) }}
+									</a>
+								</div>
+
+								<div class="flex flex-col gap-2 sm:items-end">
+									<div class="flex items-center gap-1" aria-label="Рейтинг {{ review.rating }} з 5">
+										@for (star of ratingRange; track star) {
+											<span
+												class="material-symbols-outlined reviews-page__star"
+												[class.reviews-page__star--active]="star <= review.rating"
+												aria-hidden="true"
+											>
+												star
+											</span>
+										}
+									</div>
+									<p class="text-xs uppercase tracking-[0.18em] text-[var(--c-text-muted)]">
+										{{ review.date | date: 'dd.MM.yyyy' }}
+									</p>
+								</div>
+							</div>
+
+							<p class="mt-4 text-sm leading-7 text-[var(--c-text-muted)] sm:text-base">
+								{{ review.text }}
+							</p>
+							<div class="mt-4">
+								<a
+									[routerLink]="['/reviews', review.id]"
+									class="inline-flex text-sm font-semibold text-[var(--c-primary)] transition-colors hover:text-[var(--c-primary-hover)]"
+								>
+									Детальніше
+								</a>
+							</div>
+						</article>
+					}
+				</div>
+			} @else {
+				<div class="px-6 py-14 text-center">
+					<p class="text-lg font-semibold text-[var(--c-text-secondary)]">
+						Опублікованих відгуків поки немає.
+					</p>
+					<p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[var(--c-text-muted)]">
+						Після першої публікації на сторінці компанії відгук з’явиться тут у
+						загальному списку.
+					</p>
+				</div>
+			}
+		</div>
+	</div>
+</section>
