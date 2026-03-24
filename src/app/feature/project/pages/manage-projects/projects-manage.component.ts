@@ -1,6 +1,7 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	HostListener,
 	WritableSignal,
 	computed,
 	inject,
@@ -15,11 +16,13 @@ import {
 	ValidatorFn,
 	Validators,
 } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 import { TEAM_MEMBERS, TeamMember } from '../../../../data/team.data';
 import { Project, ProjectData } from '../../project.interface';
 import { ProjectService } from '../../project.service';
-
-type TabKey = 'create' | 'publications';
 
 interface ProjectFormModel {
 	photo: FormControl<string>;
@@ -46,13 +49,13 @@ const minArrayLength = (min: number): ValidatorFn => {
 	templateUrl: './projects-manage.component.html',
 	styleUrl: './projects-manage.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [CommonModule, ReactiveFormsModule],
+	imports: [CommonModule, ReactiveFormsModule, TableModule, DialogModule, InputTextModule, ButtonModule],
 })
 export class ProjectsManageComponent {
 	private readonly _projectService = inject(ProjectService);
 	private _toastTimeout: ReturnType<typeof setTimeout> | null = null;
 
-	protected readonly activeTab = signal<TabKey>('create');
+	protected readonly isCreateDialogOpen = signal(false);
 	protected readonly tagsOpen = signal(false);
 	protected readonly membersOpen = signal(false);
 	protected readonly isPreviewOpen = signal(false);
@@ -104,16 +107,40 @@ export class ProjectsManageComponent {
 		this._loadProjects();
 	}
 
-	protected switchTab(tab: TabKey): void {
-		this.activeTab.set(tab);
+	protected openCreateDialog(): void {
+		this.clearCreateForm();
+		this.apiError.set('');
+		this.isCreateDialogOpen.set(true);
+	}
+
+	protected closeCreateDialog(): void {
+		this.isCreateDialogOpen.set(false);
+		this.tagsOpen.set(false);
+		this.membersOpen.set(false);
+	}
+
+	protected onCreateDialogVisibleChange(visible: boolean): void {
+		this.isCreateDialogOpen.set(visible);
+		if (!visible) {
+			this.tagsOpen.set(false);
+			this.membersOpen.set(false);
+		}
 	}
 
 	protected toggleTagsDropdown(): void {
-		this.tagsOpen.update((current) => !current);
+		const next = !this.tagsOpen();
+		this.tagsOpen.set(next);
+		if (next) {
+			this.membersOpen.set(false);
+		}
 	}
 
 	protected toggleMembersDropdown(): void {
-		this.membersOpen.update((current) => !current);
+		const next = !this.membersOpen();
+		this.membersOpen.set(next);
+		if (next) {
+			this.tagsOpen.set(false);
+		}
 	}
 
 	protected toggleCreateTag(tag: string): void {
@@ -176,6 +203,7 @@ export class ProjectsManageComponent {
 					return;
 				}
 
+				this.closeCreateDialog();
 				this.clearCreateForm();
 				this._loadProjects();
 				this._showToast('Проєкт успішно опубліковано!');
@@ -234,6 +262,8 @@ export class ProjectsManageComponent {
 		});
 		this.editImageName.set(data.imageKind === 'asset' ? `${data.photo || ''}.png` : 'upload.png');
 		this.editSubmitted.set(false);
+		this.tagsOpen.set(false);
+		this.membersOpen.set(false);
 		this.isEditOpen.set(true);
 	}
 
@@ -241,6 +271,18 @@ export class ProjectsManageComponent {
 		this.isEditOpen.set(false);
 		this.editProjectId.set(null);
 		this.editSubmitted.set(false);
+		this.tagsOpen.set(false);
+		this.membersOpen.set(false);
+	}
+
+	protected onEditDialogVisibleChange(visible: boolean): void {
+		this.isEditOpen.set(visible);
+		if (!visible) {
+			this.editProjectId.set(null);
+			this.editSubmitted.set(false);
+			this.tagsOpen.set(false);
+			this.membersOpen.set(false);
+		}
 	}
 
 	protected saveEdit(): void {
@@ -353,6 +395,21 @@ export class ProjectsManageComponent {
 
 	protected trackByProjectId(index: number, project: Project): string {
 		return project._id || String(index);
+	}
+
+	@HostListener('document:click', ['$event'])
+	protected onDocumentClick(event: MouseEvent): void {
+		if (!this.tagsOpen() && !this.membersOpen()) {
+			return;
+		}
+
+		const target = event.target as HTMLElement | null;
+		if (target?.closest('.multi-select')) {
+			return;
+		}
+
+		this.tagsOpen.set(false);
+		this.membersOpen.set(false);
 	}
 
 	private _createForm(): FormGroup<ProjectFormModel> {
