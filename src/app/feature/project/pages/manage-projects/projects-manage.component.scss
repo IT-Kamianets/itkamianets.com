@@ -37,7 +37,7 @@
 	color: #fff;
 	font-weight: 700;
 	cursor: pointer;
-	transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+	transition: transform 0.15s ease;
 	box-shadow: 0 10px 24px rgb(56 133 255 / 35%);
 }
 
@@ -57,9 +57,60 @@
 	filter: none;
 }
 
-.projects-manage__add-btn:active {
-	transform: scale(0.95);
+.projects-manage__add-btn.p-button:enabled:hover,
+.projects-manage__add-btn.p-button:hover,
+.projects-manage__add-btn:hover {
+	background: var(--c-primary) !important;
+	border-color: var(--c-primary) !important;
+	opacity: 1 !important;
+	filter: none !important;
+	transform: none !important;
+	box-shadow: 0 10px 24px rgb(56 133 255 / 35%) !important;
+	text-decoration: none !important;
+}
+
+.projects-manage__add-btn,
+.project-form__file,
+.project-form__file-btn,
+.btn,
+.table-btn,
+.publications__photo-button {
+	cursor: pointer;
+	transition: transform 0.12s ease;
+}
+
+.projects-manage__add-btn:hover,
+.project-form__file:hover,
+.project-form__file-btn:hover,
+.btn:not(:disabled):hover,
+.table-btn:hover,
+.publications__photo-button:hover {
+	filter: none !important;
+	opacity: 1 !important;
+	background-image: none;
+	text-decoration: none;
+	box-shadow: inherit;
+	transform: none !important;
+}
+
+.projects-manage__add-btn:active,
+.project-form__file-btn:active,
+.btn:not(:disabled):active,
+.table-btn:active,
+.publications__photo-button:active {
+	transform: scale(0.95) !important;
 	transition-duration: 0.08s;
+}
+
+.projects-manage__add-btn:hover:active,
+.projects-manage__add-btn.p-button:enabled:hover:active,
+.projects-manage__add-btn.p-button:hover:active {
+	transform: scale(0.95) !important;
+	transition-duration: 0.08s;
+}
+
+.project-form__file:active {
+	transform: none !important;
 }
 
 .projects-manage__title {
@@ -183,11 +234,6 @@
 	color: #fff;
 }
 
-.project-form__file:active .project-form__file-btn {
-	transform: scale(0.95);
-	transition-duration: 0.08s;
-}
-
 .project-form__file-name {
 	color: var(--c-text-primary);
 	font-size: 0.88rem;
@@ -278,6 +324,23 @@
 	display: grid;
 	gap: 0.15rem;
 	animation: panel-in 0.2s ease;
+	scrollbar-width: thin;
+	scrollbar-color: var(--c-primary) transparent;
+}
+
+.multi-select__panel::-webkit-scrollbar {
+	width: 8px;
+}
+
+.multi-select__panel::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.multi-select__panel::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--c-primary) 86%, #4f8fff 14%);
+	border-radius: 999px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
 }
 
 .multi-select__panel--members {
@@ -402,22 +465,21 @@
 		box-shadow 0.2s ease;
 }
 
-.table-btn:hover {
-	transform: none;
-}
-
-.project-form__actions .btn:hover {
-	transform: none;
-}
-
 .project-form__actions .btn.p-button,
-.project-form__actions .btn.p-button:enabled,
-.project-form__actions .btn.p-button:enabled:hover,
-.project-form__actions .btn.p-button:hover,
 .project-form__actions .btn.p-button:enabled:focus {
 	box-shadow: none;
 	filter: none;
-	transform: none;
+}
+
+.btn.p-button:disabled,
+.btn[disabled],
+.btn.p-button:disabled:hover,
+.btn[disabled]:hover {
+	opacity: 0.55;
+	cursor: not-allowed;
+	filter: grayscale(0.15);
+	box-shadow: none;
+	transform: none !important;
 }
 
 .project-form__actions .btn--ghost.p-button,
@@ -446,11 +508,6 @@
 	border-color: var(--c-primary);
 	color: #fff;
 	box-shadow: 0 10px 24px rgb(56 133 255 / 35%);
-}
-
-.project-form__actions .btn:active {
-	transform: scale(0.95);
-	transition-duration: 0.08s;
 }
 
 .btn--ghost {
@@ -542,10 +599,6 @@
 	font-weight: 600;
 	cursor: pointer;
 	transition: transform 0.12s ease;
-}
-
-.table-btn:active {
-	transform: scale(0.95);
 }
 
 :host-context(html[data-mode='light']) .table-btn {
@@ -649,6 +702,23 @@
 	background: var(--c-bg-secondary);
 	padding: 0.4rem 1.1rem 1rem;
 	overflow: auto;
+	scrollbar-width: thin;
+	scrollbar-color: var(--c-primary) transparent;
+}
+
+:host ::ng-deep .project-dialog .p-dialog-content::-webkit-scrollbar {
+	width: 10px;
+}
+
+:host ::ng-deep .project-dialog .p-dialog-content::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+:host ::ng-deep .project-dialog .p-dialog-content::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--c-primary) 86%, #4f8fff 14%);
+	border-radius: 999px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
 }
 
 :host ::ng-deep .project-dialog .p-dialog-header-close {
@@ -719,7 +789,8 @@
 }
 
 .publications__links a:active {
-	transform: scale(0.95);
+	transform: scale(0.95) !important;
+	transition-duration: 0.08s;
 }
 
 .publications__link-icon {
@@ -752,7 +823,7 @@
 .overlay {
 	position: fixed;
 	inset: 0;
-	z-index: 60;
+	z-index: 2000;
 	background: rgb(15 23 42 / 55%);
 	display: grid;
 	place-items: center;
@@ -842,15 +913,20 @@
 	border: 1px solid var(--c-border);
 }
 
-.projects-manage__toast {
+.projects-manage__toast-stack {
 	position: fixed;
 	top: 90px;
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 9999;
+	display: grid;
+	gap: 0.5rem;
+}
+
+.projects-manage__toast {
 	margin: 0;
 	width: max-content;
-	max-width: calc(100% - 24px);
+	max-width: none;
 	padding: 0.62rem 1rem;
 	border-radius: 10px;
 	border: 1px solid var(--c-primary);
@@ -859,6 +935,7 @@
 	box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
 	font-weight: 600;
 	text-align: center;
+	white-space: nowrap;
 }
 
 .edit-form {
