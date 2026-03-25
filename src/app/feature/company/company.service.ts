@@ -71,11 +71,19 @@ export class CompanyService {
 	}
 
 	private _fromDoc(doc: any): Company {
+		const rawData = typeof doc?.data === 'object' && doc.data !== null ? doc.data : {};
+		const contacts = rawData.contacts ?? {};
+		const techStack = rawData.techStack ?? [];
+		const services = rawData.services ?? [];
+
 		return {
 			id: doc._id,
 			name: doc.name ?? '',
 			shortDescription: doc.description ?? '',
-			...(doc.data ?? {}),
+			...rawData,
+			contacts,
+			techStack,
+			services,
 		} as Company;
 	}
 }
