@@ -20,15 +20,15 @@
 							</div>
 
 							<p class="uppercase tracking-[0.3em] text-indigo-400 font-bold mb-4 text-xs">
-								Certificate of Excellence
+								Official Document
 							</p>
 
 							<h1 class="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-fuchsia-400 mb-6 leading-tight">
 								{{ certificate()!.data?.['title'] || 'Документ без назви' }}
 							</h1>
 
-							<p class="text-slate-400 mb-8 max-w-xl mx-auto">
-								Цим сертифікатом підтверджується, що
+							<p class="text-slate-400 mb-8 max-w-xl mx-auto uppercase tracking-widest text-[10px] font-bold">
+								Вручається
 							</p>
 
 							<p class="text-3xl md:text-5xl font-bold text-white mb-10 tracking-wide">
@@ -71,7 +71,7 @@
 						</h1>
 
 						<p class="text-sm text-slate-400 uppercase tracking-[0.2em] mb-4">
-							Вручається
+							Для
 						</p>
 
 						<p class="text-3xl md:text-4xl font-serif text-black mb-12">
@@ -109,7 +109,7 @@
 							</div>
 							
 							<p class="uppercase tracking-widest text-amber-700 dark:text-amber-500 font-bold mb-4 text-xs font-serif">
-								Сертифікат про закінчення
+								Офіційний документ
 							</p>
 
 							<h1 class="text-4xl md:text-5xl font-serif text-slate-900 dark:text-amber-50 mb-6 leading-tight">
@@ -117,7 +117,7 @@
 							</h1>
 							
 							<p class="text-lg text-slate-600 dark:text-amber-200/70 mb-8 max-w-xl mx-auto font-serif italic">
-								Цим сертифікатом підтверджується, що
+								Нагороджується
 							</p>
 
 							<p class="text-3xl md:text-5xl font-serif font-bold text-amber-800 dark:text-amber-400 mb-12 border-b border-amber-300 dark:border-amber-700/50 pb-4 px-12 inline-block">
@@ -151,15 +151,6 @@
 					</div>
 				}
 			}
-
-			<!-- Детальні дані у вигляді коду для дебагу чи додаткової інформації -->
-			<div class="mt-12 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-				<h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Технічні деталі сертифікату</h3>
-				<pre class="text-xs bg-slate-50 dark:bg-slate-900 p-4 rounded-xl overflow-x-auto text-slate-700 dark:text-slate-300 font-mono border border-slate-100 dark:border-slate-800">
-{{ certificate()!.data | json }}
-				</pre>
-			</div>
-
 
 		} @else {
 			<div class="bg-white dark:bg-slate-800 p-16 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-700 text-center">

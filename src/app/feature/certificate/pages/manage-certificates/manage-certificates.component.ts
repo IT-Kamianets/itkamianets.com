@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -8,7 +9,7 @@ import { Certificate } from '../../certificate.interface';
 @Component({
 	selector: 'app-manage-certificates',
 	standalone: true,
-	imports: [FormsModule, RouterLink],
+	imports: [FormsModule, RouterLink, DatePipe],
 	templateUrl: './manage-certificates.component.html',
 	styleUrl: './manage-certificates.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,22 +22,42 @@ export class ManageCertificatesComponent {
 	protected readonly options = this.optionService.docs;
 
 	protected readonly editingCert = signal<Certificate | null>(null);
+	protected form = {
+		title: '',
+		recipientName: '',
+		description: '',
+		issueDate: '',
+		templateStyle: 'classic'
+	};
 
 	protected create() {
-		const newDoc = this.certService.new() as Certificate;
-		newDoc.data = {};
-		this.editingCert.set(newDoc);
+		this.form = {
+			title: '',
+			recipientName: '',
+			description: '',
+			issueDate: new Date().toISOString().slice(0, 16),
+			templateStyle: 'classic'
+		};
+		this.editingCert.set(this.certService.new() as Certificate);
 	}
 
 	protected edit(cert: Certificate) {
-		if (!cert.data) cert.data = {};
-		const editCert = { ...cert, data: { ...cert.data } } as Certificate;
-		this.editingCert.set(editCert);
+		const data = cert.data || {};
+		this.form = {
+			title: data['title'] || '',
+			recipientName: data['recipientName'] || '',
+			description: data['description'] || '',
+			issueDate: data['issueDate'] ? data['issueDate'].slice(0, 16) : '',
+			templateStyle: data['templateStyle'] || 'classic'
+		};
+		this.editingCert.set({ ...cert });
 	}
 
 	protected save() {
 		const cert = this.editingCert();
 		if (!cert) return;
+
+		cert.data = { ...this.form };
 
 		if (cert._id) {
 			this.certService.update(cert).subscribe(() => {
@@ -61,10 +82,10 @@ export class ManageCertificatesComponent {
 
 	protected applyTemplate(optionId: string) {
 		const opt = this.options().find(o => o._id === optionId);
-		if (opt) {
-			const currentData = this.editingCert()!.data || {};
-			const newData = { ...currentData, ...opt.data, templateStyle: opt.data?.['templateStyle'] || 'classic', title: opt.data?.['title'] || currentData['title'], description: opt.data?.['description'] || currentData['description'] };
-			this.editingCert.update(c => c ? { ...c, data: newData } : c);
+		if (opt && opt.data) {
+			this.form.title = opt.data['title'] || this.form.title;
+			this.form.description = opt.data['description'] || this.form.description;
+			this.form.templateStyle = opt.data['templateStyle'] || this.form.templateStyle;
 		}
 	}
 }

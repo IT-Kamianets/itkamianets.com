@@ -17,22 +17,36 @@ export class ManageOptionsComponent {
 	protected readonly options = this.optionService.docs;
 
 	protected readonly editingOption = signal<CertificateOption | null>(null);
+	protected form = {
+		title: '',
+		description: '',
+		templateStyle: 'classic'
+	};
 
 	protected create() {
-		const newDoc = this.optionService.new() as CertificateOption;
-		newDoc.data = {};
-		this.editingOption.set(newDoc);
+		this.form = {
+			title: '',
+			description: '',
+			templateStyle: 'classic'
+		};
+		this.editingOption.set(this.optionService.new() as CertificateOption);
 	}
 
 	protected edit(option: CertificateOption) {
-		if (!option.data) option.data = {};
-		const editOption = { ...option, data: { ...option.data } } as CertificateOption;
-		this.editingOption.set(editOption);
+		const data = option.data || {};
+		this.form = {
+			title: data['title'] || '',
+			description: data['description'] || '',
+			templateStyle: data['templateStyle'] || 'classic'
+		};
+		this.editingOption.set({ ...option });
 	}
 
 	protected save() {
 		const option = this.editingOption();
 		if (!option) return;
+
+		option.data = { ...this.form };
 
 		if (option._id) {
 			this.optionService.update(option).subscribe(() => {
