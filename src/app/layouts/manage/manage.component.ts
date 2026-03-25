@@ -19,6 +19,7 @@ import { ManageHeaderComponent } from '../manage-header/manage-header.component'
 export class ManageComponent {
 	protected readonly navItems = [
 		{ label: 'Merch', path: '/manage/merch', icon: 'shopping_bag' },
+		{ label: 'Items', path: '/manage/items', icon: 'inventory_2' },
 		{ label: 'Orders', path: '/manage/orders', icon: 'receipt_long' },
 		{ label: 'Companies', path: '/manage/companies', icon: 'apartment' },
 		{ label: 'Projects', path: '/manage/projects', icon: 'deployed_code' },

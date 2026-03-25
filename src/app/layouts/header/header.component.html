@@ -14,7 +14,7 @@
 
 			<!-- Center: Navigation Links -->
 			<div class="header__nav-pill">
-				@for (item of menuItems; track item._id) {
+				@for (item of menuItems(); track item._id) {
 					@if (item.options?.menu?.external) {
 						<a
 							[href]="item.href"
@@ -102,7 +102,7 @@
 
 			<!-- Row 2: Navigation Links -->
 			<div class="header__nav-pill header__nav-pill--mobile">
-				@for (item of menuItems; track item._id) {
+				@for (item of menuItems(); track item._id) {
 					@if (item.options?.menu?.external) {
 						<a
 							[href]="item.href"

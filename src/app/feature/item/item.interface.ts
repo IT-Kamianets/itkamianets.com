@@ -1,3 +1,27 @@
+export type ItemData = Record<string, unknown>;
+
+// Backend-aligned Item shape.
+export interface Item<TData extends ItemData = ItemData> {
+	_id: string;
+	data: TData;
+}
+
+export type ItemCreatePayload<TData extends ItemData = ItemData> = {
+	data: TData;
+};
+
+export type ItemUpdatePayload<TData extends ItemData = ItemData> = {
+	_id: string;
+	data: TData;
+};
+
+export type ItemDeletePayload = {
+	_id: string;
+};
+
+export type ItemFetchPayload = Record<string, unknown>;
+
+// Legacy view models used by existing pages (menu/news/etc).
 export type ItemType =
 	| 'menu'
 	| 'gallery'
@@ -7,21 +31,7 @@ export type ItemType =
 	| 'merch'
 	| 'other';
 
-export interface ItemPricingOptions {
-	price?: number;
-	priceFrom?: number;
-	priceTo?: number;
-	currency?: string;
-}
-
-export interface ItemInventoryOptions {
-	quantity?: number;
-	unit?: string;
-}
-
 export interface ItemOptions {
-	pricing?: ItemPricingOptions;
-	inventory?: ItemInventoryOptions;
 	menu?: {
 		exact?: boolean;
 		external?: boolean;
@@ -70,5 +80,3 @@ export interface NewsItem extends ItemBase {
 export interface LandingItem extends ItemBase {
 	type: 'landing';
 }
-
-export interface Item extends ItemBase {}

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './feature/user/admin.guard';
 import { authenticatedGuard } from './feature/user/authenticated.guard';
 
 export const routes: Routes = [
@@ -160,6 +161,15 @@ export const routes: Routes = [
 				data: { title: 'Merch' },
 				loadComponent: () =>
 					import('./pages/manage/merch/merch.component').then((m) => m.MerchComponent),
+			},
+			{
+				path: 'items',
+				canActivate: [adminGuard],
+				data: { title: 'Items' },
+				loadComponent: () =>
+					import('./feature/item/pages/manage-items/manage-items.component').then(
+						(m) => m.ManageItemsComponent,
+					),
 			},
 			{
 				path: 'projects',
