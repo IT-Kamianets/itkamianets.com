@@ -134,7 +134,7 @@ export class HeaderComponent {
 			type: 'menu',
 			title,
 			href,
-			order,
+			order: order ?? undefined,
 			options: {
 				menu: {
 					exact: exact ?? undefined,
