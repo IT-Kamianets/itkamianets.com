@@ -17,33 +17,22 @@ export class ManageOptionsComponent {
 	protected readonly options = this.optionService.docs;
 
 	protected readonly editingOption = signal<CertificateOption | null>(null);
-	protected readonly editingDataStr = signal<string>('{}');
 
 	protected create() {
 		const newDoc = this.optionService.new() as CertificateOption;
 		newDoc.data = {};
 		this.editingOption.set(newDoc);
-		this.editingDataStr.set('{}');
 	}
 
 	protected edit(option: CertificateOption) {
 		if (!option.data) option.data = {};
-		// Робимо клон для редагування, як у JobsComponent
 		const editOption = { ...option, data: { ...option.data } } as CertificateOption;
 		this.editingOption.set(editOption);
-		this.editingDataStr.set(JSON.stringify(editOption.data, null, 2));
 	}
 
 	protected save() {
 		const option = this.editingOption();
 		if (!option) return;
-
-		try {
-			option.data = JSON.parse(this.editingDataStr());
-		} catch (e) {
-			alert('Invalid JSON in data field');
-			return;
-		}
 
 		if (option._id) {
 			this.optionService.update(option).subscribe(() => {
@@ -64,13 +53,5 @@ export class ManageOptionsComponent {
 
 	protected cancel() {
 		this.editingOption.set(null);
-	}
-
-	protected stringify(data: any): string {
-		try {
-			return JSON.stringify(data, null, 2);
-		} catch {
-			return '{}';
-		}
 	}
 }

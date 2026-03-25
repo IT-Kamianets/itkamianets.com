@@ -22,12 +22,12 @@
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
 							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Назва шаблону (Title)</label>
-							<input type="text" [(ngModel)]="editingOption()!.data!['title']" (ngModelChange)="editingDataStr.set(stringify(editingOption()!.data))" placeholder="Наприклад: Випускник курсу..." class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+							<input type="text" [(ngModel)]="editingOption()!.data!['title']" placeholder="Наприклад: Випускник курсу..." class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
 						</div>
 
 						<div>
 							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Дизайн (Стиль)</label>
-							<select [(ngModel)]="editingOption()!.data!['templateStyle']" (ngModelChange)="editingDataStr.set(stringify(editingOption()!.data))" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+							<select [(ngModel)]="editingOption()!.data!['templateStyle']" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
 								<option value="classic">Класичний (Classic)</option>
 								<option value="modern">Сучасний (Modern)</option>
 								<option value="minimalist">Мінімалістичний (Minimalist)</option>
@@ -36,9 +36,8 @@
 					</div>
 
 					<div>
-						<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">JSON Дані (гнучкі)</label>
-						<textarea [(ngModel)]="editingDataStr" rows="10" placeholder='{"title": "My Title", "description": "...", "backgroundUrl": "..."}' class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all font-mono text-sm"></textarea>
-						<p class="text-xs text-slate-500 mt-2">Ви можете додавати будь-які поля у JSON форматі. Це збережеться у поле 'data'.</p>
+						<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Опис (Description)</label>
+						<textarea [(ngModel)]="editingOption()!.data!['description']" rows="4" placeholder="Опис, який буде відображено на сертифікаті..." class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all"></textarea>
 					</div>
 
 					<div class="flex justify-end gap-4 mt-6 border-t dark:border-slate-700 pt-6">
@@ -58,7 +57,7 @@
 				<div class="job-item flex flex-col bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-white dark:border-slate-700 shadow-sm overflow-hidden group">
 					<div class="p-5 flex flex-col flex-1">
 						<h3 class="font-bold text-lg text-slate-900 dark:text-white mb-1 truncate">{{ opt.data?.['title'] || 'Без назви' }}</h3>
-						<p class="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-3 break-all">{{ stringify(opt.data) }}</p>
+						<p class="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-3 break-all">{{ opt.data?.['description'] || 'Без опису' }}</p>
 						
 						<div class="mt-auto flex justify-between gap-2 border-t dark:border-slate-700 pt-4">
 							<button (click)="edit(opt)" class="flex-1 py-2 bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 font-bold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">

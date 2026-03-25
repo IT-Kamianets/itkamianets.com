@@ -21,32 +21,22 @@ export class ManageCertificatesComponent {
 	protected readonly options = this.optionService.docs;
 
 	protected readonly editingCert = signal<Certificate | null>(null);
-	protected readonly editingDataStr = signal<string>('{}');
 
 	protected create() {
 		const newDoc = this.certService.new() as Certificate;
 		newDoc.data = {};
 		this.editingCert.set(newDoc);
-		this.editingDataStr.set('{}');
 	}
 
 	protected edit(cert: Certificate) {
 		if (!cert.data) cert.data = {};
 		const editCert = { ...cert, data: { ...cert.data } } as Certificate;
 		this.editingCert.set(editCert);
-		this.editingDataStr.set(JSON.stringify(editCert.data, null, 2));
 	}
 
 	protected save() {
 		const cert = this.editingCert();
 		if (!cert) return;
-
-		try {
-			cert.data = JSON.parse(this.editingDataStr());
-		} catch (e) {
-			alert('Invalid JSON in data field');
-			return;
-		}
 
 		if (cert._id) {
 			this.certService.update(cert).subscribe(() => {
@@ -72,22 +62,9 @@ export class ManageCertificatesComponent {
 	protected applyTemplate(optionId: string) {
 		const opt = this.options().find(o => o._id === optionId);
 		if (opt) {
-			try {
-				const currentData = JSON.parse(this.editingDataStr());
-				const newData = { ...currentData, ...opt.data, templateId: opt._id };
-				this.editingDataStr.set(JSON.stringify(newData, null, 2));
-			} catch(e) {
-				const newData = { ...opt.data, templateId: opt._id };
-				this.editingDataStr.set(JSON.stringify(newData, null, 2));
-			}
-		}
-	}
-	
-	protected stringify(data: any): string {
-		try {
-			return JSON.stringify(data, null, 2);
-		} catch {
-			return '{}';
+			const currentData = this.editingCert()!.data || {};
+			const newData = { ...currentData, ...opt.data, templateStyle: opt.data?.['templateStyle'] || 'classic', title: opt.data?.['title'] || currentData['title'], description: opt.data?.['description'] || currentData['description'] };
+			this.editingCert.update(c => c ? { ...c, data: newData } : c);
 		}
 	}
 }

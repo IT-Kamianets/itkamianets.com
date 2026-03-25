@@ -21,10 +21,15 @@
 				<div class="grid gap-6">
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
-							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Отримувач (Ім'я)</label>
-							<input type="text" [(ngModel)]="editingCert()!.data!['recipientName']" (ngModelChange)="editingDataStr.set(stringify(editingCert()!.data))" placeholder="Наприклад: Іван Іванов..." class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Назва сертифікату (Курс/Подія)</label>
+							<input type="text" [(ngModel)]="editingCert()!.data!['title']" placeholder="Сертифікат про завершення курсу" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
 						</div>
 						
+						<div>
+							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Отримувач (ПІБ)</label>
+							<input type="text" [(ngModel)]="editingCert()!.data!['recipientName']" placeholder="Наприклад: Іван Іванов" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+						</div>
+
 						<div>
 							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Використати шаблон</label>
 							<select (change)="applyTemplate($any($event.target).value)" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
@@ -37,12 +42,12 @@
 
 						<div>
 							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Дата видачі</label>
-							<input type="datetime-local" [(ngModel)]="editingCert()!.data!['issueDate']" (ngModelChange)="editingDataStr.set(stringify(editingCert()!.data))" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+							<input type="datetime-local" [(ngModel)]="editingCert()!.data!['issueDate']" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
 						</div>
 
 						<div>
 							<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Дизайн (Стиль)</label>
-							<select [(ngModel)]="editingCert()!.data!['templateStyle']" (ngModelChange)="editingDataStr.set(stringify(editingCert()!.data))" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
+							<select [(ngModel)]="editingCert()!.data!['templateStyle']" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all">
 								<option value="classic">Класичний (Classic)</option>
 								<option value="modern">Сучасний (Modern)</option>
 								<option value="minimalist">Мінімалістичний (Minimalist)</option>
@@ -51,8 +56,8 @@
 					</div>
 
 					<div>
-						<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">JSON Дані</label>
-						<textarea [(ngModel)]="editingDataStr" rows="10" class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all font-mono text-sm"></textarea>
+						<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Опис сертифікату (за що виданий)</label>
+						<textarea [(ngModel)]="editingCert()!.data!['description']" rows="4" placeholder="Наприклад: За успішне проходження повного курсу та захист фінального проєкту..." class="w-full px-4 py-2 rounded-xl border-2 border-white dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 outline-none transition-all"></textarea>
 					</div>
 
 					<div class="flex justify-end gap-4 mt-6 border-t dark:border-slate-700 pt-6">
@@ -73,8 +78,8 @@
 					<div class="p-5 flex flex-col flex-1">
 						<h3 class="font-bold text-lg text-slate-900 dark:text-white mb-1 truncate">{{ cert.data?.['recipientName'] || 'Невідомий отримувач' }}</h3>
 						<p class="text-sm font-semibold text-blue-600 mb-2 truncate">{{ cert.data?.['title'] || 'Без курсу' }}</p>
-						<p class="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-3 break-all">{{ stringify(cert.data) }}</p>
-						
+						<p class="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-3 break-all">{{ cert.data?.['description'] || 'Без опису' }}</p>
+
 						<div class="mt-auto flex justify-between gap-2 border-t dark:border-slate-700 pt-4">
 							<a [routerLink]="['/certificate', cert._id]" class="flex-1 py-1 px-2 text-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold rounded-lg hover:bg-blue-100 transition-all text-sm">
 								Друк 🔍
