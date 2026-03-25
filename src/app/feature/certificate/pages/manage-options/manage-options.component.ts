@@ -23,12 +23,15 @@ export class ManageOptionsComponent {
 		const newDoc = this.optionService.new() as CertificateOption;
 		newDoc.data = {};
 		this.editingOption.set(newDoc);
-		this.editingDataStr.set(JSON.stringify(newDoc.data, null, 2));
+		this.editingDataStr.set('{}');
 	}
 
 	protected edit(option: CertificateOption) {
-		this.editingOption.set({ ...option });
-		this.editingDataStr.set(JSON.stringify(option.data || {}, null, 2));
+		if (!option.data) option.data = {};
+		// Робимо клон для редагування, як у JobsComponent
+		const editOption = { ...option, data: { ...option.data } } as CertificateOption;
+		this.editingOption.set(editOption);
+		this.editingDataStr.set(JSON.stringify(editOption.data, null, 2));
 	}
 
 	protected save() {

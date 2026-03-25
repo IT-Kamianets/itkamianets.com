@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed, signal, effect } from '@angular/core';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CertificateService } from '../../certificate.service';
+import { Certificate } from '../../certificate.interface';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -19,9 +20,21 @@ export class CertificateComponent {
 	private readonly idParams = toSignal(this.route.paramMap);
 	protected readonly certId = computed(() => this.idParams()?.get('id'));
 
-	protected readonly certificate = computed(() => {
-		const id = this.certId();
-		if (!id) return null;
-		return this.certService.docs().find(c => c._id === id);
-	});
+	protected readonly certificate = signal<Certificate | null>(null);
+	protected readonly isLoading = signal<boolean>(false);
+
+	constructor() {
+		effect(() => {
+			const id = this.certId();
+			if (id) {
+				this.isLoading.set(true);
+				this.certService.fetchOne(id).subscribe(cert => {
+					this.certificate.set(cert);
+					this.isLoading.set(false);
+				});
+			} else {
+				this.certificate.set(null);
+			}
+		});
+	}
 }

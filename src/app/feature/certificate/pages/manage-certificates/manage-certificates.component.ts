@@ -27,12 +27,14 @@ export class ManageCertificatesComponent {
 		const newDoc = this.certService.new() as Certificate;
 		newDoc.data = {};
 		this.editingCert.set(newDoc);
-		this.editingDataStr.set(JSON.stringify(newDoc.data, null, 2));
+		this.editingDataStr.set('{}');
 	}
 
 	protected edit(cert: Certificate) {
-		this.editingCert.set({ ...cert });
-		this.editingDataStr.set(JSON.stringify(cert.data || {}, null, 2));
+		if (!cert.data) cert.data = {};
+		const editCert = { ...cert, data: { ...cert.data } } as Certificate;
+		this.editingCert.set(editCert);
+		this.editingDataStr.set(JSON.stringify(editCert.data, null, 2));
 	}
 
 	protected save() {

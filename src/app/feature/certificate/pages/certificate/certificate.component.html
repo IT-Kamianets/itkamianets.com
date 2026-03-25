@@ -7,7 +7,7 @@
 		</header>
 
 		@if (certificate()) {
-			@switch (certificate()!.data['templateStyle']) {
+			@switch (certificate()!.data?.['templateStyle']) {
 				@case ('modern') {
 					<!-- MODERN STYLE -->
 					<div class="certificate-container relative bg-slate-900 border border-slate-700 p-10 md:p-16 rounded-[2rem] shadow-2xl overflow-hidden text-center text-white">
@@ -24,7 +24,7 @@
 							</p>
 
 							<h1 class="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-fuchsia-400 mb-6 leading-tight">
-								{{ certificate()!.data['title'] || 'Документ без назви' }}
+								{{ certificate()!.data?.['title'] || 'Документ без назви' }}
 							</h1>
 
 							<p class="text-slate-400 mb-8 max-w-xl mx-auto">
@@ -32,12 +32,12 @@
 							</p>
 
 							<p class="text-3xl md:text-5xl font-bold text-white mb-10 tracking-wide">
-								{{ certificate()!.data['recipientName'] || 'Отримувач не вказаний' }}
+								{{ certificate()!.data?.['recipientName'] || 'Отримувач не вказаний' }}
 							</p>
 
-							@if (certificate()!.data['description']) {
+							@if (certificate()!.data?.['description']) {
 								<p class="text-lg text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed whitespace-pre-line bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50 shadow-inner">
-									{{ certificate()!.data['description'] }}
+									{{ certificate()!.data?.['description'] }}
 								</p>
 							}
 
@@ -49,11 +49,11 @@
 									</span>
 								</div>
 								
-								@if (certificate()!.data['issueDate']) {
+								@if (certificate()!.data?.['issueDate']) {
 									<div class="text-right flex flex-col gap-1">
 										<span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Дата видачі</span>
 										<span class="font-medium text-slate-300">
-											{{ certificate()!.data['issueDate'] | date: 'longDate' }}
+											{{ certificate()!.data?.['issueDate'] | date: 'longDate' }}
 										</span>
 									</div>
 								}
@@ -67,7 +67,7 @@
 						<div class="w-12 h-1 bg-black mx-auto mb-16"></div>
 
 						<h1 class="text-3xl md:text-5xl font-light text-black tracking-wide mb-12">
-							{{ certificate()!.data['title'] || 'Документ без назви' }}
+							{{ certificate()!.data?.['title'] || 'Документ без назви' }}
 						</h1>
 
 						<p class="text-sm text-slate-400 uppercase tracking-[0.2em] mb-4">
@@ -75,12 +75,12 @@
 						</p>
 
 						<p class="text-3xl md:text-4xl font-serif text-black mb-12">
-							{{ certificate()!.data['recipientName'] || 'Отримувач не вказаний' }}
+							{{ certificate()!.data?.['recipientName'] || 'Отримувач не вказаний' }}
 						</p>
 
-						@if (certificate()!.data['description']) {
+						@if (certificate()!.data?.['description']) {
 							<p class="text-md text-slate-600 max-w-lg mx-auto mb-20 font-light leading-relaxed whitespace-pre-line">
-								{{ certificate()!.data['description'] }}
+								{{ certificate()!.data?.['description'] }}
 							</p>
 						}
 
@@ -90,10 +90,10 @@
 								<p class="font-mono text-xs text-black">{{ certificate()!._id }}</p>
 							</div>
 							
-							@if (certificate()!.data['issueDate']) {
+							@if (certificate()!.data?.['issueDate']) {
 								<div class="text-right border-b border-black pb-2 px-4">
 									<p class="text-sm font-light text-black">
-										{{ certificate()!.data['issueDate'] | date: 'longDate' }}
+										{{ certificate()!.data?.['issueDate'] | date: 'longDate' }}
 									</p>
 								</div>
 							}
@@ -113,7 +113,7 @@
 							</p>
 
 							<h1 class="text-4xl md:text-5xl font-serif text-slate-900 dark:text-amber-50 mb-6 leading-tight">
-								{{ certificate()!.data['title'] || 'Документ без назви' }}
+								{{ certificate()!.data?.['title'] || 'Документ без назви' }}
 							</h1>
 							
 							<p class="text-lg text-slate-600 dark:text-amber-200/70 mb-8 max-w-xl mx-auto font-serif italic">
@@ -121,12 +121,12 @@
 							</p>
 
 							<p class="text-3xl md:text-5xl font-serif font-bold text-amber-800 dark:text-amber-400 mb-12 border-b border-amber-300 dark:border-amber-700/50 pb-4 px-12 inline-block">
-								{{ certificate()!.data['recipientName'] || 'Отримувач не вказаний' }}
+								{{ certificate()!.data?.['recipientName'] || 'Отримувач не вказаний' }}
 							</p>
 
-							@if (certificate()!.data['description']) {
+							@if (certificate()!.data?.['description']) {
 								<p class="text-lg text-slate-700 dark:text-amber-100/80 max-w-2xl mx-auto mb-16 leading-relaxed whitespace-pre-line font-serif">
-									{{ certificate()!.data['description'] }}
+									{{ certificate()!.data?.['description'] }}
 								</p>
 							}
 
@@ -138,11 +138,11 @@
 									</p>
 								</div>
 								
-								@if (certificate()!.data['issueDate']) {
+								@if (certificate()!.data?.['issueDate']) {
 									<div class="text-right font-serif">
 										<p class="text-xs text-slate-500 dark:text-amber-400/60 uppercase tracking-widest mb-1">Дата видачі</p>
 										<p class="font-medium text-slate-800 dark:text-amber-200">
-											{{ certificate()!.data['issueDate'] | date: 'longDate' }}
+											{{ certificate()!.data?.['issueDate'] | date: 'longDate' }}
 										</p>
 									</div>
 								}
@@ -163,9 +163,15 @@
 
 		} @else {
 			<div class="bg-white dark:bg-slate-800 p-16 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-700 text-center">
-				<div class="text-6xl mb-6">🔍</div>
-				<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Сертифікат не знайдено</h2>
-				<p class="text-slate-500">За заданим ідентифікатором сертифікат відсутній або виникла помилка.</p>
+				@if (isLoading()) {
+					<div class="text-6xl mb-6 animate-spin inline-block">⏳</div>
+					<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Завантаження...</h2>
+					<p class="text-slate-500">Отримуємо деталі сертифікату з бази даних.</p>
+				} @else {
+					<div class="text-6xl mb-6">🔍</div>
+					<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Сертифікат не знайдено</h2>
+					<p class="text-slate-500">За заданим ідентифікатором сертифікат відсутній або виникла помилка.</p>
+				}
 			</div>
 		}
 	</div>

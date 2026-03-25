@@ -17,16 +17,16 @@
 					</div>
 					
 					<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-						{{ cert.data['recipientName'] || 'Невідомий отримувач' }}
+						{{ cert.data?.['recipientName'] || 'Невідомий отримувач' }}
 					</h3>
 					
 					<p class="font-medium text-blue-600 dark:text-blue-400 mb-4">
-						{{ cert.data['title'] || 'Документ' }}
+						{{ cert.data?.['title'] || 'Документ' }}
 					</p>
 
-					@if (cert.data['issueDate']) {
+					@if (cert.data?.['issueDate']) {
 						<p class="text-sm text-slate-500 flex items-center gap-2">
-							📅 {{ cert.data['issueDate'] | date: 'longDate' }}
+							📅 {{ cert.data?.['issueDate'] | date: 'longDate' }}
 						</p>
 					}
 					
