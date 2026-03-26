@@ -29,5 +29,6 @@ export class ManageComponent {
 		{ label: 'Events', path: '/manage/events', icon: 'event' },
 		{ label: 'Competitions', path: '/manage/competitions', icon: 'emoji_events' },
 		{ label: 'People', path: '/manage/people', icon: 'group' },
+		{ label: 'CV Generation', path: '/manage/cv-generation', icon: 'description' },
 	];
 }

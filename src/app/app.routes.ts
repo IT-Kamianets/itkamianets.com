@@ -287,6 +287,15 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'cv-generation',
+				canActivate: [authenticatedGuard],
+				data: { title: 'CV Generation' },
+				loadComponent: () =>
+					import('./pages/manage/cv-generation/cv-generate.component').then(
+						(m) => m.CvGenerateComponent,
+					),
+			},
+			{
 				path: 'companies',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
