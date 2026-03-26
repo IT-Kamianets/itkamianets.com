@@ -31,12 +31,20 @@ export class CvPdfService {
 
 	async generatePdfDataUrl(payload: CvPayload): Promise<string> {
 		const definition = await this._buildDocDefinition(payload);
-		return (await (pdfMake.createPdf(definition as any) as any).getDataUrl()) as string;
+		const pdfDoc = pdfMake.createPdf(definition as any) as any;
+		const dataUrl = await new Promise<string>((resolve) => {
+			pdfDoc.getDataUrl((url: string) => resolve(url));
+		});
+		return dataUrl;
 	}
 
 	async generatePdfBlob(payload: CvPayload): Promise<Blob> {
 		const definition = await this._buildDocDefinition(payload);
-		return (await (pdfMake.createPdf(definition as any) as any).getBlob()) as Blob;
+		const pdfDoc = pdfMake.createPdf(definition as any) as any;
+		const blob = await new Promise<Blob>((resolve) => {
+			pdfDoc.getBlob((result: Blob) => resolve(result));
+		});
+		return blob;
 	}
 
 	async download(payload: CvPayload, fileName: string): Promise<void> {
