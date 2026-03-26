@@ -386,7 +386,7 @@ export class HomeComponent implements OnInit {
 		const unique = Array.from(
 			new Set(proposals.map((p) => p.category).filter((c) => c && c.trim().length)),
 		);
-		return ['РЈСЃС–', ...unique];
+		return [this.fallbackCategories[0], ...unique];
 	}
 
 	private isProposalItem(item: Item): boolean {
