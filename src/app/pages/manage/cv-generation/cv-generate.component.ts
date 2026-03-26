@@ -210,7 +210,7 @@ export class CvGenerateComponent implements OnDestroy {
 			}
 
 			const objectUrl = URL.createObjectURL(blob);
-			const viewerUrl = `${objectUrl}#toolbar=0&navpanes=0&scrollbar=0&view=Fit&zoom=65`;
+			const viewerUrl = `${objectUrl}#toolbar=0&navpanes=0&scrollbar=0&zoom=65`;
 			this._clearPreviewObjectUrl();
 			this._previewObjectUrl = objectUrl;
 			this.safePdfUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(viewerUrl));
