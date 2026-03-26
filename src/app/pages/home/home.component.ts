@@ -429,7 +429,7 @@ export class HomeComponent implements OnInit {
 				'',
 			fullDescription:
 				this.pickString(data, ['fullDescription', 'description', 'body']) ?? '',
-			category: this.pickString(data, ['category', 'segment', 'typeLabel']) ?? 'Р›РµРЅРґС–РЅРі',
+			category: this.pickString(data, ['category', 'segment', 'typeLabel']) ?? 'Лендінг',
 			image:
 				this.pickString(data, ['image', 'cover', 'thumbnail', 'hero']) ?? 'logo.png',
 			features: this.pickStringArray(data, ['features', 'highlights', 'bullets']),
