@@ -18,25 +18,13 @@ export class HeaderComponent {
 		{
 			_id: 'menu-services',
 			type: 'menu',
-			title: 'Послуги',
-			href: '/services',
-		},
-		{
-			_id: 'menu-hackathons',
-			type: 'menu',
-			title: 'Змагання',
-			href: '/hackathons',
-		},
-		{
-			_id: 'menu-projects',
-			type: 'menu',
-			title: 'Проєкти',
-			href: '/projects',
+			title: 'Наша робота',
+			href: '/our-work',
 		},
 		{
 			_id: 'menu-team',
 			type: 'menu',
-			title: 'Команда',
+			title: 'Наша команда',
 			href: '/team',
 		},
 		{

@@ -19,7 +19,7 @@
 }
 
 /* Make header solid on mobile light theme to prevent gray appearance */
-@media (max-width: 639px) {
+@media (max-width: 899px) {
 	:host-context(html[data-mode='light']) .header {
 		background: var(--c-bg-secondary) !important;
 		backdrop-filter: none !important;
@@ -34,7 +34,7 @@
 	padding: 10px 16px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 900px) {
 	.header__inner {
 		padding: 12px 24px;
 	}
@@ -45,7 +45,7 @@
 	display: none;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 900px) {
 	.header__desktop {
 		display: flex;
 		align-items: center;
@@ -69,11 +69,11 @@
 	align-items: center;
 	gap: 12px;
 	flex-shrink: 0;
-	pointer-events: none;
-	cursor: default;
+	cursor: pointer;
 	user-select: none;
 	position: relative;
 	z-index: 2; /* Keep above nav-pill if overlapping */
+	text-decoration: none;
 }
 
 .header__brand--sm {
@@ -238,14 +238,13 @@
 
 /* ── Mobile UI Helpers ── */
 .header__nav-pill--mobile {
-	overflow-x: auto;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
 	margin-top: 6px;
-	padding: 3px;
-	gap: 5px;
+	padding: 4px;
+	gap: 4px;
 	border-radius: 10px;
 	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .header__nav-pill--mobile::-webkit-scrollbar {
@@ -302,8 +301,14 @@
 
 /* Mobile link sizing */
 .header__nav-pill--mobile .header__link {
-	padding: 7px 7px;
-	font-size: 0.6rem;
+	flex: 1 1 0;
+	justify-content: center;
+	min-width: 0;
+	padding: 10px 8px;
+	font-size: 0.82rem;
+	line-height: 1.25;
+	white-space: normal;
+	word-break: break-word;
 	border-radius: 8px;
 }
 
@@ -322,7 +327,7 @@
 	display: block;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 900px) {
 	.header__mobile {
 		display: none;
 	}
