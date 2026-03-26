@@ -107,7 +107,8 @@ export class CvGenerateComponent implements OnDestroy {
 		}
 
 		const raw = this.form.getRawValue();
-		return Object.values(raw).some((value) => Boolean(String(value).trim()));
+		const { imageBase64, ...otherValues } = raw as { imageBase64?: unknown; [key: string]: unknown };
+		return Object.values(otherValues).some((value) => Boolean(String(value).trim()));
 	}
 
 	protected showError(control: AbstractControl | null): boolean {
