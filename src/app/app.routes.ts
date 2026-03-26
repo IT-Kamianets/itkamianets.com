@@ -164,7 +164,7 @@ export const routes: Routes = [
 			},
 			{
 				path: 'items',
-				canActivate: [adminGuard],
+				canActivate: [authenticatedGuard, adminGuard],
 				data: { title: 'Items' },
 				loadComponent: () =>
 					import('./feature/item/pages/manage-items/manage-items.component').then(
