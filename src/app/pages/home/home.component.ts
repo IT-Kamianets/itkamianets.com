@@ -6,11 +6,8 @@ import {
 	Inject,
 	OnInit,
 	PLATFORM_ID,
-	inject,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Item } from '../../feature/item/item.interface';
-import { ItemService } from '../../feature/item/item.service';
 import { PROJECTS, Project } from '../../data/projects.data';
 import { CATEGORIES, PROPOSALS, Proposal } from '../../data/proposals.data';
 import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
@@ -22,14 +19,9 @@ import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-	private readonly itemService = inject(ItemService);
-
-	private readonly fallbackProposals = PROPOSALS;
-	private readonly fallbackCategories = ['Усі', ...CATEGORIES];
-	private readonly fallbackProjects = PROJECTS;
 	/** ProposalsComponent carousel */
-	proposals: Proposal[] = [...PROPOSALS];
-	categories: string[] = ['Усі', ...CATEGORIES];
+	readonly proposals: Proposal[] = PROPOSALS;
+	readonly categories: string[] = ['Усі', ...CATEGORIES];
 	activeCategory = 0;
 	proposalSlideIndex = 0;
 	proposalsVisible = 3;
@@ -42,7 +34,7 @@ export class HomeComponent implements OnInit {
 	teamScrollStep = 2;
 
 	/** ProjectsComponent slider */
-	allProjects: Project[] = [...PROJECTS];
+	readonly allProjects: Project[] = PROJECTS;
 	projectSlideIndex = 0;
 	projectsVisible = 3;
 	projectsScrollStep = 2;
@@ -53,8 +45,6 @@ export class HomeComponent implements OnInit {
 		if (isPlatformBrowser(this.platformId)) {
 			this.updateResponsiveConfig();
 		}
-
-		this.loadLandingItems();
 	}
 
 	@HostListener('window:resize')
@@ -325,237 +315,6 @@ export class HomeComponent implements OnInit {
 		return closest === dotValue;
 	}
 
-	private loadLandingItems(): void {
-		this.itemService.get().subscribe({
-			next: (items) => {
-				this.applyLandingItems(items);
-			},
-			error: () => {
-				this.proposals = [...this.fallbackProposals];
-				this.categories = [...this.fallbackCategories];
-				this.allProjects = [...this.fallbackProjects];
-			},
-		});
-	}
-
-	private applyLandingItems(items: Item[]): void {
-		const proposals = this.mapProposals(items);
-		const projects = this.mapProjects(items);
-
-		if (proposals.length) {
-			this.proposals = proposals;
-			this.categories = this.buildCategories(proposals);
-			this.activeCategory = 0;
-			this.proposalSlideIndex = 0;
-		} else {
-			this.proposals = [...this.fallbackProposals];
-			this.categories = [...this.fallbackCategories];
-		}
-
-		if (projects.length) {
-			this.allProjects = projects;
-			this.projectSlideIndex = 0;
-		} else {
-			this.allProjects = [...this.fallbackProjects];
-		}
-
-		if (isPlatformBrowser(this.platformId)) {
-			this.updateResponsiveConfig();
-		}
-	}
-
-	private mapProposals(items: Item[]): Proposal[] {
-		const proposals = items
-			.filter((item) => this.isProposalItem(item))
-			.map((item, index) => this.toProposal(item, index + 1))
-			.filter((item): item is Proposal => Boolean(item));
-
-		return proposals.sort((a, b) => a.id - b.id);
-	}
-
-	private mapProjects(items: Item[]): Project[] {
-		const projects = items
-			.filter((item) => this.isProjectItem(item))
-			.map((item, index) => this.toProject(item, index + 1))
-			.filter((item): item is Project => Boolean(item));
-
-		return projects.sort((a, b) => a.id - b.id);
-	}
-
-	private buildCategories(proposals: Proposal[]): string[] {
-		const unique = Array.from(
-			new Set(proposals.map((p) => p.category).filter((c) => c && c.trim().length)),
-		);
-		return [this.fallbackCategories[0], ...unique];
-	}
-
-	private isProposalItem(item: Item): boolean {
-		const data = this.asRecord(item.data);
-		return this.matchesKind(data, ['proposal', 'proposals', 'service', 'services', 'offer']);
-	}
-
-	private isProjectItem(item: Item): boolean {
-		const data = this.asRecord(item.data);
-		return this.matchesKind(data, ['project', 'projects', 'portfolio', 'gallery']);
-	}
-
-	private matchesKind(source: Record<string, unknown>, tokens: string[]): boolean {
-		const type = this.pickString(source, ['type', 'kind', 'contentType']);
-		const section = this.pickString(source, ['section', 'block', 'area', 'group']);
-		const category = this.pickString(source, ['category', 'tag']);
-		return (
-			this.matchToken(type, tokens) ||
-			this.matchToken(section, tokens) ||
-			this.matchToken(category, tokens)
-		);
-	}
-
-	private matchToken(value: string | null, tokens: string[]): boolean {
-		if (!value) return false;
-		const normalized = value.toLowerCase();
-		return tokens.some((token) => normalized === token || normalized.includes(token));
-	}
-
-	private toProposal(item: Item, fallbackId: number): Proposal | null {
-		const data = this.asRecord(item.data);
-		const title = this.pickString(data, ['title', 'name', 'headline']);
-		if (!title) return null;
-
-		return {
-			id: this.pickNumber(data, ['id', 'order', 'position']) ?? fallbackId,
-			title,
-			shortDescription:
-				this.pickString(data, ['shortDescription', 'summary', 'excerpt', 'subtitle']) ??
-				'',
-			fullDescription:
-				this.pickString(data, ['fullDescription', 'description', 'body']) ?? '',
-			category: this.pickString(data, ['category', 'segment', 'typeLabel']) ?? 'Лендінг',
-			image:
-				this.pickString(data, ['image', 'cover', 'thumbnail', 'hero']) ?? 'logo.png',
-			features: this.pickStringArray(data, ['features', 'highlights', 'bullets']),
-			team: this.pickTeamArray(data, ['team', 'people', 'members']),
-			priceFrom: this.pickNumber(data, ['priceFrom', 'minPrice', 'from']) ?? 0,
-			priceTo: this.pickNumber(data, ['priceTo', 'maxPrice', 'to']) ?? 0,
-			timeFrom: this.pickNumber(data, ['timeFrom', 'minTime', 'durationFrom']) ?? 0,
-			timeTo: this.pickNumber(data, ['timeTo', 'maxTime', 'durationTo']) ?? 0,
-		};
-	}
-
-	private toProject(item: Item, fallbackId: number): Project | null {
-		const data = this.asRecord(item.data);
-		const title = this.pickString(data, ['title', 'name']);
-		if (!title) return null;
-
-		const category = this.normalizeProjectCategory(
-			this.pickString(data, ['category', 'theme', 'type']) ?? '',
-		);
-		return {
-			id: this.pickNumber(data, ['id', 'order', 'position']) ?? fallbackId,
-			title,
-			description: this.pickString(data, ['description', 'summary']) ?? '',
-			category,
-			repoUrl: this.pickString(data, ['repoUrl', 'repo', 'github']) ?? '',
-			liveUrl: this.pickString(data, ['liveUrl', 'url', 'link']) ?? '',
-			tags: this.pickStringArray(data, ['tags', 'stack', 'skills']),
-			image: this.pickString(data, ['image', 'cover', 'thumbnail']) ?? '',
-		};
-	}
-
-	private normalizeProjectCategory(input: string): Project['category'] {
-		const value = input.toLowerCase();
-		if (value.includes('bulma')) return 'theme-bulma';
-		if (value.includes('bootstrap')) return 'theme-bootstrap';
-		return 'theme-tailwind';
-	}
-
-	projectImage(project: Project): string {
-		const image = project.image?.trim();
-		if (!image) return 'logo.png';
-		if (image.startsWith('http') || image.startsWith('/')) {
-			return image;
-		}
-		return `project/${image}.png`;
-	}
-
-	private asRecord(value: unknown): Record<string, unknown> {
-		if (!value || typeof value !== 'object' || Array.isArray(value)) {
-			return {};
-		}
-
-		return value as Record<string, unknown>;
-	}
-
-	private pickString(source: Record<string, unknown>, keys: string[]): string | null {
-		for (const key of keys) {
-			const value = source[key];
-			if (typeof value === 'string' && value.trim().length) {
-				return value.trim();
-			}
-		}
-
-		return null;
-	}
-
-	private pickNumber(source: Record<string, unknown>, keys: string[]): number | null {
-		for (const key of keys) {
-			const value = source[key];
-			if (typeof value === 'number' && Number.isFinite(value)) {
-				return value;
-			}
-			if (typeof value === 'string' && value.trim().length) {
-				const parsed = Number(value);
-				if (Number.isFinite(parsed)) {
-					return parsed;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	private pickStringArray(source: Record<string, unknown>, keys: string[]): string[] {
-		for (const key of keys) {
-			const value = source[key];
-			if (Array.isArray(value)) {
-				return value.filter((entry): entry is string => typeof entry === 'string');
-			}
-			if (typeof value === 'string' && value.trim().length) {
-				return value.split(',').map((entry) => entry.trim()).filter(Boolean);
-			}
-		}
-
-		return [];
-	}
-
-	private pickTeamArray(
-		source: Record<string, unknown>,
-		keys: string[],
-	): { name: string; avatar: string; role: string }[] {
-		for (const key of keys) {
-			const value = source[key];
-			if (Array.isArray(value)) {
-				return value
-					.map((entry) => {
-						if (!entry || typeof entry !== 'object') {
-							return null;
-						}
-						const record = entry as Record<string, unknown>;
-						const name = this.pickString(record, ['name', 'title']);
-						const avatar = this.pickString(record, ['avatar', 'image', 'photo']) ?? '';
-						const role = this.pickString(record, ['role', 'position']) ?? '';
-						if (!name) return null;
-						return { name, avatar, role };
-					})
-					.filter(
-						(entry): entry is { name: string; avatar: string; role: string } =>
-							Boolean(entry),
-					);
-			}
-		}
-
-		return [];
-	}
-
 	categoryLabel(cat: string): string {
 		switch (cat) {
 			case 'theme-tailwind':
@@ -569,6 +328,3 @@ export class HomeComponent implements OnInit {
 		}
 	}
 }
-
-
-

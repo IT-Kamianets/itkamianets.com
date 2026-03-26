@@ -14,26 +14,15 @@
 
 			<!-- Center: Navigation Links -->
 			<div class="header__nav-pill">
-				@for (item of menuItems(); track item._id) {
-					@if (item.options?.menu?.external) {
-						<a
-							[href]="item.href"
-							[attr.target]="item.options?.menu?.target ?? null"
-							[attr.rel]="item.options?.menu?.target === '_blank' ? 'noopener noreferrer' : null"
-							class="header__link"
-						>
-							{{ item.title }}
-						</a>
-					} @else {
-						<a
-							[routerLink]="item.href"
-							[routerLinkActiveOptions]="{ exact: item.options?.menu?.exact ?? false }"
-							routerLinkActive="header__link--active"
-							class="header__link"
-						>
-							{{ item.title }}
-						</a>
-					}
+				@for (item of menuItems; track item._id) {
+					<a
+						[routerLink]="item.href"
+						[routerLinkActiveOptions]="{ exact: item.options?.menu?.exact ?? false }"
+						routerLinkActive="header__link--active"
+						class="header__link"
+					>
+						{{ item.title }}
+					</a>
 				}
 			</div>
 
@@ -102,26 +91,15 @@
 
 			<!-- Row 2: Navigation Links -->
 			<div class="header__nav-pill header__nav-pill--mobile">
-				@for (item of menuItems(); track item._id) {
-					@if (item.options?.menu?.external) {
-						<a
-							[href]="item.href"
-							[attr.target]="item.options?.menu?.target ?? null"
-							[attr.rel]="item.options?.menu?.target === '_blank' ? 'noopener noreferrer' : null"
-							class="header__link"
-						>
-							{{ item.title }}
-						</a>
-					} @else {
-						<a
-							[routerLink]="item.href"
-							[routerLinkActiveOptions]="{ exact: item.options?.menu?.exact ?? false }"
-							routerLinkActive="header__link--active"
-							class="header__link"
-						>
-							{{ item.title }}
-						</a>
-					}
+				@for (item of menuItems; track item._id) {
+					<a
+						[routerLink]="item.href"
+						[routerLinkActiveOptions]="{ exact: item.options?.menu?.exact ?? false }"
+						routerLinkActive="header__link--active"
+						class="header__link"
+					>
+						{{ item.title }}
+					</a>
 				}
 			</div>
 		</div>
