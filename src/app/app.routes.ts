@@ -13,6 +13,13 @@ export const routes: Routes = [
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
+				path: 'our-work',
+				loadComponent: () =>
+					import('./pages/our-work/our-work.component').then(
+						(m) => m.OurWorkComponent,
+					),
+			},
+			{
 				path: 'jobs',
 				loadComponent: () =>
 					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),

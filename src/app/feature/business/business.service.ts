@@ -9,11 +9,11 @@ const API = `${environment.apiUrl}/api/itcompany`;
 const STATIC_BUSINESSES: Business[] = [
 	{
 		id: 'static-1',
-		name: 'WebArtWork',
+		name: 'Web Art Work',
 		logo: '',
 		type: 'Студія',
 		shortDescription: 'Веб-студія повного циклу з Кам\'янця-Подільського',
-		description: 'WebArtWork — команда досвідчених розробників, що створює сучасні веб-застосунки та цифрові продукти для бізнесу. Понад 10 років на ринку.',
+		description: 'Web Art Work — команда досвідчених розробників, що створює сучасні веб-застосунки та цифрові продукти для бізнесу. Понад 10 років на ринку.',
 		techStack: ['Angular', 'Node.js', 'MongoDB', 'TypeScript'],
 		services: ['Веб-розробка', 'Мобільні застосунки', 'UI/UX дизайн', 'Технічна підтримка'],
 		employees: 25,
