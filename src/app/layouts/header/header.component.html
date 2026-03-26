@@ -1,16 +1,16 @@
 <header class="header">
 	<nav class="header__inner">
 		<!-- ============================================ -->
-		<!-- DESKTOP LAYOUT (>= 640px) -->
+		<!-- DESKTOP LAYOUT (>= 900px) -->
 		<!-- ============================================ -->
 		<div class="header__desktop">
 			<!-- Left: Logo + Brand -->
-			<div class="header__brand">
+			<a routerLink="/" class="header__brand">
 				<div class="header__logo-wrap">
 					<img src="logo.png" alt="Logo" class="header__logo" />
 				</div>
 				<span class="header__brand-name">IT-KAMIANETS</span>
-			</div>
+			</a>
 
 			<!-- Center: Navigation Links -->
 			<div class="header__nav-pill">
@@ -34,7 +34,10 @@
 					[attr.aria-label]="profileLabel"
 					routerLinkActive="header__icon-link--active"
 				>
-					<span class="material-symbols-outlined header__icon-link-symbol" aria-hidden="true">
+					<span
+						class="material-symbols-outlined header__icon-link-symbol"
+						aria-hidden="true"
+					>
 						account_circle
 					</span>
 				</a>
@@ -53,17 +56,17 @@
 		</div>
 
 		<!-- ============================================ -->
-		<!-- MOBILE LAYOUT (< 640px) -->
+		<!-- MOBILE LAYOUT (< 900px) -->
 		<!-- ============================================ -->
 		<div class="header__mobile">
 			<!-- Row 1: Logo + Brand + Theme Toggle -->
 			<div class="header__mobile-top">
-				<div class="header__brand header__brand--sm">
+				<a routerLink="/" class="header__brand header__brand--sm">
 					<div class="header__logo-wrap header__logo-wrap--sm">
 						<img src="logo.png" alt="Logo" class="header__logo" />
 					</div>
 					<span class="header__brand-name">IT-KAMIANETS</span>
-				</div>
+				</a>
 				<div class="header__mobile-actions">
 					<a
 						routerLink="/manage/profile"
@@ -71,7 +74,10 @@
 						[attr.aria-label]="profileLabel"
 						routerLinkActive="header__icon-link--active"
 					>
-						<span class="material-symbols-outlined header__icon-link-symbol" aria-hidden="true">
+						<span
+							class="material-symbols-outlined header__icon-link-symbol"
+							aria-hidden="true"
+						>
 							account_circle
 						</span>
 					</a>
@@ -82,7 +88,10 @@
 						(click)="toggleTheme()"
 						[attr.aria-label]="themeLabel"
 					>
-						<span class="material-symbols-outlined theme-toggle__icon" aria-hidden="true">
+						<span
+							class="material-symbols-outlined theme-toggle__icon"
+							aria-hidden="true"
+						>
 							{{ themeIcon }}
 						</span>
 					</button>

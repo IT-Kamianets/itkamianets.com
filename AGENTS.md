@@ -27,15 +27,26 @@ This file defines repo-specific instructions for coding agents working in this p
 
 ## Wacom Usage
 
+- This project uses `wacom`, an Angular utility library for shared services, directives, pipes, and app-level configuration.
 - `wacom` is installed and configured in `src/app/app.config.ts` via `provideWacom(wacomConfig)` and `provideTranslate()`.
+- Prefer bootstrapping with `provideWacom({...})` in application providers. Use `WacomModule` / `WacomModule.forRoot()` only for legacy NgModule-based apps.
 - Repo-level `wacom` config lives in `src/app/wacom.config.ts`. Extend that file when adding shared `wacom` configuration instead of scattering setup across features.
+- Put library-wide configuration in `provideWacom()` instead of scattering it across components. Available config areas include `http`, `store`, `meta`, `network`, and optional `socket` / `io`.
 - Use `wacom` services directly through Angular DI. Do not wrap `HttpService`, `CrudService`, `ThemeService`, `TranslateService`, or other SSR-safe `wacom` services in `isPlatformBrowser` guards or lazy `Injector.get(...)` access just for SSR.
 - Keep SSR guards focused on actual browser APIs such as `localStorage`, `window`, `document`, `navigator`, WebRTC, or other DOM-only behavior.
-- Prefer existing `wacom` primitives when they fit the task:
-  `HttpService` for API calls and shared headers,
-  `CrudService` for CRUD-style feature data,
+- Prefer the library services before adding duplicate app utilities:
+  `HttpService` for API calls and shared headers/base URL handling,
+  `StoreService` for persisted local storage values,
+  `MetaService` for title, description, robots, image, and link tags,
+  `CrudService` for data flows that need offline-aware syncing behavior,
   `ThemeService` for mode switching,
-  `TranslateService` and app translations for localized UI.
+  `TranslateService` and app translations for localized UI,
+  `EmitterService`, `NetworkService`, `SocketService`, `RtcService`, `TimeService`, and `UtilService` when their built-in behavior matches the need.
+- Prefer importing the specific `wacom` directives, pipes, and translation helpers you need instead of wrapping the whole library again in another shared abstraction.
+- For metadata, prefer configuring defaults in `provideWacom({ meta: ... })` and using `MetaService` or route metadata. If route-driven updates are expected, prefer `meta.applyFromRoutes = true`; use `MetaGuard` only when that flow specifically needs a guard.
+- For translations, register app translations with `provideTranslate(...)` and use the exported translation pipe/directive rather than creating another parallel translation bootstrap path.
+- Common reusable building blocks exported by the library include `clickOutside`, manual form-related directives, translation helpers, and array/search/safe/pagination-style pipes.
+- When changing app behavior, prefer configuring or composing `wacom` services first before modifying the library source.
 - If a feature needs browser-only `wacom` behavior such as realtime, RTC, or DOM interaction, isolate the browser-specific calls without blocking server rendering of the rest of the feature.
 
 ## File Placement
