@@ -1,101 +1,105 @@
-<div class="job-detail-page bg-[var(--c-bg-primary)] min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-	<div class="max-w-4xl mx-auto">
-		<!-- Back Link -->
-		<a routerLink="/jobs" class="inline-flex items-center gap-2 text-[var(--c-text-muted)] hover:text-[var(--c-primary)] font-bold mb-8 transition-colors group">
-			<span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
-			Назад до списку
-		</a>
+<div class="job-detail-page bg-slate-50 dark:bg-slate-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <a routerLink="/jobs" class="inline-flex items-center text-sm font-bold text-[var(--c-primary)] hover:underline mb-8 gap-2">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Назад до всіх вакансій
+        </a>
 
-		@if (job(); as jobData) {
-			<article class="bg-[var(--c-bg-secondary)] rounded-[3rem] border border-[var(--c-border)] shadow-xl overflow-hidden animate-in fade-in duration-500">
-				<!-- Hero Section -->
-				<div class="aspect-[21/9] w-full relative overflow-hidden bg-[var(--c-bg-primary)]">
-					@if (jobData.data?.preview) {
-						<img [src]="jobData.data.preview" [alt]="jobData.data.title" class="h-full w-full object-cover">
-					} @else {
-						<div class="h-full w-full flex items-center justify-center opacity-10">
-							<span class="material-symbols-outlined text-9xl">work</span>
-						</div>
-					}
-					<div class="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-secondary)] to-transparent"></div>
-					
-					<div class="absolute bottom-0 left-0 p-8 sm:p-12 w-full">
-						<div class="flex items-center gap-3 mb-4">
-							<span class="bg-[var(--c-primary)] text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-[var(--c-primary)]/20">
-								Вільна позиція
-							</span>
-						</div>
-						<h1 class="text-3xl sm:text-5xl font-black text-[var(--c-text-secondary)] leading-tight">
-							{{ jobData.data?.title }}
-						</h1>
-					</div>
-				</div>
+        @if (job(); as current) {
+            <div class="bg-[var(--c-bg-secondary)] rounded-[3rem] border border-[var(--c-border)] overflow-hidden shadow-sm">
+                <!-- Header Section -->
+                <div class="p-8 sm:p-12 border-b border-[var(--c-border)]">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                        <div>
+                            <p-tag [severity]="current.data.status === 'active' ? 'success' : 'danger'" [value]="current.data.status === 'active' ? 'Активна' : 'Закрита'" class="mb-4"></p-tag>
+                            <h1 class="text-3xl sm:text-5xl font-black text-[var(--c-text-secondary)] leading-tight mt-2">
+                                {{ current.data.title }}
+                            </h1>
+                            <p class="text-xl font-bold text-[var(--c-primary)] mt-2">
+                                {{ current.data.company }}
+                            </p>
+                        </div>
+                        @if (current.data.status === 'active') {
+                            <p-button label="Відгукнутися" icon="pi pi-send" (onClick)="openApplyModal()" size="large"></p-button>
+                        }
+                    </div>
+                </div>
 
-				<!-- Content Grid -->
-				<div class="p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
-					<!-- Main Content -->
-					<div class="lg:col-span-2 space-y-8">
-						<div class="prose prose-lg prose-blue max-w-none text-[var(--c-text-primary)] font-medium" [innerHTML]="jobData.data?.description">
-						</div>
+                <!-- Content Section -->
+                <div class="p-8 sm:p-12 space-y-12">
+                    <!-- Requirements -->
+                    @if (current.data.requirements?.length) {
+                        <div>
+                            <h3 class="text-sm font-black uppercase tracking-widest text-[var(--c-text-muted)] mb-4">Вимоги</h3>
+                            <div class="flex flex-wrap gap-2">
+                                @for (req of current.data.requirements; track req) {
+                                    <span class="px-4 py-2 bg-[var(--c-bg-primary)] border border-[var(--c-border)] rounded-xl text-sm font-bold text-[var(--c-text-secondary)]">
+                                        {{ req }}
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    }
 
-						<!-- Success Message -->
-						@if (isSubmitted()) {
-							<div class="bg-emerald-50 border-2 border-emerald-200 rounded-[2rem] p-8 text-center animate-in zoom-in-95">
-								<div class="h-16 w-16 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/20">
-									<span class="material-symbols-outlined text-3xl">check</span>
-								</div>
-								<h3 class="text-xl font-black text-emerald-900 mb-2">Заявку надіслано!</h3>
-								<p class="text-emerald-700 font-bold">Дякуємо за ваш інтерес. Ми розглянемо вашу кандидатуру найближчим часом.</p>
-								<button (click)="isSubmitted.set(false)" class="mt-6 text-emerald-600 font-black hover:underline underline-offset-8">
-									Надіслати ще одну?
-								</button>
-							</div>
-						} @else {
-							<div class="pt-8 border-t border-[var(--c-border)]">
-								<button 
-									(click)="openApplyModal()"
-									class="w-full sm:w-auto px-10 py-5 rounded-2xl bg-[var(--c-primary)] text-white font-black text-lg shadow-2xl shadow-[var(--c-primary)]/30 hover:scale-[1.02] active:scale-95 transition-all">
-									ВІДГУКНУТИСЯ НА ВАКАНСІЮ
-								</button>
-							</div>
-						}
-					</div>
+                    <!-- Description -->
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-[var(--c-text-muted)] mb-4">Опис вакансії</h3>
+                        <div class="prose prose-lg dark:prose-invert max-w-none text-[var(--c-text-secondary)]" [innerHTML]="current.data.description"></div>
+                    </div>
+                </div>
 
-					<!-- Sidebar Area -->
-					<div class="space-y-8">
-						<div class="bg-[var(--c-bg-primary)] rounded-[2.5rem] p-8 border border-[var(--c-border)]">
-							<h4 class="text-xs font-black text-[var(--c-text-muted)] uppercase tracking-widest mb-6">Про автора</h4>
-							<div class="flex items-center gap-4 mb-6">
-								<div class="h-14 w-14 rounded-2xl bg-[var(--c-bg-secondary)] flex items-center justify-center border border-[var(--c-border)]">
-									<span class="material-symbols-outlined text-3xl text-[var(--c-primary)]">person_outline</span>
-								</div>
-								<div>
-									<p class="font-black text-[var(--c-text-secondary)]">{{ jobData.data?.authorName || 'Команда ITK' }}</p>
-									<p class="text-xs font-bold text-[var(--c-text-muted)]">IT Кам'янець-Подільський</p>
-								</div>
-							</div>
-							<p class="text-sm font-medium text-[var(--c-text-muted)] leading-relaxed italic">
-								"Ми завжди шукаємо талановитих фахівців для розвитку нашого ком'юніті та проєктів."
-							</p>
-						</div>
+                <!-- Footer CTA -->
+                @if (current.data.status === 'active') {
+                    <div class="p-8 sm:p-12 bg-[var(--c-bg-primary)]/50 border-t border-[var(--c-border)] text-center">
+                        <h2 class="text-2xl font-black mb-4">Готові приєднатися?</h2>
+                        <p class="text-[var(--c-text-muted)] mb-8 max-w-md mx-auto font-medium">
+                            Ми шукаємо талановитих людей, які хочуть розвивати IT-спільноту нашого міста.
+                        </p>
+                        <p-button label="Подати заявку зараз" (onClick)="openApplyModal()" severity="primary" size="large" [style]="{width: '100%', maxWidth: '300px'}"></p-button>
+                    </div>
+                }
+            </div>
+        } @else {
+            <div class="flex flex-col items-center justify-center py-32">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--c-primary)]"></div>
+                <p class="mt-4 text-[var(--c-text-muted)] font-bold">Завантаження деталей вакансії...</p>
+            </div>
+        }
+    </div>
 
-						<div class="bg-amber-50 rounded-[2.5rem] p-8 border border-amber-100">
-							<div class="flex items-center gap-3 text-amber-600 mb-4">
-								<span class="material-symbols-outlined">info</span>
-								<h4 class="font-black text-xs uppercase tracking-widest">Важливо</h4>
-							</div>
-							<p class="text-sm font-bold text-amber-800 leading-relaxed">
-								Усі заявки розглядаються впродовж 3-5 робочих днів. Переконайтеся, що ваші контакти вказані вірно.
-							</p>
-						</div>
-					</div>
-				</div>
-			</article>
-		} @else {
-			<!-- Loading State -->
-			<div class="flex flex-col items-center justify-center py-32 opacity-30">
-				<div class="h-12 w-12 border-4 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-4"></div>
-				<p class="font-black text-[var(--c-text-muted)]">ЗАВАНТАЖЕННЯ...</p>
-			</div>
-		}
-...
+    <!-- Apply Modal -->
+    <p-dialog [(visible)]="isApplying" header="Подати заявку" [modal]="true" [style]="{width: '35vw'}" [draggable]="false" [resizable]="false">
+        <div class="flex flex-col gap-4 py-4">
+            <div class="flex flex-col gap-2">
+                <label for="name" class="font-bold">Ваше ім'я</label>
+                <input pInputText id="name" [(ngModel)]="proposal.candidateName" placeholder="Іван Іванов" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="email" class="font-bold">Email для зв'язку</label>
+                <input pInputText id="email" [(ngModel)]="proposal.email" placeholder="ivan@example.com" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="cv" class="font-bold">Посилання на CV / Портфоліо</label>
+                <input pInputText id="cv" [(ngModel)]="proposal.cvUrl" placeholder="https://linkedin.com/in/..." />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="message" class="font-bold">Супровідний текст (необов'язково)</label>
+                <textarea pInputTextarea id="message" [(ngModel)]="proposal.message" rows="4" placeholder="Чому саме ви?"></textarea>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button label="Скасувати" (onClick)="closeApplyModal()" [text]="true" severity="secondary"></p-button>
+            <p-button label="Відправити" icon="pi pi-check" (onClick)="submitApplication()" [loading]="isSending()" [disabled]="!proposal.candidateName || !proposal.email"></p-button>
+        </ng-template>
+    </p-dialog>
+
+    <!-- Success Message -->
+    @if (isSubmitted()) {
+        <div class="fixed bottom-10 right-10 z-50">
+            <p-message severity="success" text="Вашу заявку успішно надіслано! Ми зв'яжемося з вами найближчим часом."></p-message>
+        </div>
+    }
+</div>

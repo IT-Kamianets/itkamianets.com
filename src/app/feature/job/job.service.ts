@@ -1,7 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { Job } from './job.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
 import { HttpService } from 'wacom';
 
 @Injectable({ providedIn: 'root' })
@@ -17,9 +16,10 @@ export class JobService {
 
 	load(): void {
 		this.http.get(`${this.API}/get`).subscribe({
-			next: (docs) => {
-				if (Array.isArray(docs)) {
-					this.jobs.set(docs.map(d => this._fromDoc(d)));
+			next: (docs: any) => {
+				const data = Array.isArray(docs) ? docs : (docs?.data || []);
+				if (Array.isArray(data)) {
+					this.jobs.set(data.map((d: any) => this._fromDoc(d)));
 				}
 			}
 		});
@@ -27,18 +27,20 @@ export class JobService {
 
 	create(job: Partial<Job>): Observable<any> {
 		return this.http.post(`${this.API}/create`, { data: job.data }).pipe(
-			tap(doc => {
-				if (doc?._id) {
-					this.jobs.update(list => [this._fromDoc(doc), ...list]);
-				}
+			map(doc => {
+				const mapped = this._fromDoc(doc || { data: job.data });
+				this.jobs.update(list => [mapped, ...list]);
+				return mapped;
 			})
 		);
 	}
 
 	update(job: Job): Observable<any> {
 		return this.http.post(`${this.API}/update`, { _id: job._id, data: job.data }).pipe(
-			tap(doc => {
-				this.jobs.update(list => list.map(item => item._id === job._id ? this._fromDoc(doc || job) : item));
+			map(doc => {
+				const mapped = this._fromDoc(doc || job);
+				this.jobs.update(list => list.map(item => item._id === job._id ? mapped : item));
+				return mapped;
 			})
 		);
 	}
@@ -53,28 +55,31 @@ export class JobService {
 
 	fetch(id: string): Observable<any> {
 		return this.http.post(`${this.API}/fetch`, { _id: id }).pipe(
-			tap(doc => {
-				if (doc?._id) {
+			map(doc => {
+				if (doc) {
 					const mapped = this._fromDoc(doc);
 					this.jobs.update(list => {
 						const exists = list.find(item => item._id === mapped._id);
 						return exists ? list.map(item => item._id === mapped._id ? mapped : item) : [...list, mapped];
 					});
+					return mapped;
 				}
+				return null;
 			})
 		);
 	}
 
 	private _fromDoc(doc: any): Job {
+		const d = doc.data || doc || {};
 		return {
-			_id: doc._id,
-			...doc, // зберігаємо оригінальні поля якщо є
-			data: doc.data || {
-				title: doc.title || '',
-				description: doc.description || '',
-				authorName: doc.authorName || '',
-				published: !!doc.published,
-				preview: doc.preview || ''
+			_id: doc._id || doc.id,
+			data: {
+				title: d.title || '',
+				description: d.description || '',
+				company: d.company || '',
+				requirements: Array.isArray(d.requirements) ? d.requirements : [],
+				status: d.status || (d.published ? 'active' : 'closed') || 'active',
+				preview: d.preview || ''
 			}
 		} as Job;
 	}

@@ -5,11 +5,27 @@ import { RouterLink } from '@angular/router';
 import { JobService } from '../../job.service';
 import { JobProposalService } from '../../job-proposal.service';
 import { Job } from '../../job.interface';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Textarea } from 'primeng/textarea';
+import { Dialog } from 'primeng/dialog';
+import { Tag } from 'primeng/tag';
+import { Message } from 'primeng/message';
 
 @Component({
 	selector: 'app-job-detail',
 	standalone: true,
-	imports: [CommonModule, FormsModule, RouterLink],
+	imports: [
+		CommonModule, 
+		FormsModule, 
+		RouterLink,
+		Button,
+		InputText,
+		Textarea,
+		Dialog,
+		Tag,
+		Message
+	],
 	templateUrl: './job.component.html',
 	styleUrl: './job.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,9 +42,9 @@ export class JobComponent implements OnInit {
 	protected readonly isSending = signal(false);
 
 	protected proposal = {
-		applicantName: '',
-		applicantEmail: '',
-		applicantPhone: '',
+		candidateName: '',
+		email: '',
+		cvUrl: '',
 		message: ''
 	};
 
@@ -56,24 +72,26 @@ export class JobComponent implements OnInit {
 		this.isSending.set(true);
 
 		this.jobProposalService.create({
-			jobId: currentJob._id,
-			data: { ...this.proposal }
+			data: { 
+				...this.proposal,
+				jobId: currentJob._id,
+				status: 'new'
+			}
 		}).subscribe({
 			next: () => {
 				this.isSending.set(false);
 				this.isSubmitted.set(true);
 				this.isApplying.set(false);
 				this.proposal = {
-					applicantName: '',
-					applicantEmail: '',
-					applicantPhone: '',
+					candidateName: '',
+					email: '',
+					cvUrl: '',
 					message: ''
 				};
 			},
 			error: (err) => {
 				this.isSending.set(false);
 				console.error('Apply error:', err);
-				alert('Помилка при відправці заявки');
 			}
 		});
 	}

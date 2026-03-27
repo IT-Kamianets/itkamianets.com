@@ -16,7 +16,7 @@ export class JobsComponent {
 	protected readonly jobService = inject(JobService);
 	protected readonly jobs = computed(() => this.jobService.jobs());
 
-	protected readonly publishedJobs = computed(() => {
-		return this.jobs().filter((job: Job) => job.data?.published);
+	protected readonly activeJobs = computed(() => {
+		return this.jobs().filter((job: Job) => job.data?.status === 'active');
 	});
 }

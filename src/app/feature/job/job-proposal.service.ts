@@ -1,13 +1,12 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { JobProposal } from './job-proposal.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
+import { HttpService } from 'wacom';
 
 @Injectable({ providedIn: 'root' })
 export class JobProposalService {
-	private http = inject(HttpClient);
-	private API = `${environment.apiUrl}/api/itjobproposal`;
+	private http = inject(HttpService);
+	private API = `/api/itjobproposal`;
 
 	readonly proposals = signal<JobProposal[]>([]);
 
@@ -16,27 +15,51 @@ export class JobProposalService {
 	}
 
 	load(): void {
-		this.http.get<any[]>(`${this.API}/get`).subscribe({
-			next: (docs) => {
-				if (Array.isArray(docs)) {
-					this.proposals.set(docs.map(d => this._fromDoc(d)));
+		this.http.get(`${this.API}/get`).subscribe({
+			next: (docs: any) => {
+				const data = Array.isArray(docs) ? docs : (docs?.data || []);
+				if (Array.isArray(data)) {
+					this.proposals.set(data.map((d: any) => this._fromDoc(d)));
 				}
 			}
 		});
 	}
 
 	create(proposal: Partial<JobProposal>): Observable<any> {
-		return this.http.post<any>(`${this.API}/create`, { jobId: proposal.jobId, data: proposal.data }).pipe(
-			tap(doc => {
-				if (doc?._id) {
-					this.proposals.update(list => [this._fromDoc(doc), ...list]);
-				}
+		const payload = {
+			...proposal.data,
+			jobId: proposal.data?.jobId,
+			data: proposal.data
+		};
+		return this.http.post(`${this.API}/create`, payload).pipe(
+			map(doc => {
+				const fullDoc = { ...doc, ...proposal.data, data: doc?.data || proposal.data };
+				const mapped = this._fromDoc(fullDoc);
+				this.proposals.update(list => [mapped, ...list]);
+				return mapped;
+			})
+		);
+	}
+
+	update(proposal: JobProposal): Observable<any> {
+		const payload = {
+			_id: proposal._id,
+			...proposal.data,
+			jobId: proposal.data.jobId,
+			data: proposal.data
+		};
+		return this.http.post(`${this.API}/update`, payload).pipe(
+			map(doc => {
+				const fullDoc = { ...proposal, ...doc, ...proposal.data, data: doc?.data || proposal.data };
+				const mapped = this._fromDoc(fullDoc);
+				this.proposals.update(list => list.map(item => item._id === proposal._id ? mapped : item));
+				return mapped;
 			})
 		);
 	}
 
 	delete(proposal: JobProposal): Observable<any> {
-		return this.http.post<any>(`${this.API}/delete`, { _id: proposal._id }).pipe(
+		return this.http.post(`${this.API}/delete`, { _id: proposal._id }).pipe(
 			tap(() => {
 				this.proposals.update(list => list.filter(item => item._id !== proposal._id));
 			})
@@ -44,14 +67,15 @@ export class JobProposalService {
 	}
 
 	private _fromDoc(doc: any): JobProposal {
+		const d = doc.data || {};
 		return {
-			_id: doc._id,
-			jobId: doc.jobId,
-			data: doc.data || {
-				applicantName: doc.applicantName || '',
-				applicantEmail: doc.applicantEmail || '',
-				applicantPhone: doc.applicantPhone || '',
-				message: doc.message || ''
+			_id: doc._id || doc.id,
+			data: {
+				candidateName: doc.candidateName || d.candidateName || '',
+				email: doc.email || d.email || '',
+				cvUrl: doc.cvUrl || d.cvUrl || '',
+				jobId: doc.jobId || d.jobId || '',
+				status: doc.status || d.status || 'new'
 			}
 		} as JobProposal;
 	}

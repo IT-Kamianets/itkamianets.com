@@ -8,47 +8,44 @@
 			</div>
 		</header>
 
-		@if (publishedJobs().length) {
+		@if (activeJobs().length) {
 			<div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-				@for (job of publishedJobs(); track job._id) {
+				@for (job of activeJobs(); track job._id) {
 					<article 
 						[routerLink]="['/job', job._id]"
 						class="group flex flex-col overflow-hidden rounded-[2.5rem] bg-[var(--c-bg-secondary)] shadow-sm transition-all hover:shadow-2xl border border-[var(--c-border)] relative cursor-pointer hover:-translate-y-2 duration-300">
 						
-						<div class="aspect-[16/10] w-full overflow-hidden bg-[var(--c-bg-primary)] relative">
-							@if (job.data?.preview || job.preview) {
-								<img [src]="job.data?.preview || job.preview" [alt]="job.data?.title || job.title" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
-							} @else {
-								<div class="h-full w-full flex items-center justify-center opacity-20">
-									<span class="material-symbols-outlined text-6xl">work</span>
-								</div>
-							}
-							<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-						</div>
-
 						<div class="flex flex-1 flex-col p-8">
 							<div class="flex-1">
+                                <div class="mb-4">
+                                    <span class="inline-flex items-center rounded-full bg-[var(--c-primary)]/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-[var(--c-primary)]">
+                                        {{ job.data?.company }}
+                                    </span>
+                                </div>
 								<h3 class="text-2xl font-black text-[var(--c-text-secondary)] mb-4 line-clamp-2 leading-tight group-hover:text-[var(--c-primary)] transition-colors">
-									{{ job.data?.title || job.title }}
+									{{ job.data?.title }}
 								</h3>
-								<div class="prose prose-sm prose-slate dark:prose-invert max-w-none line-clamp-3 opacity-60 font-medium" [innerHTML]="job.data?.description || job.description"></div>
+								<div class="prose prose-sm prose-slate dark:prose-invert max-w-none line-clamp-3 opacity-60 font-medium" [innerHTML]="job.data?.description"></div>
 							</div>
 							
+                            @if (job.data?.requirements?.length) {
+                                <div class="mt-6 flex flex-wrap gap-2">
+                                    @for (req of job.data.requirements.slice(0, 3); track req) {
+                                        <span class="inline-flex items-center rounded-lg bg-[var(--c-bg-primary)] px-2 py-1 text-[10px] font-bold text-[var(--c-text-muted)] border border-[var(--c-border)] uppercase tracking-tighter">
+                                            {{ req }}
+                                        </span>
+                                    }
+                                    @if (job.data.requirements.length > 3) {
+                                        <span class="text-[10px] font-bold text-[var(--c-text-muted)] flex items-center">+{{ job.data.requirements.length - 3 }}</span>
+                                    }
+                                </div>
+                            }
+
 							<div class="mt-8 pt-6 border-t border-[var(--c-border)] flex items-center justify-between">
-								<div class="flex items-center gap-3">
-									<div class="h-10 w-10 rounded-full bg-[var(--c-bg-primary)] flex items-center justify-center border border-[var(--c-border)]">
-										<span class="material-symbols-outlined text-[var(--c-text-muted)] text-xl">person</span>
-									</div>
-									<div>
-										<p class="text-[10px] uppercase tracking-widest text-[var(--c-text-muted)] font-black">Автор</p>
-										<p class="text-sm font-bold text-[var(--c-text-secondary)]">
-											{{ (job.data?.authorName || job.authorName) || 'IT Кам\'янець' }}
-										</p>
-									</div>
-								</div>
-								<div class="h-10 w-10 rounded-xl bg-[var(--c-bg-primary)] flex items-center justify-center text-[var(--c-primary)] group-hover:bg-[var(--c-primary)] group-hover:text-white transition-all">
-									<span class="material-symbols-outlined">arrow_forward</span>
-								</div>
+								<div class="text-sm font-bold text-[var(--c-primary)] flex items-center gap-2">
+                                    Детальніше
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </div>
 							</div>
 						</div>
 					</article>
@@ -59,7 +56,7 @@
 				<div class="inline-flex h-24 w-24 items-center justify-center rounded-full bg-[var(--c-bg-primary)] mb-6">
 					<span class="material-symbols-outlined text-5xl text-[var(--c-text-muted)] opacity-30">work_off</span>
 				</div>
-				<p class="text-2xl font-black text-[var(--c-text-secondary)]">Наразі немає опублікованих вакансій</p>
+				<p class="text-2xl font-black text-[var(--c-text-secondary)]">Наразі немає активних вакансій</p>
 				<p class="mt-2 text-[var(--c-text-muted)] font-bold">Заходьте пізніше, ми постійно оновлюємо список</p>
 			</div>
 		}
