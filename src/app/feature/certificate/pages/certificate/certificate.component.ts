@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, computed, signal, effect } from '@angular/core';
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CertificateService } from '../../certificate.service';
 import { Certificate } from '../../certificate.interface';
@@ -8,7 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
 	selector: 'app-certificate',
 	standalone: true,
-	imports: [DatePipe, JsonPipe, RouterLink],
+	imports: [DatePipe, RouterLink],
 	templateUrl: './certificate.component.html',
 	styleUrl: './certificate.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
