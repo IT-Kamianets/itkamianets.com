@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BUSINESSES } from '../../data/businesses.data';
+import { COMPANIES } from '../../data/companies.data';
 import { PROJECTS } from '../../data/projects.data';
 
 interface WorkHackathon {
@@ -36,7 +36,7 @@ export class OurWorkComponent {
 		tags: project.tags.map((tag) => this._projectTagLabel(tag)),
 	}));
 
-	protected readonly businesses = BUSINESSES.slice(0, 3);
+	protected readonly businesses = COMPANIES.slice(0, 3);
 
 	protected readonly hackathons: WorkHackathon[] = [
 		{
