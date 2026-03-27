@@ -15,7 +15,7 @@ import { CompanyService } from '../../company.service';
 export class CompaniesComponent {
 	private _companyService = inject(CompanyService);
 	readonly companies = this._companyService.companies;
-	readonly types: string[] = COMPANY_TYPES;
+	readonly types = COMPANY_TYPES;
 
 	activeType = signal<string>('All');
 	searchQuery = signal<string>('');
