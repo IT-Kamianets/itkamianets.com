@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../company.service';
-import { Company, COMPANY_TYPES } from '../../company.interface';
+import { COMPANY_TYPES, Company, CompanyType } from '../../company.interface';
 
 @Component({
 	selector: 'app-manage-companies',
@@ -89,10 +89,13 @@ export class ManageCompaniesComponent {
 	}
 
 	save() {
+		const type: CompanyType = COMPANY_TYPES.includes(this.form.type as CompanyType)
+			? (this.form.type as CompanyType)
+			: COMPANY_TYPES[0];
 		const data: Omit<Company, 'id'> = {
 			name: this.form.name,
 			logo: this.form.logo,
-			type: this.form.type,
+			type,
 			shortDescription: this.form.shortDescription,
 			description: this.form.description,
 			techStack: this.form.techStack.split(',').map(s => s.trim()).filter(Boolean),

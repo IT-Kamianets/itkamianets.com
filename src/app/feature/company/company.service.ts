@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Company } from './company.interface';
+import { COMPANY_TYPES, Company } from './company.interface';
 
 const API = `${environment.apiUrl}/api/itcompany`;
 
@@ -75,9 +75,14 @@ export class CompanyService {
 			id: doc._id,
 			name: doc.name ?? '',
 			shortDescription: doc.description ?? '',
+			logo: restData.logo ?? '',
+			type: COMPANY_TYPES.includes(restData.type) ? restData.type : COMPANY_TYPES[0],
+			employees: restData.employees ?? 0,
+			founded: restData.founded ?? 0,
+			description: restData.description ?? '',
 			contacts,
 			techStack,
 			services,
-		} as Company;
+		};
 	}
 }

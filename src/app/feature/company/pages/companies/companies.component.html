@@ -16,14 +16,14 @@
 	<div class="container">
 		<!-- View Toggle -->
 		<div class="companies-view-toggle">
-			<a routerLink="/companies" class="companies-view-toggle__btn companies-view-toggle__btn--active">
+			<a routerLink="/companies" routerLinkActive="companies-view-toggle__btn--active" [routerLinkActiveOptions]="{exact: true}" class="companies-view-toggle__btn">
 				<svg aria-hidden="true" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
 					<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
 					<rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
 				</svg>
 				Список
 			</a>
-			<a routerLink="/companies/map" class="companies-view-toggle__btn">
+			<a routerLink="/companies/map" routerLinkActive="companies-view-toggle__btn--active" class="companies-view-toggle__btn">
 				<svg aria-hidden="true" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
 					<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
 					<circle cx="12" cy="10" r="3"/>

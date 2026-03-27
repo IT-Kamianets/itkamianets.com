@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { COMPANY_TYPES, Company } from '../../company.interface';
 import { CompanyService } from '../../company.service';
 
 @Component({
 	selector: 'app-companies',
-	imports: [RouterLink, FormsModule],
+	imports: [RouterLink, RouterLinkActive, FormsModule],
 	templateUrl: './companies.component.html',
 	styleUrl: './companies.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompaniesComponent {
-	private companyService = inject(CompanyService);
-	readonly companies = this.companyService.companies;
+	private _companyService = inject(CompanyService);
+	readonly companies = this._companyService.companies;
 	readonly types: string[] = COMPANY_TYPES;
 
 	activeType = signal<string>('All');

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { DOCUMENT, SlicePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs';
 import { Company } from '../../company.interface';
@@ -20,7 +20,6 @@ export class CompanyComponent {
 	private companyService = inject(CompanyService);
 	private reviewService = inject(ReviewService);
 	private route = inject(ActivatedRoute);
-	private _document = inject(DOCUMENT);
 
 	private routeId = toSignal(this.route.params.pipe(map((p) => p['id'] as string)), { initialValue: '' });
 
@@ -48,16 +47,16 @@ export class CompanyComponent {
 		];
 	});
 
-	constructor() {}
-
 	submitReview(): void {
 		const c = this.company();
+		const rating = this.reviewForm.rating;
 		if (!c || !this.reviewForm.author.trim() || !this.reviewForm.text.trim()) return;
+		if (rating < 1 || rating > 5) return;
 
 		this.reviewService.add({
 			companyId: c.id,
 			author: this.reviewForm.author.trim(),
-			rating: this.reviewForm.rating as 1 | 2 | 3 | 4 | 5,
+			rating: rating as 1 | 2 | 3 | 4 | 5,
 			text: this.reviewForm.text.trim(),
 			date: new Date().toISOString(),
 		});
@@ -66,23 +65,4 @@ export class CompanyComponent {
 	}
 
 	ratingRange = [1, 2, 3, 4, 5];
-
-	private _getOgImageUrl(logoUrl: string): string {
-		try {
-			const origin = this._document.location?.origin ?? '';
-			const url = new URL(logoUrl, origin || undefined);
-			const params = url.searchParams;
-
-			if (params.has('w')) {
-				params.set('w', '1200');
-			}
-			if (params.has('h')) {
-				params.set('h', '630');
-			}
-
-			return url.toString();
-		} catch {
-			return logoUrl;
-		}
-	}
 }
