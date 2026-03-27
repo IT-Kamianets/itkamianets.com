@@ -1,27 +1,27 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BusinessService } from '../../../feature/business/business.service';
-import { Business, BUSINESS_TYPES } from '../../../feature/business/business.interface';
+import { CompanyService } from '../../company.service';
+import { COMPANY_TYPES, Company, CompanyType } from '../../company.interface';
 
 @Component({
-	selector: 'app-manage-businesses',
+	selector: 'app-manage-companies',
 	standalone: true,
 	imports: [FormsModule],
-	templateUrl: './businesses.component.html',
-	styleUrl: './businesses.component.scss',
+	templateUrl: './manage-companies.component.html',
+	styleUrl: './manage-companies.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageBusinessesComponent {
-	protected readonly businessService = inject(BusinessService);
-	protected readonly businesses = this.businessService.businesses;
-	protected readonly businessTypes = BUSINESS_TYPES;
+export class ManageCompaniesComponent {
+	protected readonly companyService = inject(CompanyService);
+	protected readonly companies = this.companyService.companies;
+	protected readonly companyTypes = COMPANY_TYPES;
 
 	protected isModalOpen = signal(false);
-	protected editingBusiness = signal<Business | null>(null);
+	protected editingCompany = signal<Company | null>(null);
 
-	protected form = this.emptyForm();
+	protected form = this._emptyForm();
 
-	private emptyForm() {
+	private _emptyForm() {
 		return {
 			name: '',
 			logo: '',
@@ -49,50 +49,53 @@ export class ManageBusinessesComponent {
 	}
 
 	openAddModal() {
-		this.editingBusiness.set(null);
-		this.form = this.emptyForm();
+		this.editingCompany.set(null);
+		this.form = this._emptyForm();
 		this.isModalOpen.set(true);
 	}
 
-	openEditModal(b: Business) {
-		this.editingBusiness.set(b);
+	openEditModal(c: Company) {
+		this.editingCompany.set(c);
 		this.form = {
-			name: b.name,
-			logo: b.logo,
-			type: b.type,
-			shortDescription: b.shortDescription,
-			description: b.description,
-			techStack: (b.techStack ?? []).join(', '),
-			services: (b.services ?? []).join(', '),
-			employees: b.employees ?? 0,
-			founded: b.founded ?? new Date().getFullYear(),
-			openPositions: b.openPositions ?? '',
-			verified: b.verified ?? false,
-			lat: b.lat ?? '',
-			lng: b.lng ?? '',
-			website: b.contacts?.website ?? '',
-			email: b.contacts?.email ?? '',
-			linkedin: b.contacts?.linkedin ?? '',
-			telegram: b.contacts?.telegram ?? '',
-			github: b.contacts?.github ?? '',
-			twitter: b.contacts?.twitter ?? '',
-			facebook: b.contacts?.facebook ?? '',
-			instagram: b.contacts?.instagram ?? '',
-			address: b.contacts?.address ?? '',
+			name: c.name,
+			logo: c.logo,
+			type: c.type,
+			shortDescription: c.shortDescription,
+			description: c.description,
+			techStack: (c.techStack ?? []).join(', '),
+			services: (c.services ?? []).join(', '),
+			employees: c.employees ?? 0,
+			founded: c.founded ?? new Date().getFullYear(),
+			openPositions: c.openPositions ?? '',
+			verified: c.verified ?? false,
+			lat: c.lat ?? '',
+			lng: c.lng ?? '',
+			website: c.contacts?.website ?? '',
+			email: c.contacts?.email ?? '',
+			linkedin: c.contacts?.linkedin ?? '',
+			telegram: c.contacts?.telegram ?? '',
+			github: c.contacts?.github ?? '',
+			twitter: c.contacts?.twitter ?? '',
+			facebook: c.contacts?.facebook ?? '',
+			instagram: c.contacts?.instagram ?? '',
+			address: c.contacts?.address ?? '',
 		};
 		this.isModalOpen.set(true);
 	}
 
 	closeModal() {
 		this.isModalOpen.set(false);
-		this.editingBusiness.set(null);
+		this.editingCompany.set(null);
 	}
 
 	save() {
-		const data: Omit<Business, 'id'> = {
+		const type: CompanyType = COMPANY_TYPES.includes(this.form.type as CompanyType)
+			? (this.form.type as CompanyType)
+			: COMPANY_TYPES[0];
+		const data: Omit<Company, 'id'> = {
 			name: this.form.name,
 			logo: this.form.logo,
-			type: this.form.type,
+			type,
 			shortDescription: this.form.shortDescription,
 			description: this.form.description,
 			techStack: this.form.techStack.split(',').map(s => s.trim()).filter(Boolean),
@@ -116,18 +119,18 @@ export class ManageBusinessesComponent {
 			},
 		};
 
-		const editing = this.editingBusiness();
+		const editing = this.editingCompany();
 		if (editing) {
-			this.businessService.updateBusiness({ ...data, id: editing.id });
+			this.companyService.updateCompany({ ...data, id: editing.id });
 		} else {
-			this.businessService.add(data);
+			this.companyService.add(data);
 		}
 		this.closeModal();
 	}
 
 	delete(id: string) {
 		if (confirm('Ви впевнені, що хочете видалити цю компанію?')) {
-			this.businessService.deleteBusiness(id);
+			this.companyService.deleteCompany(id);
 		}
 	}
 }

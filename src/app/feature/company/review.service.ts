@@ -13,7 +13,7 @@ export class ReviewService {
 		this.reviews.update(reviews => [...reviews, newReview]);
 	}
 
-	getByBusinessId(id: string) {
-		return computed(() => this.reviews().filter(r => r.businessId === id));
+	getByCompanyId(id: string) {
+		return computed(() => this.reviews().filter(r => r.companyId === id));
 	}
 }

@@ -11,32 +11,31 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Business, BUSINESS_TYPES } from '../../feature/business/business.interface';
-import { BusinessService } from '../../feature/business/business.service';
+import { Company, COMPANY_TYPES } from '../../company.interface';
+import { CompanyService } from '../../company.service';
 
 @Component({
-	selector: 'app-businesses-map',
+	selector: 'app-companies-map',
 	standalone: true,
 	imports: [RouterLink],
-	templateUrl: './businesses-map.component.html',
-	styleUrl: './businesses-map.component.scss',
+	templateUrl: './map.component.html',
+	styleUrl: './map.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BusinessesMapComponent implements AfterViewInit, OnDestroy {
-	private businessService = inject(BusinessService);
-	private platformId = inject(PLATFORM_ID);
+export class CompaniesMapComponent implements AfterViewInit, OnDestroy {
+	private _companyService = inject(CompanyService);
+	private _platformId = inject(PLATFORM_ID);
 
 	activeType = signal<string>('All');
-	selectedBusiness = signal<Business | null>(null);
-	readonly types = BUSINESS_TYPES;
+	selectedCompany = signal<Company | null>(null);
+	readonly types = COMPANY_TYPES;
 
-	readonly filteredBusinesses = computed(() => {
+	readonly filteredCompanies = computed(() => {
 		const type = this.activeType();
-		const all = this.businessService.businesses().filter((b) => b.lat && b.lng);
-		return type === 'All' ? all : all.filter((b) => b.type === type);
+		const all = this._companyService.companies().filter((c) => c.lat != null && c.lng != null);
+		return type === 'All' ? all : all.filter((c) => c.type === type);
 	});
 
-	// Leaflet types — loaded dynamically on browser only
 	private L: typeof import('leaflet') | null = null;
 	private map: any = null;
 	private clusterGroup: any = null;
@@ -44,14 +43,14 @@ export class BusinessesMapComponent implements AfterViewInit, OnDestroy {
 
 	constructor() {
 		effect(() => {
-			const businesses = this.filteredBusinesses();
+			const companies = this.filteredCompanies();
 			if (!this.mapReady) return;
-			this.refreshMarkers(businesses);
+			this._refreshMarkers(companies);
 		});
 	}
 
 	async ngAfterViewInit() {
-		if (!isPlatformBrowser(this.platformId)) return;
+		if (!isPlatformBrowser(this._platformId)) return;
 
 		const leafletModule = await import('leaflet');
 		const L = (leafletModule as any).default ?? leafletModule;
@@ -69,7 +68,7 @@ export class BusinessesMapComponent implements AfterViewInit, OnDestroy {
 		this.map.addLayer(this.clusterGroup);
 
 		this.mapReady = true;
-		this.refreshMarkers(this.filteredBusinesses());
+		this._refreshMarkers(this.filteredCompanies());
 	}
 
 	ngOnDestroy() {
@@ -80,36 +79,45 @@ export class BusinessesMapComponent implements AfterViewInit, OnDestroy {
 
 	setFilter(type: string) {
 		this.activeType.set(type);
-		this.selectedBusiness.set(null);
+		this.selectedCompany.set(null);
 	}
 
 	closePanelPreview() {
-		this.selectedBusiness.set(null);
+		this.selectedCompany.set(null);
 	}
 
-	private refreshMarkers(businesses: Business[]) {
+	private _escapeHtml(value: string): string {
+		return value
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+
+	private _refreshMarkers(companies: Company[]) {
 		if (!this.L || !this.clusterGroup) return;
 		const L = this.L;
 
 		this.clusterGroup.clearLayers();
 
-		for (const b of businesses) {
-			if (!b.lat || !b.lng) continue;
+		for (const c of companies) {
+			if (c.lat == null || c.lng == null) continue;
 
 			const icon = L.divIcon({
 				className: '',
 				html: `<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
 					<span style="display:block;width:18px;height:18px;border-radius:50%;background:#6366f1;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35)"></span>
-					<span style="background:rgba(0,0,0,0.7);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none">${b.name}</span>
+					<span style="background:rgba(0,0,0,0.7);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none">${this._escapeHtml(c.name)}</span>
 				</div>`,
 				iconSize: [18, 18],
 				iconAnchor: [9, 0],
 			});
 
-			const marker = L.marker([b.lat, b.lng], { icon });
+			const marker = L.marker([c.lat, c.lng], { icon });
 			marker.on('click', () => {
-				this.selectedBusiness.set(b);
-				this.map.panTo([b.lat!, b.lng!]);
+				this.selectedCompany.set(c);
+				this.map.panTo([c.lat!, c.lng!]);
 			});
 
 			this.clusterGroup.addLayer(marker);

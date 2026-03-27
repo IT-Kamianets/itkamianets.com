@@ -34,6 +34,12 @@ export class HeaderComponent {
 			href: '/news',
 		},
 		{
+			_id: 'menu-companies',
+			type: 'menu',
+			title: 'Компанії',
+			href: '/companies',
+		},
+		{
 			_id: 'menu-merch',
 			type: 'menu',
 			title: 'Мерч',

@@ -18,10 +18,10 @@
 		</div>
 
 		<!-- Company count -->
-		<p class="map-count">Компаній на карті: {{ filteredBusinesses().length }}</p>
+		<p class="map-count">Компаній на карті: {{ filteredCompanies().length }}</p>
 
 		<!-- Preview card -->
-		@if (selectedBusiness(); as b) {
+		@if (selectedCompany(); as b) {
 			<div class="map-preview">
 				<button class="map-preview__close" (click)="closePanelPreview()" aria-label="Закрити">
 					<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@
 					}
 				</div>
 
-				<a [routerLink]="['/businesses', b.id]" class="map-preview__link">
+				<a [routerLink]="['/company', b.id]" class="map-preview__link">
 					Перейти до профілю →
 				</a>
 			</div>
