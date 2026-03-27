@@ -32,19 +32,33 @@ export class CvPdfService {
 	async generatePdfDataUrl(payload: CvPayload): Promise<string> {
 		const definition = await this._buildDocDefinition(payload);
 		const pdfDoc = pdfMake.createPdf(definition as any) as any;
-		const dataUrl = await new Promise<string>((resolve) => {
+
+		if (typeof pdfDoc.getDataUrl === 'function' && pdfDoc.getDataUrl.length === 0) {
+			const maybePromise = pdfDoc.getDataUrl();
+			if (maybePromise && typeof maybePromise.then === 'function') {
+				return (await maybePromise) as string;
+			}
+		}
+
+		return await new Promise<string>((resolve) => {
 			pdfDoc.getDataUrl((url: string) => resolve(url));
 		});
-		return dataUrl;
 	}
 
 	async generatePdfBlob(payload: CvPayload): Promise<Blob> {
 		const definition = await this._buildDocDefinition(payload);
 		const pdfDoc = pdfMake.createPdf(definition as any) as any;
-		const blob = await new Promise<Blob>((resolve) => {
+
+		if (typeof pdfDoc.getBlob === 'function' && pdfDoc.getBlob.length === 0) {
+			const maybePromise = pdfDoc.getBlob();
+			if (maybePromise && typeof maybePromise.then === 'function') {
+				return (await maybePromise) as Blob;
+			}
+		}
+
+		return await new Promise<Blob>((resolve) => {
 			pdfDoc.getBlob((result: Blob) => resolve(result));
 		});
-		return blob;
 	}
 
 	async download(payload: CvPayload, fileName: string): Promise<void> {
@@ -61,10 +75,10 @@ export class CvPdfService {
 		const image = await this._roundProfileImage(payload.imageBase64);
 		const hardSkillsItems = payload.hardSkills.length ? payload.hardSkills : ['Не вказано'];
 		const softSkillsItems = payload.softSkills.length ? payload.softSkills : ['Не вказано'];
-		const hardSkillsColumns = this._buildSkillColumns(hardSkillsItems);
-		const softSkillsColumns = this._buildSkillColumns(softSkillsItems);
-		const hardSkillsHeading = this._buildSkillHeading('HARD SKILLS', hardSkillsColumns.length);
-		const softSkillsHeading = this._buildSkillHeading('SOFT SKILLS', softSkillsColumns.length);
+		const hardSkillsLayout = this._buildSkillColumns(hardSkillsItems);
+		const softSkillsLayout = this._buildSkillColumns(softSkillsItems);
+		const hardSkillsSection = this._buildSkillSection('HARD SKILLS', hardSkillsLayout.columns, hardSkillsLayout.gap);
+		const softSkillsSection = this._buildSkillSection('SOFT SKILLS', softSkillsLayout.columns, softSkillsLayout.gap);
 
 		const professionalActivityBlock = payload.professionalActivity
 			? [
@@ -88,18 +102,8 @@ export class CvPdfService {
 										{ image, width: 118, height: 118, alignment: 'center', margin: [0, 2, 0, 14] },
 										{ text: payload.fullName, style: 'leftName', margin: [0, 0, 0, 4] },
 										{ text: payload.role, style: 'leftRole', margin: [0, 0, 0, 16] },
-										hardSkillsHeading,
-										{
-											columns: hardSkillsColumns,
-											margin: [0, 0, 0, 12],
-											columnGap: 10,
-										},
-										softSkillsHeading,
-										{
-											columns: softSkillsColumns,
-											margin: [0, 0, 0, 0],
-											columnGap: 10,
-										},
+										hardSkillsSection,
+										softSkillsSection,
 									],
 									border: [false, false, false, false],
 								},
@@ -235,56 +239,72 @@ export class CvPdfService {
 		};
 	}
 
-	private _buildSkillHeading(text: string, columnCount: number): Record<string, unknown> {
-		if (columnCount <= 1) {
-			return {
-				text,
-				style: 'leftSectionTitle',
-			};
-		}
+	private _buildSkillSection(text: string, columns: Array<Record<string, unknown>>, gap: number): Record<string, unknown> {
+		const columnCount = Math.max(1, columns.length);
+		const firstRow = [
+			{ text, style: 'leftSectionTitle', alignment: 'left', colSpan: columnCount },
+			...Array.from({ length: columnCount - 1 }, () => ({ text: '' })),
+		];
+
+		const secondRow = columns.map((column) => ({
+			...column,
+			margin: [0, 0, 0, 0],
+		}));
 
 		return {
+			margin: [0, 0, 0, 12],
 			table: {
 				widths: Array.from({ length: columnCount }, () => '*'),
 				body: [
-					[
-						{ text, style: 'leftSectionTitle', alignment: 'center', colSpan: columnCount },
-						...Array.from({ length: columnCount - 1 }, () => ({ text: '' })),
-					],
+					firstRow,
+					secondRow,
 				],
 			},
 			layout: {
 				hLineWidth: () => 0,
 				vLineWidth: () => 0,
 				paddingLeft: () => 0,
-				paddingRight: () => 0,
+				paddingRight: (columnIndex: number, node: { table?: { widths?: unknown[] } }) => {
+					const total = node?.table?.widths?.length ?? 0;
+					return columnIndex < total - 1 ? gap : 0;
+				},
 				paddingTop: () => 0,
-				paddingBottom: () => 0,
+				paddingBottom: () => 2,
 			},
 		};
 	}
 
-	private _buildSkillColumns(skills: string[]): Array<Record<string, unknown>> {
-		const count = skills.length > 20 ? 3 : skills.length > 10 ? 2 : 1;
+	private _buildSkillColumns(skills: string[]): { columns: Array<Record<string, unknown>>; gap: number } {
+		const normalized = skills
+			.map((skill) => this._normalizeSkillText(skill))
+			.filter(Boolean)
+			.slice(0, 20);
+
+		const source = normalized.length ? normalized : ['Не вказано'];
 		const chunks: string[][] = [];
 
-		for (let index = 0; index < count; index += 1) {
-			const from = index * 10;
-			const to = index === count - 1 ? skills.length : (index + 1) * 10;
-			const chunk = skills.slice(from, to);
-			if (chunk.length) {
-				chunks.push(chunk);
-			}
+		if (source.length <= 10) {
+			chunks.push(source);
+		} else {
+			chunks.push(source.slice(0, 10));
+			chunks.push(source.slice(10, 20));
 		}
 
-		if (!chunks.length) {
-			chunks.push(['Не вказано']);
+		return {
+			columns: chunks.map((chunk) => ({
+				ul: chunk.map((skill) => ({ text: skill, style: 'leftItem' })),
+			})),
+			gap: 10,
+		};
+	}
+
+	private _normalizeSkillText(value: string): string {
+		const trimmed = value.trim();
+		if (!trimmed) {
+			return '';
 		}
 
-		return chunks.map((chunk) => ({
-			width: '*',
-			ul: chunk.map((skill) => ({ text: skill, style: 'leftItem' })),
-		}));
+		return trimmed.replace(/\S+/g, (token) => token.replace(/(.{12})(?=.)/g, '$1\u200b'));
 	}
 
 	private _roundProfileImage(dataUrl: string): Promise<string> {

@@ -58,7 +58,7 @@ export class CvGenerateComponent implements OnDestroy {
 		phone: this._fb.control('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^[+\d]+$/)] }),
 		email: this._fb.control('', {
 			nonNullable: true,
-			validators: [Validators.required, Validators.email, this._gmailValidator()],
+			validators: [Validators.required, Validators.email],
 		}),
 		githubUrl: this._fb.control('', {
 			nonNullable: true,
@@ -125,11 +125,7 @@ export class CvGenerateComponent implements OnDestroy {
 		}
 
 		if (control.hasError('email')) {
-			return 'Вкажіть коректний email (наприклад name@gmail.com).';
-		}
-
-		if (control.hasError('gmailDomain')) {
-			return 'Пошта має закінчуватися на @gmail.com.';
+			return 'Вкажіть коректний email (наприклад name@example.com).';
 		}
 
 		if (control.hasError('fullNameFormat')) {
@@ -210,7 +206,7 @@ export class CvGenerateComponent implements OnDestroy {
 			}
 
 			const objectUrl = URL.createObjectURL(blob);
-			const viewerUrl = `${objectUrl}#toolbar=0&navpanes=0&scrollbar=0&view=Fit&zoom=65`;
+			const viewerUrl = `${objectUrl}#toolbar=0&navpanes=0&scrollbar=0&zoom=65`;
 			this._clearPreviewObjectUrl();
 			this._previewObjectUrl = objectUrl;
 			this.safePdfUrl.set(this._sanitizer.bypassSecurityTrustResourceUrl(viewerUrl));
@@ -331,17 +327,6 @@ export class CvGenerateComponent implements OnDestroy {
 		};
 
 		return JSON.stringify(normalized);
-	}
-
-	private _gmailValidator(): ValidatorFn {
-		return (control: AbstractControl): ValidationErrors | null => {
-			const value = String(control.value ?? '').trim();
-			if (!value) {
-				return null;
-			}
-
-			return value.toLowerCase().endsWith('@gmail.com') ? null : { gmailDomain: true };
-		};
 	}
 
 	private _fullNameValidator(): ValidatorFn {

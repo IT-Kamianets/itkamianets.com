@@ -220,18 +220,16 @@
 	align-items: center;
 	justify-content: center;
 	gap: 0.3rem;
+	padding: 0.68rem 0.95rem;
 	border: 1px solid var(--c-border);
+	border-radius: 10px;
 	background: var(--c-bg-secondary);
 	color: var(--c-text-secondary);
 	cursor: pointer;
 	font: inherit;
+	font-size: 0.88rem;
 	font-weight: 700;
 	transition: transform 0.14s ease;
-}
-.cv-btn {
-	padding: 0.68rem 0.95rem;
-	border-radius: 10px;
-	font-size: 0.88rem;
 }
 
 .cv-btn:active {
