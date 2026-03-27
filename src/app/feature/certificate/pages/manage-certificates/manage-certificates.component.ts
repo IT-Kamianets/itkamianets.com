@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CertificateService } from '../../certificate.service';
 import { CertificateOptionService } from '../../certificate-option.service';
+import { CertificatePdfService } from '../../certificate-pdf.service';
 import { Certificate } from '../../certificate.interface';
 
 @Component({
@@ -17,6 +18,8 @@ import { Certificate } from '../../certificate.interface';
 export class ManageCertificatesComponent {
 	protected readonly certService = inject(CertificateService);
 	protected readonly optionService = inject(CertificateOptionService);
+	protected readonly pdfService = inject(CertificatePdfService);
+	protected readonly cdr = inject(ChangeDetectorRef);
 	
 	protected readonly certificates = this.certService.docs;
 	protected readonly options = this.optionService.docs;
@@ -50,7 +53,7 @@ export class ManageCertificatesComponent {
 			issueDate: data['issueDate'] ? data['issueDate'].slice(0, 16) : '',
 			templateStyle: data['templateStyle'] || 'classic'
 		};
-		this.editingCert.set({ ...cert });
+		this.editingCert.set(cert);
 	}
 
 	protected save() {
@@ -60,19 +63,31 @@ export class ManageCertificatesComponent {
 		cert.data = { ...this.form };
 
 		if (cert._id) {
-			this.certService.update(cert).subscribe(() => {
-				this.editingCert.set(null);
+			this.certService.update(cert).subscribe((res) => {
+				if (res) {
+					this.editingCert.set(null);
+					this.cdr.markForCheck();
+				} else {
+					alert('Помилка: сервер відхилив оновлення сертифікату.');
+				}
 			});
 		} else {
-			this.certService.create(cert).subscribe(() => {
-				this.editingCert.set(null);
+			this.certService.create(cert).subscribe((res) => {
+				if (res) {
+					this.editingCert.set(null);
+					this.cdr.markForCheck();
+				} else {
+					alert('Помилка: сервер відхилив створення сертифікату.');
+				}
 			});
 		}
 	}
 
 	protected delete(cert: Certificate) {
 		if (confirm('Ви впевнені, що хочете видалити цей сертифікат?')) {
-			this.certService.delete(cert).subscribe();
+			this.certService.delete(cert).subscribe(() => {
+				this.cdr.markForCheck();
+			});
 		}
 	}
 
@@ -86,6 +101,11 @@ export class ManageCertificatesComponent {
 			this.form.title = opt.data['title'] || this.form.title;
 			this.form.description = opt.data['description'] || this.form.description;
 			this.form.templateStyle = opt.data['templateStyle'] || this.form.templateStyle;
+			this.cdr.markForCheck();
 		}
+	}
+
+	protected exportPdf(cert: Certificate) {
+		this.pdfService.download(cert);
 	}
 }
