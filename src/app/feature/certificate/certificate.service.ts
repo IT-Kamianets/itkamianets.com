@@ -39,7 +39,12 @@ export class CertificateService {
 	}
 
 	create(cert: Partial<Certificate>): Observable<Certificate | null> {
-		return this._http.post('/api/itcertificate/create', cert).pipe(
+		const payload = {
+			...cert,
+			name: cert.data?.['recipientName'] || '',
+			description: cert.data?.['title'] || ''
+		};
+		return this._http.post('/api/itcertificate/create', payload).pipe(
 			map((res: unknown) => res ? (res as Certificate) : null),
 			tap(newCert => {
 				if (newCert) {
@@ -51,7 +56,13 @@ export class CertificateService {
 	}
 
 	update(cert: Certificate): Observable<Certificate | null> {
-		return this._http.post('/api/itcertificate/update', cert).pipe(
+		const payload = {
+			_id: cert._id,
+			name: cert.data?.['recipientName'] || '',
+			description: cert.data?.['title'] || '',
+			data: cert.data
+		};
+		return this._http.post('/api/itcertificate/update', payload).pipe(
 			map((res: unknown) => res ? (res as Certificate) : null),
 			tap(updatedCert => {
 				if (updatedCert) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CertificateOptionService } from '../../certificate-option.service';
@@ -14,6 +14,7 @@ import { CertificateOption } from '../../certificate-option.interface';
 })
 export class ManageOptionsComponent {
 	protected readonly optionService = inject(CertificateOptionService);
+	protected readonly cdr = inject(ChangeDetectorRef);
 	protected readonly options = this.optionService.docs;
 
 	protected readonly editingOption = signal<CertificateOption | null>(null);
@@ -39,7 +40,7 @@ export class ManageOptionsComponent {
 			description: data['description'] || '',
 			templateStyle: data['templateStyle'] || 'classic'
 		};
-		this.editingOption.set({ ...option });
+		this.editingOption.set(option);
 	}
 
 	protected save() {
@@ -49,19 +50,31 @@ export class ManageOptionsComponent {
 		option.data = { ...this.form };
 
 		if (option._id) {
-			this.optionService.update(option).subscribe(() => {
-				this.editingOption.set(null);
+			this.optionService.update(option).subscribe((res) => {
+				if (res) {
+					this.editingOption.set(null);
+					this.cdr.markForCheck();
+				} else {
+					alert('Помилка: сервер відхилив оновлення шаблону.');
+				}
 			});
 		} else {
-			this.optionService.create(option).subscribe(() => {
-				this.editingOption.set(null);
+			this.optionService.create(option).subscribe((res) => {
+				if (res) {
+					this.editingOption.set(null);
+					this.cdr.markForCheck();
+				} else {
+					alert('Помилка: сервер відхилив створення шаблону.');
+				}
 			});
 		}
 	}
 
 	protected delete(option: CertificateOption) {
 		if (confirm('Ви впевнені, що хочете видалити цей шаблон?')) {
-			this.optionService.delete(option).subscribe();
+			this.optionService.delete(option).subscribe(() => {
+				this.cdr.markForCheck();
+			});
 		}
 	}
 

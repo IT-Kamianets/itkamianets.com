@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpService } from 'wacom';
 import { CertificateOption } from './certificate-option.interface';
 import { Observable, catchError, map, of, tap } from 'rxjs';
@@ -48,7 +48,10 @@ export class CertificateOptionService {
 	}
 
 	update(option: CertificateOption): Observable<CertificateOption | null> {
-		return this._http.post('/api/itcertificateoption/update', option).pipe(
+		return this._http.post('/api/itcertificateoption/update', {
+			_id: option._id,
+			data: option.data
+		}).pipe(
 			map((res: unknown) => res ? (res as CertificateOption) : null),
 			tap(updatedOpt => {
 				if (updatedOpt) {
