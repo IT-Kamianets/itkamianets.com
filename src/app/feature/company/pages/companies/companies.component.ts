@@ -66,7 +66,7 @@ export class CompaniesComponent {
 		this.activeType.set(type);
 	}
 
-	private matchesQuery(company: Company, query: string): boolean {
+	private _matchesQuery(company: Company, query: string): boolean {
 		if (!query) {
 			return true;
 		}
@@ -87,7 +87,7 @@ export class CompaniesComponent {
 		}
 
 		for (const company of this.companies()) {
-			if (!this.matchesQuery(company, query)) {
+			if (!this._matchesQuery(company, query)) {
 				continue;
 			}
 
@@ -112,7 +112,7 @@ export class CompaniesComponent {
 		}
 
 		if (query) {
-			result = result.filter((c) => this.matchesQuery(c, query));
+			result = result.filter((c) => this._matchesQuery(c, query));
 		}
 
 		return [...result].sort((a, b) => {

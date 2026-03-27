@@ -23,8 +23,8 @@ import { CompanyService } from '../../company.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompaniesMapComponent implements AfterViewInit, OnDestroy {
-	private companyService = inject(CompanyService);
-	private platformId = inject(PLATFORM_ID);
+	private _companyService = inject(CompanyService);
+	private _platformId = inject(PLATFORM_ID);
 
 	activeType = signal<string>('All');
 	selectedCompany = signal<Company | null>(null);
@@ -32,7 +32,7 @@ export class CompaniesMapComponent implements AfterViewInit, OnDestroy {
 
 	readonly filteredCompanies = computed(() => {
 		const type = this.activeType();
-		const all = this.companyService.companies().filter((c) => c.lat && c.lng);
+		const all = this._companyService.companies().filter((c) => c.lat != null && c.lng != null);
 		return type === 'All' ? all : all.filter((c) => c.type === type);
 	});
 
@@ -45,12 +45,12 @@ export class CompaniesMapComponent implements AfterViewInit, OnDestroy {
 		effect(() => {
 			const companies = this.filteredCompanies();
 			if (!this.mapReady) return;
-			this.refreshMarkers(companies);
+			this._refreshMarkers(companies);
 		});
 	}
 
 	async ngAfterViewInit() {
-		if (!isPlatformBrowser(this.platformId)) return;
+		if (!isPlatformBrowser(this._platformId)) return;
 
 		const leafletModule = await import('leaflet');
 		const L = (leafletModule as any).default ?? leafletModule;
@@ -68,7 +68,7 @@ export class CompaniesMapComponent implements AfterViewInit, OnDestroy {
 		this.map.addLayer(this.clusterGroup);
 
 		this.mapReady = true;
-		this.refreshMarkers(this.filteredCompanies());
+		this._refreshMarkers(this.filteredCompanies());
 	}
 
 	ngOnDestroy() {
@@ -86,20 +86,29 @@ export class CompaniesMapComponent implements AfterViewInit, OnDestroy {
 		this.selectedCompany.set(null);
 	}
 
-	private refreshMarkers(companies: Company[]) {
+	private _escapeHtml(value: string): string {
+		return value
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+
+	private _refreshMarkers(companies: Company[]) {
 		if (!this.L || !this.clusterGroup) return;
 		const L = this.L;
 
 		this.clusterGroup.clearLayers();
 
 		for (const c of companies) {
-			if (!c.lat || !c.lng) continue;
+			if (c.lat == null || c.lng == null) continue;
 
 			const icon = L.divIcon({
 				className: '',
 				html: `<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
 					<span style="display:block;width:18px;height:18px;border-radius:50%;background:#6366f1;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35)"></span>
-					<span style="background:rgba(0,0,0,0.7);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none">${c.name}</span>
+					<span style="background:rgba(0,0,0,0.7);color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none">${this._escapeHtml(c.name)}</span>
 				</div>`,
 				iconSize: [18, 18],
 				iconAnchor: [9, 0],

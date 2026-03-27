@@ -1,8 +1,12 @@
+export const COMPANY_TYPES = ['Студія', 'Аутсорс', 'Продукт', 'Агентство', 'Ресторан', 'Кафе', 'Освіта', 'Медицина', 'Рітейл', 'Сервіс'] as const;
+
+export type CompanyType = (typeof COMPANY_TYPES)[number];
+
 export interface Company {
 	id: string;
 	name: string;
 	logo: string;
-	type: string;
+	type: CompanyType;
 	shortDescription: string;
 	description: string;
 	techStack: string[];
@@ -25,5 +29,3 @@ export interface Company {
 		address?: string;
 	};
 }
-
-export const COMPANY_TYPES = ['Студія', 'Аутсорс', 'Продукт', 'Агентство', 'Ресторан', 'Кафе', 'Освіта', 'Медицина', 'Рітейл', 'Сервіс'];

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { SlicePipe } from '@angular/common';
+import { DOCUMENT, SlicePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs';
 import { Company } from '../../company.interface';
@@ -20,6 +20,7 @@ export class CompanyComponent {
 	private companyService = inject(CompanyService);
 	private reviewService = inject(ReviewService);
 	private route = inject(ActivatedRoute);
+	private _document = inject(DOCUMENT);
 
 	private routeId = toSignal(this.route.params.pipe(map((p) => p['id'] as string)), { initialValue: '' });
 
@@ -66,9 +67,10 @@ export class CompanyComponent {
 
 	ratingRange = [1, 2, 3, 4, 5];
 
-	private getOgImageUrl(logoUrl: string): string {
+	private _getOgImageUrl(logoUrl: string): string {
 		try {
-			const url = new URL(logoUrl, window.location.origin);
+			const origin = this._document.location?.origin ?? '';
+			const url = new URL(logoUrl, origin || undefined);
 			const params = url.searchParams;
 
 			if (params.has('w')) {

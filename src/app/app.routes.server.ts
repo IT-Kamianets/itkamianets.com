@@ -13,7 +13,7 @@ export const serverRoutes: ServerRoute[] = [
 	},
 	{
 		path: 'company/:id',
-		renderMode: RenderMode.Client,
+		renderMode: RenderMode.Server,
 	},
 	{
 		path: 'profile/:id',

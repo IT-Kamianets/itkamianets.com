@@ -19,9 +19,9 @@ export class ManageCompaniesComponent {
 	protected isModalOpen = signal(false);
 	protected editingCompany = signal<Company | null>(null);
 
-	protected form = this.emptyForm();
+	protected form = this._emptyForm();
 
-	private emptyForm() {
+	private _emptyForm() {
 		return {
 			name: '',
 			logo: '',
@@ -50,7 +50,7 @@ export class ManageCompaniesComponent {
 
 	openAddModal() {
 		this.editingCompany.set(null);
-		this.form = this.emptyForm();
+		this.form = this._emptyForm();
 		this.isModalOpen.set(true);
 	}
 
