@@ -12,12 +12,10 @@ export class CertificateOptionService {
 	private readonly _options = signal<CertificateOption[]>([]);
 	readonly docs = this._options.asReadonly();
 
-	constructor() {
-		this.getAll().subscribe(items => {
-			if (items.length === 0) {
-				this._seedDemoOptions();
-			}
-		});
+	constructor() {}
+
+	seedDemoOptions() {
+		this._seedDemoOptions();
 	}
 
 	getAll(): Observable<CertificateOption[]> {
@@ -64,7 +62,7 @@ export class CertificateOptionService {
 
 	delete(option: CertificateOption): Observable<boolean> {
 		return this._http.post('/api/itcertificateoption/delete', { _id: option._id }).pipe(
-			map(() => true),
+			map((res: unknown) => !!res),
 			tap(success => {
 				if (success) {
 					this._options.update(opts => opts.filter(o => o._id !== option._id));

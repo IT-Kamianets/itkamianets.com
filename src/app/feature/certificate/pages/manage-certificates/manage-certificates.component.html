@@ -4,7 +4,7 @@
 			<div class="sm:flex-auto">
 				<div class="flex items-center gap-4">
 					<a routerLink="/manage/profile" class="p-2 hover:bg-[var(--c-bg-tertiary)] rounded-lg transition-colors text-[var(--c-text-secondary)]" title="Назад до профілю">
-						⬅️
+						<span class="material-symbols-outlined align-middle" aria-hidden="true">arrow_back</span>
 					</a>
 					<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Керування сертифікатами</h1>
 				</div>
@@ -29,17 +29,17 @@
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
 							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Назва сертифікату (Курс/Подія)</label>
-							<input type="text" [(ngModel)]="form.title" name="title" placeholder="Сертифікат про завершення курсу" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<input type="text" [ngModel]="form().title" (ngModelChange)="updateFormField('title', $event)" name="title" placeholder="Сертифікат про завершення курсу" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 						</div>
 						
 						<div>
 							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Отримувач (ПІБ)</label>
-							<input type="text" [(ngModel)]="form.recipientName" name="recipientName" placeholder="Наприклад: Іван Іванов" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<input type="text" [ngModel]="form().recipientName" (ngModelChange)="updateFormField('recipientName', $event)" name="recipientName" placeholder="Наприклад: Іван Іванов" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 						</div>
 
 						<div>
 							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Використати шаблон</label>
-							<select (change)="applyTemplate($any($event.target).value)" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<select [ngModel]="selectedTemplateId()" (change)="applyTemplate($any($event.target).value)" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 								<option value="">-- Оберіть шаблон (опціонально) --</option>
 								@for (opt of options(); track opt._id) {
 									<option [value]="opt._id">{{ opt.data?.['title'] || opt._id }}</option>
@@ -49,12 +49,12 @@
 
 						<div>
 							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Дата видачі</label>
-							<input type="datetime-local" [(ngModel)]="form.issueDate" name="issueDate" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<input type="datetime-local" [ngModel]="form().issueDate" (ngModelChange)="updateFormField('issueDate', $event)" name="issueDate" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 						</div>
 
 						<div>
 							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Дизайн (Стиль)</label>
-							<select [(ngModel)]="form.templateStyle" name="templateStyle" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<select [ngModel]="form().templateStyle" (ngModelChange)="updateFormField('templateStyle', $event)" name="templateStyle" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 								<option value="classic">Класичний (Classic)</option>
 								<option value="modern">Сучасний (Modern)</option>
 								<option value="minimalist">Мінімалістичний (Minimalist)</option>
@@ -64,7 +64,7 @@
 
 					<div>
 						<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Опис сертифікату (за що виданий)</label>
-						<textarea [(ngModel)]="form.description" name="description" rows="4" placeholder="Наприклад: За успішне проходження повного курсу та захист фінального проєкту..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all"></textarea>
+						<textarea [ngModel]="form().description" (ngModelChange)="updateFormField('description', $event)" name="description" rows="4" placeholder="Наприклад: За успішне проходження повного курсу та захист фінального проєкту..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all"></textarea>
 					</div>
 
 					<div class="flex justify-end gap-4 mt-6 border-t border-[var(--c-border)] pt-6">
@@ -132,7 +132,7 @@
 												<button (click)="edit(cert)" class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]">
 													<span class="material-symbols-outlined mr-1 text-sm">edit</span> Ред.
 												</button>
-												<button (click)="delete(cert)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white">
+												<button (click)="delete(cert)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white" aria-label="Видалити сертифікат">
 													<span class="material-symbols-outlined mr-1 text-sm">delete</span>
 												</button>
 											</div>

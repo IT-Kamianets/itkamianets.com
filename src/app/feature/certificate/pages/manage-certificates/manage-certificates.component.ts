@@ -16,66 +16,87 @@ import { Certificate } from '../../certificate.interface';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCertificatesComponent {
-	protected readonly certService = inject(CertificateService);
-	protected readonly optionService = inject(CertificateOptionService);
-	protected readonly pdfService = inject(CertificatePdfService);
-	protected readonly cdr = inject(ChangeDetectorRef);
+	private readonly _certService = inject(CertificateService);
+	private readonly _optionService = inject(CertificateOptionService);
+	private readonly _pdfService = inject(CertificatePdfService);
+	private readonly _cdr = inject(ChangeDetectorRef);
 	
-	protected readonly certificates = this.certService.docs;
-	protected readonly options = this.optionService.docs;
+	protected readonly certificates = this._certService.docs;
+	protected readonly options = this._optionService.docs;
+
+	constructor() {
+		this._optionService.getAll().subscribe();
+	}
 
 	protected readonly editingCert = signal<Certificate | null>(null);
-	protected form = {
+	protected readonly selectedTemplateId = signal<string>('');
+	protected readonly form = signal({
 		title: '',
 		recipientName: '',
 		description: '',
 		issueDate: '',
 		templateStyle: 'classic'
-	};
+	});
+
+	private _toDateTimeLocal(value: string | Date): string {
+		const date = new Date(value);
+		if (isNaN(date.getTime())) {
+			return '';
+		}
+		const offset = date.getTimezoneOffset() * 60000;
+		const localDate = new Date(date.getTime() - offset);
+		return localDate.toISOString().slice(0, 16);
+	}
 
 	protected create() {
-		this.form = {
+		this.form.set({
 			title: '',
 			recipientName: '',
 			description: '',
-			issueDate: new Date().toISOString().slice(0, 16),
+			issueDate: this._toDateTimeLocal(new Date()),
 			templateStyle: 'classic'
-		};
-		this.editingCert.set(this.certService.new() as Certificate);
+		});
+		this.selectedTemplateId.set('');
+		this.editingCert.set(this._certService.new() as Certificate);
 	}
 
 	protected edit(cert: Certificate) {
 		const data = cert.data || {};
-		this.form = {
+		this.form.set({
 			title: data['title'] || '',
 			recipientName: data['recipientName'] || '',
 			description: data['description'] || '',
-			issueDate: data['issueDate'] ? data['issueDate'].slice(0, 16) : '',
+			issueDate: data['issueDate'] ? this._toDateTimeLocal(data['issueDate']) : '',
 			templateStyle: data['templateStyle'] || 'classic'
-		};
+		});
+		this.selectedTemplateId.set('');
 		this.editingCert.set(cert);
+	}
+
+	protected updateFormField(field: string, value: any) {
+		this.form.update(f => ({ ...f, [field]: value }));
 	}
 
 	protected save() {
 		const cert = this.editingCert();
 		if (!cert) return;
 
-		cert.data = { ...this.form };
+		cert.data = { ...this.form() };
 
 		if (cert._id) {
-			this.certService.update(cert).subscribe((res) => {
+			this._certService.update(cert).subscribe((res) => {
 				if (res) {
 					this.editingCert.set(null);
-					this.cdr.markForCheck();
+					this._cdr.markForCheck();
 				} else {
 					alert('Помилка: сервер відхилив оновлення сертифікату.');
 				}
 			});
 		} else {
-			this.certService.create(cert).subscribe((res) => {
+			this._certService.create(cert).subscribe((res) => {
 				if (res) {
 					this.editingCert.set(null);
-					this.cdr.markForCheck();
+					this._cdr.markForCheck();
 				} else {
 					alert('Помилка: сервер відхилив створення сертифікату.');
 				}
@@ -85,8 +106,12 @@ export class ManageCertificatesComponent {
 
 	protected delete(cert: Certificate) {
 		if (confirm('Ви впевнені, що хочете видалити цей сертифікат?')) {
-			this.certService.delete(cert).subscribe(() => {
-				this.cdr.markForCheck();
+			this._certService.delete(cert).subscribe((success) => {
+				if (success) {
+					this._cdr.markForCheck();
+				} else {
+					alert('Помилка: не вдалося видалити сертифікат.');
+				}
 			});
 		}
 	}
@@ -96,16 +121,20 @@ export class ManageCertificatesComponent {
 	}
 
 	protected applyTemplate(optionId: string) {
+		this.selectedTemplateId.set(optionId);
 		const opt = this.options().find(o => o._id === optionId);
 		if (opt && opt.data) {
-			this.form.title = opt.data['title'] || this.form.title;
-			this.form.description = opt.data['description'] || this.form.description;
-			this.form.templateStyle = opt.data['templateStyle'] || this.form.templateStyle;
-			this.cdr.markForCheck();
+			this.form.update(f => ({
+				...f,
+				title: opt.data?.['title'] || f.title,
+				description: opt.data?.['description'] || f.description,
+				templateStyle: opt.data?.['templateStyle'] || f.templateStyle
+			}));
+			this._cdr.markForCheck();
 		}
 	}
 
 	protected exportPdf(cert: Certificate) {
-		this.pdfService.download(cert);
+		this._pdfService.download(cert);
 	}
 }

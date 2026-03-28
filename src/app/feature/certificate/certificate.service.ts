@@ -58,8 +58,6 @@ export class CertificateService {
 	update(cert: Certificate): Observable<Certificate | null> {
 		const payload = {
 			_id: cert._id,
-			name: cert.data?.['recipientName'] || '',
-			description: cert.data?.['title'] || '',
 			data: cert.data
 		};
 		return this._http.post('/api/itcertificate/update', payload).pipe(
@@ -75,7 +73,7 @@ export class CertificateService {
 
 	delete(cert: Certificate): Observable<boolean> {
 		return this._http.post('/api/itcertificate/delete', { _id: cert._id }).pipe(
-			map(() => true),
+			map((res: unknown) => !!res),
 			tap(success => {
 				if (success) {
 					this._certificates.update(certs => certs.filter(c => c._id !== cert._id));

@@ -2,7 +2,7 @@
 	<div class="max-w-4xl w-full">
 		<header class="mb-8 flex items-center gap-4">
 			<a routerLink="/certificates" class="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors font-medium text-slate-700 dark:text-slate-300">
-				⬅️ Всі сертифікати
+				<span class="material-symbols-outlined align-middle" aria-hidden="true">arrow_back</span> Всі сертифікати
 			</a>
 		</header>
 
@@ -16,7 +16,7 @@
 
 						<div class="relative z-10 flex flex-col items-center">
 							<div class="w-20 h-20 bg-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
-								🚀
+								<span class="material-symbols-outlined text-4xl" aria-hidden="true">rocket_launch</span>
 							</div>
 
 							<p class="uppercase tracking-[0.3em] text-indigo-400 font-bold mb-4 text-xs">
@@ -102,10 +102,10 @@
 				}
 				@default {
 					<!-- CLASSIC STYLE -->
-					<div class="certificate-container relative bg-[url('https://www.transparenttextures.com/patterns/rice-paper.png')] bg-amber-50 dark:bg-amber-900/10 p-4 border-[12px] border-double border-amber-200 dark:border-amber-700/30 rounded-lg shadow-xl text-center">
+					<div class="certificate-container relative bg-[url('/assets/rice-paper.png')] bg-amber-50 dark:bg-amber-900/10 p-4 border-[12px] border-double border-amber-200 dark:border-amber-700/30 rounded-lg shadow-xl text-center">
 						<div class="border border-amber-300 dark:border-amber-700/50 p-8 md:p-16 h-full w-full">
 							<div class="w-24 h-24 mx-auto border-2 border-amber-400 dark:border-amber-600 rounded-full flex items-center justify-center text-4xl mb-8 text-amber-600 dark:text-amber-500">
-								🎓
+								<span class="material-symbols-outlined text-4xl" aria-hidden="true">school</span>
 							</div>
 							
 							<p class="uppercase tracking-widest text-amber-700 dark:text-amber-500 font-bold mb-4 text-xs font-serif">
@@ -155,11 +155,11 @@
 		} @else {
 			<div class="bg-white dark:bg-slate-800 p-16 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-700 text-center">
 				@if (isLoading()) {
-					<div class="text-6xl mb-6 animate-spin inline-block">⏳</div>
+					<span class="material-symbols-outlined text-6xl mb-6 animate-spin inline-block text-blue-500" aria-label="Завантаження">progress_activity</span>
 					<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Завантаження...</h2>
 					<p class="text-slate-500">Отримуємо деталі сертифікату з бази даних.</p>
 				} @else {
-					<div class="text-6xl mb-6">🔍</div>
+					<span class="material-symbols-outlined text-6xl mb-6 text-slate-400" aria-hidden="true">search_off</span>
 					<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Сертифікат не знайдено</h2>
 					<p class="text-slate-500">За заданим ідентифікатором сертифікат відсутній або виникла помилка.</p>
 				}

@@ -17,6 +17,14 @@ export class ManageOptionsComponent {
 	protected readonly cdr = inject(ChangeDetectorRef);
 	protected readonly options = this.optionService.docs;
 
+	constructor() {
+		this.optionService.getAll().subscribe();
+	}
+
+	protected seed() {
+		this.optionService.seedDemoOptions();
+	}
+
 	protected readonly editingOption = signal<CertificateOption | null>(null);
 	protected form = {
 		title: '',
@@ -72,8 +80,17 @@ export class ManageOptionsComponent {
 
 	protected delete(option: CertificateOption) {
 		if (confirm('Ви впевнені, що хочете видалити цей шаблон?')) {
-			this.optionService.delete(option).subscribe(() => {
-				this.cdr.markForCheck();
+			this.optionService.delete(option).subscribe({
+				next: (success) => {
+					if (success) {
+						this.cdr.markForCheck();
+					} else {
+						alert('Помилка: не вдалося видалити шаблон.');
+					}
+				},
+				error: () => {
+					alert('Критична помилка при видаленні шаблону.');
+				}
 			});
 		}
 	}

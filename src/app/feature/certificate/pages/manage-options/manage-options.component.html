@@ -4,7 +4,7 @@
 			<div class="sm:flex-auto">
 				<div class="flex items-center gap-4">
 					<a routerLink="/manage/profile" class="p-2 hover:bg-[var(--c-bg-tertiary)] rounded-lg transition-colors text-[var(--c-text-secondary)]" title="Назад до профілю">
-						⬅️
+						<span class="material-symbols-outlined align-middle" aria-hidden="true">arrow_back</span>
 					</a>
 					<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Керування шаблонами сертифікатів</h1>
 				</div>
@@ -12,7 +12,12 @@
 					Створюйте та редагуйте шаблони для швидкої видачі сертифікатів з попередньо заповненими даними.
 				</p>
 			</div>
-			<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+			<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-2">
+				@if (options().length === 0) {
+					<button (click)="seed()" class="block rounded-md bg-[var(--c-bg-tertiary)] px-3 py-2 text-center text-sm font-semibold text-[var(--c-text-secondary)] shadow-sm hover:opacity-90 transition-opacity border border-[var(--c-border)]">
+						Завантажити демо-дані
+					</button>
+				}
 				<button (click)="create()" class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity">
 					+ Створити шаблон
 				</button>
@@ -102,7 +107,7 @@
 												<button (click)="edit(opt)" class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]">
 													<span class="material-symbols-outlined mr-1 text-sm">edit</span> Ред.
 												</button>
-												<button (click)="delete(opt)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white">
+												<button (click)="delete(opt)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white" aria-label="Видалити шаблон">
 													<span class="material-symbols-outlined mr-1 text-sm">delete</span>
 												</button>
 											</div>

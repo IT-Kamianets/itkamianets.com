@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Certificate } from './certificate.interface';
@@ -7,15 +8,23 @@ import { Certificate } from './certificate.interface';
 	providedIn: 'root',
 })
 export class CertificatePdfService {
+	private _platformId = inject(PLATFORM_ID);
+
 	constructor() {
-		const fonts = pdfFonts as unknown as { pdfMake?: { vfs?: unknown }; vfs?: unknown };
-		const vfs = fonts?.pdfMake?.vfs || fonts?.vfs;
-		if (vfs) {
-			(pdfMake as unknown as { vfs: unknown }).vfs = vfs;
+		if (isPlatformBrowser(this._platformId)) {
+			const fonts = pdfFonts as unknown as { pdfMake?: { vfs?: unknown }; vfs?: unknown };
+			const vfs = fonts?.pdfMake?.vfs || fonts?.vfs;
+			if (vfs) {
+				(pdfMake as unknown as { vfs: unknown }).vfs = vfs;
+			}
 		}
 	}
 
 	async download(certificate: Certificate): Promise<void> {
+		if (!isPlatformBrowser(this._platformId)) {
+			return;
+		}
+
 		const definition = await this._buildDocDefinition(certificate);
 		const fileName = `Certificate_${certificate.data?.['recipientName'] || 'document'}.pdf`.replace(/\s+/g, '_');
 		(pdfMake.createPdf(definition as any) as any).download(fileName);
