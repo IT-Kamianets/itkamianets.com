@@ -72,11 +72,11 @@ export class CvGenerateComponent implements OnDestroy {
 		professionalActivity: this._fb.control('', { nonNullable: true }),
 		hardSkills: this._fb.control('', {
 			nonNullable: true,
-			validators: [Validators.required, this._commaSeparatedListValidator()],
+			validators: [Validators.required, this._commaSeparatedListValidator(20)],
 		}),
 		softSkills: this._fb.control('', {
 			nonNullable: true,
-			validators: [Validators.required, this._commaSeparatedListValidator()],
+			validators: [Validators.required, this._commaSeparatedListValidator(20)],
 		}),
 		imageBase64: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
 	});
@@ -148,6 +148,10 @@ export class CvGenerateComponent implements OnDestroy {
 
 		if (control.hasError('commaList')) {
 			return `${label} потрібно вказати списком через кому.`;
+		}
+
+		if (control.hasError('commaListMax')) {
+			return `У полі ${label} дозволено не більше 20 елементів.`;
 		}
 
 		return 'Перевірте коректність введених даних.';
@@ -341,7 +345,7 @@ export class CvGenerateComponent implements OnDestroy {
 		};
 	}
 
-	private _commaSeparatedListValidator(): ValidatorFn {
+	private _commaSeparatedListValidator(maxItems: number): ValidatorFn {
 		return (control: AbstractControl): ValidationErrors | null => {
 			const value = String(control.value ?? '').trim();
 			if (!value) {
@@ -349,7 +353,15 @@ export class CvGenerateComponent implements OnDestroy {
 			}
 
 			const items = this._parseCommaList(value);
-			return items.length > 0 ? null : { commaList: true };
+			if (items.length === 0) {
+				return { commaList: true };
+			}
+
+			if (items.length > maxItems) {
+				return { commaListMax: true };
+			}
+
+			return null;
 		};
 	}
 
