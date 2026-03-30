@@ -73,6 +73,7 @@ export class CvPdfService {
 
 	private async _buildDocDefinition(payload: CvPayload): Promise<Record<string, unknown>> {
 		const image = await this._roundProfileImage(payload.imageBase64);
+		const plainEmail = this._asPlainEmail(payload.email);
 		const hardSkillsItems = payload.hardSkills.length ? payload.hardSkills : ['Не вказано'];
 		const softSkillsItems = payload.softSkills.length ? payload.softSkills : ['Не вказано'];
 		const hardSkillsLayout = this._buildSkillColumns(hardSkillsItems);
@@ -136,7 +137,7 @@ export class CvPdfService {
 										{
 											columns: [
 												{ text: 'Пошта:', style: 'metaLabel', width: 90 },
-												{ text: payload.email, style: 'metaValue', width: '*' },
+												{ text: plainEmail, style: 'metaValue', width: '*' },
 											],
 											margin: [0, 0, 0, 2],
 										},
@@ -305,6 +306,10 @@ export class CvPdfService {
 		}
 
 		return trimmed.replace(/\S+/g, (token) => token.replace(/(.{12})(?=.)/g, '$1\u200b'));
+	}
+
+	private _asPlainEmail(email: string): string {
+		return email.trim().replace('@', '@\u200b');
 	}
 
 	private _roundProfileImage(dataUrl: string): Promise<string> {
