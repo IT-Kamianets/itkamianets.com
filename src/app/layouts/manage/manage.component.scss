@@ -33,6 +33,25 @@
 	min-height: 0;
 	overflow-y: auto;
 	padding-right: 0.25rem;
+	overscroll-behavior: contain;
+	scrollbar-gutter: stable;
+	scrollbar-width: thin;
+	scrollbar-color: var(--c-primary) transparent;
+}
+
+.manage-sidebar__nav::-webkit-scrollbar {
+	width: 8px;
+}
+
+.manage-sidebar__nav::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.manage-sidebar__nav::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--c-primary) 86%, #4f8fff 14%);
+	border-radius: 999px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
 }
 
 .manage-sidebar__link {

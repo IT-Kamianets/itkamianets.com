@@ -30,5 +30,8 @@ export class ManageComponent {
 		{ label: 'Competitions', path: '/manage/competitions', icon: 'emoji_events' },
 		{ label: 'People', path: '/manage/people', icon: 'group' },
 		{ label: 'reviews', path: '/manage/reviews', icon: 'group' },
+		{ label: 'Cert. Templates', path: '/manage/manage-options', icon: 'settings' },
+		{ label: 'Certificates', path: '/manage/manage-certificates', icon: 'workspace_premium' },
+		{ label: 'CV Generation', path: '/manage/cv-generation', icon: 'description' },
 	];
 }

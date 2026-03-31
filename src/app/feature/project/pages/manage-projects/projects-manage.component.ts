@@ -34,6 +34,11 @@ interface ProjectFormModel {
 	team: FormControl<number[]>;
 }
 
+interface ToastItem {
+	id: number;
+	message: string;
+}
+
 const minArrayLength = (min: number): ValidatorFn => {
 	return (control): ValidationErrors | null => {
 		const value = control.value;
@@ -53,7 +58,7 @@ const minArrayLength = (min: number): ValidatorFn => {
 })
 export class ProjectsManageComponent {
 	private readonly _projectService = inject(ProjectService);
-	private _toastTimeout: ReturnType<typeof setTimeout> | null = null;
+	private _toastId = 0;
 
 	protected readonly isCreateDialogOpen = signal(false);
 	protected readonly tagsOpen = signal(false);
@@ -70,7 +75,7 @@ export class ProjectsManageComponent {
 	protected readonly editImageName = signal('Фото не вибрано');
 	protected readonly projects = signal<Project[]>([]);
 	protected readonly apiError = signal('');
-	protected readonly toastMessage = signal('');
+	protected readonly toasts = signal<ToastItem[]>([]);
 
 	protected readonly tagOptions: string[] = [
 		'Tailwind',
@@ -183,6 +188,18 @@ export class ProjectsManageComponent {
 		}
 
 		const payload = this._buildPayload(this.createForm);
+		this.previewProject.set({ _id: 'preview', data: payload });
+		this.isPreviewOpen.set(true);
+	}
+
+	protected openEditDraftPreview(): void {
+		this.editSubmitted.set(true);
+		if (this.editForm.invalid) {
+			this.editForm.markAllAsTouched();
+			return;
+		}
+
+		const payload = this._buildPayload(this.editForm);
 		this.previewProject.set({ _id: 'preview', data: payload });
 		this.isPreviewOpen.set(true);
 	}
@@ -451,6 +468,7 @@ export class ProjectsManageComponent {
 			? current.filter((item) => item !== value)
 			: [...current, value];
 		control.setValue(next);
+		control.markAsDirty();
 		control.markAsTouched();
 		control.updateValueAndValidity();
 	}
@@ -496,6 +514,7 @@ export class ProjectsManageComponent {
 				}
 
 				control.setValue(result);
+				control.markAsDirty();
 				control.markAsTouched();
 				control.updateValueAndValidity();
 				this.apiError.set('');
@@ -591,15 +610,11 @@ export class ProjectsManageComponent {
 	}
 
 	private _showToast(message: string): void {
-		this.toastMessage.set(message);
+		const id = ++this._toastId;
+		this.toasts.update((current) => [...current, { id, message }]);
 
-		if (this._toastTimeout) {
-			clearTimeout(this._toastTimeout);
-		}
-
-		this._toastTimeout = setTimeout(() => {
-			this.toastMessage.set('');
-			this._toastTimeout = null;
-		}, 2600);
+		setTimeout(() => {
+			this.toasts.update((current) => current.filter((toast) => toast.id !== id));
+		}, 2000);
 	}
 }

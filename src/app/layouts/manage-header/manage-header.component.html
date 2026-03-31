@@ -12,9 +12,13 @@
 
 		<div class="manage-header__actions">
 			<a
+				#profileLinkActive="routerLinkActive"
 				routerLink="/manage/profile"
 				routerLinkActive="manage-header__link--active"
+				[routerLinkActiveOptions]="{ exact: true }"
 				class="manage-header__link"
+				[attr.aria-disabled]="profileLinkActive.isActive ? 'true' : null"
+				(click)="onProfileClick($event, profileLinkActive.isActive)"
 			>
 				<span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
 				<span>Profile</span>
