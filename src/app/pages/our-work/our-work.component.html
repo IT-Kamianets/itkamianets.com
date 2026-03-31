@@ -1,0 +1,220 @@
+<div class="our-work">
+	<section class="hero">
+		<div class="hero__overlay"></div>
+		<div class="hero__content">
+			<h1 class="hero__title">Наша <span class="hero__highlight">робота</span></h1>
+			<p class="hero__subtitle">
+				Це проєкти, змагання, бізнеси та партнерські сервіси, які формують екосистему
+				IT Kamianets.
+			</p>
+		</div>
+	</section>
+
+	<div class="section-divider-bar">
+		<span class="section-divider-bar__line"></span>
+	</div>
+
+	<section class="section about-section">
+		<div class="container">
+			<div class="about-grid">
+				<div class="about-text">
+					<span class="section-label">Огляд</span>
+					<h2 class="section-title">Що входить у нашу роботу?</h2>
+					<p class="about-description">
+						Ми ведемо реальні веб-проєкти, організовуємо змагання для практики, працюємо
+						з локальними компаніями та будуємо партнерські сервісні напрямки.
+					</p>
+					<p class="about-description">
+						Кожен блок нижче показує одну частину екосистеми: від демонстраційних
+						запусків і MVP до сайтів, бізнес-сторінок та команд, які відповідають за
+						різні типи послуг.
+					</p>
+					<div class="about-stats">
+						<div class="stat">
+							<span class="stat__number">4</span>
+							<span class="stat__label">Напрями</span>
+						</div>
+						<div class="stat">
+							<span class="stat__number">12</span>
+							<span class="stat__label">Карток</span>
+						</div>
+						<div class="stat">
+							<span class="stat__number">3</span>
+							<span class="stat__label">У кожному блоці</span>
+						</div>
+					</div>
+				</div>
+				<div class="about-image">
+					<img
+						src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=500&fit=crop"
+						alt="Огляд нашої роботи"
+						loading="lazy"
+					/>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section projects-home-section">
+		<div class="container">
+			<div class="section-header">
+				<span class="section-label">Проєкти</span>
+				<h2 class="section-title">Реальні рішення, які ми запускаємо</h2>
+				<p class="section-subtitle">
+					Три приклади сайтів і продуктів із нашого портфоліо, що показують підходи до
+					дизайну, розробки та запуску.
+				</p>
+			</div>
+
+			<div class="preview-grid">
+				@for (project of projects; track project.id) {
+					<a
+						class="project-card-home preview-link"
+						[routerLink]="['/project', project.url]"
+					>
+						<div class="project-card-home__img">
+							<img
+								[src]="'project/' + project.image + '.png'"
+								[alt]="project.title"
+								loading="lazy"
+							/>
+							<span class="project-card-home__badge">{{ project.category }}</span>
+						</div>
+						<div class="project-card-home__body">
+							<h3 class="project-card-home__title">{{ project.title }}</h3>
+							<p class="project-card-home__desc">{{ project.description }}</p>
+							<div class="project-card-home__tags">
+								@for (tag of project.tags; track tag) {
+									<span class="project-card-home__tag">{{ tag }}</span>
+								}
+							</div>
+						</div>
+					</a>
+				}
+			</div>
+
+			<div class="section-cta">
+				<a routerLink="/projects" class="btn-outline">Переглянути всі проєкти</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section team-home-section">
+		<div class="container">
+			<div class="section-header">
+				<span class="section-label">Змагання</span>
+				<h2 class="section-title">Практика, демонстрації та командний темп</h2>
+				<p class="section-subtitle">
+					Демо-змагання, у яких команди проходять шлях від ідеї до презентації готового
+					результату.
+				</p>
+			</div>
+
+			<div class="preview-grid">
+				@for (hackathon of hackathons; track hackathon.id) {
+					<a class="team-card preview-panel" [routerLink]="['/hackathon', hackathon.url]">
+						<div class="preview-icon">
+							<span class="material-symbols-outlined" aria-hidden="true">trophy</span>
+						</div>
+						<h3 class="team-card__name">{{ hackathon.title }}</h3>
+						<span class="team-card__role">{{ hackathon.format }}</span>
+						<p class="preview-panel__text">{{ hackathon.description }}</p>
+						<span class="team-card__exp">{{ hackathon.period }}</span>
+						<div class="preview-tags">
+							@for (item of hackathon.stack; track item) {
+								<span class="project-card-home__tag">{{ item }}</span>
+							}
+						</div>
+					</a>
+				}
+			</div>
+
+			<div class="section-cta">
+				<a routerLink="/hackathons" class="btn-outline">Переглянути всі змагання</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section projects-home-section">
+		<div class="container">
+			<div class="section-header">
+				<span class="section-label">Бізнес</span>
+				<h2 class="section-title">Компанії, які ми підтримуємо та розвиваємо</h2>
+				<p class="section-subtitle">
+					Три бізнеси як приклад того, як виглядають сторінки компаній, сервіси та
+					позиціонування в екосистемі.
+				</p>
+			</div>
+
+			<div class="preview-grid">
+				@for (business of businesses; track business.id) {
+					<a
+						class="project-card-home preview-link"
+						[routerLink]="['/company', business.id]"
+					>
+						<div class="preview-logo-wrap">
+							<img
+								class="preview-logo"
+								[src]="business.logo"
+								[alt]="business.name"
+								loading="lazy"
+							/>
+							<span class="project-card-home__badge">{{ business.type }}</span>
+						</div>
+						<div class="project-card-home__body">
+							<h3 class="project-card-home__title">{{ business.name }}</h3>
+							<p class="project-card-home__desc">{{ business.shortDescription }}</p>
+							<div class="project-card-home__tags">
+								@for (service of business.services.slice(0, 3); track service) {
+									<span class="project-card-home__tag">{{ service }}</span>
+								}
+							</div>
+						</div>
+					</a>
+				}
+			</div>
+
+			<div class="section-cta">
+				<a routerLink="/companies" class="btn-outline">Переглянути всі компанії</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section promo-section">
+		<div class="container">
+			<div class="section-header">
+				<span class="section-label">Сервіси</span>
+				<h2 class="section-title">Партнери для різних типів робіт</h2>
+				<p class="section-subtitle">
+					Три команди з різним фокусом: платформа, дизайн-продакшн і демонстраційна
+					реалізація.
+				</p>
+			</div>
+
+			<div class="preview-grid">
+				@for (partner of partners; track partner.id) {
+					<a
+						class="promo-card preview-link preview-link--stacked"
+						[routerLink]="['/partner', partner.url]"
+					>
+						<div class="promo-card__icon preview-initial">
+							{{ partner.name.charAt(0) }}
+						</div>
+						<h3 class="promo-card__title">{{ partner.name }}</h3>
+						<p class="promo-card__desc">{{ partner.description }}</p>
+						<div class="project-card-home__tags preview-tags">
+							@for (service of partner.services; track service) {
+								<span class="project-card-home__tag">{{ service }}</span>
+							}
+						</div>
+						<span class="promo-card__link">{{ partner.label }}</span>
+					</a>
+				}
+			</div>
+
+			<div class="section-cta">
+				<a routerLink="/services" class="btn-outline">Переглянути всі сервіси</a>
+			</div>
+		</div>
+	</section>
+</div>

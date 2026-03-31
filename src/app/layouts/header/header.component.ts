@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UserService } from '../../feature/user/user.service';
 import { ThemeMode, ThemeService } from 'wacom';
 import { MenuItem } from '../../feature/item/item.interface';
+import { UserService } from '../../feature/user/user.service';
 
 @Component({
 	selector: 'app-public-header',
@@ -16,34 +16,15 @@ export class HeaderComponent {
 	protected readonly userService = inject(UserService);
 	protected readonly menuItems: MenuItem[] = [
 		{
-			_id: 'menu-home',
-			type: 'menu',
-			title: 'Головна',
-			href: '/',
-			options: { menu: { exact: true } },
-		},
-		{
 			_id: 'menu-services',
 			type: 'menu',
-			title: 'Послуги',
-			href: '/services',
-		},
-		{
-			_id: 'menu-hackathons',
-			type: 'menu',
-			title: 'Змагання',
-			href: '/hackathons',
-		},
-		{
-			_id: 'menu-projects',
-			type: 'menu',
-			title: 'Проєкти',
-			href: '/projects',
+			title: 'Наша робота',
+			href: '/our-work',
 		},
 		{
 			_id: 'menu-team',
 			type: 'menu',
-			title: 'Команда',
+			title: 'Наша команда',
 			href: '/team',
 		},
 		{
@@ -53,10 +34,10 @@ export class HeaderComponent {
 			href: '/news',
 		},
 		{
-			_id: 'menu-businesses',
+			_id: 'menu-companies',
 			type: 'menu',
-			title: 'Бізнеси',
-			href: '/businesses',
+			title: 'Компанії',
+			href: '/companies',
 		},
 		{
 			_id: 'menu-merch',

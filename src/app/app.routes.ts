@@ -13,6 +13,14 @@ export const routes: Routes = [
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
+				path: 'our-work',
+				loadComponent: () =>
+					import('./pages/our-work/our-work.component').then(
+						(m) => m.OurWorkComponent,
+					),
+			},
+
+			{
 				path: 'education',
 				loadComponent: () =>
 					import('./pages/education/education.component').then(
@@ -82,23 +90,25 @@ export const routes: Routes = [
 					),
 			},
 			{
-				path: 'businesses',
+				path: 'companies',
 				loadComponent: () =>
-					import('./pages/businesses/businesses.component').then(
-						(m) => m.BusinessesComponent,
+					import('./feature/company/pages/companies/companies.component').then(
+						(m) => m.CompaniesComponent,
 					),
 			},
 			{
-				path: 'businesses/map',
+				path: 'companies/map',
 				loadComponent: () =>
-					import('./pages/businesses-map/businesses-map.component').then(
-						(m) => m.BusinessesMapComponent,
+					import('./feature/company/pages/map/map.component').then(
+						(m) => m.CompaniesMapComponent,
 					),
 			},
 			{
-				path: 'businesses/:id',
+				path: 'company/:id',
 				loadComponent: () =>
-					import('./pages/business/business.component').then((m) => m.BusinessComponent),
+					import('./feature/company/pages/company/company.component').then(
+						(m) => m.CompanyComponent,
+					),
 			},
 			{
 				path: 'profiles',
@@ -269,11 +279,20 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'cv-generation',
+				canActivate: [authenticatedGuard],
+				data: { title: 'CV Generation' },
+				loadComponent: () =>
+					import('./pages/manage/cv-generation/cv-generate.component').then(
+						(m) => m.CvGenerateComponent,
+					),
+			},
+			{
 				path: 'companies',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
-					import('./pages/manage/businesses/businesses.component').then(
-						(m) => m.ManageBusinessesComponent,
+					import('./feature/company/pages/manage-companies/manage-companies.component').then(
+						(m) => m.ManageCompaniesComponent,
 					),
 			},
 			{

@@ -1,7 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
+import { HttpService } from 'wacom';
 import { UserService } from '../user/user.service';
 import { Project, ProjectData } from './project.interface';
 
@@ -9,46 +8,45 @@ import { Project, ProjectData } from './project.interface';
 providedIn: 'root',
 })
 export class ProjectService {
-private readonly _http = inject(HttpClient);
-private readonly _userService = inject(UserService);
-private readonly _platformId = inject(PLATFORM_ID);
-private readonly _baseUrl = 'https://api.webart.work/api/itproject';
+  private readonly _http = inject(HttpService);
+  private readonly _userService = inject(UserService);
+  private readonly _basePath = '/api/itproject';
 
-getAll(): Observable<Project[]> {
-return this._http
-.get<any[]>(`${this._baseUrl}/get`, this._authOptions())
-.pipe(
-map(response => {
-if (!Array.isArray(response)) return [];
-return response.map(item => this._mapToProject(item));
-}),
-catchError(() => of([]))
-);
-}
+  getAll(): Observable<Project[]> {
+    this._syncToken();
+
+    return this._http.get(`${this._basePath}/get`).pipe(
+      map((response: unknown) => {
+        if (!Array.isArray(response)) {
+          return [];
+        }
+
+        return response.map((item) => this._mapToProject(item));
+      }),
+      catchError(() => of([])),
+    );
+  }
 
   create(projectData: ProjectData): Observable<Project | null> {
     const payload = {
       title: projectData.title,
       description: projectData.description,
-      category: "custom", // HARDCODED to bypass backend enum crash
+      category: 'custom',
       tags: projectData.tags,
       repoUrl: projectData.githubLink,
       liveUrl: projectData.websiteLink,
       memberIds: projectData.team,
       image: projectData.photo,
       imageKind: projectData.imageKind,
-      data: projectData // The flexible object holding the REAL category and completionDate
+      data: projectData,
     };
 
-    return this._http
-      .post<any>(`${this._baseUrl}/create`, payload, this._authOptions())
-      .pipe(
-        map(item => item ? this._mapToProject(item) : null),
-        catchError((error) => {
-          console.error('Create error:', error);
-          return of(null);
-        })
-      );
+    this._syncToken();
+
+    return this._http.post(`${this._basePath}/create`, payload).pipe(
+      map((item: unknown) => item ? this._mapToProject(item) : null),
+      catchError(() => of(null)),
+    );
   }
 
   update(id: string, projectData: ProjectData): Observable<Project | null> {
@@ -56,99 +54,71 @@ catchError(() => of([]))
       _id: id,
       title: projectData.title,
       description: projectData.description,
-      category: "custom", // HARDCODED to bypass backend enum crash
+      category: 'custom',
       tags: projectData.tags,
       repoUrl: projectData.githubLink,
       liveUrl: projectData.websiteLink,
       memberIds: projectData.team,
       image: projectData.photo,
       imageKind: projectData.imageKind,
-      data: projectData // The flexible object holding the REAL category and completionDate
+      data: projectData,
     };
 
-    return this._http
-      .post<any>(`${this._baseUrl}/update`, payload, this._authOptions())
-      .pipe(
-        map(item => item ? this._mapToProject(item) : null),
-        catchError((error) => {
-          console.error('Update error:', error);
-          return of(null);
-        })
-      );
+    this._syncToken();
+
+    return this._http.post(`${this._basePath}/update`, payload).pipe(
+      map((item: unknown) => item ? this._mapToProject(item) : null),
+      catchError(() => of(null)),
+    );
   }
 
-delete(id: string): Observable<boolean> {
-return this._http
-.post<boolean>(`${this._baseUrl}/delete`, { _id: id }, this._authOptions())     
-.pipe(
-map(() => true),
-catchError(() => of(false))
-);
-}
+  delete(id: string): Observable<boolean> {
+    this._syncToken();
 
-fetchOne(id: string): Observable<Project | null> {
-return this._http
-.post<any>(`${this._baseUrl}/fetch`, { _id: id }, this._authOptions())
-.pipe(
-map(item => item ? this._mapToProject(item) : null),
-catchError(() => of(null))
-);
-}
+    return this._http.post(`${this._basePath}/delete`, { _id: id }).pipe(
+      map(() => true),
+      catchError(() => of(false)),
+    );
+  }
 
-private _mapToProject(item: any): Project {
-const source = item.data ? { ...item, ...item.data } : item;
-return {
-_id: item._id,
-createdAt: item.createdAt,
-updatedAt: item.updatedAt,
-data: {
-title: source.title || '',
-description: source.description || '',
-photo: source.image || source.photo || '',
-category: source.category || '',
-tags: Array.isArray(source.tags) ? source.tags : [],
-githubLink: source.repoUrl || source.githubLink || '',
-websiteLink: source.liveUrl || source.websiteLink || '',
-team: Array.isArray(source.memberIds) ? source.memberIds : (Array.isArray(source.team) ? source.team : []),
-completionDate: source.completionDate || source.completedAt || '',
-imageKind: source.imageKind || 'asset'
-}
-};
-}
+  fetchOne(id: string): Observable<Project | null> {
+    this._syncToken();
 
-private _authOptions(): { headers?: HttpHeaders } {
-const token = this._resolveToken();
-if (!token) {
-return {};
-}
+    return this._http.post(`${this._basePath}/fetch`, { _id: id }).pipe(
+      map((item: unknown) => item ? this._mapToProject(item) : null),
+      catchError(() => of(null)),
+    );
+  }
 
-return {
-headers: new HttpHeaders({
-token,
-}),
-};
-}
+  private _mapToProject(item: any): Project {
+    const source = item.data ? { ...item, ...item.data } : item;
 
-private _resolveToken(): string {
-const signalToken = this._userService.user().token?.trim();
-if (signalToken) {
-return signalToken;
-}
+    return {
+      _id: item._id,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      data: {
+        title: source.title || '',
+        description: source.description || '',
+        photo: source.image || source.photo || '',
+        category: source.category || '',
+        tags: Array.isArray(source.tags) ? source.tags : [],
+        githubLink: source.repoUrl || source.githubLink || '',
+        websiteLink: source.liveUrl || source.websiteLink || '',
+        team: Array.isArray(source.memberIds) ? source.memberIds : (Array.isArray(source.team) ? source.team : []),
+        completionDate: source.completionDate || source.completedAt || '',
+        imageKind: source.imageKind || 'asset',
+      },
+    };
+  }
 
-if (!isPlatformBrowser(this._platformId)) {
-return '';
-}
+  private _syncToken(): void {
+    const token = this._userService.user().token?.trim() || '';
 
-try {
-const raw = localStorage.getItem('waw_user');
-if (!raw) {
-return '';
-}
-
-const parsed = JSON.parse(raw) as { token?: unknown };
-return typeof parsed.token === 'string' ? parsed.token.trim() : '';
-} catch {
-return '';
-}
-}
+    if (token) {
+      this._http.set('token', token);
+    } else {
+      this._http.remove('token');
+    }
+  }
 }
