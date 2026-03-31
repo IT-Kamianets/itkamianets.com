@@ -19,22 +19,31 @@ import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-	/** ProposalsComponent carousel */
-	readonly proposals: Proposal[] = PROPOSALS;
+	readonly proposals: Proposal[] = PROPOSALS.map((proposal) => ({
+		...proposal,
+		team: proposal.team.map((member) => ({
+			...member,
+			role: this._roleLabel(member.role),
+		})),
+	}));
 	readonly categories: string[] = ['Усі', ...CATEGORIES];
 	activeCategory = 0;
 	proposalSlideIndex = 0;
 	proposalsVisible = 3;
 	proposalScrollStep = 2;
 
-	/** TeamComponent slider */
-	readonly allTeam: TeamMember[] = TEAM_MEMBERS;
+	readonly allTeam: TeamMember[] = TEAM_MEMBERS.map((member) => ({
+		...member,
+		role: this._roleLabel(member.role),
+	}));
 	teamSlideIndex = 0;
 	teamVisible = 3;
 	teamScrollStep = 2;
 
-	/** ProjectsComponent slider */
-	readonly allProjects: Project[] = PROJECTS;
+	readonly allProjects: Project[] = PROJECTS.map((project) => ({
+		...project,
+		tags: project.tags.map((tag) => this._projectTagLabel(tag)),
+	}));
 	projectSlideIndex = 0;
 	projectsVisible = 3;
 	projectsScrollStep = 2;
@@ -57,52 +66,40 @@ export class HomeComponent implements OnInit {
 	private updateResponsiveConfig() {
 		const width = window.innerWidth;
 		if (width < 768) {
-			// Mobile
 			this.proposalsVisible = 1;
 			this.proposalScrollStep = 1;
-
 			this.teamVisible = 1;
 			this.teamScrollStep = 1;
-
 			this.projectsVisible = 1;
 			this.projectsScrollStep = 1;
 		} else if (width < 1024) {
-			// Tablet
 			this.proposalsVisible = 2;
 			this.proposalScrollStep = 1;
-
 			this.teamVisible = 2;
 			this.teamScrollStep = 1;
-
 			this.projectsVisible = 2;
 			this.projectsScrollStep = 1;
 		} else {
-			// Desktop
 			this.proposalsVisible = 3;
 			this.proposalScrollStep = 2;
-
 			this.teamVisible = 3;
 			this.teamScrollStep = 2;
-
 			this.projectsVisible = 3;
 			this.projectsScrollStep = 2;
 		}
 
-		// Adjust Proposal Index
 		const propCount = this.currentCategoryProposals.length;
 		const maxPropIndex = Math.max(0, propCount - this.proposalsVisible);
 		if (this.proposalSlideIndex > maxPropIndex) {
 			this.proposalSlideIndex = maxPropIndex;
 		}
 
-		// Adjust TeamComponent Index
 		const teamCount = this.allTeam.length;
 		const maxTeamIndex = Math.max(0, teamCount - this.teamVisible);
 		if (this.teamSlideIndex > maxTeamIndex) {
 			this.teamSlideIndex = maxTeamIndex;
 		}
 
-		// Adjust Project Index
 		const projCount = this.allProjects.length;
 		const maxProjIndex = Math.max(0, projCount - this.projectsVisible);
 		if (this.projectSlideIndex > maxProjIndex) {
@@ -110,14 +107,14 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	get currentCategoryProposals(): Proposal[] {
+	get currentCategoryProposals() {
 		if (this.categories[this.activeCategory] === 'Усі') {
 			return this.proposals;
 		}
 		return this.proposals.filter((p) => p.category === this.categories[this.activeCategory]);
 	}
 
-	get proposalDots(): number[] {
+	get proposalDots() {
 		const count = this.currentCategoryProposals.length;
 		const visible = this.proposalsVisible;
 		const step = this.proposalScrollStep;
@@ -136,12 +133,12 @@ export class HomeComponent implements OnInit {
 		return dots;
 	}
 
-	selectCategory(index: number): void {
+	selectCategory(index: number) {
 		this.activeCategory = index;
 		this.proposalSlideIndex = 0;
 	}
 
-	prevProposal(): void {
+	prevProposal() {
 		const dots = this.proposalDots;
 		if (dots.length === 0) return;
 
@@ -154,7 +151,7 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	nextProposal(): void {
+	nextProposal() {
 		const dots = this.proposalDots;
 		if (dots.length === 0) return;
 
@@ -167,11 +164,11 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	setProposalSlide(index: number): void {
+	setProposalSlide(index: number) {
 		this.proposalSlideIndex = index;
 	}
 
-	isDotActive(dotValue: number): boolean {
+	isDotActive(dotValue: number) {
 		const dots = this.proposalDots;
 		if (dots.length === 0) return false;
 
@@ -189,8 +186,7 @@ export class HomeComponent implements OnInit {
 		return closest === dotValue;
 	}
 
-	/** TeamComponent slider */
-	get teamDots(): number[] {
+	get teamDots() {
 		const count = this.allTeam.length;
 		const visible = this.teamVisible;
 		const step = this.teamScrollStep;
@@ -209,7 +205,7 @@ export class HomeComponent implements OnInit {
 		return dots;
 	}
 
-	prevTeam(): void {
+	prevTeam() {
 		const dots = this.teamDots;
 		if (dots.length === 0) return;
 		const currentDotIndex = dots.findIndex((d) => d === this.teamSlideIndex);
@@ -221,7 +217,7 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	nextTeam(): void {
+	nextTeam() {
 		const dots = this.teamDots;
 		if (dots.length === 0) return;
 		const currentDotIndex = dots.findIndex((d) => d === this.teamSlideIndex);
@@ -233,11 +229,11 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	setTeamSlide(index: number): void {
+	setTeamSlide(index: number) {
 		this.teamSlideIndex = index;
 	}
 
-	isTeamDotActive(dotValue: number): boolean {
+	isTeamDotActive(dotValue: number) {
 		const dots = this.teamDots;
 		if (dots.length === 0) return false;
 		let closest = dots[0];
@@ -252,8 +248,7 @@ export class HomeComponent implements OnInit {
 		return closest === dotValue;
 	}
 
-	/** ProjectsComponent slider */
-	get projectDots(): number[] {
+	get projectDots() {
 		const count = this.allProjects.length;
 		const visible = this.projectsVisible;
 		const step = this.projectsScrollStep;
@@ -272,7 +267,7 @@ export class HomeComponent implements OnInit {
 		return dots;
 	}
 
-	prevProject(): void {
+	prevProject() {
 		const dots = this.projectDots;
 		if (dots.length === 0) return;
 		const currentDotIndex = dots.findIndex((d) => d === this.projectSlideIndex);
@@ -284,7 +279,7 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	nextProject(): void {
+	nextProject() {
 		const dots = this.projectDots;
 		if (dots.length === 0) return;
 		const currentDotIndex = dots.findIndex((d) => d === this.projectSlideIndex);
@@ -296,11 +291,11 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	setProjectSlide(index: number): void {
+	setProjectSlide(index: number) {
 		this.projectSlideIndex = index;
 	}
 
-	isProjectDotActive(dotValue: number): boolean {
+	isProjectDotActive(dotValue: number) {
 		const dots = this.projectDots;
 		if (dots.length === 0) return false;
 		let closest = dots[0];
@@ -315,16 +310,44 @@ export class HomeComponent implements OnInit {
 		return closest === dotValue;
 	}
 
-	categoryLabel(cat: string): string {
+	categoryLabel(cat: string) {
 		switch (cat) {
 			case 'theme-tailwind':
-				return 'Tailwind';
+				return 'Тема Tailwind';
 			case 'theme-bulma':
-				return 'Bulma';
+				return 'Тема Bulma';
 			case 'theme-bootstrap':
-				return 'Bootstrap';
+				return 'Тема Bootstrap';
 			default:
 				return cat;
+		}
+	}
+
+	private _roleLabel(role: string) {
+		switch (role) {
+			case 'Head of Team / Full-stack Developer':
+				return 'Керівник команди / Фулстек-розробник';
+			case 'Frontend Developer':
+				return 'Фронтенд-розробник';
+			case 'UI/UX Designer':
+				return 'UI/UX дизайнер';
+			case 'Full-stack':
+				return 'Фулстек';
+			case 'Frontend':
+				return 'Фронтенд';
+			default:
+				return role;
+		}
+	}
+
+	private _projectTagLabel(tag: string) {
+		switch (tag) {
+			case 'Portfolio':
+				return 'Портфоліо';
+			case 'Responsive':
+				return 'Адаптивний';
+			default:
+				return tag;
 		}
 	}
 }

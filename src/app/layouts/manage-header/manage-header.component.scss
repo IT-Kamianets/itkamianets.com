@@ -83,12 +83,25 @@
 	font: inherit;
 	font-weight: 600;
 	text-decoration: none;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.15s ease,
+		color 0.2s ease;
+}
+
+.manage-header__icon-btn,
+.manage-header__signout {
+	cursor: pointer;
 }
 
 .manage-header__link--active {
 	background: linear-gradient(135deg, var(--c-primary), #4f8fff);
 	color: #fff;
 	box-shadow: 0 2px 10px color-mix(in srgb, var(--c-primary) 40%, transparent);
+	pointer-events: none;
+	cursor: default;
 }
 
 .manage-header__icon-btn {
@@ -100,6 +113,43 @@
 	border-color: color-mix(in srgb, var(--c-secondary) 24%, var(--c-border));
 	background: color-mix(in srgb, var(--c-secondary) 8%, var(--c-bg-secondary));
 	color: var(--c-text-secondary);
+}
+
+.manage-header__link:active,
+.manage-header__icon-btn:active,
+.manage-header__signout:active {
+	transform: scale(0.95);
+	transition-duration: 0.08s;
+}
+
+@media (hover: hover) {
+	.manage-header__link:not(.manage-header__link--active):hover {
+		border-color: color-mix(in srgb, var(--c-primary) 85%, white 15%);
+		box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-primary) 30%, transparent);
+	}
+
+	.manage-header__icon-btn:hover {
+		background: var(--c-bg-secondary);
+		border-color: var(--c-primary);
+		transform: scale(1.1);
+	}
+
+	.manage-header__signout:hover {
+		background: color-mix(in srgb, #ef4444 26%, var(--c-bg-secondary));
+		border-color: color-mix(in srgb, #ef4444 55%, var(--c-border));
+		color: #fff;
+	}
+
+	.manage-header__icon-btn:hover:active,
+	.manage-header__signout:hover:active,
+	.manage-header__link:hover:active {
+		transform: scale(0.95);
+	}
+
+	:host-context(html[data-mode='light']) .manage-header__icon-btn:hover {
+		border-color: var(--c-primary);
+		background: var(--c-bg-secondary);
+	}
 }
 
 @media (width < 720px) {
