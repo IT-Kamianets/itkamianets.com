@@ -1,0 +1,36 @@
+.editor-content {
+	&:focus {
+		outline: none;
+	}
+
+	h1 {
+		font-size: 2rem;
+		font-weight: 800;
+		margin-bottom: 1rem;
+	}
+
+	h2 {
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin-bottom: 0.75rem;
+	}
+
+	p {
+		margin-bottom: 1rem;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+		border-radius: 0.5rem;
+		margin: 1rem 0;
+	}
+}
+
+.editor-toolbar button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.5rem;
+	height: 2.5rem;
+}

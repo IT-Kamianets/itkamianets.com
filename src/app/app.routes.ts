@@ -13,9 +13,23 @@ export const routes: Routes = [
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
-				path: 'projects',
+				path: 'our-work',
 				loadComponent: () =>
-					import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
+					import('./pages/our-work/our-work.component').then(
+						(m) => m.OurWorkComponent,
+					),
+			},
+			{
+				path: 'jobs',
+				loadComponent: () =>
+					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
+			},
+			{
+				path: 'education',
+				loadComponent: () =>
+					import('./pages/education/education.component').then(
+						(m) => m.EducationComponent,
+					),
 			},
 			{
 				path: 'hackathons',
@@ -25,10 +39,29 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'events',
+				loadComponent: () =>
+					import('./pages/events/events.component').then((m) => m.EventsComponent),
+			},
+			{
 				path: 'hackathon',
 				loadComponent: () =>
 					import('./pages/hackathon/hackathon.component').then(
 						(m) => m.HackathonComponent,
+					),
+			},
+			{
+				path: 'competitions',
+				loadComponent: () =>
+					import('./pages/competitions/competitions.component').then(
+						(m) => m.CompetitionsComponent,
+					),
+			},
+			{
+				path: 'competition',
+				loadComponent: () =>
+					import('./pages/competition/competition.component').then(
+						(m) => m.CompetitionComponent,
 					),
 			},
 			{
@@ -47,17 +80,141 @@ export const routes: Routes = [
 					import('./pages/merch/merch.component').then((m) => m.MerchComponent),
 			},
 			{
-				path: 'proposals',
+				path: 'services',
 				loadComponent: () =>
-					import('./pages/proposals/proposals.component').then(
-						(m) => m.ProposalsComponent,
+					import('./pages/services/services.component').then(
+						(m) => m.ServicesComponent,
 					),
+			},
+			{
+				path: 'services/:id',
+				loadComponent: () =>
+					import('./pages/service-detail/service-detail.component').then(
+						(m) => m.ServiceDetailComponent,
+					),
+			},
+			{
+				path: 'companies',
+				loadComponent: () =>
+					import('./feature/company/pages/companies/companies.component').then(
+						(m) => m.CompaniesComponent,
+					),
+			},
+			{
+				path: 'companies/map',
+				loadComponent: () =>
+					import('./feature/company/pages/map/map.component').then(
+						(m) => m.CompaniesMapComponent,
+					),
+			},
+			{
+				path: 'company/:id',
+				loadComponent: () =>
+					import('./feature/company/pages/company/company.component').then(
+						(m) => m.CompanyComponent,
+					),
+			},
+			{
+				path: 'profiles',
+				loadComponent: () =>
+					import('./pages/profiles/profiles.component').then((m) => m.ProfilesComponent),
+			},
+			{
+				path: 'profile/:id',
+				loadComponent: () =>
+					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/article/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/merch/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/project/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/school/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/job/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/competition/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/event/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/profile/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/course/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/item/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/test/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/startup/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/quest/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/notification/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/company/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/review/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/certificate/public.routes').then((m) => m.routes),
 			},
 		],
 	},
 	{
 		path: '',
-		loadComponent: () => import('./layouts/guest.component').then((m) => m.GuestComponent),
+		loadComponent: () =>
+			import('./layouts/guest/guest.component').then((m) => m.GuestComponent),
 		children: [
 			{
 				path: 'sign',
@@ -68,12 +225,21 @@ export const routes: Routes = [
 	},
 	{
 		path: 'manage',
-		loadComponent: () => import('./layouts/manage.component').then((m) => m.ManageComponent),
+		loadComponent: () =>
+			import('./layouts/manage/manage.component').then((m) => m.ManageComponent),
 		children: [
 			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'profile',
+			},
+			{
+				path: 'events',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/events/events.component').then(
+						(m) => m.ManageEventsComponent,
+					),
 			},
 			{
 				path: 'profile',
@@ -84,85 +250,145 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'schools',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/shcools/shcools.component').then(
+						(m) => m.ShcoolsComponent,
+					),
+			},
+			{
 				path: 'merch',
 				canActivate: [authenticatedGuard],
 				data: { title: 'Merch' },
 				loadComponent: () =>
-					import('./pages/manage/merch/merch.component').then(
-						(m) => m.MerchComponent,
-					),
-			},
-			{
-				path: 'orders',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Orders' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
-			{
-				path: 'companies',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Companies' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
-			{
-				path: 'projects',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Projects' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
-			{
-				path: 'articles',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Articles' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
-			{
-				path: 'schools',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Schools' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
+					import('./pages/manage/merch/merch.component').then((m) => m.MerchComponent),
 			},
 			{
 				path: 'jobs',
 				canActivate: [authenticatedGuard],
-				data: { title: 'Jobs' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
-			},
-			{
-				path: 'events',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Events' },
-				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
-					),
+					import('./pages/manage/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
 			{
 				path: 'competitions',
 				canActivate: [authenticatedGuard],
 				data: { title: 'Competitions' },
 				loadComponent: () =>
-					import('./pages/manage/section/section.component').then(
-						(m) => m.SectionComponent,
+					import('./pages/manage/competitions/competitions.component').then(
+						(m) => m.ManageCompetitionsComponent,
 					),
+			},
+			{
+				path: 'people',
+				canActivate: [authenticatedGuard],
+				data: { title: 'People' },
+				loadComponent: () =>
+					import('./pages/manage/people/people.component').then(
+						(m) => m.ManagePeopleComponent,
+					),
+			},
+			{
+				path: 'cv-generation',
+				canActivate: [authenticatedGuard],
+				data: { title: 'CV Generation' },
+				loadComponent: () =>
+					import('./pages/manage/cv-generation/cv-generate.component').then(
+						(m) => m.CvGenerateComponent,
+					),
+			},
+			{
+				path: 'companies',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./feature/company/pages/manage-companies/manage-companies.component').then(
+						(m) => m.ManageCompaniesComponent,
+					),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/article/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/merch/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/project/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/school/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/job/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/competition/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/event/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/profile/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/course/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/item/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/test/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/startup/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/quest/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/notification/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/company/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/review/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/certificate/manage.routes').then((m) => m.routes),
 			},
 		],
 	},

@@ -1,0 +1,76 @@
+<div class="projects-page">
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Портфоліо</span>
+			<h1 class="page-hero__title">Наші проєкти</h1>
+			<p class="page-hero__subtitle">
+				Публікації, які керуються прямо з Control panel
+			</p>
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<div class="projects-grid projects-grid--top-space">
+			@if (!projects().length) {
+				<p class="projects-empty">Поки що немає опублікованих проєктів.</p>
+			}
+
+			@for (p of projects(); track trackByProjectId($index, p)) {
+				<div class="project-card">
+					<div class="project-card__img">
+						<img [src]="getImageSrc(p)" [alt]="p.data.title || 'Project image'" loading="eager" />
+					</div>
+					<div class="project-card__body">
+						<div class="project-card__header">
+							<h3 class="project-card__title">{{ p.data.title }}</h3>
+						</div>
+						<p class="project-card__desc">{{ p.data.description }}</p>
+						<div class="project-card__meta project-card__meta--team">
+							<span class="project-card__meta-label">Команда:</span>
+							<div class="project-card__team-avatars">
+								@for (member of getProjectMembers(p); track member.id) {
+									<a
+										[href]="member.socials.github"
+										target="_blank"
+										rel="noopener noreferrer"
+										class="project-card__member-link"
+										[title]="member.name"
+									>
+										<img [src]="'developer/' + member.avatar + '.png'" [alt]="member.name" class="project-card__member-avatar" />
+									</a>
+								}
+							</div>
+						</div>
+						<div class="project-card__tags">
+							@for (tag of p.data.tags; track tag) {
+								<span class="project-card__tag">{{ tag }}</span>
+							}
+						</div>
+						<div class="project-card__links">
+							<a [href]="p.data.githubLink" target="_blank" rel="noopener noreferrer" class="project-card__link">
+								<svg class="project-card__link-icon project-card__link-icon--github" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M12 2A10 10 0 0 0 8.84 21.49c.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.18-3.37-1.18-.45-1.15-1.11-1.45-1.11-1.45-.9-.62.07-.6.07-.6 1 .07 1.52 1.03 1.52 1.03.88 1.53 2.32 1.08 2.88.82.09-.65.35-1.08.64-1.33-2.22-.25-4.55-1.11-4.55-4.92 0-1.08.38-1.96 1.02-2.65-.1-.25-.44-1.28.1-2.66 0 0 .83-.27 2.73 1.01A9.3 9.3 0 0 1 12 6.8a9.3 9.3 0 0 1 2.49.34c1.9-1.28 2.73-1.01 2.73-1.01.54 1.38.2 2.41.1 2.66.64.69 1.02 1.57 1.02 2.65 0 3.82-2.33 4.66-4.56 4.91.36.31.68.92.68 1.86V21c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/>
+								</svg>
+								GitHub
+							</a>
+							<a
+								[href]="p.data.websiteLink"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="project-card__link project-card__link--live"
+							>
+								<span class="material-symbols-outlined project-card__link-icon" aria-hidden="true">open_in_new</span>
+								Live
+							</a>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>

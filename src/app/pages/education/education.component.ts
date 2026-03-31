@@ -1,0 +1,50 @@
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { EDUCATION_TYPE_OPTIONS } from '../../feature/education/education.const';
+import { EducationService } from '../../feature/education/education.service';
+import { EducationInstitutionType } from '../../feature/education/education.interface';
+
+@Component({
+	imports: [RouterLink, DecimalPipe],
+	templateUrl: './education.component.html',
+	styleUrl: './education.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EducationComponent {
+	protected readonly educationService = inject(EducationService);
+	protected readonly institutions = this.educationService.publishedInstitutions;
+	protected readonly typeOptions = EDUCATION_TYPE_OPTIONS;
+	protected readonly selectedType = signal<EducationInstitutionType | 'all'>('all');
+	protected readonly searchTerm = signal('');
+	protected readonly filteredInstitutions = computed(() => {
+		const type = this.selectedType();
+		const search = this.searchTerm().trim().toLowerCase();
+
+		return this.institutions().filter((institution) => {
+			const matchesType = type === 'all' || institution.type === type;
+			const matchesSearch =
+				!search
+				|| institution.name.toLowerCase().includes(search)
+				|| institution.shortName.toLowerCase().includes(search)
+				|| institution.address.toLowerCase().includes(search)
+				|| institution.principal.toLowerCase().includes(search);
+
+			return matchesType && matchesSearch;
+		});
+	});
+	protected readonly featuredInstitutions = computed(() => {
+		return this.institutions().filter((institution) => institution.featured).slice(0, 3);
+	});
+	protected readonly totalStudents = computed(() => {
+		return this.institutions().reduce((sum, institution) => sum + institution.studentsCount, 0);
+	});
+
+	protected updateSearch(value: string) {
+		this.searchTerm.set(value);
+	}
+
+	protected typeLabel(value: EducationInstitutionType) {
+		return this.typeOptions.find((option) => option.value === value)?.label || value;
+	}
+}
