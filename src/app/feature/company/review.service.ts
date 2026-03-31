@@ -78,7 +78,7 @@ export class ReviewService {
 		this.reviews.update((reviews) => [...reviews, newReview]);
 	}
 
-	getBycompanyId(id: string) {
+	getByCompanyId(id: string) {
 		return computed(() =>
 			this.publishedReviews().filter((review) => review.companyId === id),
 		);

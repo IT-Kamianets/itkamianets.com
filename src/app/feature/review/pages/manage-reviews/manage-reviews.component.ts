@@ -2,17 +2,25 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { BusinessService } from '../../../business/business.service';
-import { Review, ReviewStatus } from '../../../business/review.interface';
-import { ReviewService } from '../../../business/review.service';
+import { CompanyService } from '../../../company/company.service';
+import { Review, ReviewStatus } from '../../../company/review.interface';
+import { ReviewService } from '../../../company/review.service';
 
 interface ReviewFormValue {
-	businessId: string;
+	companyId: string;
 	author: string;
 	rating: 1 | 2 | 3 | 4 | 5;
 	text: string;
 	date: string;
 	status: ReviewStatus;
+}
+
+interface ReviewCompanyOption {
+	id: string;
+	name: string;
+	type: string;
+	label: string;
+	reviewCount: number;
 }
 
 @Component({
@@ -24,18 +32,36 @@ interface ReviewFormValue {
 })
 export class ManageReviewsComponent {
 	private readonly _reviewService = inject(ReviewService);
-	private readonly _businessService = inject(BusinessService);
+	private readonly _companyService = inject(CompanyService);
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
 	protected readonly statusOptions: ReviewStatus[] = ['pending', 'approved', 'rejected'];
-	protected readonly reviews = computed(() =>
-		[...this._reviewService.reviews()].sort(
-			(left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
-		),
+	protected readonly filterOptions: Array<ReviewStatus | 'all'> = [
+		'all',
+		'pending',
+		'approved',
+		'rejected',
+	];
+	protected readonly companies = computed(() => this._companyService.companies());
+	protected readonly companyOptions = computed<ReviewCompanyOption[]>(() =>
+		this.companies()
+			.map((company) => {
+				const reviewCount = this._reviewService
+					.reviews()
+					.filter((review) => review.companyId === company.id).length;
+
+				return {
+					id: company.id,
+					name: company.name,
+					type: company.type,
+					label: `${company.name} - ${company.type}`,
+					reviewCount,
+				};
+			})
+			.sort((left, right) => left.name.localeCompare(right.name, 'uk')),
 	);
-	protected readonly businesses = computed(() => this._businessService.businesses());
 	protected readonly reviewCounts = computed(() => {
-		const reviews = this.reviews();
+		const reviews = this._reviewService.reviews();
 
 		return {
 			all: reviews.length,
@@ -44,7 +70,43 @@ export class ManageReviewsComponent {
 			rejected: reviews.filter((review) => review.status === 'rejected').length,
 		};
 	});
+	protected readonly filteredReviews = computed(() => {
+		const query = this.searchQuery().trim().toLowerCase();
+		const status = this.activeFilter();
 
+		return [...this._reviewService.reviews()]
+			.filter((review) => {
+				if (status !== 'all' && review.status !== status) {
+					return false;
+				}
+
+				if (!query) {
+					return true;
+				}
+
+				const companyLabel = this.getCompanyLabel(review.companyId).toLowerCase();
+
+				return (
+					review.author.toLowerCase().includes(query) ||
+					review.text.toLowerCase().includes(query) ||
+					companyLabel.includes(query)
+				);
+			})
+			.sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime());
+	});
+	protected readonly selectedCompany = computed(
+		() =>
+			this.companyOptions().find((company) => company.id === this.form().companyId) || null,
+	);
+	protected readonly pendingQueueLabel = computed(
+		() =>
+			this.reviewCounts().pending
+				? `${this.reviewCounts().pending} запис(и) очікують перевірки`
+				: 'Черга модерації порожня',
+	);
+
+	protected readonly activeFilter = signal<ReviewStatus | 'all'>('all');
+	protected readonly searchQuery = signal('');
 	protected readonly editingReviewId = signal<number | null>(null);
 	protected readonly form = signal<ReviewFormValue>(this._createEmptyForm());
 
@@ -56,7 +118,7 @@ export class ManageReviewsComponent {
 	protected startEdit(review: Review) {
 		this.editingReviewId.set(review.id);
 		this.form.set({
-			businessId: review.businessId,
+			companyId: review.companyId,
 			author: review.author,
 			rating: review.rating,
 			text: review.text,
@@ -68,7 +130,7 @@ export class ManageReviewsComponent {
 	protected save() {
 		const value = this.form();
 		const payload: Omit<Review, 'id'> = {
-			businessId: value.businessId,
+			companyId: value.companyId,
 			author: value.author.trim(),
 			rating: value.rating,
 			text: value.text.trim(),
@@ -76,7 +138,7 @@ export class ManageReviewsComponent {
 			status: value.status,
 		};
 
-		if (!payload.businessId || !payload.author || !payload.text || !value.date) {
+		if (!payload.companyId || !payload.author || !payload.text || !value.date) {
 			return;
 		}
 
@@ -115,11 +177,25 @@ export class ManageReviewsComponent {
 		this.startCreate();
 	}
 
-	protected getBusinessName(businessId: string) {
-		return this.businesses().find((business) => business.id === businessId)?.name || 'Компанія';
+	protected setFilter(status: ReviewStatus | 'all') {
+		this.activeFilter.set(status);
 	}
 
-	protected getStatusLabel(status: ReviewStatus) {
+	protected getCompanyName(companyId: string) {
+		return (
+			this.companyOptions().find((company) => company.id === companyId)?.name ||
+			'Компанія з каталогу'
+		);
+	}
+
+	protected getCompanyLabel(companyId: string) {
+		return (
+			this.companyOptions().find((company) => company.id === companyId)?.label ||
+			'Компанія з каталогу'
+		);
+	}
+
+	protected getStatusLabel(status: ReviewStatus | 'all') {
 		if (status === 'approved') {
 			return 'Approved';
 		}
@@ -128,7 +204,11 @@ export class ManageReviewsComponent {
 			return 'Rejected';
 		}
 
-		return 'Pending';
+		if (status === 'pending') {
+			return 'Pending';
+		}
+
+		return 'All';
 	}
 
 	protected updateRating(value: string | number) {
@@ -141,16 +221,16 @@ export class ManageReviewsComponent {
 		}
 	}
 
-	private _createEmptyForm(): ReviewFormValue {
-		const firstBusiness = this.businesses()[0];
+	private _createEmptyForm() {
+		const firstCompany = this.companyOptions()[0];
 
 		return {
-			businessId: firstBusiness?.id || '',
+			companyId: firstCompany?.id || '',
 			author: '',
-			rating: 5,
+			rating: 5 as Review['rating'],
 			text: '',
 			date: new Date().toISOString().slice(0, 10),
-			status: 'pending',
+			status: 'pending' as ReviewStatus,
 		};
 	}
 }

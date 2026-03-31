@@ -1,9 +1,23 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BusinessService } from '../../../business/business.service';
-import { ReviewService } from '../../../business/review.service';
+import { CompanyService } from '../../../company/company.service';
+import { ReviewService } from '../../../company/review.service';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
+
+interface ReviewListItem {
+	id: number;
+	author: string;
+	companyId: string;
+	companyName: string;
+	companyType: string;
+	companyDescription: string;
+	rating: 1 | 2 | 3 | 4 | 5;
+	date: string;
+	text: string;
+	excerpt: string;
+	isVerifiedCompany: boolean;
+}
 
 @Component({
 	selector: 'app-reviews',
@@ -14,7 +28,7 @@ import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadc
 })
 export class ReviewsComponent {
 	private readonly _reviewService = inject(ReviewService);
-	private readonly _businessService = inject(BusinessService);
+	private readonly _companyService = inject(CompanyService);
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
 	protected readonly breadcrumbs: Crumb[] = [
@@ -22,14 +36,34 @@ export class ReviewsComponent {
 		{ label: 'Відгуки' },
 	];
 
-	protected readonly reviews = computed(() =>
-		[...this._reviewService.publishedReviews()].sort(
-			(left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
-		),
-	);
+	protected readonly reviewItems = computed<ReviewListItem[]>(() => {
+		const companies = this._companyService.companies();
+
+		return [...this._reviewService.publishedReviews()]
+			.sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime())
+			.map((review) => {
+				const company = companies.find((item) => item.id === review.companyId) || null;
+
+				return {
+					id: review.id,
+					author: review.author,
+					companyId: review.companyId,
+					companyName: company?.name || 'Компанія з каталогу',
+					companyType: company?.type || 'Компанія',
+					companyDescription:
+						company?.shortDescription ||
+						'Команда з каталогу IT-Kamianets, для якої вже є публічні клієнтські відгуки.',
+					rating: review.rating,
+					date: review.date,
+					text: review.text,
+					excerpt: this._createExcerpt(review.text),
+					isVerifiedCompany: !!company?.verified,
+				};
+			});
+	});
 
 	protected readonly averageRating = computed(() => {
-		const reviews = this.reviews();
+		const reviews = this.reviewItems();
 		if (!reviews.length) {
 			return 0;
 		}
@@ -38,10 +72,25 @@ export class ReviewsComponent {
 		return total / reviews.length;
 	});
 
-	protected getBusinessName(businessId: string) {
-		return (
-			this._businessService.businesses().find((business) => business.id === businessId)?.name ||
-			'Компанія'
-		);
+	protected readonly uniqueCompaniesCount = computed(
+		() => new Set(this.reviewItems().map((review) => review.companyId)).size,
+	);
+
+	protected readonly topRatedCount = computed(
+		() => this.reviewItems().filter((review) => review.rating >= 5).length,
+	);
+
+	protected readonly featuredReview = computed(() => this.reviewItems()[0] || null);
+
+	protected trackReview(_index: number, review: ReviewListItem) {
+		return review.id;
+	}
+
+	private _createExcerpt(text: string) {
+		if (text.length <= 180) {
+			return text;
+		}
+
+		return `${text.slice(0, 177).trimEnd()}...`;
 	}
 }

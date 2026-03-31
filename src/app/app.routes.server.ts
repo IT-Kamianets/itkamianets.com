@@ -1,6 +1,6 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { TEAM_MEMBERS } from './data/team.data';
-import { REVIEW_IDS } from './feature/business/review.service';
+import { REVIEW_IDS } from './feature/company/review.service';
 import { SERVICE_IDS } from './feature/service/service.service';
 
 export const serverRoutes: ServerRoute[] = [

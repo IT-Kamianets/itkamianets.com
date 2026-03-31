@@ -1,6 +1,23 @@
 .reviews-page {
-	&__eyebrow {
-		margin: 0 0 0.75rem;
+	&__shell {
+		border: 1px solid var(--c-border);
+		border-radius: calc(var(--radius-card) + 0.5rem);
+		background:
+			radial-gradient(circle at top right, color-mix(in srgb, var(--c-primary) 12%, transparent), transparent 28%),
+			linear-gradient(180deg, var(--c-bg-secondary), var(--c-bg-secondary));
+	}
+
+	&__hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+		gap: 1.5rem;
+		padding: 2rem;
+		border-bottom: 1px solid var(--c-border);
+	}
+
+	&__eyebrow,
+	&__section-label {
+		margin: 0;
 		font-size: 0.75rem;
 		font-weight: 700;
 		letter-spacing: 0.3em;
@@ -8,8 +25,149 @@
 		color: var(--c-primary);
 	}
 
+	&__hero-stats {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+		align-self: end;
+	}
+
+	&__metric,
+	&__featured,
+	&__card,
+	&__empty {
+		border: 1px solid var(--c-border);
+		border-radius: var(--radius-card);
+		background: color-mix(in srgb, var(--c-bg-secondary) 88%, white 12%);
+	}
+
+	&__metric {
+		padding: 1rem 1.1rem;
+
+		span {
+			display: block;
+			font-size: 0.72rem;
+			text-transform: uppercase;
+			letter-spacing: 0.18em;
+			color: var(--c-text-muted);
+		}
+
+		strong {
+			display: block;
+			margin-top: 0.5rem;
+			font-size: 2rem;
+			line-height: 1;
+			color: var(--c-text-secondary);
+		}
+	}
+
+	&__featured {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 220px;
+		gap: 1.5rem;
+		margin: 1.5rem 2rem 0;
+		padding: 1.5rem;
+	}
+
+	&__featured-side {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		padding: 1rem;
+		border-radius: calc(var(--radius-card) - 0.25rem);
+		background: color-mix(in srgb, var(--c-primary) 8%, transparent);
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		padding: 0.85rem 1.25rem;
+		font-size: 0.92rem;
+		font-weight: 700;
+		background: var(--c-primary);
+		color: white;
+		transition:
+			transform 0.2s ease,
+			opacity 0.2s ease;
+
+		&:hover {
+			transform: translateY(-1px);
+			opacity: 0.92;
+		}
+	}
+
+	&__button--ghost {
+		border: 1px solid var(--c-border);
+		background: transparent;
+		color: var(--c-text-secondary);
+	}
+
+	&__list {
+		display: grid;
+		gap: 1rem;
+		padding: 1.5rem 2rem 2rem;
+	}
+
+	&__card {
+		padding: 1.5rem;
+		box-shadow: 0 14px 38px color-mix(in srgb, var(--c-text-secondary) 7%, transparent);
+	}
+
+	&__card-header {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid var(--c-border);
+	}
+
+	&__card-meta {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.5rem;
+	}
+
+	&__card-body {
+		padding: 1.25rem 0 1rem;
+	}
+
+	&__card-footer {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+
+	&__tag,
+	&__verified {
+		display: inline-flex;
+		align-items: center;
+		border-radius: 999px;
+		padding: 0.38rem 0.8rem;
+		font-size: 0.74rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	&__tag {
+		background: color-mix(in srgb, var(--c-primary) 9%, transparent);
+		color: var(--c-primary);
+	}
+
+	&__verified {
+		background: color-mix(in srgb, #22c55e 14%, transparent);
+		color: #15803d;
+	}
+
 	&__star {
-		font-size: 1.25rem;
+		font-size: 1.3rem;
 		font-variation-settings:
 			'FILL' 0,
 			'wght' 500,
@@ -25,5 +183,52 @@
 			'GRAD' 0,
 			'opsz' 24;
 		color: var(--c-primary);
+	}
+
+	&__empty {
+		margin: 1.5rem 2rem 2rem;
+		padding: 2.5rem 1.5rem;
+		text-align: center;
+	}
+
+	@media (max-width: 960px) {
+		&__hero,
+		&__featured {
+			grid-template-columns: 1fr;
+		}
+
+		&__hero,
+		&__list {
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+
+		&__featured,
+		&__empty {
+			margin-left: 1rem;
+			margin-right: 1rem;
+		}
+
+		&__hero-stats {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		&__card-meta {
+			align-items: flex-start;
+		}
+	}
+
+	@media (max-width: 640px) {
+		&__hero-stats {
+			grid-template-columns: 1fr;
+		}
+
+		&__card {
+			padding: 1.15rem;
+		}
+
+		&__card-footer {
+			align-items: flex-start;
+		}
 	}
 }
