@@ -33,7 +33,6 @@
 	}
 
 	&__metric,
-	&__featured,
 	&__card,
 	&__empty {
 		border: 1px solid var(--c-border);
@@ -59,24 +58,6 @@
 			line-height: 1;
 			color: var(--c-text-secondary);
 		}
-	}
-
-	&__featured {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) 220px;
-		gap: 1.5rem;
-		margin: 1.5rem 2rem 0;
-		padding: 1.5rem;
-	}
-
-	&__featured-side {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		justify-content: center;
-		padding: 1rem;
-		border-radius: calc(var(--radius-card) - 0.25rem);
-		background: color-mix(in srgb, var(--c-primary) 8%, transparent);
 	}
 
 	&__button {
@@ -192,8 +173,7 @@
 	}
 
 	@media (max-width: 960px) {
-		&__hero,
-		&__featured {
+		&__hero {
 			grid-template-columns: 1fr;
 		}
 
@@ -203,7 +183,6 @@
 			padding-right: 1rem;
 		}
 
-		&__featured,
 		&__empty {
 			margin-left: 1rem;
 			margin-right: 1rem;

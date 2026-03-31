@@ -72,15 +72,13 @@ export class ReviewsComponent {
 		return total / reviews.length;
 	});
 
-	protected readonly uniqueCompaniesCount = computed(
+	protected readonly companiesCount = computed(
 		() => new Set(this.reviewItems().map((review) => review.companyId)).size,
 	);
 
 	protected readonly topRatedCount = computed(
-		() => this.reviewItems().filter((review) => review.rating >= 5).length,
+		() => this.reviewItems().filter((review) => review.rating === 5).length,
 	);
-
-	protected readonly featuredReview = computed(() => this.reviewItems()[0] || null);
 
 	protected trackReview(_index: number, review: ReviewListItem) {
 		return review.id;

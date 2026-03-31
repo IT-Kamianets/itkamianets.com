@@ -5,7 +5,7 @@
 		<div class="reviews-page__shell mt-6 overflow-hidden">
 			<section class="reviews-page__hero">
 				<div class="max-w-3xl">
-					<p class="reviews-page__eyebrow">Reviews</p>
+					<p class="reviews-page__eyebrow">Відгуки</p>
 					<h1 class="text-3xl font-black text-[var(--c-text-secondary)] sm:text-4xl">
 						Всі опубліковані відгуки
 					</h1>
@@ -26,8 +26,8 @@
 						<strong>{{ averageRating() | number: '1.1-1' }}</strong>
 					</div>
 					<div class="reviews-page__metric">
-						<span>Компаній у вибірці</span>
-						<strong>{{ uniqueCompaniesCount() }}</strong>
+						<span>Компаній</span>
+						<strong>{{ companiesCount() }}</strong>
 					</div>
 					<div class="reviews-page__metric">
 						<span>Оцінок 5/5</span>
@@ -35,53 +35,6 @@
 					</div>
 				</div>
 			</section>
-
-			@if (featuredReview(); as featured) {
-				<section class="reviews-page__featured">
-					<div>
-						<p class="reviews-page__section-label">Останній відгук</p>
-						<h2 class="mt-2 text-2xl font-black text-[var(--c-text-secondary)]">
-							{{ featured.author }}
-						</h2>
-						<p class="mt-2 text-sm font-semibold text-[var(--c-primary)]">
-							{{ featured.companyName }} · {{ featured.companyType }}
-						</p>
-						<p class="mt-4 text-sm leading-7 text-[var(--c-text-muted)]">
-							{{ featured.excerpt }}
-						</p>
-						<div class="mt-5 flex flex-wrap gap-3">
-							<a [routerLink]="['/reviews', featured.id]" class="reviews-page__button">
-								Читати повністю
-							</a>
-							<a
-								[routerLink]="['/company', featured.companyId]"
-								class="reviews-page__button reviews-page__button--ghost"
-							>
-								Перейти до компанії
-							</a>
-						</div>
-					</div>
-
-					<div class="reviews-page__featured-side">
-						<div class="flex items-center gap-1" aria-hidden="true">
-							@for (star of ratingRange; track star) {
-								<span
-									class="material-symbols-outlined reviews-page__star"
-									[class.reviews-page__star--active]="star <= featured.rating"
-								>
-									star
-								</span>
-							}
-						</div>
-						<p class="mt-3 text-sm text-[var(--c-text-muted)]">
-							{{ featured.date | date: 'dd.MM.yyyy' }}
-						</p>
-						@if (featured.isVerifiedCompany) {
-							<span class="reviews-page__verified">Верифікована компанія</span>
-						}
-					</div>
-				</section>
-			}
 
 			@if (reviewItems().length) {
 				<div class="reviews-page__list">
@@ -99,7 +52,7 @@
 											</a>
 										</h2>
 										@if (review.isVerifiedCompany) {
-											<span class="reviews-page__verified">Verified</span>
+											<span class="reviews-page__verified">Верифікована</span>
 										}
 									</div>
 									<a
@@ -142,12 +95,17 @@
 
 							<div class="reviews-page__card-footer">
 								<span class="reviews-page__tag">{{ review.companyType }}</span>
-								<a
-									[routerLink]="['/reviews', review.id]"
-									class="inline-flex text-sm font-semibold text-[var(--c-primary)] transition-colors hover:text-[var(--c-primary-hover)]"
-								>
-									Детальніше
-								</a>
+								<div class="flex flex-wrap gap-3">
+									<a [routerLink]="['/reviews', review.id]" class="reviews-page__button">
+										Читати повністю
+									</a>
+									<a
+										[routerLink]="['/company', review.companyId]"
+										class="reviews-page__button reviews-page__button--ghost"
+									>
+										Перейти до компанії
+									</a>
+								</div>
 							</div>
 						</article>
 					}

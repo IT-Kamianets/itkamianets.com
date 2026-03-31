@@ -36,7 +36,7 @@ export const PUBLISHED_REVIEWS: Review[] = [
 		rating: 4,
 		text: 'Команда допомогла з аудитом продукту і пріоритизацією беклогу. Особливо корисним був етап передпроєктної аналітики.',
 		date: '2026-02-14T16:45:00.000Z',
-		status: 'pending',
+		status: 'approved',
 	},
 	{
 		id: 5,

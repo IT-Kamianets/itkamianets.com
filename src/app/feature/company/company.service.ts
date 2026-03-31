@@ -129,7 +129,9 @@ export class CompanyService {
 			next: (docs) => {
 				if (Array.isArray(docs)) {
 					const fetchedCompanies = docs.map((d) => this._fromDoc(d));
-					this.companies.set(this._mergeCompanies(fetchedCompanies));
+					this.companies.set(
+						this._mergeCompanies([...this._getInitialCompanies(), ...fetchedCompanies]),
+					);
 				}
 			},
 			error: () => this.companies.set(this._getInitialCompanies()),
@@ -140,9 +142,50 @@ export class CompanyService {
 		const localCompany = this.companies().find((company) => company.id === id) || null;
 
 		return this._http.post<any>(`${API}/fetch`, { _id: id }).pipe(
-			map((doc) => (doc?._id ? this._fromDoc(doc) : null)),
+			map((doc) => (doc?._id ? this._fromDoc(doc) : localCompany)),
 			catchError(() => of(localCompany)),
 		);
+	}
+
+	createLocalCompany(name: string) {
+		const normalizedName = name.trim();
+		if (!normalizedName) {
+			return '';
+		}
+
+		const existingCompany = this.companies().find(
+			(company) => company.name.toLowerCase() === normalizedName.toLowerCase(),
+		);
+
+		if (existingCompany) {
+			return existingCompany.id;
+		}
+
+		const id = `local-${normalizedName
+			.toLowerCase()
+			.replace(/[^a-z0-9а-щьюяґєії-]+/gi, '-')
+			.replace(/^-+|-+$/g, '')}-${Date.now()}`;
+
+		this.companies.update((companies) => [
+			{
+				id,
+				name: normalizedName,
+				logo: '',
+				type: 'Сервіс',
+				shortDescription: 'Компанія додана вручну під час створення відгуку.',
+				description:
+					'Цю компанію додали вручну в адмінці відгуків. За потреби її можна пізніше доповнити в каталозі компаній.',
+				techStack: [],
+				services: ['Потребує уточнення'],
+				employees: 0,
+				founded: new Date().getFullYear(),
+				verified: false,
+				contacts: {},
+			},
+			...companies,
+		]);
+
+		return id;
 	}
 
 	add(company: Omit<Company, 'id'>): void {

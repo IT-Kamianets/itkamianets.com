@@ -1,18 +1,27 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	afterNextRender,
+	computed,
+	inject,
+	signal,
+	viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CompanyService } from '../../../company/company.service';
-import { Review, ReviewStatus } from '../../../company/review.interface';
+import { Review } from '../../../company/review.interface';
 import { ReviewService } from '../../../company/review.service';
 
 interface ReviewFormValue {
 	companyId: string;
+	customCompanyName: string;
 	author: string;
 	rating: 1 | 2 | 3 | 4 | 5;
 	text: string;
 	date: string;
-	status: ReviewStatus;
 }
 
 interface ReviewCompanyOption {
@@ -22,6 +31,8 @@ interface ReviewCompanyOption {
 	label: string;
 	reviewCount: number;
 }
+
+type ReviewFilter = 'all' | 'approved' | 'pending' | 'rejected';
 
 @Component({
 	selector: 'app-manage-reviews',
@@ -33,15 +44,13 @@ interface ReviewCompanyOption {
 export class ManageReviewsComponent {
 	private readonly _reviewService = inject(ReviewService);
 	private readonly _companyService = inject(CompanyService);
+	private readonly _formPanel = viewChild<ElementRef<HTMLFormElement>>('formPanel');
+	private readonly _formScroll = viewChild<ElementRef<HTMLDivElement>>('formScroll');
+	private readonly _authorInput = viewChild<ElementRef<HTMLInputElement>>('authorInput');
+	private _formHighlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
-	protected readonly statusOptions: ReviewStatus[] = ['pending', 'approved', 'rejected'];
-	protected readonly filterOptions: Array<ReviewStatus | 'all'> = [
-		'all',
-		'pending',
-		'approved',
-		'rejected',
-	];
+	protected readonly filterOptions: ReviewFilter[] = ['all', 'pending', 'approved', 'rejected'];
 	protected readonly companies = computed(() => this._companyService.companies());
 	protected readonly companyOptions = computed<ReviewCompanyOption[]>(() =>
 		this.companies()
@@ -98,49 +107,59 @@ export class ManageReviewsComponent {
 		() =>
 			this.companyOptions().find((company) => company.id === this.form().companyId) || null,
 	);
-	protected readonly pendingQueueLabel = computed(
-		() =>
-			this.reviewCounts().pending
-				? `${this.reviewCounts().pending} запис(и) очікують перевірки`
-				: 'Черга модерації порожня',
+	protected readonly pendingQueueLabel = computed(() =>
+		this.reviewCounts().pending
+			? `${this.reviewCounts().pending} запис(и) очікують перевірки`
+			: 'Черга модерації порожня',
 	);
 
-	protected readonly activeFilter = signal<ReviewStatus | 'all'>('all');
+	protected readonly activeFilter = signal<ReviewFilter>('all');
 	protected readonly searchQuery = signal('');
 	protected readonly editingReviewId = signal<number | null>(null);
+	protected readonly highlightForm = signal(false);
 	protected readonly form = signal<ReviewFormValue>(this._createEmptyForm());
 
 	protected startCreate() {
 		this.editingReviewId.set(null);
+		this.searchQuery.set('');
+		this.activeFilter.set('all');
 		this.form.set(this._createEmptyForm());
+		this._scrollToForm();
 	}
 
 	protected startEdit(review: Review) {
 		this.editingReviewId.set(review.id);
 		this.form.set({
 			companyId: review.companyId,
+			customCompanyName: '',
 			author: review.author,
 			rating: review.rating,
 			text: review.text,
 			date: review.date.slice(0, 10),
-			status: review.status,
 		});
+		this._scrollToForm();
 	}
 
 	protected save() {
 		const value = this.form();
+		const companyId =
+			value.companyId || this._companyService.createLocalCompany(value.customCompanyName);
+
+		if (!companyId || !value.author.trim() || !value.text.trim() || !value.date) {
+			return;
+		}
+
+		const existingReview = this.editingReviewId()
+			? this._reviewService.getById(this.editingReviewId()!)()
+			: null;
 		const payload: Omit<Review, 'id'> = {
-			companyId: value.companyId,
+			companyId,
 			author: value.author.trim(),
 			rating: value.rating,
 			text: value.text.trim(),
 			date: new Date(value.date).toISOString(),
-			status: value.status,
+			status: existingReview?.status || 'pending',
 		};
-
-		if (!payload.companyId || !payload.author || !payload.text || !value.date) {
-			return;
-		}
 
 		const reviewId = this.editingReviewId();
 
@@ -177,15 +196,8 @@ export class ManageReviewsComponent {
 		this.startCreate();
 	}
 
-	protected setFilter(status: ReviewStatus | 'all') {
+	protected setFilter(status: ReviewFilter) {
 		this.activeFilter.set(status);
-	}
-
-	protected getCompanyName(companyId: string) {
-		return (
-			this.companyOptions().find((company) => company.id === companyId)?.name ||
-			'Компанія з каталогу'
-		);
 	}
 
 	protected getCompanyLabel(companyId: string) {
@@ -195,20 +207,20 @@ export class ManageReviewsComponent {
 		);
 	}
 
-	protected getStatusLabel(status: ReviewStatus | 'all') {
+	protected getStatusLabel(status: ReviewFilter) {
 		if (status === 'approved') {
-			return 'Approved';
+			return 'Підтверджено';
 		}
 
 		if (status === 'rejected') {
-			return 'Rejected';
+			return 'Відхилено';
 		}
 
 		if (status === 'pending') {
-			return 'Pending';
+			return 'На перевірці';
 		}
 
-		return 'All';
+		return 'Усі';
 	}
 
 	protected updateRating(value: string | number) {
@@ -221,16 +233,42 @@ export class ManageReviewsComponent {
 		}
 	}
 
-	private _createEmptyForm() {
+	private _createEmptyForm(): ReviewFormValue {
 		const firstCompany = this.companyOptions()[0];
 
 		return {
 			companyId: firstCompany?.id || '',
+			customCompanyName: '',
 			author: '',
 			rating: 5 as Review['rating'],
 			text: '',
 			date: new Date().toISOString().slice(0, 10),
-			status: 'pending' as ReviewStatus,
 		};
+	}
+
+	private _scrollToForm() {
+		if (typeof window === 'undefined') {
+			return;
+		}
+
+		this.highlightForm.set(true);
+		if (this._formHighlightTimeout) {
+			clearTimeout(this._formHighlightTimeout);
+		}
+		this._formHighlightTimeout = setTimeout(() => this.highlightForm.set(false), 1200);
+
+		afterNextRender(() => {
+			this._formPanel()?.nativeElement.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
+
+			this._formScroll()?.nativeElement.scrollTo({
+				top: 0,
+				behavior: 'smooth',
+			});
+
+			this._authorInput()?.nativeElement.focus();
+		});
 	}
 }

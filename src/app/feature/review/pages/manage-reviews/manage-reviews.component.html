@@ -2,14 +2,13 @@
 	<div class="mx-auto max-w-7xl">
 		<header class="manage-reviews__header">
 			<div class="max-w-3xl">
-				<p class="manage-reviews__eyebrow">Moderation</p>
+				<p class="manage-reviews__eyebrow">Модерація</p>
 				<h1 class="text-3xl font-black text-[var(--c-text-secondary)]">
 					Керування відгуками
 				</h1>
 				<p class="mt-4 text-sm leading-7 text-[var(--c-text-muted)] sm:text-base">
-					Створюйте нові відгуки, редагуйте тексти, перевіряйте тональність та керуйте
-					публікацією. У публічному списку `/reviews` відображаються лише записи зі статусом
-					`approved`.
+					Створюйте нові відгуки, редагуйте тексти, перевіряйте тональність і керуйте
+					публікацією. У публічному списку `/reviews` відображаються лише підтверджені записи.
 				</p>
 				<p class="mt-3 text-sm font-semibold text-[var(--c-primary)]">
 					{{ pendingQueueLabel() }}
@@ -17,10 +16,7 @@
 			</div>
 
 			<div class="manage-reviews__header-actions">
-				<a
-					routerLink="/reviews"
-					class="manage-reviews__hero-link"
-				>
+				<a routerLink="/reviews" class="manage-reviews__hero-link">
 					Публічна сторінка
 				</a>
 				<button
@@ -39,29 +35,34 @@
 				<strong>{{ reviewCounts().all }}</strong>
 			</div>
 			<div class="manage-reviews__stat">
-				<span>Approved</span>
+				<span>Підтверджено</span>
 				<strong>{{ reviewCounts().approved }}</strong>
 			</div>
 			<div class="manage-reviews__stat">
-				<span>Pending</span>
+				<span>На перевірці</span>
 				<strong>{{ reviewCounts().pending }}</strong>
 			</div>
 			<div class="manage-reviews__stat">
-				<span>Rejected</span>
+				<span>Відхилено</span>
 				<strong>{{ reviewCounts().rejected }}</strong>
 			</div>
 		</div>
 
 		<div class="manage-reviews__layout">
-			<form class="manage-reviews__form" (submit)="save(); $event.preventDefault()">
+			<form
+				#formPanel
+				class="manage-reviews__form"
+				[class.manage-reviews__form--highlight]="highlightForm()"
+				(submit)="save(); $event.preventDefault()"
+			>
 				<div class="flex items-start justify-between gap-4">
 					<div>
 						<h2 class="text-xl font-black text-[var(--c-text-secondary)]">
 							{{ editingReviewId() ? 'Редагування відгуку' : 'Створення відгуку' }}
 						</h2>
 						<p class="mt-2 text-sm leading-6 text-[var(--c-text-muted)]">
-							Обирайте компанію, вказуйте автора, рейтинг та одразу визначайте статус
-							модерації.
+							Оберіть компанію з каталогу або введіть власну назву, якщо її ще немає в
+							системі.
 						</p>
 					</div>
 					@if (editingReviewId()) {
@@ -69,93 +70,91 @@
 					}
 				</div>
 
-				@if (selectedCompany(); as company) {
-					<div class="manage-reviews__company-note">
-						<p class="text-sm font-semibold text-[var(--c-text-secondary)]">
-							{{ company.name }}
-						</p>
-						<p class="mt-1 text-sm text-[var(--c-text-muted)]">
-							{{ company.type }} · Відгуків у системі: {{ company.reviewCount }}
-						</p>
-					</div>
-				}
+				<div #formScroll class="manage-reviews__form-scroll">
+					@if (selectedCompany(); as company) {
+						<div class="manage-reviews__company-note">
+							<p class="text-sm font-semibold text-[var(--c-text-secondary)]">
+								{{ company.name }}
+							</p>
+							<p class="mt-1 text-sm text-[var(--c-text-muted)]">
+								{{ company.type }} · Відгуків у системі: {{ company.reviewCount }}
+							</p>
+						</div>
+					}
 
-				<label class="manage-reviews__field">
-					<span>Компанія</span>
-					<select
-						[ngModel]="form().companyId"
-						(ngModelChange)="form.set({ ...form(), companyId: $event })"
-						name="companyId"
-					>
-						@if (companyOptions().length) {
+					<label class="manage-reviews__field">
+						<span>Компанія з каталогу</span>
+						<select
+							[ngModel]="form().companyId"
+							(ngModelChange)="form.set({ ...form(), companyId: $event })"
+							name="companyId"
+						>
+							<option value="">Оберіть компанію</option>
 							@for (company of companyOptions(); track company.id) {
 								<option [value]="company.id">{{ company.label }}</option>
 							}
-						} @else {
-							<option value="">Немає доступних компаній</option>
-						}
-					</select>
-				</label>
-
-				<label class="manage-reviews__field">
-					<span>Автор</span>
-					<input
-						type="text"
-						placeholder="Наприклад, Олена Петрів"
-						[ngModel]="form().author"
-						(ngModelChange)="form.set({ ...form(), author: $event })"
-						name="author"
-					/>
-				</label>
-
-				<div class="manage-reviews__grid">
-					<label class="manage-reviews__field">
-						<span>Рейтинг</span>
-						<select
-							[ngModel]="form().rating"
-							(ngModelChange)="updateRating($event)"
-							name="rating"
-						>
-							@for (rating of ratingRange; track rating) {
-								<option [value]="rating">{{ rating }}/5</option>
-							}
 						</select>
 					</label>
 
 					<label class="manage-reviews__field">
-						<span>Статус</span>
-						<select
-							[ngModel]="form().status"
-							(ngModelChange)="form.set({ ...form(), status: $event })"
-							name="status"
-						>
-							@for (status of statusOptions; track status) {
-								<option [value]="status">{{ getStatusLabel(status) }}</option>
-							}
-						</select>
+						<span>Або введіть нову компанію</span>
+						<input
+							type="text"
+							placeholder="Наприклад, Soft River Studio"
+							[ngModel]="form().customCompanyName"
+							(ngModelChange)="form.set({ ...form(), customCompanyName: $event })"
+							name="customCompanyName"
+						/>
+					</label>
+
+					<label class="manage-reviews__field">
+						<span>Автор</span>
+						<input
+							#authorInput
+							type="text"
+							placeholder="Наприклад, Олена Петрів"
+							[ngModel]="form().author"
+							(ngModelChange)="form.set({ ...form(), author: $event })"
+							name="author"
+						/>
+					</label>
+
+					<div class="manage-reviews__grid">
+						<label class="manage-reviews__field">
+							<span>Рейтинг</span>
+							<select
+								[ngModel]="form().rating"
+								(ngModelChange)="updateRating($event)"
+								name="rating"
+							>
+								@for (rating of ratingRange; track rating) {
+									<option [value]="rating">{{ rating }}/5</option>
+								}
+							</select>
+						</label>
+
+						<label class="manage-reviews__field">
+							<span>Дата</span>
+							<input
+								type="date"
+								[ngModel]="form().date"
+								(ngModelChange)="form.set({ ...form(), date: $event })"
+								name="date"
+							/>
+						</label>
+					</div>
+
+					<label class="manage-reviews__field">
+						<span>Текст відгуку</span>
+						<textarea
+							rows="7"
+							placeholder="Опишіть сильні сторони співпраці, результат і можливі зауваження..."
+							[ngModel]="form().text"
+							(ngModelChange)="form.set({ ...form(), text: $event })"
+							name="text"
+						></textarea>
 					</label>
 				</div>
-
-				<label class="manage-reviews__field">
-					<span>Дата</span>
-					<input
-						type="date"
-						[ngModel]="form().date"
-						(ngModelChange)="form.set({ ...form(), date: $event })"
-						name="date"
-					/>
-				</label>
-
-				<label class="manage-reviews__field">
-					<span>Текст відгуку</span>
-					<textarea
-						rows="7"
-						placeholder="Опишіть сильні сторони співпраці, результат і можливі зауваження..."
-						[ngModel]="form().text"
-						(ngModelChange)="form.set({ ...form(), text: $event })"
-						name="text"
-					></textarea>
-				</label>
 
 				<div class="manage-reviews__form-actions">
 					<button type="submit" class="manage-reviews__submit">
@@ -247,17 +246,17 @@
 									(click)="approve(review)"
 									class="manage-reviews__action manage-reviews__action--approve"
 								>
-									Approve
+									Підтвердити
 								</button>
 								<button type="button" (click)="markPending(review)" class="manage-reviews__action">
-									Pending
+									На перевірку
 								</button>
 								<button
 									type="button"
 									(click)="reject(review)"
 									class="manage-reviews__action manage-reviews__action--reject"
 								>
-									Reject
+									Відхилити
 								</button>
 								<a [routerLink]="['/reviews', review.id]" class="manage-reviews__action">
 									Публічний перегляд
