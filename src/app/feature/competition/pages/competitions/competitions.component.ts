@@ -40,6 +40,10 @@ export class CompetitionsComponent implements OnInit {
 		this._pickStringArray(item.data, ['tags', 'stack', 'topics']);
 	protected readonly getParticipants = (_index: number, item: Competition) =>
 		this._pickNumber(item.data, ['participants', 'teamsCount', 'membersCount']);
+	protected readonly getLocation = (_index: number, item: Competition) =>
+		this._pickString(item.data, ['location', 'place', 'venue']);
+	protected readonly getSponsors = (_index: number, item: Competition) =>
+		this._pickStringArray(item.data, ['sponsors', 'partners', 'supporters']);
 	protected readonly getDeadline = (_index: number, item: Competition) =>
 		this._pickString(item.data, ['deadline', 'registrationDeadline', 'date']);
 	protected readonly activeCount = computed(() => this.activeCompetitions().length);

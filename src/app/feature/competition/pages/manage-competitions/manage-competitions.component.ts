@@ -18,6 +18,9 @@ type CompetitionRow = {
 	period: string;
 	prize: string;
 	tags: string;
+	location: string;
+	participants: string;
+	sponsors: string;
 	isActive: boolean;
 	rawData: Record<string, unknown>;
 };
@@ -45,6 +48,9 @@ export class ManageCompetitionsComponent implements OnInit {
 	protected readonly formPeriod = signal('');
 	protected readonly formPrize = signal('');
 	protected readonly formTags = signal('');
+	protected readonly formLocation = signal('');
+	protected readonly formParticipants = signal('');
+	protected readonly formSponsors = signal('');
 	protected readonly formStages = signal('');
 	protected readonly formRequirements = signal('');
 	protected readonly formBenefits = signal('');
@@ -71,6 +77,9 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formPeriod.set('');
 		this.formPrize.set('');
 		this.formTags.set('');
+		this.formLocation.set('');
+		this.formParticipants.set('');
+		this.formSponsors.set('');
 		this.formStages.set('');
 		this.formRequirements.set('');
 		this.formBenefits.set('');
@@ -89,6 +98,11 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formPeriod.set(row.period);
 		this.formPrize.set(row.prize);
 		this.formTags.set(row.tags);
+		this.formLocation.set(row.location);
+		this.formParticipants.set(row.participants);
+		this.formSponsors.set(
+			this._pickStringList(row.rawData, ['sponsors', 'partners', 'supporters']).join('\n'),
+		);
 		this.formStages.set(this._pickStringList(row.rawData, ['stages', 'timeline', 'steps']).join('\n'));
 		this.formRequirements.set(
 			this._pickStringList(row.rawData, ['requirements', 'criteria', 'conditions']).join('\n'),
@@ -149,6 +163,11 @@ export class ManageCompetitionsComponent implements OnInit {
 			period: this._pickString(doc.data, ['period', 'deadline', 'date']),
 			prize: this._pickString(doc.data, ['prize', 'reward']),
 			tags: this._pickStringArray(doc.data, ['tags', 'stack', 'topics']).join(', '),
+			location: this._pickString(doc.data, ['location', 'place', 'venue']),
+			participants:
+				this._pickString(doc.data, ['participants']) ||
+				String(this._pickNumber(doc.data, ['participants', 'teamsCount', 'membersCount']) || ''),
+			sponsors: this._pickStringArray(doc.data, ['sponsors', 'partners', 'supporters']).join(', '),
 			isActive: this._competitionService.isActive(doc),
 			rawData: { ...doc.data },
 		};
@@ -171,6 +190,10 @@ export class ManageCompetitionsComponent implements OnInit {
 			'topics',
 			'status',
 			'published',
+			'place',
+			'venue',
+			'partners',
+			'supporters',
 		];
 
 		for (const key of removeKeys) {
@@ -188,6 +211,9 @@ export class ManageCompetitionsComponent implements OnInit {
 			.split(',')
 			.map((tag) => tag.trim())
 			.filter((tag) => tag);
+		data['location'] = this.formLocation().trim();
+		data['participants'] = this.formParticipants().trim();
+		data['sponsors'] = this._parseMultiline(this.formSponsors());
 		data['stages'] = this._parseMultiline(this.formStages());
 		data['requirements'] = this._parseMultiline(this.formRequirements());
 		data['benefits'] = this._parseMultiline(this.formBenefits());
@@ -215,6 +241,21 @@ export class ManageCompetitionsComponent implements OnInit {
 		}
 
 		return [];
+	}
+
+	private _pickNumber(data: Record<string, unknown>, keys: string[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (typeof value === 'number' && Number.isFinite(value)) {
+				return value;
+			}
+
+			if (typeof value === 'string' && value.trim() && !Number.isNaN(Number(value))) {
+				return Number(value);
+			}
+		}
+
+		return null;
 	}
 
 	private _pickStringList(data: Record<string, unknown>, keys: string[]) {

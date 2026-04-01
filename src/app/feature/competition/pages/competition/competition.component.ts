@@ -59,6 +59,22 @@ export class CompetitionComponent implements OnInit {
 
 		return this._pickStringArray(current.data, ['tags', 'stack', 'topics']);
 	});
+	protected readonly location = computed(() => {
+		const current = this.competition();
+		if (!current) {
+			return '';
+		}
+
+		return this._pickString(current.data, ['location', 'place', 'venue']);
+	});
+	protected readonly sponsors = computed(() => {
+		const current = this.competition();
+		if (!current) {
+			return [];
+		}
+
+		return this._pickStringArray(current.data, ['sponsors', 'partners', 'supporters']);
+	});
 	protected readonly stages = computed(() => {
 		const current = this.competition();
 		if (!current) {
@@ -173,6 +189,15 @@ export class CompetitionComponent implements OnInit {
 			'highlights',
 			'outcomes',
 			'whatYouGet',
+			'location',
+			'place',
+			'venue',
+			'sponsors',
+			'partners',
+			'supporters',
+			'participants',
+			'teamsCount',
+			'membersCount',
 		]);
 
 		return Object.entries(current.data)
