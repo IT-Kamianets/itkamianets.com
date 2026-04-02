@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import * as champions from 'champions';
 import { ThemeService } from 'wacom';
 
 @Component({
@@ -12,6 +13,8 @@ export class AppComponent {
 	private _themeService = inject(ThemeService);
 
 	constructor() {
+		console.log(champions);
+
 		this._themeService.init();
 	}
 }
