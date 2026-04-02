@@ -30,6 +30,29 @@ export const serverRoutes: ServerRoute[] = [
 		getPrerenderParams: async () => SERVICE_IDS.map((id) => ({ id })),
 	},
 	{
+		path: 'competition/:id',
+		renderMode: RenderMode.Prerender,
+		getPrerenderParams: async () => {
+			try {
+				const response = await fetch('https://api.webart.work/api/itcompetition/get');
+				if (!response.ok) {
+					return [];
+				}
+
+				const docs = (await response.json()) as Array<{ _id?: unknown }>;
+				if (!Array.isArray(docs)) {
+					return [];
+				}
+
+				return docs
+					.map((doc) => (typeof doc?._id === 'string' ? { id: doc._id } : null))
+					.filter((item): item is { id: string } => !!item);
+			} catch {
+				return [];
+			}
+		},
+	},
+	{
 		path: '**',
 		renderMode: RenderMode.Prerender,
 	},

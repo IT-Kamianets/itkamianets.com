@@ -1,0 +1,295 @@
+<section class="manage-competitions">
+	<div class="manage-competitions__header">
+		<div>
+			<h1 class="manage-competitions__title">Керування змаганнями</h1>
+			<p class="manage-competitions__subtitle">
+				Змагання з API (`create/get/fetch/update/delete`) через PrimeNG Table + Dialog.
+			</p>
+		</div>
+		<button
+			pButton
+			type="button"
+			class="manage-competitions__add"
+			label="Додати змагання"
+			icon="pi pi-plus"
+			(click)="openCreateDialog()"
+		></button>
+	</div>
+
+	@if (error()) {
+		<p class="manage-competitions__error">{{ error() }}</p>
+	}
+
+	@if (isLoading()) {
+		<p class="manage-competitions__subtitle">Завантаження...</p>
+	} @else {
+		<div class="manage-competitions__table-wrapper">
+			<p-table [value]="competitions()" [tableStyle]="{ 'min-width': '40rem' }">
+				<ng-template pTemplate="header">
+					<tr>
+						<th>ID</th>
+						<th>Назва</th>
+						<th>Опис</th>
+						<th>Сезон</th>
+						<th>Формат</th>
+						<th>Період</th>
+						<th>Приз</th>
+						<th>Теги</th>
+						<th>Місце проведення</th>
+						<th>Учасники</th>
+						<th>Спонсори</th>
+						<th>Статус</th>
+						<th class="manage-competitions__actions-column">Дії</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-competition>
+					<tr>
+						<td>{{ competition._id }}</td>
+						<td>{{ competition.title }}</td>
+						<td class="manage-competitions__truncate">{{ competition.description || '-' }}</td>
+						<td>{{ competition.season || '-' }}</td>
+						<td>{{ competition.format || '-' }}</td>
+						<td>{{ competition.period || '-' }}</td>
+						<td>{{ competition.prize || '-' }}</td>
+						<td class="manage-competitions__truncate">{{ competition.tags || '-' }}</td>
+						<td>{{ competition.location || '-' }}</td>
+						<td>{{ competition.participants || '-' }}</td>
+						<td class="manage-competitions__truncate">{{ competition.sponsors || '-' }}</td>
+						<td>{{ competition.isActive ? 'Active' : 'Inactive' }}</td>
+						<td class="manage-competitions__actions">
+							<button
+								pButton
+								type="button"
+								class="manage-competitions__icon-button"
+								label="Редагувати"
+								severity="secondary"
+								[outlined]="true"
+								(click)="openEditDialog(competition)"
+								[disabled]="isSaving()"
+								aria-label="Редагувати змагання"
+							></button>
+							<button
+								pButton
+								type="button"
+								class="manage-competitions__icon-button manage-competitions__icon-button--danger"
+								label="Видалити"
+								severity="danger"
+								[outlined]="true"
+								(click)="removeCompetition(competition._id)"
+								[disabled]="isSaving()"
+								aria-label="Видалити змагання"
+							></button>
+						</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	}
+
+	<p-dialog
+		[visible]="isDialogVisible()"
+		(visibleChange)="isDialogVisible.set($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: '44rem', maxWidth: '95vw' }"
+		[header]="dialogMode() === 'create' ? 'Створити змагання' : 'Редагувати змагання'"
+		(onHide)="closeDialog()"
+	>
+		<div class="manage-competitions__dialog-content">
+			<div class="manage-competitions__field">
+				<label for="competition-title" class="manage-competitions__label">Назва</label>
+				<input
+					id="competition-title"
+					pInputText
+					type="text"
+					class="manage-competitions__input"
+					[ngModel]="formTitle()"
+					(ngModelChange)="formTitle.set($event)"
+					placeholder="Назва змагання"
+				/>
+			</div>
+			<div class="manage-competitions__field">
+				<label for="competition-description" class="manage-competitions__label">Опис</label>
+				<textarea
+					id="competition-description"
+					pTextarea
+					class="manage-competitions__textarea"
+					[ngModel]="formDescription()"
+					(ngModelChange)="formDescription.set($event)"
+					placeholder="Короткий опис змагання"
+				></textarea>
+			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-season" class="manage-competitions__label">Сезон</label>
+					<input
+						id="competition-season"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formSeason()"
+						(ngModelChange)="formSeason.set($event)"
+						placeholder="Spring 2026"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-format" class="manage-competitions__label">Формат</label>
+					<input
+						id="competition-format"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formFormat()"
+						(ngModelChange)="formFormat.set($event)"
+						placeholder="Team / Solo"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-period" class="manage-competitions__label">Період</label>
+					<input
+						id="competition-period"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formPeriod()"
+						(ngModelChange)="formPeriod.set($event)"
+						placeholder="01.04 - 30.04"
+					/>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-2">
+				<div class="manage-competitions__field">
+					<label for="competition-prize" class="manage-competitions__label">Приз</label>
+					<input
+						id="competition-prize"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formPrize()"
+						(ngModelChange)="formPrize.set($event)"
+						placeholder="1000$ або стажування"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-tags" class="manage-competitions__label">Теги</label>
+					<input
+						id="competition-tags"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formTags()"
+						(ngModelChange)="formTags.set($event)"
+						placeholder="Angular, API, UX"
+					/>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-location" class="manage-competitions__label">Місце проведення</label>
+					<input
+						id="competition-location"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formLocation()"
+						(ngModelChange)="formLocation.set($event)"
+						placeholder="Онлайн / Кам'янець-Подільський"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-participants" class="manage-competitions__label">Кількість учасників</label>
+					<input
+						id="competition-participants"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formParticipants()"
+						(ngModelChange)="formParticipants.set($event)"
+						placeholder="Наприклад: 120 або 20 команд"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-sponsors" class="manage-competitions__label">Спонсори</label>
+					<textarea
+						id="competition-sponsors"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formSponsors()"
+						(ngModelChange)="formSponsors.set($event)"
+						placeholder="Кожного спонсора з нового рядка"
+					></textarea>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-stages" class="manage-competitions__label">Етапи</label>
+					<textarea
+						id="competition-stages"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formStages()"
+						(ngModelChange)="formStages.set($event)"
+						placeholder="Кожен етап з нового рядка"
+					></textarea>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-requirements" class="manage-competitions__label">Вимоги</label>
+					<textarea
+						id="competition-requirements"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formRequirements()"
+						(ngModelChange)="formRequirements.set($event)"
+						placeholder="Кожну вимогу з нового рядка"
+					></textarea>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-benefits" class="manage-competitions__label">Переваги</label>
+					<textarea
+						id="competition-benefits"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formBenefits()"
+						(ngModelChange)="formBenefits.set($event)"
+						placeholder="Кожну перевагу з нового рядка"
+					></textarea>
+				</div>
+			</div>
+			<div class="manage-competitions__field">
+				<label for="competition-active" class="manage-competitions__label">Статус</label>
+				<div class="manage-competitions__checkbox">
+					<p-checkbox
+						inputId="competition-active"
+						[ngModel]="formIsActive()"
+						(ngModelChange)="formIsActive.set($event)"
+						[binary]="true"
+					/>
+					<span>{{ formIsActive() ? 'Active' : 'Inactive' }}</span>
+				</div>
+			</div>
+		</div>
+		<ng-template pTemplate="footer">
+			<div class="manage-competitions__dialog-actions">
+				<button
+					pButton
+					type="button"
+					class="manage-competitions__secondary"
+					label="Скасувати"
+					severity="secondary"
+					[outlined]="true"
+					(click)="closeDialog()"
+				></button>
+				<button
+					pButton
+					type="button"
+					class="manage-competitions__primary"
+					icon="pi pi-check"
+					[label]="dialogMode() === 'create' ? 'Створити' : 'Зберегти'"
+					(click)="submitDialog()"
+					[disabled]="isSaving()"
+				></button>
+			</div>
+		</ng-template>
+	</p-dialog>
+</section>
