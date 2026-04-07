@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ArticleService, NewsItem } from '../../article.service'; // Вкажіть правильний шлях до сервісу
+import { ArticleService } from '../../article.service';
+import { Article } from '../../article.interface'; // Імпортуємо правильний інтерфейс
 
 @Component({
     selector: 'app-manage-articles',
@@ -56,7 +57,7 @@ export class ManageArticlesComponent implements OnInit {
         if (!title || !content) return;
 
         const currentId = this.editingId();
-        const payload: Partial<NewsItem> = {
+        const payload: Partial<Article> = {
             title,
             content,
             imageUrl: imageUrl || 'https://via.placeholder.com/300x200?text=Немає+фото'

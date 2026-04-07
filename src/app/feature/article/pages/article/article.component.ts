@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { ArticleService, NewsItem } from '../../article.service';
+import { ArticleService } from '../../article.service';
+import { Article } from '../../article.interface'; // Імпортуємо правильний інтерфейс
 
 @Component({
     selector: 'app-article',
@@ -16,7 +17,7 @@ export class ArticleComponent implements OnInit {
     private router = inject(Router);
     private articleService = inject(ArticleService);
 
-    protected readonly article = signal<NewsItem | null>(null);
+    protected readonly article = signal<Article | null>(null);
 
     ngOnInit(): void {
         const id = this.route.snapshot.paramMap.get('id');

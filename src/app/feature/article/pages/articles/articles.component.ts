@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { ArticleService, NewsItem } from '../../article.service';
+import { ArticleService } from '../../article.service';
+import { Article } from '../../article.interface'; // Імпортуємо правильний інтерфейс
 
 @Component({
     selector: 'app-articles',
@@ -16,8 +17,8 @@ export class ArticlesComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private articleService = inject(ArticleService);
 
-    protected readonly newsList = signal<NewsItem[]>([]);
-    protected readonly itemToDelete = signal<NewsItem | null>(null);
+    protected readonly newsList = signal<Article[]>([]);
+    protected readonly itemToDelete = signal<Article | null>(null);
 
     ngOnInit(): void {
         this.fetchArticles();
@@ -48,7 +49,7 @@ export class ArticlesComponent implements OnInit {
         this.router.navigate(['/manage-articles']);
     }
 
-    protected handleEdit(event: Event, item: NewsItem): void {
+    protected handleEdit(event: Event, item: Article): void {
         event.stopPropagation();
         const targetId = item._id || item.id;
         if (targetId) {
@@ -56,7 +57,7 @@ export class ArticlesComponent implements OnInit {
         }
     }
 
-    protected handleDeleteClick(event: Event, item: NewsItem): void {
+    protected handleDeleteClick(event: Event, item: Article): void {
         event.stopPropagation();
         this.itemToDelete.set(item);
     }
@@ -81,7 +82,7 @@ export class ArticlesComponent implements OnInit {
         }
     }
     
-    protected goToArticle(item: NewsItem): void {
+    protected goToArticle(item: Article): void {
         const targetId = item._id || item.id;
         if (targetId) {
             this.router.navigate(['../article', targetId], { relativeTo: this.route });
