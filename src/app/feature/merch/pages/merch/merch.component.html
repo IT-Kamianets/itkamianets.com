@@ -1,0 +1,65 @@
+<div class="p-6 max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold">IT-Kamianets Merch</h1>
+        <p-button icon="pi pi-shopping-cart" [rounded]="true" severity="secondary" (onClick)="isCartVisible.set(true)">
+            <p-badge *ngIf="cart().length > 0" [value]="cart().length" severity="danger"></p-badge>
+        </p-button>
+    </div>
+
+    <!-- Список товарів -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (product of ms.products(); track product._id) {
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition hover:shadow-lg">
+                <img [src]="product.image || 'assets/logo.png'" class="w-full h-64 object-contain p-4 bg-gray-50" />
+                <div class="p-4">
+                    <h3 class="text-xl font-bold mb-2">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4 h-12 overflow-hidden">{{ product.description }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">{{ product.price }} грн</span>
+                        <p-button label="У кошик" icon="pi pi-cart-plus" (onClick)="addToCart(product)"></p-button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Кошик (Sidebar) -->
+    <p-drawer [(visible)]="isCartVisible" position="right" [style]="{ width: '400px' }" header="Кошик">
+        <div class="flex flex-col h-full">
+            <div class="flex-grow overflow-y-auto">
+                @for (item of cart(); track item._id) {
+                    <div class="flex gap-4 p-4 border-b">
+                        <img [src]="item.image || 'assets/logo.png'" class="w-16 h-16 object-contain" />
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-sm">{{ item.name }}</h4>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button (click)="updateQuantity(item._id, -1)" class="p-1 px-2 border rounded">-</button>
+                                <span>{{ item.quantity }}</span>
+                                <button (click)="updateQuantity(item._id, 1)" class="p-1 px-2 border rounded">+</button>
+                                <span class="ml-auto font-bold">{{ item.price * item.quantity }} грн</span>
+                            </div>
+                        </div>
+                        <button (click)="removeFromCart(item._id)" class="text-red-500"><i class="pi pi-trash"></i></button>
+                    </div>
+                }
+                @if (cart().length === 0) {
+                    <div class="text-center p-8 text-gray-500">Кошик порожній</div>
+                }
+            </div>
+
+            @if (cart().length > 0) {
+                <div class="p-4 bg-gray-50 border-t">
+                    <div class="text-xl font-bold mb-4">Разом: {{ total() }} грн</div>
+                    
+                    <div class="flex flex-col gap-3">
+                        <input pInputText [(ngModel)]="customer.name" placeholder="Ім'я та Прізвище" />
+                        <input pInputText [(ngModel)]="customer.phone" placeholder="Номер телефону" />
+                        <input pInputText [(ngModel)]="customer.address" placeholder="Адреса доставки (Нова Пошта)" />
+                        <p-button label="Оформити замовлення" class="w-full" severity="success" (onClick)="placeOrder()" 
+                            [disabled]="!customer.name || !customer.phone"></p-button>
+                    </div>
+                </div>
+            }
+        </div>
+    </p-drawer>
+</div>

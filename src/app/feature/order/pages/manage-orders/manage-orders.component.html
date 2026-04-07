@@ -1,0 +1,46 @@
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-6">Керування замовленнями</h1>
+
+    <p-table [value]="os.orders()" [responsiveLayout]="'scroll'" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Дата</th>
+                <th>Клієнт</th>
+                <th>Товари</th>
+                <th>Сума</th>
+                <th>Статус</th>
+                <th>Дії</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+            <tr>
+                <td>{{ order._id | date:'short' }}</td>
+                <td>
+                    <div class="flex flex-col">
+                        <span class="font-bold">{{ order.data.customer.name }}</span>
+                        <span class="text-xs text-gray-500">{{ order.data.customer.phone }}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex flex-col gap-1">
+                        @for (item of order.data.items; track item.productId) {
+                            <span class="text-xs">{{ item.quantity }}x {{ item.name }}</span>
+                        }
+                    </div>
+                </td>
+                <td class="font-bold">{{ order.data.total }} грн</td>
+                <td>
+                    <p-tag [value]="order.data.status" [severity]="getSeverity(order.data.status)"></p-tag>
+                </td>
+                <td>
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="deleteOrder(order)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" class="text-center p-4">Замовлень поки немає.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

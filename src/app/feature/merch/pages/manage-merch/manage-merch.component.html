@@ -1,0 +1,74 @@
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Керування каталогом мерчу</h1>
+        <p-button label="Додати товар" icon="pi pi-plus" (onClick)="showAddDialog()"></p-button>
+    </div>
+
+    <p-table [value]="ms.products()" [responsiveLayout]="'scroll'" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Зображення</th>
+                <th>Назва</th>
+                <th>Ціна</th>
+                <th>Опис</th>
+                <th style="width: 10rem">Дії</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <img [src]="product.image || 'assets/logo.png'" [alt]="product.name" class="w-16 h-16 object-contain rounded border" />
+                </td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }} грн</td>
+                <td>{{ product.description }}</td>
+                <td>
+                    <div class="flex gap-2">
+                        <p-button icon="pi pi-pencil" severity="secondary" [rounded]="true" [text]="true" (onClick)="startEdit(product)"></p-button>
+                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="removeProduct(product)"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog 
+        [header]="editingProduct() ? 'Редагувати товар' : 'Додати новий товар'" 
+        [(visible)]="isFormVisible" 
+        [modal]="true" 
+        [style]="{ width: '450px' }" 
+        (onHide)="cancelEdit()"
+    >
+        <div class="flex flex-col gap-4 pt-2">
+            <div class="flex flex-col gap-2">
+                <label for="name" class="font-semibold">Назва</label>
+                <input pInputText id="name" [(ngModel)]="newProduct.name" placeholder="Введіть назву" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="price" class="font-semibold">Ціна (грн)</label>
+                <input pInputText id="price" type="number" [(ngModel)]="newProduct.price" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="description" class="font-semibold">Опис</label>
+                <textarea pTextarea id="description" [(ngModel)]="newProduct.description" rows="3" [autoResize]="true"></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="font-semibold">Зображення</label>
+                <div class="flex items-center gap-4">
+                    @if (newProduct.image) {
+                        <img [src]="newProduct.image" class="w-20 h-20 object-contain rounded border" />
+                    }
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*" class="text-sm" />
+                </div>
+            </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="cancelEdit()"></p-button>
+            <p-button label="Зберегти" icon="pi pi-check" (onClick)="saveProduct()" [disabled]="!newProduct.name || (newProduct.price || 0) <= 0"></p-button>
+        </ng-template>
+    </p-dialog>
+</div>
