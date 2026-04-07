@@ -3,11 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { JobProposalService } from '../../job-proposal.service';
 import { JobService } from '../../job.service';
+import { TableModule as Table } from 'primeng/table';
+import { Button } from 'primeng/button';
+import { Tag } from 'primeng/tag';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
 	selector: 'app-manage-applications',
 	standalone: true,
-	imports: [CommonModule, RouterLink],
+	imports: [CommonModule, RouterLink, Table, Button, Tag, ConfirmDialog],
+	providers: [ConfirmationService],
 	templateUrl: './manage-applications.component.html',
 	styleUrl: './manage-applications.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +21,7 @@ import { JobService } from '../../job.service';
 export class ManageApplicationsComponent {
 	private readonly jobProposalService = inject(JobProposalService);
 	private readonly jobService = inject(JobService);
+	private readonly confirmationService = inject(ConfirmationService);
 
 	protected readonly proposals = computed(() => this.jobProposalService.proposals());
 	protected readonly jobs = computed(() => {
@@ -28,9 +35,16 @@ export class ManageApplicationsComponent {
 	});
 
 	protected deleteProposal(proposal: any) {
-		if (confirm('Ви впевнені?')) {
-			this.jobProposalService.delete(proposal).subscribe();
-		}
+		this.confirmationService.confirm({
+			message: 'Ви впевнені, що хочете видалити цю заявку?',
+			header: 'Підтвердження видалення',
+			icon: 'pi pi-exclamation-triangle',
+			acceptLabel: 'Так',
+			rejectLabel: 'Ні',
+			accept: () => {
+				this.jobProposalService.delete(proposal).subscribe();
+			}
+		});
 	}
 
 	protected getJobTitle(jobId: string): string {

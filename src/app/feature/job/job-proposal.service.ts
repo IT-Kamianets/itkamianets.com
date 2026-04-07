@@ -73,7 +73,9 @@ export class JobProposalService {
 			data: {
 				candidateName: doc.candidateName || d.candidateName || '',
 				email: doc.email || d.email || '',
+				phone: doc.phone || d.phone || '',
 				cvUrl: doc.cvUrl || d.cvUrl || '',
+				message: doc.message || d.message || '',
 				jobId: doc.jobId || d.jobId || '',
 				status: doc.status || d.status || 'new'
 			}

@@ -37,27 +37,27 @@
 									<td class="whitespace-nowrap py-6 pl-8 pr-3">
 										<div class="flex items-center gap-3">
 											<div class="h-10 w-10 rounded-full bg-[var(--c-primary)]/10 flex items-center justify-center text-[var(--c-primary)] font-black text-xs uppercase">
-												{{ proposal.data.applicantName.substring(0, 2) }}
+												{{ proposal.data.candidateName.substring(0, 2) }}
 											</div>
 											<div class="text-sm font-black text-[var(--c-text-secondary)]">
-												{{ proposal.data.applicantName }}
+												{{ proposal.data.candidateName }}
 											</div>
 										</div>
 									</td>
 									<td class="px-3 py-6">
 										<span class="inline-flex items-center rounded-lg bg-[var(--c-bg-primary)] px-3 py-1 text-xs font-bold text-[var(--c-text-secondary)] border border-[var(--c-border)]">
-											{{ getJobTitle(proposal.jobId) }}
+											{{ getJobTitle(proposal.data.jobId) }}
 										</span>
 									</td>
 									<td class="px-3 py-6">
 										<div class="text-sm space-y-1">
 											<div class="flex items-center gap-1.5 text-[var(--c-text-primary)] font-bold">
 												<span class="material-symbols-outlined text-xs">mail</span>
-												{{ proposal.data.applicantEmail }}
+												{{ proposal.data.email }}
 											</div>
 											<div class="flex items-center gap-1.5 text-[var(--c-text-muted)] font-medium">
 												<span class="material-symbols-outlined text-xs">call</span>
-												{{ proposal.data.applicantPhone }}
+												{{ proposal.data.phone }}
 											</div>
 										</div>
 									</td>
