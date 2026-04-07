@@ -1,25 +1,15 @@
 import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { TextareaModule } from 'primeng/textarea';
 import { CommonModule } from '@angular/common';
-import { MerchService } from '../merch.service';
-import { MerchProduct } from '../merch.interface';
+import { MerchService } from '../../merch.service';
+import { MerchProduct } from '../../merch.interface';
 
 @Component({
 	selector: 'app-manage-merch',
 	standalone: true,
 	imports: [
 		CommonModule,
-		FormsModule,
-		TableModule,
-		DialogModule,
-		ButtonModule,
-		InputTextModule,
-		TextareaModule
+		FormsModule
 	],
 	templateUrl: './manage-merch.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,11 +54,11 @@ export class ManageMerchComponent {
 			const product = this.editingProduct();
 			if (product) {
 				// Оновлюємо існуючий продукт
-				Object.assign(product, this.newProduct);
+				product.data = { ...this.newProduct };
 				this.ms.update(product);
 			} else {
 				// Створюємо новий
-				this.ms.create(this.newProduct);
+				this.ms.create({ data: this.newProduct } as any);
 			}
 			this.cancelEdit();
 		}

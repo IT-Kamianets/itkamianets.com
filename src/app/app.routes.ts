@@ -262,7 +262,7 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				data: { title: 'Merch' },
 				loadComponent: () =>
-					import('./pages/manage/merch/merch.component').then((m) => m.MerchComponent),
+					import('./feature/merch/pages/manage-merch/manage-merch.component').then((m) => m.ManageMerchComponent),
 			},
 			{
 				path: 'jobs',

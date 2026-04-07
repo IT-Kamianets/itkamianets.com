@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MerchService } from '../../feature/merch/merch.service';
-import { OrderService } from '../../feature/order/order.service';
-import { MerchProduct } from '../../feature/merch/merch.interface';
+import { MerchService } from '../../merch.service';
+import { OrderService } from '../../../order/order.service';
+import { MerchProduct } from '../../merch.interface';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';

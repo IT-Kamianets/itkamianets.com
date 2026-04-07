@@ -6,11 +6,10 @@ export interface MerchProduct {
 		description: string;
 		image: string;
 	};
-	// Допоміжні геттери для зручності (опціонально, але ми будемо звертатися через .data)
-	name?: string;
-	price?: number;
-	description?: string;
-	image?: string;
+	name: string;
+	price: number;
+	description: string;
+	image: string;
 }
 
 export interface Order {

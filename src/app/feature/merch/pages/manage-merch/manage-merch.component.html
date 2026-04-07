@@ -1,74 +1,157 @@
-<div class="p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Керування каталогом мерчу</h1>
-        <p-button label="Додати товар" icon="pi pi-plus" (onClick)="showAddDialog()"></p-button>
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Мерч</h1>
+            <p class="mt-2 text-sm text-[var(--c-text-muted)]">
+                Керуйте каталогом мерчу: додавайте нові товари, редагуйте ціни та опис.
+            </p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+            <button
+                (click)="showAddDialog()"
+                type="button"
+                class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
+            >
+                Додати товар
+            </button>
+        </div>
     </div>
 
-    <p-table [value]="ms.products()" [responsiveLayout]="'scroll'" styleClass="p-datatable-striped">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Зображення</th>
-                <th>Назва</th>
-                <th>Ціна</th>
-                <th>Опис</th>
-                <th style="width: 10rem">Дії</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-            <tr>
-                <td>
-                    <img [src]="product.image || 'assets/logo.png'" [alt]="product.name" class="w-16 h-16 object-contain rounded border" />
-                </td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.price }} грн</td>
-                <td>{{ product.description }}</td>
-                <td>
-                    <div class="flex gap-2">
-                        <p-button icon="pi pi-pencil" severity="secondary" [rounded]="true" [text]="true" (onClick)="startEdit(product)"></p-button>
-                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="removeProduct(product)"></p-button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-
-    <p-dialog 
-        [header]="editingProduct() ? 'Редагувати товар' : 'Додати новий товар'" 
-        [(visible)]="isFormVisible" 
-        [modal]="true" 
-        [style]="{ width: '450px' }" 
-        (onHide)="cancelEdit()"
-    >
-        <div class="flex flex-col gap-4 pt-2">
-            <div class="flex flex-col gap-2">
-                <label for="name" class="font-semibold">Назва</label>
-                <input pInputText id="name" [(ngModel)]="newProduct.name" placeholder="Введіть назву" />
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <label for="price" class="font-semibold">Ціна (грн)</label>
-                <input pInputText id="price" type="number" [(ngModel)]="newProduct.price" />
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <label for="description" class="font-semibold">Опис</label>
-                <textarea pTextarea id="description" [(ngModel)]="newProduct.description" rows="3" [autoResize]="true"></textarea>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold">Зображення</label>
-                <div class="flex items-center gap-4">
-                    @if (newProduct.image) {
-                        <img [src]="newProduct.image" class="w-20 h-20 object-contain rounded border" />
-                    }
-                    <input type="file" (change)="onFileSelected($event)" accept="image/*" class="text-sm" />
+    <div class="mt-8 flow-root">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg border border-[var(--c-border)]">
+                    <table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
+                        <thead class="bg-[var(--c-bg-tertiary)]">
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">
+                                    Зображення
+                                </th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+                                    Назва
+                                </th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+                                    Ціна
+                                </th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+                                    Опис
+                                </th>
+                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                    <span class="sr-only">Дії</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[var(--c-border)]">
+                            @for (product of ms.products(); track product._id) {
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
+                                        <img [src]="product.image || 'assets/logo.png'" [alt]="product.name" class="h-12 w-12 rounded-lg object-contain border bg-gray-50" />
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-[var(--c-text-primary)]">
+                                        {{ product.name }}
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+                                        <span class="font-bold text-[var(--c-primary)]">{{ product.price }} грн</span>
+                                    </td>
+                                    <td class="px-3 py-4 text-sm text-[var(--c-text-muted)] max-w-xs truncate">
+                                        {{ product.description }}
+                                    </td>
+                                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                        <div class="flex justify-end gap-2">
+                                            <button
+                                                (click)="startEdit(product)"
+                                                class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+                                            >
+                                                <span class="material-symbols-outlined mr-1 text-sm">edit</span>
+                                                Редагувати
+                                            </button>
+                                            <button
+                                                (click)="removeProduct(product)"
+                                                class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
+                                            >
+                                                <span class="material-symbols-outlined mr-1 text-sm">delete</span>
+                                                Видалити
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>
 
-        <ng-template pTemplate="footer">
-            <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="cancelEdit()"></p-button>
-            <p-button label="Зберегти" icon="pi pi-check" (onClick)="saveProduct()" [disabled]="!newProduct.name || (newProduct.price || 0) <= 0"></p-button>
-        </ng-template>
-    </p-dialog>
+    @if (isFormVisible()) {
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            (click)="cancelEdit()"
+        >
+            <div
+                class="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[2rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-2xl p-8"
+                (click)="$event.stopPropagation()"
+            >
+                <h2 class="text-2xl font-black text-[var(--c-text-secondary)] mb-6">
+                    {{ editingProduct() ? 'Редагувати товар' : 'Додати товар' }}
+                </h2>
+
+                <form (submit)="saveProduct(); $event.preventDefault()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Назва</label>
+                        <input type="text" [(ngModel)]="newProduct.name" name="name" required
+                            class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Ціна (грн)</label>
+                        <input type="number" [(ngModel)]="newProduct.price" name="price" required min="1"
+                            class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Опис</label>
+                        <textarea [(ngModel)]="newProduct.description" name="description" rows="3"
+                            class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Зображення</label>
+                        <div class="flex items-center gap-4 mt-2">
+                            @if (newProduct.image) {
+                                <img [src]="newProduct.image" class="w-20 h-20 object-contain rounded-xl border bg-[var(--c-bg-tertiary)]" />
+                            }
+                            <label class="flex-1">
+                                <span class="sr-only">Оберіть файл</span>
+                                <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                                    class="block w-full text-sm text-[var(--c-text-muted)]
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-[var(--c-bg-tertiary)] file:text-[var(--c-primary)]
+                                    hover:file:bg-blue-100" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button
+                            type="button"
+                            (click)="cancelEdit()"
+                            class="flex-1 rounded-full border border-[var(--c-border)] py-3 text-sm font-bold text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-tertiary)] transition-colors"
+                        >
+                            Скасувати
+                        </button>
+                        <button
+                            type="submit"
+                            [disabled]="!newProduct.name || newProduct.price <= 0"
+                            class="flex-1 rounded-full bg-[var(--c-primary)] py-3 text-sm font-bold text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-opacity disabled:opacity-50"
+                        >
+                            Зберегти
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
 </div>
