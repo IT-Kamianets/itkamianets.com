@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from 'wacom';
+import { CrudService } from 'wacom';
 import { MerchProduct } from './merch.interface';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
-export class MerchService extends BaseService<MerchProduct> {
-	products = this.docs;
+export class MerchService extends CrudService<MerchProduct> {
+	products = this.getDocs();
 
 	constructor() {
 		super({
 			name: 'itproduct',
-			url: '/api/itproduct'
 		});
 
-		// Примусово завантажуємо дані з фільтром проекту
-		this.load();
+		this.get();
 	}
 }

@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from 'wacom';
+import { CrudService } from 'wacom';
 import { Order } from '../merch/merch.interface';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
-export class OrderService extends BaseService<Order> {
-	orders = this.docs;
+export class OrderService extends CrudService<Order> {
+	orders = this.getDocs();
 
 	constructor() {
 		super({
 			name: 'itproductorder',
-			url: '/api/itproductorder'
 		});
 	}
 }

@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { TextareaModule } from 'primeng/textarea';
 import { CommonModule } from '@angular/common';
-import { MerchService } from '../merch.service';
-import { MerchProduct } from '../merch.interface';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { TextareaModule } from 'primeng/textarea';
+import { MerchProduct } from '../../merch.interface';
+import { MerchService } from '../../merch.service';
 
 @Component({
 	selector: 'app-manage-merch',
@@ -19,14 +19,14 @@ import { MerchProduct } from '../merch.interface';
 		DialogModule,
 		ButtonModule,
 		InputTextModule,
-		TextareaModule
+		TextareaModule,
 	],
 	templateUrl: './manage-merch.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageMerchComponent {
 	readonly ms = inject(MerchService);
-	
+
 	isFormVisible = signal(false);
 	editingProduct = signal<MerchProduct | null>(null);
 
@@ -45,11 +45,11 @@ export class ManageMerchComponent {
 
 	startEdit(product: MerchProduct) {
 		this.editingProduct.set(product);
-		this.newProduct = { 
-			name: product.name || '', 
-			price: product.price || 0, 
-			description: product.description || '', 
-			image: product.image || '' 
+		this.newProduct = {
+			name: product.name || '',
+			price: product.price || 0,
+			description: product.description || '',
+			image: product.image || '',
 		};
 		this.isFormVisible.set(true);
 	}
