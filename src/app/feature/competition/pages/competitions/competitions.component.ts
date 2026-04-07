@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Competition } from '../../competition.interface';
+import { normalizeCompetitionTeams } from '../../competition-jury-teams';
+import { Competition, CompetitionData } from '../../competition.interface';
 import { CompetitionService } from '../../competition.service';
 
 @Component({
@@ -38,8 +39,10 @@ export class CompetitionsComponent implements OnInit {
 		this._pickString(item.data, ['prize', 'reward']);
 	protected readonly getTags = (_index: number, item: Competition) =>
 		this._pickStringArray(item.data, ['tags', 'stack', 'topics']);
-	protected readonly getParticipants = (_index: number, item: Competition) =>
-		this._pickNumber(item.data, ['participants', 'teamsCount', 'membersCount']);
+	protected readonly getTeamsCount = (_index: number, item: Competition) =>
+		this._pickNumber(item.data, ['teamsCount']) ?? this._countTeamsFromTeams(item.data['teams']);
+	protected readonly getMaxTeams = (_index: number, item: Competition) =>
+		this._pickNumber(item.data, ['maxTeams', 'teamsLimit']);
 	protected readonly getLocation = (_index: number, item: Competition) =>
 		this._pickString(item.data, ['location', 'place', 'venue']);
 	protected readonly getSponsors = (_index: number, item: Competition) =>
@@ -55,7 +58,7 @@ export class CompetitionsComponent implements OnInit {
 		this.isLoading.set(false);
 	}
 
-	private _pickString(data: Record<string, unknown>, keys: string[]) {
+	private _pickString(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (typeof value === 'string' && value.trim()) {
@@ -66,7 +69,7 @@ export class CompetitionsComponent implements OnInit {
 		return '';
 	}
 
-	private _pickStringArray(data: Record<string, unknown>, keys: string[]) {
+	private _pickStringArray(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (Array.isArray(value)) {
@@ -77,7 +80,7 @@ export class CompetitionsComponent implements OnInit {
 		return [];
 	}
 
-	private _pickNumber(data: Record<string, unknown>, keys: string[]) {
+	private _pickNumber(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (typeof value === 'number' && Number.isFinite(value)) {
@@ -90,5 +93,13 @@ export class CompetitionsComponent implements OnInit {
 		}
 
 		return null;
+	}
+
+	private _countTeamsFromTeams(raw: unknown) {
+		const teams = normalizeCompetitionTeams(raw);
+		if (!teams.length) {
+			return null;
+		}
+		return teams.length;
 	}
 }

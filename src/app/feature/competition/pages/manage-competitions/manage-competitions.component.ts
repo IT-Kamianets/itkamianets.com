@@ -4,9 +4,8 @@ import { ButtonDirective } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
-import { TableModule } from 'primeng/table';
 import { Textarea } from 'primeng/textarea';
-import { Competition } from '../../competition.interface';
+import { Competition, CompetitionData } from '../../competition.interface';
 import { CompetitionService } from '../../competition.service';
 
 type CompetitionRow = {
@@ -21,12 +20,13 @@ type CompetitionRow = {
 	location: string;
 	participants: string;
 	sponsors: string;
+	maxTeams: string;
 	isActive: boolean;
-	rawData: Record<string, unknown>;
+	rawData: CompetitionData;
 };
 
 @Component({
-	imports: [FormsModule, InputText, Textarea, ButtonDirective, Checkbox, TableModule, DialogModule],
+	imports: [FormsModule, InputText, Textarea, ButtonDirective, Checkbox, DialogModule],
 	templateUrl: './manage-competitions.component.html',
 	styleUrl: './manage-competitions.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,9 +51,12 @@ export class ManageCompetitionsComponent implements OnInit {
 	protected readonly formLocation = signal('');
 	protected readonly formParticipants = signal('');
 	protected readonly formSponsors = signal('');
+	protected readonly formMaxTeams = signal('');
 	protected readonly formStages = signal('');
 	protected readonly formRequirements = signal('');
 	protected readonly formBenefits = signal('');
+	protected readonly formJudgesJson = signal('');
+	protected readonly formTeamsJson = signal('');
 	protected readonly formIsActive = signal(true);
 
 	async ngOnInit() {
@@ -80,9 +83,12 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formLocation.set('');
 		this.formParticipants.set('');
 		this.formSponsors.set('');
+		this.formMaxTeams.set('');
 		this.formStages.set('');
 		this.formRequirements.set('');
 		this.formBenefits.set('');
+		this.formJudgesJson.set('');
+		this.formTeamsJson.set('');
 		this.formIsActive.set(true);
 		this.error.set('');
 		this.isDialogVisible.set(true);
@@ -103,6 +109,10 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formSponsors.set(
 			this._pickStringList(row.rawData, ['sponsors', 'partners', 'supporters']).join('\n'),
 		);
+		this.formMaxTeams.set(
+			this._pickString(row.rawData, ['maxTeams', 'teamsLimit']) ||
+				String(this._pickNumber(row.rawData, ['maxTeams', 'teamsLimit']) || ''),
+		);
 		this.formStages.set(this._pickStringList(row.rawData, ['stages', 'timeline', 'steps']).join('\n'));
 		this.formRequirements.set(
 			this._pickStringList(row.rawData, ['requirements', 'criteria', 'conditions']).join('\n'),
@@ -110,6 +120,14 @@ export class ManageCompetitionsComponent implements OnInit {
 		this.formBenefits.set(
 			this._pickStringList(row.rawData, ['benefits', 'highlights', 'outcomes']).join('\n'),
 		);
+		{
+			const jury = row.rawData['judges'] ?? row.rawData['jury'];
+			this.formJudgesJson.set(Array.isArray(jury) ? JSON.stringify(jury, null, 2) : '');
+		}
+		{
+			const teams = row.rawData['teams'];
+			this.formTeamsJson.set(Array.isArray(teams) ? JSON.stringify(teams, null, 2) : '');
+		}
 		this.formIsActive.set(row.isActive);
 		this.error.set('');
 		this.isDialogVisible.set(true);
@@ -120,34 +138,68 @@ export class ManageCompetitionsComponent implements OnInit {
 	}
 
 	protected async submitDialog() {
-		this.isSaving.set(true);
 		this.error.set('');
-		const data = this._buildPayloadData();
+		const judgesValue = this._parseOptionalJsonArray(this.formJudgesJson());
+		if (judgesValue === null) {
+			this.error.set('Поле «Журі (JSON)» має бути коректним JSON-масивом об’єктів.');
+			return;
+		}
+		const teamsValue = this._parseOptionalJsonArray(this.formTeamsJson());
+		if (teamsValue === null) {
+			this.error.set('Поле «Команди (JSON)» має бути коректним JSON-масивом.');
+			return;
+		}
 
-		const response =
-			this.dialogMode() === 'create'
+		this.isSaving.set(true);
+		const isCreate = this.dialogMode() === 'create';
+		const data = this._buildPayloadData(
+			isCreate ? (judgesValue ?? []) : judgesValue,
+			isCreate ? (teamsValue ?? []) : teamsValue,
+		);
+
+		let response = null;
+		try {
+			response = isCreate
 				? await this._competitionService.create(data)
 				: await this._competitionService.update(this.selectedCompetition()?._id || '', data);
+		} catch (error) {
+			this.error.set(error instanceof Error ? error.message : 'Не вдалося зберегти зміни через API.');
+			this.isSaving.set(false);
+			return;
+		}
 
 		if (!response) {
 			this.error.set(
-				this.dialogMode() === 'create'
+				isCreate
 					? 'Не вдалося створити змагання через API.'
-					: 'Не вдалося оновити змагання через API.',
+					: 'Не вдалося зберегти зміни через API (сервер не повернув оновлений документ).',
 			);
+			this.isSaving.set(false);
+			return;
 		}
 
 		this.isSaving.set(false);
+		this.error.set('');
 		this.isDialogVisible.set(false);
+		// Оновлюємо таблицю з відповіді API одразу (без залежності від GET /get кешу).
+		const updatedRow = this.toRow(response);
+		this.competitions.update((rows) =>
+			rows.map((row) => (row._id === updatedRow._id ? updatedRow : row)),
+		);
+		// І паралельно підтягнемо список (із cache-buster в сервісі).
 		await this.load();
 	}
 
 	protected async removeCompetition(id: string) {
 		this.isSaving.set(true);
 		this.error.set('');
-		const success = await this._competitionService.delete(id);
-		if (!success) {
-			this.error.set('Не вдалося видалити змагання через API.');
+		try {
+			const success = await this._competitionService.delete(id);
+			if (!success) {
+				this.error.set('Не вдалося видалити змагання через API.');
+			}
+		} catch (error) {
+			this.error.set(error instanceof Error ? error.message : 'Не вдалося видалити змагання через API.');
 		}
 		this.isSaving.set(false);
 		await this.load();
@@ -168,14 +220,20 @@ export class ManageCompetitionsComponent implements OnInit {
 				this._pickString(doc.data, ['participants']) ||
 				String(this._pickNumber(doc.data, ['participants', 'teamsCount', 'membersCount']) || ''),
 			sponsors: this._pickStringArray(doc.data, ['sponsors', 'partners', 'supporters']).join(', '),
+			maxTeams:
+				this._pickString(doc.data, ['maxTeams', 'teamsLimit']) ||
+				String(this._pickNumber(doc.data, ['maxTeams', 'teamsLimit']) || ''),
 			isActive: this._competitionService.isActive(doc),
 			rawData: { ...doc.data },
 		};
 	}
 
-	private _buildPayloadData() {
+	private _buildPayloadData(
+		judgesPayload?: unknown[],
+		teamsPayload?: unknown[],
+	): CompetitionData {
 		const selected = this.selectedCompetition();
-		const data = selected ? { ...selected.rawData } : {};
+		const data: CompetitionData = selected ? { ...selected.rawData } : {};
 
 		const removeKeys = [
 			'name',
@@ -194,6 +252,8 @@ export class ManageCompetitionsComponent implements OnInit {
 			'venue',
 			'partners',
 			'supporters',
+			'teamsLimit',
+			'membersPerTeam',
 		];
 
 		for (const key of removeKeys) {
@@ -214,14 +274,38 @@ export class ManageCompetitionsComponent implements OnInit {
 		data['location'] = this.formLocation().trim();
 		data['participants'] = this.formParticipants().trim();
 		data['sponsors'] = this._parseMultiline(this.formSponsors());
+		data['maxTeams'] = this.formMaxTeams().trim();
 		data['stages'] = this._parseMultiline(this.formStages());
 		data['requirements'] = this._parseMultiline(this.formRequirements());
 		data['benefits'] = this._parseMultiline(this.formBenefits());
+		if (judgesPayload !== undefined) {
+			delete data['jury'];
+			data['judges'] = judgesPayload;
+		}
+		if (teamsPayload !== undefined) {
+			data['teams'] = teamsPayload;
+		}
 
 		return data;
 	}
 
-	private _pickString(data: Record<string, unknown>, keys: string[]) {
+	private _parseOptionalJsonArray(raw: string) {
+		const trimmed = raw.trim();
+		if (!trimmed) {
+			return undefined;
+		}
+		try {
+			const value: unknown = JSON.parse(trimmed);
+			if (!Array.isArray(value)) {
+				return null;
+			}
+			return value;
+		} catch {
+			return null;
+		}
+	}
+
+	private _pickString(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (typeof value === 'string' && value.trim()) {
@@ -232,7 +316,7 @@ export class ManageCompetitionsComponent implements OnInit {
 		return '';
 	}
 
-	private _pickStringArray(data: Record<string, unknown>, keys: string[]) {
+	private _pickStringArray(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (Array.isArray(value)) {
@@ -243,7 +327,7 @@ export class ManageCompetitionsComponent implements OnInit {
 		return [];
 	}
 
-	private _pickNumber(data: Record<string, unknown>, keys: string[]) {
+	private _pickNumber(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (typeof value === 'number' && Number.isFinite(value)) {
@@ -258,7 +342,7 @@ export class ManageCompetitionsComponent implements OnInit {
 		return null;
 	}
 
-	private _pickStringList(data: Record<string, unknown>, keys: string[]) {
+	private _pickStringList(data: CompetitionData, keys: (keyof CompetitionData)[]) {
 		for (const key of keys) {
 			const value = data[key];
 			if (Array.isArray(value)) {

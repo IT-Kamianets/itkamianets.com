@@ -78,10 +78,16 @@
 								@if (getDeadline(i, competition)) {
 									<p>Дедлайн: <span class="text-[var(--c-text-secondary)]">{{ getDeadline(i, competition) }}</span></p>
 								}
-								@if (getParticipants(i, competition)) {
+								@if (getTeamsCount(i, competition)) {
 									<p>
-										Учасники:
-										<span class="text-[var(--c-text-secondary)]">{{ getParticipants(i, competition) }}</span>
+										Команди:
+										<span class="text-[var(--c-text-secondary)]">{{ getTeamsCount(i, competition) }}</span>
+									</p>
+								}
+								@if (getMaxTeams(i, competition)) {
+									<p>
+										Ліміт команд:
+										<span class="text-[var(--c-text-secondary)]">{{ getMaxTeams(i, competition) }}</span>
 									</p>
 								}
 								@if (getLocation(i, competition)) {
