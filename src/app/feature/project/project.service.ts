@@ -31,14 +31,14 @@ export class ProjectService {
     const payload = {
       title: projectData.title,
       description: projectData.description,
-      category: "custom", // HARDCODED to bypass backend enum crash
+      category: 'custom',
       tags: projectData.tags,
       repoUrl: projectData.githubLink,
       liveUrl: projectData.websiteLink,
       memberIds: projectData.team,
       image: projectData.photo,
       imageKind: projectData.imageKind,
-      data: projectData // The flexible object holding the REAL category and completionDate
+      data: projectData,
     };
 
     this._syncToken();
@@ -54,14 +54,14 @@ export class ProjectService {
       _id: id,
       title: projectData.title,
       description: projectData.description,
-      category: "custom", // HARDCODED to bypass backend enum crash
+      category: 'custom',
       tags: projectData.tags,
       repoUrl: projectData.githubLink,
       liveUrl: projectData.websiteLink,
       memberIds: projectData.team,
       image: projectData.photo,
       imageKind: projectData.imageKind,
-      data: projectData // The flexible object holding the REAL category and completionDate
+      data: projectData,
     };
 
     this._syncToken();

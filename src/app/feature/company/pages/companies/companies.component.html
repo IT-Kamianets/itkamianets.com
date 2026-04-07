@@ -1,0 +1,165 @@
+<div class="companies-page">
+	<!-- Page Hero -->
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Компанії</span>
+			<h1 class="page-hero__title">Компанії Кам'янця</h1>
+			<p class="page-hero__subtitle">Місцеві компанії та агентства — профілі, технології та контакти</p>
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<!-- View Toggle -->
+		<div class="companies-view-toggle">
+			<a routerLink="/companies" routerLinkActive="companies-view-toggle__btn--active" [routerLinkActiveOptions]="{exact: true}" class="companies-view-toggle__btn">
+				<svg aria-hidden="true" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+					<rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+				</svg>
+				Список
+			</a>
+			<a routerLink="/companies/map" routerLinkActive="companies-view-toggle__btn--active" class="companies-view-toggle__btn">
+				<svg aria-hidden="true" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+					<circle cx="12" cy="10" r="3"/>
+				</svg>
+				Карта
+			</a>
+		</div>
+
+		<!-- Search & Sort -->
+		<div class="companies-toolbar">
+			<div class="companies-search">
+				<svg aria-hidden="true" class="companies-search__icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					<circle cx="11" cy="11" r="8"/>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"/>
+				</svg>
+				<input
+					class="companies-search__input"
+					type="text"
+					placeholder="Пошук за назвою, технологією, послугою…"
+					[ngModel]="searchQuery()"
+					(ngModelChange)="searchQuery.set($event)"
+				/>
+				@if (searchQuery()) {
+					<button class="companies-search__clear" (click)="searchQuery.set('')" aria-label="Очистити пошук">
+						<svg aria-hidden="true" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+							<line x1="18" y1="6" x2="6" y2="18"/>
+							<line x1="6" y1="6" x2="18" y2="18"/>
+						</svg>
+					</button>
+				}
+			</div>
+			<div class="companies-sort">
+				<label class="companies-sort__label" for="sort-select">Сортування:</label>
+				<select
+					id="sort-select"
+					class="companies-sort__select"
+					[ngModel]="sortBy()"
+					(ngModelChange)="sortBy.set($event)"
+				>
+					<option value="name">За назвою</option>
+					<option value="founded">За роком заснування</option>
+					<option value="employees">За кількістю людей</option>
+				</select>
+			</div>
+		</div>
+
+		<!-- Type Filters -->
+		<div class="companies-filters">
+			<button
+				class="companies-filter"
+				[class.companies-filter--active]="activeType() === 'All'"
+				(click)="setFilter('All')"
+			>
+				Усі <span class="companies-filter__count">{{ typeCounts()['All'] }}</span>
+			</button>
+			@for (t of types; track t) {
+				<button
+					class="companies-filter"
+					[class.companies-filter--active]="activeType() === t"
+					(click)="setFilter(t)"
+				>
+					{{ t }} <span class="companies-filter__count">{{ typeCounts()[t] }}</span>
+				</button>
+			}
+		</div>
+
+		<!-- Companies Grid -->
+		@if (filteredCompanies().length > 0) {
+			<p class="companies-count">Знайдено компаній: {{ filteredCompanies().length }}</p>
+			<div class="companies-grid">
+				@for (b of filteredCompanies(); track b.id) {
+					<div class="company-card">
+						<div class="company-card__header">
+							<div class="company-card__logo-wrap">
+								@if (b.logo) {
+									<img [src]="b.logo" [alt]="b.name" loading="lazy" class="company-card__logo" />
+								} @else {
+									<div class="company-card__logo-placeholder">
+										<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+											<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/><path d="M2 12h20"/>
+										</svg>
+									</div>
+								}
+							</div>
+							<div class="company-card__info">
+								<h3 class="company-card__name">{{ b.name }}</h3>
+								<span class="company-card__badge">{{ b.type }}</span>
+							</div>
+						</div>
+						<div class="company-card__body">
+							<p class="company-card__desc">{{ b.shortDescription }}</p>
+							<div class="company-card__stack">
+								@for (tech of b.techStack; track tech) {
+									<span class="company-card__tag">{{ tech }}</span>
+								}
+							</div>
+							<div class="company-card__meta">
+								<div class="company-card__meta-item">
+									<svg aria-hidden="true" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+										<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+										<circle cx="9" cy="7" r="4"/>
+										<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+										<path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+									</svg>
+									<span>{{ b.employees }} співробітників</span>
+								</div>
+								<div class="company-card__meta-item">
+									<svg aria-hidden="true" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+										<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+										<line x1="16" y1="2" x2="16" y2="6"/>
+										<line x1="8" y1="2" x2="8" y2="6"/>
+										<line x1="3" y1="10" x2="21" y2="10"/>
+									</svg>
+									<span>з {{ b.founded }} р.</span>
+								</div>
+							</div>
+						</div>
+						<div class="company-card__footer">
+							<a [routerLink]="['/company', b.id]" class="company-card__link">Детальніше →</a>
+						</div>
+					</div>
+				}
+			</div>
+		} @else {
+			<div class="companies-empty">
+				<svg aria-hidden="true" class="companies-empty__icon" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+					<circle cx="11" cy="11" r="8"/>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"/>
+					<line x1="8" y1="11" x2="14" y2="11"/>
+				</svg>
+				<p class="companies-empty__title">Нічого не знайдено</p>
+				<p class="companies-empty__hint">Спробуйте змінити запит або скинути фільтри</p>
+				<button class="companies-empty__reset" (click)="searchQuery.set(''); setFilter('All')">
+					Скинути все
+				</button>
+			</div>
+		}
+	</div>
+</div>
