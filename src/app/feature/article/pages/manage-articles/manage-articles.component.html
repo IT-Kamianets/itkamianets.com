@@ -1,0 +1,53 @@
+<section class="manage-page">
+    <div class="manage-container">
+        <div class="manage-header">
+            <button class="btn-back" (click)="goBack()">← Назад</button>
+            <h1>{{ editingId() ? 'Редагування новини' : 'Створення нової статті' }}</h1>
+        </div>
+
+        <form class="manage-form" (ngSubmit)="handleSave()">
+            <div class="manage-form__image-group">
+                <input 
+                    type="text" 
+                    name="imageUrl" 
+                    class="manage-form__input" 
+                    placeholder="Вставте URL-адресу фотографії" 
+                    [ngModel]="formImageUrl()"
+                    (ngModelChange)="formImageUrl.set($event)"
+                />
+                <div class="manage-form__file-upload">
+                    <span class="manage-form__file-label">або завантажте з ПК:</span>
+                    <input type="file" accept="image/*" (change)="handleFileChange($event)"/>
+                </div>
+                @if (formImageUrl()) {
+                    <div class="image-preview">
+                        <img [src]="formImageUrl()" alt="Preview">
+                    </div>
+                }
+            </div>
+
+            <input 
+                type="text" 
+                name="title" 
+                class="manage-form__input" 
+                placeholder="Заголовок новини *" 
+                [ngModel]="formTitle()"
+                (ngModelChange)="formTitle.set($event)"
+                required
+            />
+            
+            <textarea 
+                name="content" 
+                class="manage-form__textarea" 
+                placeholder="Текст новини... *" 
+                rows="10" 
+                [ngModel]="formContent()"
+                (ngModelChange)="formContent.set($event)"
+                required></textarea>
+            
+            <button type="submit" class="manage-form__button" [disabled]="!formTitle() || !formContent()">
+                {{ editingId() ? 'Зберегти зміни' : 'Опублікувати новину' }}
+            </button>
+        </form>
+    </div>
+</section>

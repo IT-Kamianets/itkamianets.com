@@ -15,5 +15,18 @@ export const routes: Routes = [
                 (m) => m.ArticleComponent,
             ),
     },
-    
+    {
+        path: 'manage-articles',
+        loadComponent: () =>
+            import('./pages/manage-articles/manage-articles.component').then(
+                (m) => m.ManageArticlesComponent,
+            ),
+    },
+    {
+        path: 'manage-articles/:id',
+        loadComponent: () =>
+            import('./pages/manage-articles/manage-articles.component').then(
+                (m) => m.ManageArticlesComponent,
+            ),
+    }
 ];

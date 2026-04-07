@@ -1,0 +1,108 @@
+.manage-page {
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: var(--c-bg-primary, #f8f9fa);
+}
+
+.manage-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.manage-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+
+    h1 { margin: 1rem 0 0 0; color: #000; font-size: 1.8rem; }
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 600;
+}
+
+.manage-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    &__input, &__textarea {
+        width: 100%;
+        padding: 0.85rem;
+        border: 1px solid var(--c-border, #ccc);
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 1rem;
+        resize: vertical;
+        box-sizing: border-box;
+        color: #000; // Робить введений текст чорним
+
+        &:focus { 
+            outline: none; 
+            border-color: #007bff; 
+        }
+
+        // Стилізація тексту підказки
+        &::placeholder {
+            color: #000; // Чорний колір
+            opacity: 0.7; // Трохи прозорості, щоб відрізнялося від введеного тексту (можете поставити 1 для повністю чорного)
+        }
+    }
+
+    &__image-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border: 1px dashed #ccc;
+        border-radius: 6px;
+    }
+
+    &__file-upload {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #000; // Чорний колір для тексту "або завантажте з ПК:"
+        
+        input[type="file"] { 
+            cursor: pointer; 
+            color: #000; // Чорний колір для тексту вибору файлу
+        }
+    }
+
+    &__button {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: none;
+        border-radius: 6px;
+        background: #007bff;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover:not(:disabled) { background: #0056b3; }
+        &:disabled { background: #ccc; cursor: not-allowed; }
+    }
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-top: 1rem;
+}
