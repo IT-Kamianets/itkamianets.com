@@ -212,6 +212,13 @@ export const routes: Routes = [
 		],
 	},
 	{
+		path: 'cv-generation',
+		loadComponent: () =>
+			import('./pages/cv-generation-public/cv-generation-public.component').then(
+				(m) => m.CvGenerationPublicComponent,
+			),
+	},
+	{
 		path: '',
 		loadComponent: () =>
 			import('./layouts/guest/guest.component').then((m) => m.GuestComponent),

@@ -29,6 +29,7 @@ export class FooterComponent {
 		{ label: 'Команда', routerLink: '/team' },
 		{ label: 'Новини', routerLink: '/news' },
 		{ label: 'Мерч', routerLink: '/merch' },
+		{ label: 'CV Generation', routerLink: '/cv-generation' },
 	];
 
 	protected readonly serviceLinks: { label: string; routerLink: string; queryParams?: Record<string, string> }[] = [
