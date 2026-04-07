@@ -3,7 +3,7 @@ import { CrudService } from 'wacom';
 import { Order } from '../merch/merch.interface';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class OrderService extends CrudService<Order> {
 	orders = computed(() => {

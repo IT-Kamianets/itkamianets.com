@@ -16,7 +16,7 @@ import { MerchProduct } from '../../merch.interface';
 })
 export class ManageMerchComponent {
 	readonly ms = inject(MerchService);
-	
+
 	isFormVisible = signal(false);
 	editingProduct = signal<MerchProduct | null>(null);
 
@@ -35,11 +35,11 @@ export class ManageMerchComponent {
 
 	startEdit(product: MerchProduct) {
 		this.editingProduct.set(product);
-		this.newProduct = { 
-			name: product.name || '', 
-			price: product.price || 0, 
-			description: product.description || '', 
-			image: product.image || '' 
+		this.newProduct = {
+			name: product.name || '',
+			price: product.price || 0,
+			description: product.description || '',
+			image: product.image || '',
 		};
 		this.isFormVisible.set(true);
 	}
