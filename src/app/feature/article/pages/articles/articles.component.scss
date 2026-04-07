@@ -1,130 +1,431 @@
+// Загальна сторінка
 .articles-page {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 3rem 1rem 5rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
 }
 
-.articles-header {
+// Верхня панель
+.articles-top-bar {
+    display: flex;
+    align-items: center;
+    position: relative;
     margin-bottom: 2rem;
-    color: var(--c-text-secondary, #333);
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--c-border, #eee);
+
+    .btn-add {
+        position: absolute;
+        left: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 8px;
+        background: var(--c-primary, #007bff);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: var(--c-primary-hover, #0056b3);
+        }
+
+        span { font-size: 1.2rem; }
+    }
+
+    .articles-header {
+        margin: 0 auto;
+        color: var(--c-text-secondary, #333);
+    }
+}
+
+// Вертикальний список
+.articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+// Картка новини
+// Картка новини
+.articles-card {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--c-border, #e0e0e0);
+    border-radius: var(--radius-card, 12px);
+    background: var(--c-bg-secondary, #fff);
+    box-shadow: var(--shadow-card, 0 4px 6px rgba(0,0,0,0.05));
+    cursor: pointer;
+    position: relative; // Важливо для позиціювання дати
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+
+        .articles-card__actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    // ДОДАНИЙ КЛАС ДЛЯ ДАТИ ЗВЕРХУ СПРАВА
+    &__date {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 0.85rem;
+        color: #888;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+    }
+
+    &__image-container {
+        flex-shrink: 0;
+        width: 250px;
+        height: 180px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f0f0f0;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding-right: 4rem; // Місце для кнопок і дати
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--c-text-primary, #222);
+        font-size: 1.4rem;
+        margin-top: 0.5rem; // Трохи опускаємо заголовок, щоб не ліз на дату
+    }
+
+    &__divider {
+        height: 2px;
+        width: 50px;
+        background: var(--c-primary, #007bff);
+        margin: 0.75rem 0;
+    }
+
+    &__content {
+        margin: 0;
+        color: var(--c-text-muted, #555);
+        line-height: 1.6;
+        
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__actions {
+        position: absolute;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        display: flex;
+        gap: 0.5rem;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+}
+
+// Кнопки дій (Іконки)
+.btn-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: filter 0.2s, transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
+    &:hover {
+        filter: brightness(0.9);
+        transform: scale(1.1);
+    }
+
+    &.edit { background: #ffc107; }
+    &.delete { background: #dc3545; color: white; }
+}
+
+.articles-empty {
+    text-align: center;
+    color: var(--c-text-muted, #888);
+    padding: 3rem;
+    font-size: 1.1rem;
+}
+
+// МОДАЛЬНІ ВІКНА ТА ОВЕРЛЕЙ
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: #fff;
+    width: min(100%, 36rem);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 { margin: 0; font-size: 1.5rem; }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #888;
+        &:hover { color: #333; }
+    }
 }
 
 // Форма
 .articles-form {
-    width: min(100%, 32rem);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 2rem;
-    margin-bottom: 3rem;
-    border: 1px solid var(--c-border, #ccc);
-    border-radius: var(--radius-card, 8px);
-    background: var(--c-bg-secondary, #f9f9f9);
-    box-shadow: var(--shadow-card, 0 2px 4px rgba(0,0,0,0.1));
+    gap: 1.25rem;
 
     &__input,
     &__textarea {
         width: 100%;
-        padding: 0.75rem;
+        padding: 0.85rem;
         border: 1px solid var(--c-border, #ccc);
-        border-radius: var(--radius-btn, 4px);
+        border-radius: 6px;
         font-family: inherit;
-        background: var(--c-bg-primary, #fff);
-        color: var(--c-text-primary, #000);
+        font-size: 1rem;
+        resize: vertical;
+        background: #fff;
+        color: #000;
+
+        &:focus {
+            outline: none;
+            border-color: var(--c-primary, #007bff);
+        }
+
+        &::placeholder {
+            color: #000;
+            font-weight: 500;
+            opacity: 1;
+        }
+    }
+
+    &__image-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border: 1px dashed #ccc;
+        border-radius: 6px;
+    }
+
+    &__file-upload {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+        color: #000;
+        font-weight: 500;
+
+        input[type="file"] {
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
     }
 
     &__button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.85rem 1.1rem;
-        border: 0;
-        border-radius: var(--radius-btn, 4px);
-        background: linear-gradient(135deg, var(--c-primary, #007bff), var(--c-primary-hover, #0056b3));
+        margin-top: 1rem;
+        padding: 0.85rem;
+        border: none;
+        border-radius: 6px;
+        background: var(--c-primary, #007bff);
         color: #fff;
-        font: inherit;
-        font-weight: 700;
+        font-size: 1.1rem;
+        font-weight: 600;
         cursor: pointer;
-        transition: opacity 0.2s;
+        transition: background 0.2s;
 
-        &:hover {
-            opacity: 0.9;
-        }
+        &:hover { background: var(--c-primary-hover, #0056b3); }
     }
 }
 
-// Сітка
-.articles-grid {
-    display: grid;
-    // Максимум 3 елементи в лінію
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    width: min(100%, 75rem);
-    justify-content: center;
-
-    // Адаптив
-    @media (max-width: 900px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 600px) {
-        grid-template-columns: 1fr;
-    }
-}
-
-// Картка новини
-.articles-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    border: 1px solid var(--c-border, #ccc);
-    border-radius: var(--radius-card, 8px);
-    background: var(--c-bg-secondary, #fff);
-    box-shadow: var(--shadow-card, 0 2px 4px rgba(0,0,0,0.05));
+// ВІКНО ПІДТВЕРДЖЕННЯ ВИДАЛЕННЯ
+.confirm-dialog {
+    width: min(100%, 28rem);
     text-align: center;
+    padding: 2.5rem 2rem;
 
-    &__title {
-        margin: 0 0 1rem;
-        color: var(--c-text-secondary, #222);
-        font-size: 1.25rem;
+    &__icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
     }
 
-    &__content {
-        margin: 0 0 1.5rem;
-        color: var(--c-text-muted, #666);
-        flex-grow: 1; // Завдяки цьому кнопки завжди будуть внизу
+    h2 {
+        margin: 0 0 1rem;
+        font-size: 1.5rem;
+        color: #222;
+    }
+
+    p {
+        color: #555;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+        font-size: 1.1rem;
     }
 
     &__actions {
         display: flex;
         justify-content: center;
-        gap: 0.75rem;
-    }
+        gap: 1rem;
 
-    &__btn-edit,
-    &__btn-delete {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: var(--radius-btn, 4px);
-        font-weight: 600;
-        cursor: pointer;
-        font-family: inherit;
-    }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
 
-    &__btn-edit {
-        background: #ffc107;
-        color: #000;
-    }
+            &:hover { opacity: 0.9; }
+        }
 
-    &__btn-delete {
-        background: #dc3545;
-        color: #fff;
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-confirm-delete {
+            background: #dc3545;
+            color: #fff;
+        }
     }
 }
 
-.articles-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: var(--c-text-muted, #666);
+// ПЛАШКА ВІДНОВЛЕННЯ (SNACKBAR)
+.undo-snackbar {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #323232;
+    color: #fff;
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 2000;
+    animation: slideUp 0.3s ease-out forwards;
+
+    span { font-size: 1rem; }
+
+    .btn-undo {
+        background: none;
+        border: none;
+        color: #ffc107;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 0;
+        text-transform: uppercase;
+        
+        &:hover { text-decoration: underline; }
+    }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+// Адаптивність для мобільних пристроїв
+@media (max-width: 768px) {
+    .articles-card {
+        flex-direction: column;
+        
+        &__image-container {
+            width: 100%;
+            height: 200px;
+        }
+
+        &__body { padding-right: 0; }
+
+        &__actions {
+            opacity: 1;
+            position: relative;
+            bottom: 0;
+            right: 0;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+    }
+
+    .articles-top-bar {
+        flex-direction: column;
+        gap: 1rem;
+
+        .btn-add {
+            position: relative;
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    
+    .undo-snackbar {
+        width: 90%;
+        justify-content: space-between;
+    }
 }

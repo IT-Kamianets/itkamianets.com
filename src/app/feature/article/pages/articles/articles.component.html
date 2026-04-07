@@ -1,49 +1,116 @@
 <section class="articles-page">
-    <h1 class="articles-header">Стрічка новин</h1>
-
-    <form class="articles-form" (ngSubmit)="handleSave()">
-        <input 
-            type="text" 
-            name="title" 
-            class="articles-form__input" 
-            placeholder="Заголовок новини" 
-            [ngModel]="formTitle()"
-            (ngModelChange)="formTitle.set($event)"
-            required
-        />
-        
-        <textarea 
-            name="content" 
-            class="articles-form__textarea" 
-            placeholder="Текст новини..." 
-            rows="4" 
-            [ngModel]="formContent()"
-            (ngModelChange)="formContent.set($event)"
-            required>
-        </textarea>
-        
-        <button type="submit" class="articles-form__button">
-            {{ editingId() ? 'Зберегти зміни' : 'Додати новину' }}
+    <div class="articles-top-bar">
+        <button class="btn-add" (click)="openModal()">
+            <span>+</span> Додати новину
         </button>
-    </form>
+        <h1 class="articles-header">Стрічка новин</h1>
+    </div>
 
-    <div class="articles-grid">
+    @if (isModalOpen()) {
+        <div class="modal-overlay" (click)="closeModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>{{ editingId() ? 'Редагувати новину' : 'Створити новину' }}</h2>
+                    <button class="modal-close" (click)="closeModal()">✕</button>
+                </div>
+
+                <form class="articles-form" (ngSubmit)="handleSave()">
+                    <div class="articles-form__image-group">
+                        <input 
+                            type="text" 
+                            name="imageUrl" 
+                            class="articles-form__input" 
+                            placeholder="Вставте URL-адресу фотографії" 
+                            [ngModel]="formImageUrl()"
+                            (ngModelChange)="formImageUrl.set($event)"
+                        />
+                        <div class="articles-form__file-upload">
+                            <span class="articles-form__file-label">або завантажте з ПК:</span>
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                (change)="handleFileChange($event)"
+                            />
+                        </div>
+                    </div>
+
+                    <input 
+                        type="text" 
+                        name="title" 
+                        class="articles-form__input" 
+                        placeholder="Заголовок новини" 
+                        [ngModel]="formTitle()"
+                        (ngModelChange)="formTitle.set($event)"
+                        required
+                    />
+                    
+                    <textarea 
+                        name="content" 
+                        class="articles-form__textarea" 
+                        placeholder="Текст новини..." 
+                        rows="6" 
+                        [ngModel]="formContent()"
+                        (ngModelChange)="formContent.set($event)"
+                        required></textarea>
+                    
+                    <button type="submit" class="articles-form__button">
+                        {{ editingId() ? 'Зберегти зміни' : 'Опублікувати новину' }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (itemToDelete()) {
+        <div class="modal-overlay" (click)="cancelDelete()">
+            <div class="modal-content confirm-dialog" (click)="$event.stopPropagation()">
+                <div class="confirm-dialog__icon">🗑️</div>
+                <h2>Видалення новини</h2>
+                <p>Ви дійсно хочете видалити новину <strong>"{{ itemToDelete()?.title }}"</strong>?</p>
+                <div class="confirm-dialog__actions">
+                    <button class="btn-cancel" (click)="cancelDelete()">Скасувати</button>
+                    <button class="btn-confirm-delete" (click)="confirmDelete()">Видалити</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isUndoVisible()) {
+        <div class="undo-snackbar">
+            <span>Новину видалено.</span>
+            <button class="btn-undo" (click)="undoDelete()">Повернути</button>
+        </div>
+    }
+
+    <div class="articles-list">
         @for (item of newsList(); track item.id) {
-            <div class="articles-card">
-                <h3 class="articles-card__title">{{ item.title }}</h3>
-                <p class="articles-card__content">{{ item.content }}</p>
+            <div class="articles-card" (click)="goToArticle(item.id)">
+                
+                <div class="articles-card__date">
+                    {{ item.createdAt | date:'dd.MM.yyyy HH:mm' }}
+                </div>
+
+                <div class="articles-card__image-container">
+                    <img [src]="item.imageUrl" [alt]="item.title" class="articles-card__image">
+                </div>
+
+                <div class="articles-card__body">
+                    <h3 class="articles-card__title">{{ item.title }}</h3>
+                    <div class="articles-card__divider"></div>
+                    <p class="articles-card__content">{{ item.content }}</p>
+                </div>
                 
                 <div class="articles-card__actions">
-                    <button type="button" class="articles-card__btn-edit" (click)="handleEdit(item)">
-                        Редагувати
+                    <button type="button" class="btn-action edit" (click)="handleEdit($event, item)" title="Редагувати">
+                        ✏️
                     </button>
-                    <button type="button" class="articles-card__btn-delete" (click)="handleDelete(item.id)">
-                        Видалити
+                    <button type="button" class="btn-action delete" (click)="handleDeleteClick($event, item)" title="Видалити">
+                        🗑️
                     </button>
                 </div>
             </div>
         } @empty {
-            <p class="articles-empty">Новин поки немає. Додайте першу!</p>
+            <p class="articles-empty">Новин поки немає. Натисніть "Додати новину", щоб створити першу!</p>
         }
     </div>
 </section>
