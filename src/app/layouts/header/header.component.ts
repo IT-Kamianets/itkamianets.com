@@ -39,6 +39,12 @@ export class HeaderComponent {
 			title: 'Мерч',
 			href: '/merch',
 		},
+		{
+			_id: 'menu-companies',
+			type: 'menu',
+			title: 'Компанії',
+			href: '/companies',
+		},
 	];
 
 	protected toggleTheme() {
