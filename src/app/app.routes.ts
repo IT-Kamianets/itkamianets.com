@@ -172,6 +172,16 @@ export const routes: Routes = [
 			{
 				path: '',
 				loadChildren: () =>
+					import('./feature/achievmeent/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/waiter/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
 					import('./feature/item/public.routes').then((m) => m.routes),
 			},
 			{
@@ -349,6 +359,16 @@ export const routes: Routes = [
 				path: '',
 				loadChildren: () =>
 					import('./feature/course/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/achievmeent/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/waiter/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
