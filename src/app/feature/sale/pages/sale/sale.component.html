@@ -1,0 +1,22 @@
+<section class="sale-page">
+	<header class="sale-page__header">
+		<a routerLink="/manage/sales" class="sale-page__back">← Back to sales</a>
+		<a routerLink="/manage/manage-sales" class="sale-page__manage">Manage sales</a>
+	</header>
+
+	@if (isLoading()) {
+		<p class="sale-page__state">Loading sale...</p>
+	} @else if (sale(); as record) {
+		<article class="sale-card">
+			<h1 class="sale-card__title">{{ record.name || 'Untitled sale' }}</h1>
+			<p class="sale-card__description">{{ record.description || 'No description provided.' }}</p>
+
+			<section class="sale-card__section">
+				<h2>Data</h2>
+				<pre class="sale-card__data">{{ record.data | json }}</pre>
+			</section>
+		</article>
+	} @else {
+		<p class="sale-page__state">{{ apiError() || 'Sale not found.' }}</p>
+	}
+</section>

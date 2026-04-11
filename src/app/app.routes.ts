@@ -410,6 +410,10 @@ export const routes: Routes = [
 				loadChildren: () =>
 					import('./feature/certificate/manage.routes').then((m) => m.routes),
 			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/sale/manage.routes').then((m) => m.routes),
+			},
 		],
 	},
 	{

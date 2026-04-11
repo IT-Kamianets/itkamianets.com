@@ -1,0 +1,59 @@
+<section class="sales-page">
+	<header class="sales-page__header">
+		<div>
+			<p class="sales-page__eyebrow">Admin workspace</p>
+			<h1 class="sales-page__title">Sales</h1>
+			<p class="sales-page__subtitle">All CRM-style sales records from API.</p>
+		</div>
+
+		<div class="sales-page__actions">
+			<a pButton routerLink="/manage/manage-sales" class="sales-page__button sales-page__button--primary">
+				Manage sales
+			</a>
+		</div>
+	</header>
+
+	<div class="sales-page__card">
+		<p-table
+			[value]="sales()"
+			[dataKey]="'_id'"
+			[rowHover]="true"
+			[loading]="isLoading()"
+			styleClass="sales-page__table"
+		>
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Data preview</th>
+					<th class="sales-page__col-actions">Actions</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-sale>
+				<tr>
+					<td>{{ sale.name || 'Untitled sale' }}</td>
+					<td>{{ sale.description || '—' }}</td>
+					<td><code class="sales-page__preview">{{ dataPreview(sale.data) }}</code></td>
+					<td class="sales-page__actions">
+						<a
+							pButton
+							[routerLink]="['/manage/sales', sale._id]"
+							class="sales-page__button sales-page__button--ghost"
+						>
+							View
+						</a>
+					</td>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="4" class="sales-page__empty">No sales yet.</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</div>
+
+	@if (apiError()) {
+		<p class="sales-page__error">{{ apiError() }}</p>
+	}
+</section>

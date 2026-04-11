@@ -1,0 +1,70 @@
+.sales-page {
+	display: grid;
+	gap: 1.5rem;
+}
+
+.sales-page__header {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.sales-page__title {
+	font-size: 1.5rem;
+	font-weight: 700;
+}
+
+.sales-page__subtitle,
+.sales-page__eyebrow {
+	color: var(--c-text-muted);
+}
+
+.sales-page__card {
+	background: var(--c-bg-secondary);
+	border: 1px solid var(--c-border);
+	border-radius: 1rem;
+	overflow: hidden;
+}
+
+.sales-page__actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.sales-page__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+	border-radius: 0.75rem;
+	padding: 0.5rem 0.75rem;
+}
+
+.sales-page__button--primary {
+	background: var(--c-primary);
+	color: #fff;
+}
+
+.sales-page__button--ghost {
+	background: var(--c-bg-tertiary);
+	color: var(--c-text-primary);
+}
+
+.sales-page__col-actions {
+	width: 140px;
+}
+
+.sales-page__preview {
+	font-size: 0.8rem;
+}
+
+.sales-page__empty,
+.sales-page__error {
+	text-align: center;
+	padding: 1rem;
+}
+
+.sales-page__error {
+	color: #ef4444;
+}
