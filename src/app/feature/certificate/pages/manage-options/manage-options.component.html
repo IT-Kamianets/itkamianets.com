@@ -83,23 +83,23 @@
 								@for (opt of options(); track opt._id) {
 									<tr class="hover:bg-[var(--c-bg-tertiary)] transition-colors">
 										<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-[var(--c-text-primary)] sm:pl-6">
-											{{ opt.data?.['title'] || 'Без назви' }}
+											{{ opt.data?.title || 'Без назви' }}
 										</td>
 										<td class="px-3 py-4 text-sm text-[var(--c-text-muted)] max-w-xs truncate">
-											{{ opt.data?.['description'] || 'Без опису' }}
+											{{ opt.data?.description || 'Без опису' }}
 										</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm">
-											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset" 
-												[class.bg-blue-500/10]="opt.data?.['templateStyle'] === 'modern'"
-												[class.text-blue-500]="opt.data?.['templateStyle'] === 'modern'"
-												[class.ring-blue-500/20]="opt.data?.['templateStyle'] === 'modern'"
-												[class.bg-amber-500/10]="opt.data?.['templateStyle'] === 'classic'"
-												[class.text-amber-500]="opt.data?.['templateStyle'] === 'classic'"
-												[class.ring-amber-500/20]="opt.data?.['templateStyle'] === 'classic'"
-												[class.bg-slate-500/10]="opt.data?.['templateStyle'] === 'minimalist'"
-												[class.text-slate-500]="opt.data?.['templateStyle'] === 'minimalist'"
-												[class.ring-slate-500/20]="opt.data?.['templateStyle'] === 'minimalist'">
-												{{ opt.data?.['templateStyle'] || 'default' }}
+											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+												[class.bg-blue-500/10]="opt.data?.templateStyle === 'modern'"
+												[class.text-blue-500]="opt.data?.templateStyle === 'modern'"
+												[class.ring-blue-500/20]="opt.data?.templateStyle === 'modern'"
+												[class.bg-amber-500/10]="opt.data?.templateStyle === 'classic'"
+												[class.text-amber-500]="opt.data?.templateStyle === 'classic'"
+												[class.ring-amber-500/20]="opt.data?.templateStyle === 'classic'"
+												[class.bg-slate-500/10]="opt.data?.templateStyle === 'minimalist'"
+												[class.text-slate-500]="opt.data?.templateStyle === 'minimalist'"
+												[class.ring-slate-500/20]="opt.data?.templateStyle === 'minimalist'">
+												{{ opt.data?.templateStyle || 'default' }}
 											</span>
 										</td>
 										<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
