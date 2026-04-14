@@ -17,11 +17,18 @@
 /* ── Certificate Base Styles ── */
 .certificate {
 	width: 100%;
-	aspect-ratio: 1.414 / 1; /* A4 landscape ratio */
+	min-height: 500px;
 	background: #ffffff;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-	overflow: hidden;
+	overflow: visible;
 	position: relative;
+}
+
+/* Desktop: A4 landscape ratio */
+@media (min-width: 769px) {
+	.certificate {
+		aspect-ratio: 1.414 / 1;
+	}
 }
 
 /* ── MODERN STYLE ── */
@@ -299,7 +306,7 @@
 	margin: 0;
 }
 
-/* ── Actions ── */
+/* ── Actions ─ */
 .certificate-actions {
 	margin-top: 40px;
 	text-align: center;
@@ -381,49 +388,135 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+	.certificate-page {
+		padding: 20px 10px;
+	}
+
+	.certificate {
+		min-height: auto;
+		aspect-ratio: auto;
+	}
+
 	.certificate--modern {
 		flex-direction: column;
 	}
 
 	.certificate--modern .certificate__sidebar {
 		width: 100%;
-		padding: 30px;
+		padding: 20px;
+	}
+
+	.certificate--modern .certificate__logo {
+		font-size: 40px;
+	}
+
+	.certificate--modern .certificate__brand {
+		font-size: 12px;
 	}
 
 	.certificate--modern .certificate__content {
 		width: 100%;
-		padding: 30px;
-	}
-
-	.certificate--modern .certificate__title {
-		font-size: 24px;
-	}
-
-	.certificate--modern .certificate__recipient {
-		font-size: 32px;
-	}
-
-	.certificate--minimalist {
-		padding: 40px;
-	}
-
-	.certificate--minimalist .certificate__recipient-simple {
-		font-size: 36px;
-	}
-
-	.certificate--classic {
 		padding: 20px;
 	}
 
-	.certificate--classic .certificate__title-classic {
+	.certificate--modern .certificate__title {
+		font-size: 20px;
+		margin: 0 0 10px;
+	}
+
+	.certificate--modern .certificate__subtitle {
+		font-size: 10px;
+	}
+
+	.certificate--modern .certificate__recipient {
 		font-size: 24px;
+		margin: 0 0 15px;
+	}
+
+	.certificate--modern .certificate__description {
+		font-size: 12px;
+	}
+
+	.certificate--modern .certificate__footer {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.certificate--minimalist {
+		padding: 20px;
+	}
+
+	.certificate--minimalist .certificate__header-simple {
+		margin-bottom: 20px;
+	}
+
+	.certificate--minimalist .certificate__recipient-simple {
+		font-size: 24px;
+		margin: 0 0 8px;
+	}
+
+	.certificate--minimalist .certificate__title-simple {
+		font-size: 12px;
+		margin: 0 0 15px;
+	}
+
+	.certificate--minimalist .certificate__description-simple {
+		font-size: 12px;
+		margin: 0 0 20px;
+	}
+
+	.certificate--minimalist .certificate__footer-simple {
+		flex-direction: column;
+		gap: 8px;
+		align-items: flex-start;
+	}
+
+	.certificate--classic {
+		padding: 10px;
+	}
+
+	.certificate--classic .certificate__border {
+		padding: 10px;
+	}
+
+	.certificate--classic .certificate__inner {
+		padding: 15px;
+	}
+
+	.certificate--classic .certificate__logo-classic {
+		font-size: 14px;
+	}
+
+	.certificate--classic .certificate__title-classic {
+		font-size: 20px;
+		margin: 0 0 10px;
+	}
+
+	.certificate--classic .certificate__subheader-classic {
+		font-size: 11px;
 	}
 
 	.certificate--classic .certificate__recipient-classic {
-		font-size: 28px;
+		font-size: 22px;
+		margin: 0 0 8px;
 	}
 
 	.certificate--classic .certificate__divider {
 		width: 80%;
+		margin: 0 auto 15px;
+	}
+
+	.certificate--classic .certificate__description-classic {
+		font-size: 12px;
+		margin: 0 0 15px;
+	}
+
+	.certificate--classic .certificate__footer-classic {
+		flex-direction: column;
+		gap: 15px;
+	}
+
+	.certificate--classic .certificate__info-line {
+		width: 120px;
 	}
 }
