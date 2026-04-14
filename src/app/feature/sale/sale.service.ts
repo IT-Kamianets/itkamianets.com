@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from 'wacom';
 import { UserService } from '../user/user.service';
 import { Sale, SaleData } from './sale.interface';
 
@@ -45,7 +45,10 @@ export class SaleService {
 		);
 	}
 
-	update(id: string, payload: Pick<Sale, 'name' | 'description' | 'data'>): Observable<Sale | null> {
+	update(
+		id: string,
+		payload: Pick<Sale, 'name' | 'description' | 'data'>,
+	): Observable<Sale | null> {
 		this._syncToken();
 
 		return this._http.post(`${this._basePath}/update`, { _id: id, ...payload }).pipe(

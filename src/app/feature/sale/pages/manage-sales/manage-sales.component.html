@@ -7,7 +7,7 @@
 		</div>
 
 		<div class="manage-sales__header-actions">
-			<a pButton routerLink="/manage/sales" class="manage-sales__button manage-sales__button--ghost">
+			<a pButton routerLink="/sales" class="manage-sales__button manage-sales__button--ghost">
 				Open sales list
 			</a>
 			<button pButton type="button" class="manage-sales__button manage-sales__button--primary" (click)="openCreate()">
@@ -32,7 +32,7 @@
 					<td>{{ sale.description || '—' }}</td>
 					<td><code>{{ dataPreview(sale.data) }}</code></td>
 					<td class="manage-sales__actions">
-						<a pButton [routerLink]="['/manage/sales', sale._id]" class="manage-sales__button manage-sales__button--ghost">View</a>
+						<a pButton [routerLink]="['/sale', sale._id]" class="manage-sales__button manage-sales__button--ghost">View</a>
 						<button pButton type="button" class="manage-sales__button manage-sales__button--ghost" (click)="openEdit(sale)">
 							Edit
 						</button>
