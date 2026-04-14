@@ -8,7 +8,7 @@ import { Certificate } from './certificate.interface';
 })
 export class CertificateService {
 	private readonly _http = inject(HttpService);
-	
+
 	private readonly _certificates = signal<Certificate[]>([]);
 	readonly docs = this._certificates.asReadonly();
 
@@ -35,14 +35,30 @@ export class CertificateService {
 	}
 
 	new(): Partial<Certificate> {
-		return { data: {} };
+		return {
+			data: {
+				title: '',
+				recipientName: '',
+				description: '',
+				issueDate: '',
+				templateStyle: 'classic',
+			},
+		};
 	}
 
 	create(cert: Partial<Certificate>): Observable<Certificate | null> {
+		const data = cert.data;
 		const payload = {
 			...cert,
-			name: cert.data?.['recipientName'] || '',
-			description: cert.data?.['title'] || ''
+			name: data?.recipientName || '',
+			description: data?.title || '',
+			data: {
+				title: data?.title || '',
+				recipientName: data?.recipientName || '',
+				description: data?.description || '',
+				issueDate: data?.issueDate || '',
+				templateStyle: data?.templateStyle || 'classic',
+			},
 		};
 		return this._http.post('/api/itcertificate/create', payload).pipe(
 			map((res: unknown) => res ? (res as Certificate) : null),
@@ -56,9 +72,16 @@ export class CertificateService {
 	}
 
 	update(cert: Certificate): Observable<Certificate | null> {
+		const data = cert.data;
 		const payload = {
 			_id: cert._id,
-			data: cert.data
+			data: {
+				title: data?.title || '',
+				recipientName: data?.recipientName || '',
+				description: data?.description || '',
+				issueDate: data?.issueDate || '',
+				templateStyle: data?.templateStyle || 'classic',
+			},
 		};
 		return this._http.post('/api/itcertificate/update', payload).pipe(
 			map((res: unknown) => res ? (res as Certificate) : null),
