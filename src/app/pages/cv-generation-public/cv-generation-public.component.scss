@@ -1,0 +1,13 @@
+:host {
+	display: block;
+}
+
+.cv-public {
+	min-height: calc(100vh - 80px);
+	padding: 1rem;
+}
+
+.cv-public__content {
+	max-width: 1480px;
+	margin: 0 auto;
+}

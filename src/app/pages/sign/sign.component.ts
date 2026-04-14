@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, pattern, required, submit, FormField } from '@angular/forms/signals';
+import { form, FormField, pattern, required, submit } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
+import { HttpService } from '@wawjs/ngx-http';
+import { ThemeMode, ThemeService } from '@wawjs/ngx-ui';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { HttpService, ThemeMode, ThemeService } from 'wacom';
 import { UserService } from '../../feature/user/user.service';
 import { RespStatus, SignModel } from './sign.interface';
 
@@ -47,15 +48,20 @@ export class SignComponent {
 	}
 
 	private _submit(payload: SignModel) {
-		this._http.post('/api/user/status?test=test', payload, (resp: RespStatus) => {
-			if (resp?.email && resp?.pass) {
-				this._login(payload);
-			} else {
-				this._sign(payload);
-			}
-		}, {
-			err: () => this._setStatus('error', 'Не вдалося звʼязатися з API авторизації.'),
-		});
+		this._http.post(
+			'/api/user/status?test=test',
+			payload,
+			(resp: RespStatus) => {
+				if (resp?.email && resp?.pass) {
+					this._login(payload);
+				} else {
+					this._sign(payload);
+				}
+			},
+			{
+				err: () => this._setStatus('error', 'Не вдалося звʼязатися з API авторизації.'),
+			},
+		);
 	}
 
 	private _login(payload: SignModel) {

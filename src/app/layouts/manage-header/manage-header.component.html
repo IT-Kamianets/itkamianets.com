@@ -11,27 +11,38 @@
 		</a>
 
 		<div class="manage-header__actions">
-			<a
-				#profileLinkActive="routerLinkActive"
-				routerLink="/manage/profile"
-				routerLinkActive="manage-header__link--active"
-				[routerLinkActiveOptions]="{ exact: true }"
-				class="manage-header__link"
-				[attr.aria-disabled]="profileLinkActive.isActive ? 'true' : null"
-				(click)="onProfileClick($event, profileLinkActive.isActive)"
-			>
-				<span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
-				<span>Profile</span>
-			</a>
-			<button
-				type="button"
-				class="manage-header__icon-btn"
-				(click)="toggleTheme()"
-				[attr.aria-label]="themeLabel"
-			>
-				<span class="material-symbols-outlined" aria-hidden="true">{{ themeIcon }}</span>
-			</button>
-			<button type="button" class="manage-header__signout" (click)="logout()">Log out</button>
+			@if (publicMode) {
+				<button
+					type="button"
+					class="manage-header__icon-btn"
+					(click)="toggleTheme()"
+					[attr.aria-label]="themeLabel"
+				>
+					<span class="material-symbols-outlined" aria-hidden="true">{{ themeIcon }}</span>
+				</button>
+			} @else {
+				<a
+					#profileLinkActive="routerLinkActive"
+					routerLink="/manage/profile"
+					routerLinkActive="manage-header__link--active"
+					[routerLinkActiveOptions]="{ exact: true }"
+					class="manage-header__link"
+					[attr.aria-disabled]="profileLinkActive.isActive ? 'true' : null"
+					(click)="onProfileClick($event, profileLinkActive.isActive)"
+				>
+					<span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+					<span>Profile</span>
+				</a>
+				<button
+					type="button"
+					class="manage-header__icon-btn"
+					(click)="toggleTheme()"
+					[attr.aria-label]="themeLabel"
+				>
+					<span class="material-symbols-outlined" aria-hidden="true">{{ themeIcon }}</span>
+				</button>
+				<button type="button" class="manage-header__signout" (click)="logout()">Log out</button>
+			}
 		</div>
 	</nav>
 </header>
