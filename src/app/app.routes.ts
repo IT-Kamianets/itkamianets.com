@@ -114,16 +114,7 @@ export const routes: Routes = [
 						(m) => m.CompanyComponent,
 					),
 			},
-			{
-				path: 'profiles',
-				loadComponent: () =>
-					import('./pages/profiles/profiles.component').then((m) => m.ProfilesComponent),
-			},
-			{
-				path: 'profile/:id',
-				loadComponent: () =>
-					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
-			},
+
 			{
 				path: '',
 				loadChildren: () =>
@@ -244,14 +235,6 @@ export const routes: Routes = [
 				redirectTo: 'profile',
 			},
 			{
-				path: 'events',
-				canActivate: [authenticatedGuard],
-				loadComponent: () =>
-					import('./pages/manage/events/events.component').then(
-						(m) => m.ManageEventsComponent,
-					),
-			},
-			{
 				path: 'profile',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
@@ -259,6 +242,15 @@ export const routes: Routes = [
 						(m) => m.ProfileComponent,
 					),
 			},
+			{
+				path: 'events',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/events/events.component').then(
+						(m) => m.ManageEventsComponent,
+					),
+			},
+
 			{
 				path: 'schools',
 				canActivate: [authenticatedGuard],
@@ -289,15 +281,7 @@ export const routes: Routes = [
 						(m) => m.ManageCompetitionsComponent,
 					),
 			},
-			{
-				path: 'people',
-				canActivate: [authenticatedGuard],
-				data: { title: 'People' },
-				loadComponent: () =>
-					import('./pages/manage/people/people.component').then(
-						(m) => m.ManagePeopleComponent,
-					),
-			},
+
 			{
 				path: 'cv-generation',
 				canActivate: [authenticatedGuard],
