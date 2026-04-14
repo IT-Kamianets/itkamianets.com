@@ -1,4 +1,4 @@
-import { CrudDocument } from 'wacom';
+import { CrudDocument } from '@wawjs/ngx-crud';
 import { ItemOptions } from '../item/item.interface';
 
 export interface Job extends CrudDocument<Job> {

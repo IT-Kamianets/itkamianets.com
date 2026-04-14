@@ -158,6 +158,16 @@ export const routes: Routes = [
 			{
 				path: '',
 				loadChildren: () =>
+					import('./feature/achievmeent/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/waiter/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
 					import('./feature/item/public.routes').then((m) => m.routes),
 			},
 			{
@@ -196,6 +206,13 @@ export const routes: Routes = [
 					import('./feature/certificate/public.routes').then((m) => m.routes),
 			},
 		],
+	},
+	{
+		path: 'cv-generation',
+		loadComponent: () =>
+			import('./pages/cv-generation-public/cv-generation-public.component').then(
+				(m) => m.CvGenerationPublicComponent,
+			),
 	},
 	{
 		path: '',
@@ -326,6 +343,16 @@ export const routes: Routes = [
 				path: '',
 				loadChildren: () =>
 					import('./feature/course/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/achievmeent/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/waiter/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
