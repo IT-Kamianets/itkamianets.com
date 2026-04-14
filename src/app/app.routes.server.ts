@@ -27,11 +27,32 @@ const toCompetitionDocs = (payload: unknown): Array<{ _id?: unknown }> => {
 	return [];
 };
 
-export const serverRoutes: ServerRoute[] = [
-	{
-		path: 'manage',
+const MANAGE_CLIENT_ROUTES = [
+	'manage',
+	'manage/profile',
+	'manage/merch',
+	'manage/companies',
+	'manage/projects',
+	'manage/items',
+	'manage/schools',
+	'manage/jobs',
+	'manage/events',
+	'manage/competitions',
+	'manage/people',
+	'manage/manage-options',
+	'manage/manage-certificates',
+	'manage/cv-generation',
+] satisfies string[];
+
+const MANAGE_SERVER_ROUTES = MANAGE_CLIENT_ROUTES.map(
+	(path): ServerRoute => ({
+		path,
 		renderMode: RenderMode.Client,
-	},
+	}),
+);
+
+export const serverRoutes: ServerRoute[] = [
+	...MANAGE_SERVER_ROUTES,
 	{
 		path: 'manage/**',
 		renderMode: RenderMode.Client,
