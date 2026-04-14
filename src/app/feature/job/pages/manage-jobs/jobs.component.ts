@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { JobService } from '../../job.service';
-import { Job, JobData } from '../../job.interface';
+import { Job } from '../../job.interface';
 import { TableModule as Table } from 'primeng/table';
 import { Dialog } from 'primeng/dialog';
 import { Button } from 'primeng/button';
@@ -42,15 +42,17 @@ export class JobsComponent {
 	protected readonly selectedJob = signal<Job | null>(null);
 	protected readonly isSaving = signal(false);
 
-	private _newJobData(): JobData {
+	private _newJobData(): Job {
 		return {
 			title: '',
 			description: '',
-			company: '',
 			requirements: [],
 			status: 'active',
+			authorName: '',
+			authorId: '',
+			published: false,
 			preview: ''
-		};
+		} as Job;
 	}
 
 	protected onImageUpload(event: Event) {
@@ -63,7 +65,7 @@ export class JobsComponent {
 					// Створюємо новий об'єкт, щоб Angular помітив зміну
 					this.selectedJob.set({
 						...job,
-						data: { ...job.data, preview: e.target?.result as string }
+						 ...job, preview: e.target?.result as string 
 					});
 				}
 			};
@@ -72,7 +74,7 @@ export class JobsComponent {
 	}
 
 	protected create() {
-		this.selectedJob.set({ data: this._newJobData() } as Job);
+		this.selectedJob.set(this._newJobData() as Job);
 		this.displayDialog.set(true);
 	}
 
@@ -88,19 +90,38 @@ export class JobsComponent {
 
 		this.isSaving.set(true);
 		const obs = job._id ? this.jobService.update(job) : this.jobService.create(job);
-		
+
 		obs.subscribe({
-			next: () => {
+			next: (result) => {
 				this.isSaving.set(false);
-				this.displayDialog.set(false);
-				this.selectedJob.set(null);
-				this.jobService.load(); // Примусове перезавантаження для впевненості
+				if (result) {
+					this.displayDialog.set(false);
+					this.selectedJob.set(null);
+				} else {
+					console.warn('Server returned empty result for save');
+					this._showError('Не вдалося зберегти вакансію. Переконайтеся, що ви увійшли в систему.');
+				}
+				this.jobService.load();
 			},
 			error: (err) => {
 				console.error('Save error:', err);
 				this.isSaving.set(false);
+				if (err.name === 'TimeoutError') {
+					this._showError('Сервер не відповідає занадто довго. Спробуйте пізніше або повідомте адміністратора.');
+				} else if (err.status === 504) {
+					this._showError('Сервер тимчасово не відповідає. Спробуйте через кілька хвилин.');
+				} else if (err.status === 0) {
+					this._showError('Не вдається підключитися до сервера. Перевірте інтернет-з\'єднання.');
+				} else {
+					this._showError('Помилка під час збереження. Спробуйте ще раз.');
+				}
+				this.jobService.load();
 			}
 		});
+	}
+
+	private _showError(message: string) {
+		alert(message);
 	}
 
 	protected delete(job: Job) {
@@ -111,19 +132,26 @@ export class JobsComponent {
 			acceptLabel: 'Так',
 			rejectLabel: 'Ні',
 			accept: () => {
-				this.jobService.delete(job).subscribe();
+				this.jobService.delete(job).subscribe({
+					next: (success) => {
+						if (!success) {
+							console.warn('Failed to delete job');
+						}
+					},
+					error: (err) => console.error('Delete error:', err)
+				});
 			}
 		});
 	}
 
 	protected getRequirementString(job: Job): string {
-		return job.data?.requirements?.join(', ') || '';
+		return job.requirements?.join(', ') || '';
 	}
 
 	protected setRequirements(value: string) {
 		const job = this.selectedJob();
 		if (job) {
-			job.data.requirements = value.split(',').map(s => s.trim()).filter(s => !!s);
+			job.requirements = value.split(',').map(s => s.trim()).filter(s => !!s);
 		}
 	}
 }

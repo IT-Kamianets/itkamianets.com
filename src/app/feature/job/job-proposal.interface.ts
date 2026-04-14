@@ -1,6 +1,6 @@
 import { CrudDocument } from 'wacom';
 
-export interface JobProposalData {
+export interface JobProposal extends CrudDocument<JobProposal> {
 	candidateName: string;
 	email: string;
 	phone?: string;
@@ -8,8 +8,4 @@ export interface JobProposalData {
 	message: string;
 	jobId: string;
 	status: 'new' | 'reviewed' | 'rejected';
-}
-
-export interface JobProposal extends CrudDocument<JobProposal> {
-	data: JobProposalData;
 }

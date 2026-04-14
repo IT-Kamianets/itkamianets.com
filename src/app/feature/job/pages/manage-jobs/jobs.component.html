@@ -22,30 +22,67 @@
         <p-table [value]="jobs()" [paginator]="true" [rows]="10" responsiveLayout="scroll">
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="data.title" class="!bg-[var(--c-bg-tertiary)] !py-5 !pl-8 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Назва <p-sortIcon field="data.title"></p-sortIcon></th>
-                    <th pSortableColumn="data.company" class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Компанія <p-sortIcon field="data.company"></p-sortIcon></th>
-                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Статус</th>
+                    <th pSortableColumn="title" class="!bg-[var(--c-bg-tertiary)] !py-5 !pl-8 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Назва <p-sortIcon field="title"></p-sortIcon></th>
+                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Зображення</th>
+                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Вимоги</th>
+                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Опис</th>
+                    <th pSortableColumn="status" class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Статус <p-sortIcon field="status"></p-sortIcon></th>
                     <th style="width: 150px" class="!bg-[var(--c-bg-tertiary)] !py-5 text-center text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Дії</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-job>
                 <tr class="hover:bg-[var(--c-bg-primary)]/30 transition-colors">
-                    <td class="!py-6 !pl-8 font-bold text-[var(--c-text-secondary)]">{{job.data.title}}</td>
-                    <td class="font-bold text-[var(--c-text-muted)]">{{job.data.company}}</td>
-                    <td>
-                        <p-tag [severity]="job.data.status === 'active' ? 'success' : 'danger'" [value]="job.data.status === 'active' ? 'Активна' : 'Закрита'"></p-tag>
+                    <td class="!py-6 !pl-8 font-bold text-[var(--c-text-secondary)]">{{job.title}}</td>
+                    <td class="!py-6">
+                        @if (job.preview) {
+                            <img [src]="job.preview" [alt]="job.title" class="h-12 w-16 rounded-lg object-cover border border-[var(--c-border)]" />
+                        } @else {
+                            <div class="h-12 w-16 rounded-lg bg-[var(--c-bg-primary)] border border-[var(--c-border)] flex items-center justify-center">
+                                <span class="material-symbols-outlined text-2xl text-[var(--c-text-muted)] opacity-40">image</span>
+                            </div>
+                        }
+                    </td>
+                    <td class="!py-6">
+                        <div class="flex flex-wrap gap-1 max-w-xs">
+                            @for (req of job.requirements.slice(0, 3); track $index) {
+                                <span class="inline-flex items-center rounded-md bg-[var(--c-bg-primary)] px-2 py-1 text-xs font-medium text-[var(--c-text-secondary)] border border-[var(--c-border)]">
+                                    {{ req }}
+                                </span>
+                            }
+                            @if (job.requirements.length > 3) {
+                                <span class="inline-flex items-center rounded-md bg-[var(--c-bg-tertiary)] px-2 py-1 text-xs font-medium text-[var(--c-text-muted)]">
+                                    +{{ job.requirements.length - 3 }}
+                                </span>
+                            }
+                        </div>
+                    </td>
+                    <td class="!py-6">
+                        <p class="text-sm text-[var(--c-text-muted)] max-w-xs line-clamp-2">
+                            {{ job.description || '—' }}
+                        </p>
+                    </td>
+                    <td class="!py-6">
+                        <p-tag [severity]="job.status === 'active' ? 'success' : 'danger'" [value]="job.status === 'active' ? 'Активна' : 'Закрита'"></p-tag>
                     </td>
                     <td>
                         <div class="flex gap-2 justify-center">
-                            <p-button icon="pi pi-pencil" (onClick)="edit(job)" [rounded]="true" [outlined]="true" severity="secondary"></p-button>
-                            <p-button icon="pi pi-trash" (onClick)="delete(job)" [rounded]="true" [outlined]="true" severity="danger"></p-button>
+                            <button
+                                (click)="edit(job)"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[var(--c-primary)] hover:bg-[var(--c-primary)] hover:text-white transition-all">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+                            <button
+                                (click)="delete(job)"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
                         </div>
                     </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="4" class="py-24 text-center">
+                    <td colspan="6" class="py-24 text-center">
                         <p class="text-lg font-black text-[var(--c-text-secondary)]">Вакансій не знайдено</p>
                     </td>
                 </tr>
@@ -59,21 +96,16 @@
             <div class="flex flex-col gap-5 py-4">
                 <div class="flex flex-col gap-2">
                     <label for="title" class="font-bold text-[var(--c-text-secondary)]">Назва вакансії</label>
-                    <input pInputText id="title" [(ngModel)]="current.data.title" placeholder="Наприклад: Senior Angular Developer" class="w-full" />
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <label for="company" class="font-bold text-[var(--c-text-secondary)]">Компанія</label>
-                    <input pInputText id="company" [(ngModel)]="current.data.company" placeholder="Назва компанії" class="w-full" />
+                    <input pInputText id="title" [(ngModel)]="current.title" placeholder="Наприклад: Senior Angular Developer" class="w-full" />
                 </div>
 
                 <div class="flex flex-col gap-2">
                     <label class="font-bold text-[var(--c-text-secondary)]">Зображення</label>
                     <div class="group relative flex aspect-video w-full flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[var(--c-border)] bg-[var(--c-bg-primary)] transition-all hover:border-[var(--c-primary)]">
-                        @if (current.data.preview) {
-                            <img [src]="current.data.preview" class="h-full w-full object-cover" />
+                        @if (current.preview) {
+                            <img [src]="current.preview" class="h-full w-full object-cover" />
                             <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                                <p-button icon="pi pi-trash" (onClick)="current.data.preview = ''" severity="danger" [rounded]="true"></p-button>
+                                <p-button icon="pi pi-trash" (onClick)="current.preview = ''" severity="danger" [rounded]="true"></p-button>
                             </div>
                         } @else {
                             <label class="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2">
@@ -89,11 +121,11 @@
                     <label class="font-bold text-[var(--c-text-secondary)]">Статус вакансії</label>
                     <div class="flex gap-6">
                         <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="radio" id="active" name="status" value="active" [(ngModel)]="current.data.status" class="w-5 h-5 cursor-pointer accent-[var(--c-primary)]">
+                            <input type="radio" id="active" name="status" value="active" [(ngModel)]="current.status" class="w-5 h-5 cursor-pointer accent-[var(--c-primary)]">
                             <span class="text-sm font-bold text-[var(--c-text-secondary)] group-hover:text-[var(--c-primary)]">АКТИВНА</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="radio" id="closed" name="status" value="closed" [(ngModel)]="current.data.status" class="w-5 h-5 cursor-pointer accent-rose-500">
+                            <input type="radio" id="closed" name="status" value="closed" [(ngModel)]="current.status" class="w-5 h-5 cursor-pointer accent-rose-500">
                             <span class="text-sm font-bold text-[var(--c-text-secondary)] group-hover:text-rose-500">ЗАКРИТА</span>
                         </label>
                     </div>
@@ -106,7 +138,7 @@
 
                 <div class="flex flex-col gap-2">
                     <label for="description" class="font-bold text-[var(--c-text-secondary)]">Опис вакансії</label>
-                    <textarea pTextarea id="description" [(ngModel)]="current.data.description" rows="5" placeholder="Опишіть роль та умови..." class="w-full"></textarea>
+                    <textarea pTextarea id="description" [(ngModel)]="current.description" rows="5" placeholder="Опишіть роль та умови..." class="w-full"></textarea>
                 </div>
             </div>
         }

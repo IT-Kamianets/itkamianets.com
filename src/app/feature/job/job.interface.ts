@@ -1,14 +1,13 @@
 import { CrudDocument } from 'wacom';
 
-export interface JobData {
+export interface Job extends CrudDocument<Job> {
 	title: string;
 	description: string;
-	company: string;
 	requirements: string[];
 	status: 'active' | 'closed';
+	authorName: string;
+	authorId: string;
+	published: boolean;
 	preview: string;
-}
-
-export interface Job extends CrudDocument<Job> {
-	data: JobData;
+	company: string;
 }

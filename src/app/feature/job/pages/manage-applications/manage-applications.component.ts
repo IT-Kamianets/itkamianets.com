@@ -4,10 +4,11 @@ import { RouterLink } from '@angular/router';
 import { JobProposalService } from '../../job-proposal.service';
 import { JobService } from '../../job.service';
 import { TableModule as Table } from 'primeng/table';
-import { Button } from 'primeng/button';
-import { Tag } from 'primeng/tag';
+import { ButtonModule as Button } from 'primeng/button';
+import { TagModule as Tag } from 'primeng/tag';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+
 
 @Component({
 	selector: 'app-manage-applications',
@@ -28,7 +29,7 @@ export class ManageApplicationsComponent {
 		const jobsMap: Record<string, string> = {};
 		this.jobService.jobs().forEach(j => {
 			if (j._id) {
-				jobsMap[j._id] = j.data?.title || 'Без назви';
+				jobsMap[j._id] = j.title || 'Без назви';
 			}
 		});
 		return jobsMap;
@@ -42,7 +43,14 @@ export class ManageApplicationsComponent {
 			acceptLabel: 'Так',
 			rejectLabel: 'Ні',
 			accept: () => {
-				this.jobProposalService.delete(proposal).subscribe();
+				this.jobProposalService.delete(proposal).subscribe({
+					next: (success) => {
+						if (!success) {
+							console.warn('Failed to delete proposal');
+						}
+					},
+					error: (err) => console.error('Delete error:', err)
+				});
 			}
 		});
 	}
