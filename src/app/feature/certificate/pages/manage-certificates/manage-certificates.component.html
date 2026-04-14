@@ -42,7 +42,7 @@
 							<select [ngModel]="selectedTemplateId()" (change)="applyTemplate($any($event.target).value)" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 								<option value="">-- Оберіть шаблон (опціонально) --</option>
 								@for (opt of options(); track opt._id) {
-									<option [value]="opt._id">{{ opt.data?.['title'] || opt._id }}</option>
+									<option [value]="opt._id">{{ opt.data?.title || opt._id }}</option>
 								}
 							</select>
 						</div>
@@ -99,26 +99,26 @@
 								@for (cert of certificates(); track cert._id) {
 									<tr class="hover:bg-[var(--c-bg-tertiary)] transition-colors">
 										<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-[var(--c-text-primary)] sm:pl-6">
-											{{ cert.data?.['recipientName'] || 'Невідомий отримувач' }}
+											{{ cert.data?.recipientName || 'Невідомий отримувач' }}
 										</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
-											{{ cert.data?.['title'] || 'Без назви' }}
+											{{ cert.data?.title || 'Без назви' }}
 										</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
-											{{ cert.data?.['issueDate'] | date: 'dd.MM.yyyy' }}
+											{{ cert.data?.issueDate | date: 'dd.MM.yyyy' }}
 										</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm">
-											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset" 
-												[class.bg-blue-500/10]="cert.data?.['templateStyle'] === 'modern'"
-												[class.text-blue-500]="cert.data?.['templateStyle'] === 'modern'"
-												[class.ring-blue-500/20]="cert.data?.['templateStyle'] === 'modern'"
-												[class.bg-amber-500/10]="cert.data?.['templateStyle'] === 'classic'"
-												[class.text-amber-500]="cert.data?.['templateStyle'] === 'classic'"
-												[class.ring-amber-500/20]="cert.data?.['templateStyle'] === 'classic'"
-												[class.bg-slate-500/10]="cert.data?.['templateStyle'] === 'minimalist'"
-												[class.text-slate-500]="cert.data?.['templateStyle'] === 'minimalist'"
-												[class.ring-slate-500/20]="cert.data?.['templateStyle'] === 'minimalist'">
-												{{ cert.data?.['templateStyle'] || 'default' }}
+											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+												[class.bg-blue-500/10]="cert.data?.templateStyle === 'modern'"
+												[class.text-blue-500]="cert.data?.templateStyle === 'modern'"
+												[class.ring-blue-500/20]="cert.data?.templateStyle === 'modern'"
+												[class.bg-amber-500/10]="cert.data?.templateStyle === 'classic'"
+												[class.text-amber-500]="cert.data?.templateStyle === 'classic'"
+												[class.ring-amber-500/20]="cert.data?.templateStyle === 'classic'"
+												[class.bg-slate-500/10]="cert.data?.templateStyle === 'minimalist'"
+												[class.text-slate-500]="cert.data?.templateStyle === 'minimalist'"
+												[class.ring-slate-500/20]="cert.data?.templateStyle === 'minimalist'">
+												{{ cert.data?.templateStyle || 'default' }}
 											</span>
 										</td>
 										<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">

@@ -1,5 +1,5 @@
 import { Injectable, computed } from '@angular/core';
-import { CrudService } from 'wacom';
+import { CrudService } from '@wawjs/ngx-crud';
 import { Job } from './job.interface';
 
 @Injectable({
@@ -42,18 +42,20 @@ export class JobService extends CrudService<Job> {
 				description: '<h2>Про проєкт</h2><p>Розробка сучасного адаптивного сайту.</p>',
 				authorName: 'Гончар Денис',
 				published: true,
-				preview: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=500&fit=crop'
+				preview:
+					'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=500&fit=crop',
 			},
 			{
 				title: 'Платформа для онлайн-курсів',
 				description: '<h2>Опис</h2><p>Створення LMS-системи для школи програмування.</p>',
 				authorName: 'Вальцер Вадим',
 				published: true,
-				preview: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=500&fit=crop'
-			}
+				preview:
+					'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=500&fit=crop',
+			},
 		];
 
-		demoJobs.forEach(job => {
+		demoJobs.forEach((job) => {
 			this.create(job as Job).subscribe();
 		});
 	}

@@ -26,19 +26,19 @@ export class CertificatePdfService {
 		}
 
 		const definition = await this._buildDocDefinition(certificate);
-		const fileName = `Certificate_${certificate.data?.['recipientName'] || 'document'}.pdf`.replace(/\s+/g, '_');
+		const fileName = `Certificate_${certificate.data?.recipientName || 'document'}.pdf`.replace(/\s+/g, '_');
 		(pdfMake.createPdf(definition as any) as any).download(fileName);
 	}
 
 	private async _buildDocDefinition(cert: Certificate): Promise<Record<string, unknown>> {
-		const data = cert.data || {};
-		const style = data['templateStyle'] || 'classic';
-		
+		const data = cert.data;
+		const style = data?.templateStyle || 'classic';
+
 		// Common data
-		const title = data['title'] || 'CERTIFICATE OF COMPLETION';
-		const recipient = data['recipientName'] || 'Recipient Name';
-		const description = data['description'] || 'For successful completion of the requirements set forth by IT Kamianets.';
-		const date = data['issueDate'] ? new Date(data['issueDate']).toLocaleDateString('uk-UA') : new Date().toLocaleDateString('uk-UA');
+		const title = data?.title || 'CERTIFICATE OF COMPLETION';
+		const recipient = data?.recipientName || 'Recipient Name';
+		const description = data?.description || 'For successful completion of the requirements set forth by IT Kamianets.';
+		const date = data?.issueDate ? new Date(data.issueDate).toLocaleDateString('uk-UA') : new Date().toLocaleDateString('uk-UA');
 
 		if (style === 'modern') {
 			return this._buildModernDefinition(title, recipient, description, date);
