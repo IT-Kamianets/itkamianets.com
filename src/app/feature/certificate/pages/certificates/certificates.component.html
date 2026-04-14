@@ -1,51 +1,84 @@
-<section class="min-h-screen bg-slate-50 dark:bg-slate-900 py-20 px-4">
-	<div class="max-w-6xl mx-auto">
-		<header class="text-center mb-16">
-			<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6">
-				Публічний Реєстр Сертифікатів <span class="material-symbols-outlined text-4xl align-bottom ml-2" aria-hidden="true">school</span>
-			</h1>
-			<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-				Тут ви знайдете всі видані сертифікати наших випускників та учасників.
+<div class="certificates-page">
+	<!-- Page Hero -->
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Сертифікати</span>
+			<h1 class="page-hero__title">Публічний Реєстр Сертифікатів</h1>
+			<p class="page-hero__subtitle">
+				Тут ви знайдете всі видані сертифікати наших випускників та учасників
 			</p>
-		</header>
+		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			@for (cert of certificates(); track cert._id) {
-				<a [routerLink]="['/certificate', cert._id]" class="group block bg-white dark:bg-slate-800 rounded-3xl p-8 border-2 border-transparent hover:border-blue-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-					<div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-						<span class="material-symbols-outlined text-3xl" aria-hidden="true">description</span>
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<!-- Filters -->
+		<div class="certificates-filters">
+			@for (cat of categories; track cat) {
+				<button
+					class="certificates-filter"
+					[class.certificates-filter--active]="activeFilter() === cat"
+					(click)="setFilter(cat)"
+				>
+					{{
+						cat === 'All'
+							? 'Усі'
+							: cat === 'Classic'
+								? 'Класичні'
+								: cat === 'Modern'
+									? 'Сучасні'
+									: 'Мінімалістичні'
+					}}
+				</button>
+			}
+		</div>
+
+		<!-- Certificates Grid -->
+		<div class="certificates-grid">
+			@for (cert of filteredCertificates; track cert._id) {
+				<a [routerLink]="['/certificate', cert._id]" class="certificate-card">
+					<div class="certificate-card__img">
+						<img
+							[src]="'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&h=400&fit=crop'"
+							[alt]="cert.data?.['title'] || 'Сертифікат'"
+							loading="lazy"
+						/>
+						<span class="certificate-card__badge">{{
+							getCategoryLabel(cert.data?.templateStyle)
+						}}</span>
 					</div>
-					
-					<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-						{{ cert.data?.['recipientName'] || 'Невідомий отримувач' }}
-					</h3>
-					
-					<p class="font-medium text-blue-600 dark:text-blue-400 mb-4">
-						{{ cert.data?.['title'] || 'Документ' }}
-					</p>
-
-					@if (cert.data?.['issueDate']) {
-						<p class="text-sm text-slate-500 flex items-center gap-2">
-							<span class="material-symbols-outlined text-sm" aria-hidden="true">calendar_month</span> {{ cert.data?.['issueDate'] | date: 'longDate' }}
+					<div class="certificate-card__body">
+						@if (cert.data?.['issueDate']) {
+							<span class="certificate-card__date">{{
+								cert.data?.['issueDate'] | date: 'longDate'
+							}}</span>
+						}
+						<h3 class="certificate-card__title">
+							{{ cert.data?.['title'] || 'Документ' }}
+						</h3>
+						<p class="certificate-card__recipient">
+							{{ cert.data?.['recipientName'] || 'Невідомий отримувач' }}
 						</p>
-					}
-					
-					<div class="mt-8 pt-4 border-t dark:border-slate-700 flex items-center justify-between text-sm font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-						<span>Перевірити деталі</span>
-						<span class="material-symbols-outlined text-sm">arrow_forward</span>
 					</div>
 				</a>
 			} @empty {
-				<div class="col-span-full py-24 text-center">
-					<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 text-5xl mb-6 mb-4">
-						<span class="material-symbols-outlined text-5xl" aria-hidden="true">mark_email_unread</span>
+				<div class="empty-state">
+					<div class="empty-state__icon">
+						<span class="material-symbols-outlined" aria-hidden="true"
+							>mark_email_unread</span
+						>
 					</div>
-					<h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Немає сертифікатів</h3>
-					<p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-						Реєстр поки порожній. Найближчим часом ми додамо інформацію про видані сертифікати.
+					<h3 class="empty-state__title">Немає сертифікатів</h3>
+					<p class="empty-state__text">
+						Реєстр поки порожній. Найближчим часом ми додамо інформацію про видані
+						сертифікати.
 					</p>
 				</div>
 			}
 		</div>
 	</div>
-</section>
+</div>
