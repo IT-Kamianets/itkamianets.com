@@ -191,6 +191,12 @@ export class ManageCompetitionsComponent implements OnInit {
 	}
 
 	protected async removeCompetition(id: string) {
+		const confirmed =
+			typeof window !== 'undefined' ? window.confirm('Видалити це змагання безповоротно?') : true;
+		if (!confirmed) {
+			return;
+		}
+
 		this.isSaving.set(true);
 		this.error.set('');
 		try {

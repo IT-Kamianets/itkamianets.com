@@ -94,8 +94,6 @@ function _normalizeMember(entry: unknown, index: number): CompetitionTeamMemberV
 		subtitle = fullName;
 	} else if (name && name !== displayName) {
 		subtitle = name;
-	} else if (username && fullName && username !== fullName) {
-		subtitle = fullName;
 	}
 	const note = _s(o['note']);
 	const projects = _normalizeProjects(o['projects']);
