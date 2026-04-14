@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { COMPANY_TYPES, Company } from './company.interface';
-import { HttpService } from 'wacom';
 
 const API = `/api/itcompany`;
 
@@ -43,14 +42,14 @@ export class CompanyService {
 
 	updateCompany(company: Company): void {
 		const { id, ...rest } = company;
-		this._http
-			.post(`${API}/update`, { _id: id, ...this._toPayload(rest) })
-			.subscribe({
-				next: (doc) =>
-					this.companies.update((list) =>
-						list.map((c) => (c.id === company.id ? (doc?._id ? this._fromDoc(doc) : company) : c)),
+		this._http.post(`${API}/update`, { _id: id, ...this._toPayload(rest) }).subscribe({
+			next: (doc) =>
+				this.companies.update((list) =>
+					list.map((c) =>
+						c.id === company.id ? (doc?._id ? this._fromDoc(doc) : company) : c,
 					),
-			});
+				),
+		});
 	}
 
 	deleteCompany(id: string): void {
@@ -66,7 +65,13 @@ export class CompanyService {
 
 	private _fromDoc(doc: any): Company {
 		const rawData = typeof doc?.data === 'object' && doc.data !== null ? doc.data : {};
-		const { id: _rawId, contacts: rawContacts, techStack: rawTechStack, services: rawServices, ...restData } = rawData;
+		const {
+			id: _rawId,
+			contacts: rawContacts,
+			techStack: rawTechStack,
+			services: rawServices,
+			...restData
+		} = rawData;
 		const contacts = rawContacts ?? {};
 		const techStack = rawTechStack ?? [];
 		const services = rawServices ?? [];
