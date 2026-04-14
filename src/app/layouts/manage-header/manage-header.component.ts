@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeMode, ThemeService } from 'wacom';
 import { UserService } from '../../feature/user/user.service';
@@ -11,6 +11,8 @@ import { UserService } from '../../feature/user/user.service';
 	styleUrl: './manage-header.component.scss',
 })
 export class ManageHeaderComponent {
+	@Input() publicMode = false;
+
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
 
