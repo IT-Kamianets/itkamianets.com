@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CertificateService } from '../../certificate.service';
 import { Certificate } from '../../certificate.interface';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, tap } from 'rxjs';
 
 @Component({
@@ -25,6 +25,7 @@ export class CertificateComponent {
 	constructor() {
 		toObservable(this._idParams)
 			.pipe(
+				takeUntilDestroyed(),
 				tap(() => this.isLoading.set(true)),
 				switchMap((params) => {
 					const id = params?.get('id');
