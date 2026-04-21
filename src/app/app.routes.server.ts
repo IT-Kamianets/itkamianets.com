@@ -1,5 +1,4 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
-import { TEAM_MEMBERS } from './data/team.data';
 import { SERVICE_IDS } from './feature/service/service.service';
 
 const MANAGE_CLIENT_ROUTES = [
@@ -42,8 +41,7 @@ export const serverRoutes: ServerRoute[] = [
 	},
 	{
 		path: 'profile/:id',
-		renderMode: RenderMode.Prerender,
-		getPrerenderParams: async () => TEAM_MEMBERS.map((p) => ({ id: p.id.toString() })),
+		renderMode: RenderMode.Server,
 	},
 	{
 		path: 'services/:id',
