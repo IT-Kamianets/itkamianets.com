@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Company } from '../../../company/company.interface';
 import { CompanyService } from '../../../company/company.service';
 import { Review } from '../../../company/review.interface';
 import { ReviewService } from '../../../company/review.service';
@@ -45,7 +46,6 @@ export class ManageReviewsComponent {
 	private readonly _reviewService = inject(ReviewService);
 	private readonly _companyService = inject(CompanyService);
 	private readonly _formPanel = viewChild<ElementRef<HTMLFormElement>>('formPanel');
-	private readonly _formScroll = viewChild<ElementRef<HTMLDivElement>>('formScroll');
 	private readonly _authorInput = viewChild<ElementRef<HTMLInputElement>>('authorInput');
 	private _formHighlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -117,17 +117,18 @@ export class ManageReviewsComponent {
 	protected readonly searchQuery = signal('');
 	protected readonly editingReviewId = signal<number | null>(null);
 	protected readonly highlightForm = signal(false);
+	protected readonly isFormVisible = signal(false);
 	protected readonly form = signal<ReviewFormValue>(this._createEmptyForm());
 
 	protected startCreate() {
+		this.isFormVisible.set(true);
 		this.editingReviewId.set(null);
-		this.searchQuery.set('');
-		this.activeFilter.set('all');
 		this.form.set(this._createEmptyForm());
 		this._scrollToForm();
 	}
 
 	protected startEdit(review: Review) {
+		this.isFormVisible.set(true);
 		this.editingReviewId.set(review.id);
 		this.form.set({
 			companyId: review.companyId,
@@ -169,7 +170,7 @@ export class ManageReviewsComponent {
 			this._reviewService.create(payload);
 		}
 
-		this.startCreate();
+		this.closeForm();
 	}
 
 	protected approve(review: Review) {
@@ -188,12 +189,12 @@ export class ManageReviewsComponent {
 		this._reviewService.delete(review.id);
 
 		if (this.editingReviewId() === review.id) {
-			this.startCreate();
+			this.closeForm();
 		}
 	}
 
 	protected cancelEdit() {
-		this.startCreate();
+		this.closeForm();
 	}
 
 	protected setFilter(status: ReviewFilter) {
@@ -205,6 +206,18 @@ export class ManageReviewsComponent {
 			this.companyOptions().find((company) => company.id === companyId)?.label ||
 			'Компанія з каталогу'
 		);
+	}
+
+	protected getCompanyName(companyId: string) {
+		return this._getCompany(companyId)?.name || 'Компанію не знайдено';
+	}
+
+	protected getCompanyType(companyId: string) {
+		return this._getCompany(companyId)?.type || 'Без типу';
+	}
+
+	protected getCompanyLogo(companyId: string) {
+		return this._getCompany(companyId)?.logo || '';
 	}
 
 	protected getStatusLabel(status: ReviewFilter) {
@@ -223,6 +236,15 @@ export class ManageReviewsComponent {
 		return 'Усі';
 	}
 
+	protected getReviewExcerpt(text: string) {
+		const normalizedText = text.replace(/\s+/g, ' ').trim();
+		if (normalizedText.length <= 120) {
+			return normalizedText;
+		}
+
+		return `${normalizedText.slice(0, 117)}...`;
+	}
+
 	protected updateRating(value: string | number) {
 		const nextRating = Number(value);
 		if (nextRating >= 1 && nextRating <= 5) {
@@ -231,6 +253,12 @@ export class ManageReviewsComponent {
 				rating: nextRating as Review['rating'],
 			});
 		}
+	}
+
+	protected closeForm() {
+		this.isFormVisible.set(false);
+		this.editingReviewId.set(null);
+		this.form.set(this._createEmptyForm());
 	}
 
 	private _createEmptyForm(): ReviewFormValue {
@@ -263,12 +291,11 @@ export class ManageReviewsComponent {
 				block: 'start',
 			});
 
-			this._formScroll()?.nativeElement.scrollTo({
-				top: 0,
-				behavior: 'smooth',
-			});
-
 			this._authorInput()?.nativeElement.focus();
 		});
+	}
+
+	private _getCompany(companyId: string): Company | null {
+		return this.companies().find((company) => company.id === companyId) || null;
 	}
 }
