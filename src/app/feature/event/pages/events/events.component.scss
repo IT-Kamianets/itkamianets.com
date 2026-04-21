@@ -1,0 +1,128 @@
+.page-hero .section-label {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	color: var(--c-primary);
+	margin-bottom: 12px;
+}
+
+/* ── Divider ── */
+.section-divider-bar {
+	width: 100%;
+	border-top: 2px solid var(--c-border);
+	position: relative;
+	margin: 0;
+	height: 0;
+}
+
+.section-divider-bar__line {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: -2px;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--c-primary);
+	z-index: 2;
+}
+
+/* ── Page Hero ── */
+.page-hero {
+	position: relative;
+	padding: 62px 0 50px;
+	text-align: center;
+	background-image: url('https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?w=1920&h=600&fit=crop');
+	background-size: cover;
+	background-position: center;
+    margin-bottom: 40px;
+}
+
+.page-hero .section-divider-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
+}
+
+.page-hero__overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(37, 110, 255, 0.55) 100%);
+}
+
+.page-hero__content {
+	position: relative;
+	z-index: 1;
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+.page-hero__title {
+	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+	font-weight: 800;
+	color: #fff;
+	line-height: 1.2;
+	margin-bottom: 12px;
+}
+
+.page-hero__subtitle {
+	font-size: 1.05rem;
+	color: rgba(255, 255, 255, 0.85);
+	line-height: 1.7;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+/* ── Modal ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-container {
+    background: var(--c-bg-secondary);
+    border: 1px solid var(--c-border);
+    border-radius: 1.5rem;
+    width: 100%;
+    max-width: 32rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--c-text-muted);
+    transition: color 0.2s;
+    &:hover {
+        color: var(--c-text-primary);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

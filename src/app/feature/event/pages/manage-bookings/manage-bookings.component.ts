@@ -18,7 +18,7 @@ export class ManageBookingsComponent {
 
 	delete(booking: EventBooking) {
 		if (confirm('Ви впевнені, що хочете видалити це бронювання?')) {
-			this.bookingService.delete(booking);
+			this.bookingService.delete(booking).subscribe();
 		}
 	}
 
@@ -29,6 +29,6 @@ export class ManageBookingsComponent {
 				...booking.data,
 				status
 			}
-		});
+		}).subscribe();
 	}
 }

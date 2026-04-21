@@ -41,6 +41,10 @@ export const serverRoutes: ServerRoute[] = [
 		renderMode: RenderMode.Server,
 	},
 	{
+		path: 'event/:id',
+		renderMode: RenderMode.Server,
+	},
+	{
 		path: 'profile/:id',
 		renderMode: RenderMode.Prerender,
 		getPrerenderParams: async () => TEAM_MEMBERS.map((p) => ({ id: p.id.toString() })),

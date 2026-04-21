@@ -13,7 +13,7 @@ export const environment: {
 	appVersion: '1.0.0',
 	production: true,
 	items: [],
-	companyId: '',
+	companyId: 'itkamianets',
 	company: {
 		id: '',
 		name: '',

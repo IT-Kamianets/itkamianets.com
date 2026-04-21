@@ -77,7 +77,7 @@
 						</h1>
 					</div>
 
-					<div class="grid grid-cols-1 gap-8 mb-12 sm:grid-cols-3">
+					<div class="grid grid-cols-1 gap-8 mb-12 sm:grid-cols-2 lg:grid-cols-4">
 						<div class="flex items-center gap-4">
 							<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-tertiary)] text-[var(--c-primary)]">
 								<span class="material-symbols-outlined">calendar_month</span>
@@ -98,17 +98,28 @@
 						</div>
 						<div class="flex items-center gap-4">
 							<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-tertiary)] text-[var(--c-primary)]">
-								<span class="material-symbols-outlined">location_on</span>
+								<span class="material-symbols-outlined">payments</span>
 							</div>
 							<div>
-								<p class="text-xs font-bold text-[var(--c-text-muted)] uppercase tracking-wider">Локація</p>
-								<p class="font-semibold text-[var(--c-text-secondary)]">{{ event.data.location }}</p>
+								<p class="text-xs font-bold text-[var(--c-text-muted)] uppercase tracking-wider">Ціна</p>
+								<p class="font-semibold text-[var(--c-text-secondary)]">{{ event.data.price ? event.data.price + ' грн' : 'Безкоштовно' }}</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-4">
+							<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--c-bg-tertiary)] text-[var(--c-primary)]">
+								<span class="material-symbols-outlined">groups</span>
+							</div>
+							<div>
+								<p class="text-xs font-bold text-[var(--c-text-muted)] uppercase tracking-wider">Місця</p>
+								<p class="font-semibold text-[var(--c-text-secondary)]">
+									{{ event.data.maxSeats ? (event.data.bookedSeats || 0) + '/' + event.data.maxSeats : 'Без обмежень' }}
+								</p>
 							</div>
 						</div>
 					</div>
 
 					<div class="prose prose-slate max-w-none text-lg leading-relaxed text-[var(--c-text-primary)]">
-						<p>{{ event.data.description }}</p>
+						<p class="whitespace-pre-line">{{ event.data.description }}</p>
 					</div>
 
 					<div class="mt-14 flex flex-col gap-4 sm:flex-row">
@@ -118,6 +129,15 @@
 						>
 							Зареєструватися зараз
 						</button>
+                        <button
+                            (click)="copyLink()"
+                            class="flex-1 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] py-5 text-center text-base font-black text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] transition-all flex items-center justify-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-xl">
+                                {{ linkCopied() ? 'check' : 'share' }}
+                            </span>
+                            {{ linkCopied() ? 'Посилання скопійовано' : 'Поділитися подією' }}
+                        </button>
 						@if (event.data.link && event.data.link !== '#') {
 							<a
 								[href]="event.data.link"

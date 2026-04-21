@@ -59,19 +59,19 @@
 							@for (event of events(); track event._id) {
 								<tr>
 									<td
-										class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-primary)] sm:pl-6"
+										class="px-3 py-4 text-sm font-medium text-[var(--c-text-secondary)] sm:pl-6"
 									>
-										{{ event.data.title }}
+										{{ event.data.title || event.name }}
 									</td>
 									<td
 										class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]"
 									>
-										{{ event.data.date }} {{ event.data.time }}
+										{{ event.data.date || ($any(event)).date }} {{ event.data.time || ($any(event)).time }}
 									</td>
 									<td
-										class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]"
+										class="px-3 py-4 text-sm text-[var(--c-text-muted)]"
 									>
-										{{ event.data.location }}
+										{{ event.data.location || ($any(event)).location }}
 									</td>
 									<td
 										class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]"
@@ -86,6 +86,14 @@
 										class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6"
 									>
 										<div class="flex justify-end gap-2">
+											<a
+												[routerLink]="['/event', event._id]"
+												target="_blank"
+												class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+											>
+												<span class="material-symbols-outlined mr-1 text-sm">visibility</span>
+												Переглянути
+											</a>
 											<button
 												(click)="openEditModal(event)"
 												class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
@@ -101,6 +109,12 @@
 												Видалити
 											</button>
 										</div>
+									</td>
+								</tr>
+							} @empty {
+								<tr>
+									<td colspan="5" class="px-6 py-10 text-center text-sm text-[var(--c-text-muted)]">
+										Подій не знайдено. Натисніть "Додати подію", щоб створити першу.
 									</td>
 								</tr>
 							}
@@ -170,6 +184,27 @@
 							required
 							class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
 						/>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Ціна (0 = Безкоштовно)</label>
+							<input
+								type="number"
+								[(ngModel)]="form.price"
+								name="price"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-[var(--c-text-muted)] mb-1">Макс. місць (0 = Без обмежень)</label>
+							<input
+								type="number"
+								[(ngModel)]="form.maxSeats"
+								name="maxSeats"
+								class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
+							/>
+						</div>
 					</div>
 
 					<div>

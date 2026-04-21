@@ -1,6 +1,8 @@
-import { CrudDocument } from 'wacom';
+import { CrudDocument } from '@wawjs/ngx-crud';
 
 export interface Event extends CrudDocument<Event> {
+	name?: string;
+	description?: string;
 	data: {
 		title: string;
 		description: string;

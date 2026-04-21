@@ -6,9 +6,10 @@ import {
 	provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withInMemoryScrolling, withComponentInputBinding } from '@angular/router';
 import Aura from '@primeuix/themes/aura';
 import { provideNgxHttp } from '@wawjs/ngx-http';
+import { provideNgxCrud } from '@wawjs/ngx-crud';
 import { provideTranslate } from '@wawjs/ngx-translate';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
@@ -22,7 +23,11 @@ export const appConfig: ApplicationConfig = {
 	providers: [
 		provideBrowserGlobalErrorListeners(),
 		provideZonelessChangeDetection(),
-		provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+		provideRouter(
+			routes,
+			withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+			withComponentInputBinding(),
+		),
 		provideHttpClient(withFetch()),
 		provideClientHydration(withEventReplay()),
 		providePrimeNG({
@@ -34,6 +39,7 @@ export const appConfig: ApplicationConfig = {
 			},
 		}),
 		provideNgxHttp(wacomConfig),
+		provideNgxCrud(wacomConfig),
 		provideTranslate(),
 		{
 			provide: APP_INITIALIZER,

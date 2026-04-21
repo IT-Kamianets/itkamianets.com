@@ -5,12 +5,12 @@ import { EventService } from '../../event.service';
 import { EventBookingService } from '../../event-booking.service';
 import { Event, EventBooking } from '../../event.interface';
 import { UserService } from '../../../user/user.service';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-event',
 	standalone: true,
-	imports: [FormsModule, RouterLink],
+	imports: [FormsModule, RouterLink, CommonModule],
 	templateUrl: './event.component.html',
 	styleUrl: './event.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,15 +23,14 @@ export class EventComponent implements OnInit {
 
 	readonly id = input.required<string>();
 
-	protected readonly events = toSignal(this._eventService.events, { initialValue: [] });
-
 	protected readonly event = computed(() => {
 		const id = this.id();
-		return this.events().find((e: Event) => e._id === id) || null;
+		return this._eventService.events().find((e: Event) => e._id === id) || null;
 	});
 
 	protected readonly isRegistering = signal(false);
 	protected readonly registrationSuccess = signal(false);
+	protected readonly linkCopied = signal(false);
 
 	protected regForm = {
 		name: '',
@@ -78,6 +77,14 @@ export class EventComponent implements OnInit {
 		this._eventBookingService.create(booking as EventBooking).subscribe(() => {
 			this.registrationSuccess.set(true);
 			this.isRegistering.set(false);
+		});
+	}
+
+	copyLink() {
+		const url = window.location.href;
+		navigator.clipboard.writeText(url).then(() => {
+			this.linkCopied.set(true);
+			setTimeout(() => this.linkCopied.set(false), 2000);
 		});
 	}
 }
