@@ -1,12 +1,19 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	OnInit,
+	computed,
+	inject,
+	signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CompanyService } from '../../../company/company.service';
-import { ReviewService } from '../../../company/review.service';
+import { getReviews } from '../../api/reviewApi';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
 
 interface ReviewListItem {
-	id: number;
+	id: string;
 	author: string;
 	companyId: string;
 	companyName: string;
@@ -19,6 +26,25 @@ interface ReviewListItem {
 	isVerifiedCompany: boolean;
 }
 
+interface ApiReviewItem {
+	_id?: string;
+	id?: number | string;
+	data?: {
+		status?: string;
+		author?: string;
+		companyId?: string;
+		rating?: number | string;
+		date?: string;
+		text?: string;
+	};
+	status?: string;
+	author?: string;
+	companyId?: string;
+	rating?: number | string;
+	date?: string;
+	text?: string;
+}
+
 @Component({
 	selector: 'app-reviews',
 	imports: [BreadcrumbComponent, DatePipe, DecimalPipe, RouterLink],
@@ -26,9 +52,9 @@ interface ReviewListItem {
 	styleUrl: './reviews.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReviewsComponent {
-	private readonly _reviewService = inject(ReviewService);
+export class ReviewsComponent implements OnInit {
 	private readonly _companyService = inject(CompanyService);
+	private readonly _reviews = signal<ApiReviewItem[]>([]);
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
 	protected readonly breadcrumbs: Crumb[] = [
@@ -39,27 +65,39 @@ export class ReviewsComponent {
 	protected readonly reviewItems = computed<ReviewListItem[]>(() => {
 		const companies = this._companyService.companies();
 
-		return [...this._reviewService.publishedReviews()]
-			.sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime())
+		return [...this._reviews()]
+			.filter((review) => review.data?.status === 'published')
+			.sort((left, right) => {
+				const leftDate = left.data?.date || left.date || '';
+				const rightDate = right.data?.date || right.date || '';
+
+				return new Date(rightDate).getTime() - new Date(leftDate).getTime();
+			})
 			.map((review) => {
-				const company = companies.find((item) => item.id === review.companyId) || null;
+				const companyId = review.data?.companyId || review.companyId || '';
+				const company = companies.find((item) => item.id === companyId) || null;
+				const author = review.data?.author || review.author || 'Невідомий автор';
+				const text = review.data?.text || review.text || '';
+				const date = review.data?.date || review.date || new Date().toISOString();
+				const rating = this._normalizeRating(review.data?.rating || review.rating);
 
 				return {
-					id: review.id,
-					author: review.author,
-					companyId: review.companyId,
+					id: String(review._id || review.id || ''),
+					author,
+					companyId,
 					companyName: company?.name || 'Компанія з каталогу',
 					companyType: company?.type || 'Компанія',
 					companyDescription:
 						company?.shortDescription ||
 						'Команда з каталогу IT-Kamianets, для якої вже є публічні клієнтські відгуки.',
-					rating: review.rating,
-					date: review.date,
-					text: review.text,
-					excerpt: this._createExcerpt(review.text),
+					rating,
+					date,
+					text,
+					excerpt: this._createExcerpt(text),
 					isVerifiedCompany: !!company?.verified,
 				};
-			});
+			})
+			.filter((review) => Boolean(review.id));
 	});
 
 	protected readonly averageRating = computed(() => {
@@ -80,6 +118,12 @@ export class ReviewsComponent {
 		() => this.reviewItems().filter((review) => review.rating === 5).length,
 	);
 
+	async ngOnInit() {
+		const reviews = await getReviews<ApiReviewItem[]>();
+
+		this._reviews.set(Array.isArray(reviews) ? reviews : []);
+	}
+
 	protected trackReview(_index: number, review: ReviewListItem) {
 		return review.id;
 	}
@@ -90,5 +134,11 @@ export class ReviewsComponent {
 		}
 
 		return `${text.slice(0, 177).trimEnd()}...`;
+	}
+
+	private _normalizeRating(value: number | string | undefined): 1 | 2 | 3 | 4 | 5 {
+		const normalized = Math.min(5, Math.max(1, Number(value) || 5));
+
+		return normalized as 1 | 2 | 3 | 4 | 5;
 	}
 }

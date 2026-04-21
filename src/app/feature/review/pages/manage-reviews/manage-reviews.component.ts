@@ -3,6 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	OnInit,
 	afterNextRender,
 	computed,
 	inject,
@@ -14,7 +15,12 @@ import { RouterLink } from '@angular/router';
 import { Company } from '../../../company/company.interface';
 import { CompanyService } from '../../../company/company.service';
 import { Review } from '../../../company/review.interface';
-import { ReviewService } from '../../../company/review.service';
+import {
+	createReview,
+	deleteReview,
+	getReviews,
+	updateReview,
+} from '../../api/reviewApi';
 
 interface ReviewFormValue {
 	companyId: string;
@@ -33,6 +39,31 @@ interface ReviewCompanyOption {
 	reviewCount: number;
 }
 
+interface ApiReviewItem {
+	_id?: string;
+	id?: number | string;
+	data?: {
+		author?: string;
+		companyId?: string;
+		rating?: number | string;
+		text?: string;
+		date?: string;
+		status?: string;
+	};
+}
+
+interface ManageReviewItem {
+	id: string;
+	apiId: string;
+	companyId: string;
+	author: string;
+	rating: Review['rating'];
+	text: string;
+	date: string;
+	status: Review['status'];
+	rawStatus: string;
+}
+
 type ReviewFilter = 'all' | 'approved' | 'pending' | 'rejected';
 
 @Component({
@@ -42,11 +73,11 @@ type ReviewFilter = 'all' | 'approved' | 'pending' | 'rejected';
 	styleUrl: './manage-reviews.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageReviewsComponent {
-	private readonly _reviewService = inject(ReviewService);
+export class ManageReviewsComponent implements OnInit {
 	private readonly _companyService = inject(CompanyService);
 	private readonly _formPanel = viewChild<ElementRef<HTMLFormElement>>('formPanel');
 	private readonly _authorInput = viewChild<ElementRef<HTMLInputElement>>('authorInput');
+	private readonly _reviews = signal<ManageReviewItem[]>([]);
 	private _formHighlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
@@ -55,9 +86,7 @@ export class ManageReviewsComponent {
 	protected readonly companyOptions = computed<ReviewCompanyOption[]>(() =>
 		this.companies()
 			.map((company) => {
-				const reviewCount = this._reviewService
-					.reviews()
-					.filter((review) => review.companyId === company.id).length;
+				const reviewCount = this._reviews().filter((review) => review.companyId === company.id).length;
 
 				return {
 					id: company.id,
@@ -70,7 +99,7 @@ export class ManageReviewsComponent {
 			.sort((left, right) => left.name.localeCompare(right.name, 'uk')),
 	);
 	protected readonly reviewCounts = computed(() => {
-		const reviews = this._reviewService.reviews();
+		const reviews = this._reviews();
 
 		return {
 			all: reviews.length,
@@ -83,7 +112,7 @@ export class ManageReviewsComponent {
 		const query = this.searchQuery().trim().toLowerCase();
 		const status = this.activeFilter();
 
-		return [...this._reviewService.reviews()]
+		return [...this._reviews()]
 			.filter((review) => {
 				if (status !== 'all' && review.status !== status) {
 					return false;
@@ -115,10 +144,14 @@ export class ManageReviewsComponent {
 
 	protected readonly activeFilter = signal<ReviewFilter>('all');
 	protected readonly searchQuery = signal('');
-	protected readonly editingReviewId = signal<number | null>(null);
+	protected readonly editingReviewId = signal<string | null>(null);
 	protected readonly highlightForm = signal(false);
 	protected readonly isFormVisible = signal(false);
 	protected readonly form = signal<ReviewFormValue>(this._createEmptyForm());
+
+	async ngOnInit() {
+		await this._refreshReviews();
+	}
 
 	protected startCreate() {
 		this.isFormVisible.set(true);
@@ -127,7 +160,7 @@ export class ManageReviewsComponent {
 		this._scrollToForm();
 	}
 
-	protected startEdit(review: Review) {
+	protected startEdit(review: ManageReviewItem) {
 		this.isFormVisible.set(true);
 		this.editingReviewId.set(review.id);
 		this.form.set({
@@ -141,52 +174,60 @@ export class ManageReviewsComponent {
 		this._scrollToForm();
 	}
 
-	protected save() {
+	protected async save() {
 		const value = this.form();
 		const companyId =
-			value.companyId || this._companyService.createLocalCompany(value.customCompanyName);
+			value.customCompanyName.trim()
+				? this._companyService.createLocalCompany(value.customCompanyName)
+				: value.companyId;
 
 		if (!companyId || !value.author.trim() || !value.text.trim() || !value.date) {
 			return;
 		}
 
-		const existingReview = this.editingReviewId()
-			? this._reviewService.getById(this.editingReviewId()!)()
-			: null;
-		const payload: Omit<Review, 'id'> = {
-			companyId,
-			author: value.author.trim(),
-			rating: value.rating,
-			text: value.text.trim(),
-			date: new Date(value.date).toISOString(),
-			status: existingReview?.status || 'pending',
+		const existingReview = this._getCurrentEditingReview();
+		const payload = {
+			data: {
+				author: value.author.trim(),
+				companyId,
+				rating: value.rating,
+				text: value.text.trim(),
+				date: new Date(value.date).toISOString(),
+				status: existingReview?.rawStatus || 'published',
+			},
 		};
 
-		const reviewId = this.editingReviewId();
-
-		if (reviewId) {
-			this._reviewService.update(reviewId, payload);
+		if (existingReview?.apiId) {
+			await updateReview(existingReview.apiId, payload);
 		} else {
-			this._reviewService.create(payload);
+			await createReview(payload);
 		}
 
+		await this._refreshReviews();
 		this.closeForm();
 	}
 
-	protected approve(review: Review) {
-		this._reviewService.setStatus(review.id, 'approved');
+	protected async approve(review: ManageReviewItem) {
+		await this._updateStatus(review.id, 'published');
 	}
 
-	protected reject(review: Review) {
-		this._reviewService.setStatus(review.id, 'rejected');
+	protected async reject(review: ManageReviewItem) {
+		await this._updateStatus(review.id, 'rejected');
 	}
 
-	protected markPending(review: Review) {
-		this._reviewService.setStatus(review.id, 'pending');
+	protected async markPending(review: ManageReviewItem) {
+		await this._updateStatus(review.id, 'pending');
 	}
 
-	protected remove(review: Review) {
-		this._reviewService.delete(review.id);
+	protected async remove(review: ManageReviewItem) {
+		const currentReview = this._findReview(review.id);
+
+		if (!currentReview?.apiId) {
+			return;
+		}
+
+		await deleteReview(currentReview.apiId);
+		await this._refreshReviews();
 
 		if (this.editingReviewId() === review.id) {
 			this.closeForm();
@@ -262,10 +303,8 @@ export class ManageReviewsComponent {
 	}
 
 	private _createEmptyForm(): ReviewFormValue {
-		const firstCompany = this.companyOptions()[0];
-
 		return {
-			companyId: firstCompany?.id || '',
+			companyId: '',
 			customCompanyName: '',
 			author: '',
 			rating: 5 as Review['rating'],
@@ -297,5 +336,80 @@ export class ManageReviewsComponent {
 
 	private _getCompany(companyId: string): Company | null {
 		return this.companies().find((company) => company.id === companyId) || null;
+	}
+
+	private async _refreshReviews() {
+		const reviews = await getReviews<ApiReviewItem[]>();
+
+		this._reviews.set(
+			Array.isArray(reviews) ? reviews.map((review) => this._mapReview(review)) : [],
+		);
+	}
+
+	private _mapReview(review: ApiReviewItem): ManageReviewItem {
+		const data = review.data || {};
+		const rawStatus = data.status || 'pending';
+		const routeId = String(review._id || review.id || '');
+
+		return {
+			apiId: String(review._id || ''),
+			id: routeId,
+			companyId: data.companyId || '',
+			author: data.author || 'Невідомий автор',
+			rating: this._normalizeRating(data.rating),
+			text: data.text || '',
+			date: data.date || new Date().toISOString(),
+			status: this._mapStatus(rawStatus),
+			rawStatus,
+		};
+	}
+
+	private _normalizeRating(value: number | string | undefined): 1 | 2 | 3 | 4 | 5 {
+		const normalized = Math.min(5, Math.max(1, Number(value) || 5));
+
+		return normalized as 1 | 2 | 3 | 4 | 5;
+	}
+
+	private _mapStatus(status: string): Review['status'] {
+		if (status === 'published') {
+			return 'approved';
+		}
+
+		if (status === 'rejected') {
+			return 'rejected';
+		}
+
+		return 'pending';
+	}
+
+	private _findReview(id: string) {
+		return this._reviews().find((review) => review.id === id) || null;
+	}
+
+	private _getCurrentEditingReview() {
+		const reviewId = this.editingReviewId();
+
+		return reviewId ? this._findReview(reviewId) : null;
+	}
+
+	private async _updateStatus(id: string, status: 'published' | 'pending' | 'rejected') {
+		const review = this._findReview(id);
+
+		if (!review?.apiId) {
+			return;
+		}
+
+		await updateReview(review.apiId, {
+			data: {
+				author: review.author,
+				companyId: review.companyId,
+				rating: review.rating,
+				text: review.text,
+				date: review.date,
+				status,
+			},
+		});
+
+		await this._refreshReviews();
 	}
 }
