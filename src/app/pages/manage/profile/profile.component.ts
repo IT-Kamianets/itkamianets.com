@@ -1,18 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, minLength, pattern, required, submit, FormField } from '@angular/forms/signals';
+import { form, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
+import { HttpService } from '@wawjs/ngx-http';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
-import { HttpService } from 'wacom';
 import { UserService } from '../../../feature/user/user.service';
-
-type ProfileFormModel = {
-	name: string;
-	phone: string;
-	bio: string;
-};
-
-type ProfilePayload = Partial<ProfileFormModel> & Record<string, unknown>;
+import { ProfileFormModel, ProfilePayload } from './profile.type';
 
 @Component({
 	imports: [FormField, InputText, Textarea, ButtonDirective],
@@ -62,36 +55,46 @@ export class ProfileComponent {
 
 			const payload = field().value();
 			await new Promise<void>((resolve) => {
-				this._http.post('/api/user/update', payload, (resp: unknown) => {
-					this.applyUser(resp, payload);
-					this.submitTone.set('success');
-					this.submitMessage.set('Профіль оновлено.');
-					this.isSaving.set(false);
-					resolve();
-				}, {
-					err: () => {
-						this.submitTone.set('error');
-						this.submitMessage.set('Не вдалося оновити профіль.');
+				this._http.post(
+					'/api/user/update',
+					payload,
+					(resp: unknown) => {
+						this.applyUser(resp, payload);
+						this.submitTone.set('success');
+						this.submitMessage.set('Профіль оновлено.');
 						this.isSaving.set(false);
 						resolve();
 					},
-				});
+					{
+						err: () => {
+							this.submitTone.set('error');
+							this.submitMessage.set('Не вдалося оновити профіль.');
+							this.isSaving.set(false);
+							resolve();
+						},
+					},
+				);
 			});
 		});
 	}
 
 	private fetchMe(): void {
 		this.isFetching.set(true);
-		this._http.post('/api/user/fetchme', {}, (resp: unknown) => {
-			this.isFetching.set(false);
-			this.applyUser(resp);
-		}, {
-			err: () => {
+		this._http.post(
+			'/api/user/fetchme',
+			{},
+			(resp: unknown) => {
 				this.isFetching.set(false);
-				this.submitTone.set('error');
-				this.submitMessage.set('Не вдалося завантажити дані профілю.');
+				this.applyUser(resp);
 			},
-		});
+			{
+				err: () => {
+					this.isFetching.set(false);
+					this.submitTone.set('error');
+					this.submitMessage.set('Не вдалося завантажити дані профілю.');
+				},
+			},
+		);
 	}
 
 	private applyUser(resp: unknown, fallback?: ProfileFormModel): void {

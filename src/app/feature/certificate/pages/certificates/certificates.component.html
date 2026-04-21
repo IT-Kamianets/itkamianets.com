@@ -1,0 +1,84 @@
+<div class="certificates-page">
+	<!-- Page Hero -->
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Сертифікати</span>
+			<h1 class="page-hero__title">Публічний Реєстр Сертифікатів</h1>
+			<p class="page-hero__subtitle">
+				Тут ви знайдете всі видані сертифікати наших випускників та учасників
+			</p>
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<!-- Filters -->
+		<div class="certificates-filters">
+			@for (cat of categories; track cat) {
+				<button
+					class="certificates-filter"
+					[class.certificates-filter--active]="activeFilter() === cat"
+					(click)="setFilter(cat)"
+				>
+					{{
+						cat === 'All'
+							? 'Усі'
+							: cat === 'Classic'
+								? 'Класичні'
+								: cat === 'Modern'
+									? 'Сучасні'
+									: 'Мінімалістичні'
+					}}
+				</button>
+			}
+		</div>
+
+		<!-- Certificates Grid -->
+		<div class="certificates-grid">
+			@for (cert of filteredCertificates; track cert._id) {
+				<a [routerLink]="['/certificate', cert._id]" class="certificate-card">
+					<div class="certificate-card__img">
+						<img
+							[src]="'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&h=400&fit=crop'"
+							[alt]="cert.data?.['title'] || 'Сертифікат'"
+							loading="lazy"
+						/>
+						<span class="certificate-card__badge">{{
+							getCategoryLabel(cert.data?.templateStyle)
+						}}</span>
+					</div>
+					<div class="certificate-card__body">
+						@if (cert.data?.['issueDate']) {
+							<span class="certificate-card__date">{{
+								cert.data?.['issueDate'] | date: 'longDate'
+							}}</span>
+						}
+						<h3 class="certificate-card__title">
+							{{ cert.data?.['title'] || 'Документ' }}
+						</h3>
+						<p class="certificate-card__recipient">
+							{{ cert.data?.['recipientName'] || 'Невідомий отримувач' }}
+						</p>
+					</div>
+				</a>
+			} @empty {
+				<div class="empty-state">
+					<div class="empty-state__icon">
+						<span class="material-symbols-outlined" aria-hidden="true"
+							>mark_email_unread</span
+						>
+					</div>
+					<h3 class="empty-state__title">Немає сертифікатів</h3>
+					<p class="empty-state__text">
+						Реєстр поки порожній. Найближчим часом ми додамо інформацію про видані
+						сертифікати.
+					</p>
+				</div>
+			}
+		</div>
+	</div>
+</div>

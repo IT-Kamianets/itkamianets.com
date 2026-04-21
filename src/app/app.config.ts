@@ -8,10 +8,11 @@ import {
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import Aura from '@primeuix/themes/aura';
+import { provideNgxHttp } from '@wawjs/ngx-http';
+import { provideTranslate } from '@wawjs/ngx-translate';
 import { providePrimeNG } from 'primeng/config';
-import { provideTranslate, provideWacom } from 'wacom';
-import { BootstrapService } from './feature/bootstrap/bootstrap.service';
 import { routes } from './app.routes';
+import { BootstrapService } from './feature/bootstrap/bootstrap.service';
 import { wacomConfig } from './wacom.config';
 
 const initializeBootstrapData = (bootstrapService: BootstrapService) => () =>
@@ -32,7 +33,7 @@ export const appConfig: ApplicationConfig = {
 				},
 			},
 		}),
-		provideWacom(wacomConfig),
+		provideNgxHttp(wacomConfig),
 		provideTranslate(),
 		{
 			provide: APP_INITIALIZER,
