@@ -1,0 +1,171 @@
+<section class="cv-generate">
+	<header class="cv-generate__header">
+		<h1 class="cv-generate__title">Генерація CV</h1>
+		<p class="cv-generate__subtitle">Створіть професійне CV на основі введених даних та збережіть його у PDF.</p>
+	</header>
+
+	<section class="cv-panel" [class.cv-panel--preview]="viewMode() === 'preview'">
+		<div class="cv-panel__titlebar">
+			<button type="button" class="cv-panel__nav-btn" (click)="goToForm()" [disabled]="!canReturnToForm()">
+				← Повернутися до форми
+			</button>
+			<h2 class="cv-panel__title">{{ viewMode() === 'form' ? 'Вхідні дані' : 'Вихідні дані' }}</h2>
+			<button type="button" class="cv-panel__nav-btn" (click)="goToPreview()" [disabled]="viewMode() === 'preview' || !canViewPreview()">
+				Переглянути CV →
+			</button>
+		</div>
+
+		<div class="cv-pane cv-pane--form" [class.cv-pane--hidden]="viewMode() !== 'form'">
+			<form class="cv-form" [formGroup]="form" (ngSubmit)="generateCv()">
+				<div class="cv-form__row cv-form__row--three">
+					<label class="cv-field">
+						<span>Тема CV</span>
+						<div class="multi-select multi-select--theme">
+							<button type="button" class="multi-select__toggle" (click)="toggleThemeDropdown()">
+								<span class="multi-select__value">{{ selectedThemeLabel() }}</span>
+								<span class="material-symbols-outlined" aria-hidden="true">{{ themeOpen() ? 'expand_less' : 'expand_more' }}</span>
+							</button>
+							<div class="multi-select__panel" [class.multi-select__panel--open]="themeOpen()">
+								@for (option of themeOptions; track option.value) {
+									<button type="button" class="multi-select__option" [class.multi-select__option--selected]="form.controls.theme.value === option.value" (click)="selectTheme(option.value)">
+										<span>{{ option.label }}</span>
+										@if (form.controls.theme.value === option.value) {
+											<span class="material-symbols-outlined multi-select__check" aria-hidden="true">check</span>
+										}
+									</button>
+								}
+							</div>
+						</div>
+						<p class="cv-field__error">{{ controlError(form.controls.theme, 'Тема CV') }}</p>
+					</label>
+
+					<div class="cv-field">
+					<span>Фото профілю</span>
+					<label class="cv-upload">
+						<input type="file" accept="image/*" (change)="onImageSelected($event)" />
+						<span class="cv-upload__button">Завантажити фото</span>
+						<span class="cv-upload__file">{{ selectedImageName() }}</span>
+					</label>
+					<p class="cv-field__error">{{ controlError(form.controls.imageBase64, 'Фото профілю') }}</p>
+					</div>
+
+					<label class="cv-field">
+						<span>Прізвище та ім'я</span>
+						<input type="text" formControlName="fullName" placeholder="Шевченко Тарас" />
+						<p class="cv-field__error">{{ controlError(form.controls.fullName, 'Прізвище та ім\'я') }}</p>
+					</label>
+				</div>
+
+				<div class="cv-form__row cv-form__row--three">
+					<label class="cv-field">
+						<span>Вік</span>
+						<input type="text" formControlName="age" inputmode="numeric" placeholder="21" />
+						<p class="cv-field__error">{{ controlError(form.controls.age, 'Вік') }}</p>
+					</label>
+					<label class="cv-field">
+						<span>Роль</span>
+						<input type="text" formControlName="role" placeholder="frontend-розробник" />
+						<p class="cv-field__error">{{ controlError(form.controls.role, 'Роль') }}</p>
+					</label>
+					<label class="cv-field">
+						<span>Номер телефону</span>
+						<input type="text" formControlName="phone" inputmode="tel" placeholder="+380991234567" />
+						<p class="cv-field__error">{{ controlError(form.controls.phone, 'Номер телефону') }}</p>
+					</label>
+				</div>
+
+				<div class="cv-form__row cv-form__row--three">
+					<label class="cv-field">
+						<span>Електронна пошта</span>
+						<input type="email" formControlName="email" placeholder="name@gmail.com" />
+						<p class="cv-field__error">{{ controlError(form.controls.email, 'Електронна пошта') }}</p>
+					</label>
+					<label class="cv-field">
+						<span>Посилання на GitHub</span>
+						<input type="text" formControlName="githubUrl" placeholder="https://github.com/username" />
+						<p class="cv-field__error">{{ controlError(form.controls.githubUrl, 'Посилання на GitHub') }}</p>
+					</label>
+					<label class="cv-field">
+						<span>Посилання на LinkedIn</span>
+						<input type="text" formControlName="linkedinUrl" placeholder="https://linkedin.com/in/username" />
+						<p class="cv-field__error">{{ controlError(form.controls.linkedinUrl, 'Посилання на LinkedIn') }}</p>
+					</label>
+				</div>
+
+				<div class="cv-form__row cv-form__row--two">
+					<label class="cv-field cv-field--textarea">
+						<span>Про себе</span>
+						<textarea rows="4" formControlName="about"></textarea>
+						<p class="cv-field__error">{{ controlError(form.controls.about, 'Про себе') }}</p>
+					</label>
+
+					<label class="cv-field cv-field--textarea">
+						<span>Професійна діяльність (необов'язково)</span>
+						<textarea rows="4" formControlName="professionalActivity"></textarea>
+						<p class="cv-field__error"></p>
+					</label>
+				</div>
+
+				<div class="cv-form__row cv-form__row--two">
+					<label class="cv-field cv-field--textarea">
+						<span>Hard skills (через кому, не більше 20)</span>
+						<textarea rows="3" formControlName="hardSkills" placeholder="Angular, TypeScript, RxJS"></textarea>
+						<p class="cv-field__error">{{ controlError(form.controls.hardSkills, 'Hard skills') }}</p>
+					</label>
+
+					<label class="cv-field cv-field--textarea">
+						<span>Soft skills (через кому, не більше 20)</span>
+						<textarea rows="3" formControlName="softSkills" placeholder="Комунікація, Робота в команді, Тайм-менеджмент"></textarea>
+						<p class="cv-field__error">{{ controlError(form.controls.softSkills, 'Soft skills') }}</p>
+					</label>
+				</div>
+			</form>
+		</div>
+
+		<div class="cv-pane cv-pane--preview" [class.cv-pane--hidden]="viewMode() !== 'preview'">
+			<div class="cv-preview" [class.cv-preview--ready]="state() === 'done'">
+				@if (state() === 'generating') {
+					<div class="cv-preview__loading">
+						<div class="cv-spinner" aria-hidden="true"></div>
+						<p>CV генерується, зачекайте...</p>
+						<div class="cv-loading-bar" aria-hidden="true"><span></span></div>
+					</div>
+				}
+
+				@if (state() === 'done' && safePdfUrl()) {
+					<iframe
+						class="cv-preview__frame"
+						[src]="safePdfUrl()"
+						title="Згенероване CV"
+						width="100%"
+						height="100%"
+						style="border: none;"
+					></iframe>
+				}
+			</div>
+		</div>
+	</section>
+
+	@if (errorMessage()) {
+		<p class="cv-generate__error">{{ errorMessage() }}</p>
+	}
+
+	<footer class="cv-generate__actions">
+		<button type="button" class="cv-btn" (click)="clear()" [disabled]="!canClear()">
+			<span class="material-symbols-outlined" aria-hidden="true">mop</span>
+			Очистити
+		</button>
+		<button type="button" class="cv-btn cv-btn--primary" (click)="generateCv()" [disabled]="!canGenerate()">
+			<span class="material-symbols-outlined" aria-hidden="true">description</span>
+			Згенерувати CV
+		</button>
+		<button type="button" class="cv-btn cv-btn--secondary" (click)="download()" [disabled]="!canDownload()">
+			<span class="material-symbols-outlined" aria-hidden="true">download</span>
+			Завантажити
+		</button>
+		<button type="button" class="cv-btn cv-btn--secondary" (click)="share()" [disabled]="!canDownload()">
+			<span class="material-symbols-outlined" aria-hidden="true">ios_share</span>
+			Поділитися
+		</button>
+	</footer>
+</section>

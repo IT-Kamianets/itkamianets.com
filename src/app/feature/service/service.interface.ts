@@ -26,3 +26,10 @@ export interface Service {
 	timeTo: number;
 	timeUnit: 'days' | 'weeks' | 'months';
 }
+
+export interface ServiceCategory {
+	id: string;
+	name: string;
+	description: string;
+	services: Service[];
+}

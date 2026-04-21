@@ -12,45 +12,69 @@
 	</section>
 
 	<div class="container">
-		<div class="services-list">
-			@for (s of services(); track s.id) {
-				<div class="service-card">
-					<div class="service-card__img">
-						<img [src]="s.image" [alt]="s.title" loading="lazy" />
-						<span class="service-card__badge">{{ s.category }}</span>
+		@for (category of categories(); track category.id) {
+			<div class="category-section">
+				<div 
+					class="category-header" 
+					role="button" 
+					tabindex="0" 
+					(click)="toggleCategory(category.id)"
+					(keyup.enter)="toggleCategory(category.id)"
+					(keyup.space)="toggleCategory(category.id)"
+					[attr.aria-expanded]="!isCollapsed(category.id)"
+				>
+					<div class="category-header__info">
+						<h2 class="category-title">{{ category.name }}</h2>
+						<p class="category-desc">{{ category.description }}</p>
 					</div>
-					<div class="service-card__body">
-						<h3 class="service-card__title">{{ s.title }}</h3>
-						<p class="service-card__desc">{{ s.shortDescription }}</p>
-
-						<ul class="service-card__features">
-							@for (f of s.features.slice(0, 3); track f) {
-								<li>
-									<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
-									{{ f }}
-								</li>
-							}
-						</ul>
-
-						<div class="service-card__footer">
-							<div class="service-card__price">
-								@if (s.priceFrom === 0) {
-									<span class="price-free">Безкоштовно</span>
-								} @else {
-									<span class="price-amount">{{ s.priceFrom | number }} {{ s.currency }}</span>
-									@if (s.subscriptionFee) {
-										<span class="price-sub">+ {{ s.subscriptionFee }} {{ s.currency }}/міс</span>
-									}
-								}
-							</div>
-							<button class="more-btn" (click)="goToDetail(s.id)">
-								Дізнатися більше
-								<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-							</button>
-						</div>
-					</div>
+					<span 
+						class="material-symbols-outlined category-header__icon" 
+						[class.icon-collapsed]="isCollapsed(category.id)"
+					>
+						expand_less
+					</span>
 				</div>
-			}
-		</div>
+				@if (!isCollapsed(category.id)) {
+					<div class="services-list">
+					@for (s of category.services; track s.id) {
+						<div class="service-card">
+							<div class="service-card__side">
+								<img class="service-card__thumb" [src]="s.image" [alt]="s.title" loading="lazy" />
+								<div class="service-card__price">
+									@if (s.priceFrom === 0 && !s.subscriptionFee) {
+										<span class="price-free">Безкоштовно</span>
+									} @else if (s.priceFrom === 0 && s.subscriptionFee) {
+										<span class="price-amount">{{ s.subscriptionFee | number }} {{ s.currency }}</span>
+										<span class="price-sub">/ міс</span>
+									} @else {
+										<span class="price-amount">{{ s.priceFrom | number }}</span>
+										<span class="price-sub">{{ s.currency }}{{ s.subscriptionFee ? ' + ' + (s.subscriptionFee | number) + '/міс' : '' }}</span>
+									}
+								</div>
+							</div>
+							<div class="service-card__body">
+								<div class="service-card__head">
+									<h3 class="service-card__title">{{ s.title }}</h3>
+									<p class="service-card__desc">{{ s.shortDescription }}</p>
+								</div>
+								<ul class="service-card__features">
+									@for (f of s.features.slice(0, 4); track f) {
+										<li>
+											<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+											{{ f }}
+										</li>
+									}
+								</ul>
+								<button class="more-btn" (click)="goToDetail(s.id)" [attr.aria-label]="'Детальніше про ' + s.title">
+									Детальніше
+									<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+								</button>
+							</div>
+						</div>
+					}
+				</div>
+				}
+			</div>
+		}
 	</div>
 </div>

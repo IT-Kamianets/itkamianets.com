@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UserService } from '../../feature/user/user.service';
-import { ThemeMode, ThemeService } from 'wacom';
+import { ThemeMode, ThemeService } from '@wawjs/ngx-ui';
 import { MenuItem } from '../../feature/item/item.interface';
+import { UserService } from '../../feature/user/user.service';
 
 @Component({
 	selector: 'app-public-header',
@@ -15,13 +15,6 @@ export class HeaderComponent {
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
 	protected readonly menuItems: MenuItem[] = [
-		{
-			_id: 'menu-home',
-			type: 'menu',
-			title: 'Головна',
-			href: '/',
-			options: { menu: { exact: true } },
-		},
 		{
 			_id: 'menu-services',
 			type: 'menu',
@@ -49,7 +42,7 @@ export class HeaderComponent {
 		{
 			_id: 'menu-team',
 			type: 'menu',
-			title: 'Команда',
+			title: 'Наша команда',
 			href: '/team',
 		},
 		{
@@ -57,12 +50,6 @@ export class HeaderComponent {
 			type: 'menu',
 			title: 'Новини',
 			href: '/news',
-		},
-		{
-			_id: 'menu-businesses',
-			type: 'menu',
-			title: 'Бізнеси',
-			href: '/businesses',
 		},
 		{
 			_id: 'menu-merch',
