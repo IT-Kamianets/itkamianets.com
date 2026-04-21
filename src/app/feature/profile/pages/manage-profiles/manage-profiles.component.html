@@ -33,7 +33,9 @@
 									<span class="material-symbols-outlined" aria-hidden="true">person</span>
 								</div>
 								}
-								<span class="table-profile__name">{{ person.name }}</span>
+								<a [routerLink]="['/profile', person._id]" target="_blank" rel="noopener noreferrer"
+						class="table-profile__name table-profile__name--link"
+						title="Відкрити публічний профіль">{{ person.name }}</a>
 							</div>
 						</td>
 						<td class="col-roles">

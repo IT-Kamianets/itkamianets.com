@@ -9,26 +9,36 @@ import {
 	signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ProfileService } from '../../profile.service';
 import { ProjectService } from '../../../project/project.service';
 import { Profile, ProfileSocials } from '../../profile.types';
 import { Project } from '../../../project/project.interface';
 
-/** Заготовки підтримуваних соцмереж */
-const SOCIAL_PRESETS: { key: string; label: string; placeholder: string; color: string }[] = [
-	{ key: 'linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/...', color: '#0a66c2' },
-	{ key: 'github', label: 'GitHub', placeholder: 'https://github.com/...', color: '#333' },
-	{ key: 'upwork', label: 'Upwork', placeholder: 'https://upwork.com/freelancers/...', color: '#14a800' },
-	{ key: 'telegram', label: 'Telegram', placeholder: 'https://t.me/...', color: '#229ED9' },
-	{ key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/...', color: '#E1306C' },
-	{ key: 'tiktok', label: 'TikTok', placeholder: 'https://tiktok.com/@...', color: '#000000' },
-	{ key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/...', color: '#1877F2' },
-	{ key: 'twitter', label: 'Twitter / X', placeholder: 'https://x.com/...', color: '#000' },
+interface SocialPreset {
+	key: string;
+	label: string;
+	placeholder: string;
+	color: string;
+}
+
+const SOCIAL_PRESETS: SocialPreset[] = [
+	{ key: 'linkedin',  label: 'LinkedIn',    placeholder: 'https://linkedin.com/in/...',       color: '#0a66c2' },
+	{ key: 'github',    label: 'GitHub',      placeholder: 'https://github.com/...',            color: '#333'    },
+	{ key: 'upwork',    label: 'Upwork',      placeholder: 'https://upwork.com/freelancers/...', color: '#14a800' },
+	{ key: 'telegram',  label: 'Telegram',    placeholder: 'https://t.me/...',                  color: '#229ED9' },
+	{ key: 'instagram', label: 'Instagram',   placeholder: 'https://instagram.com/...',         color: '#E1306C' },
+	{ key: 'tiktok',    label: 'TikTok',      placeholder: 'https://tiktok.com/@...',           color: '#000000' },
+	{ key: 'facebook',  label: 'Facebook',    placeholder: 'https://facebook.com/...',          color: '#1877F2' },
+	{ key: 'twitter',   label: 'Twitter / X', placeholder: 'https://x.com/...',                color: '#000'    },
 ];
+
+type TagField = 'roles' | 'achievements';
+type TagInput = 'roleInput' | 'achievementInput';
 
 @Component({
 	selector: 'app-manage-profiles',
-	imports: [FormsModule],
+	imports: [FormsModule, RouterLink],
 	templateUrl: './manage-profiles.component.html',
 	styleUrl: './manage-profiles.component.scss',
 	changeDetection: ChangeDetectionStrategy.Default,
@@ -42,53 +52,36 @@ export class ManageProfilesComponent implements OnInit {
 	readonly profiles = this._profileService.profiles;
 	readonly isModalOpen = signal(false);
 	readonly editingProfile = signal<Profile | null>(null);
+	readonly allEvents = this._profileService.allEvents;
+	readonly socialPresets = SOCIAL_PRESETS;
 
-	/** Всі доступні проєкти для вибору через чекбокси */
 	allProjects = signal<Project[]>([]);
 	projectsLoading = signal(false);
-
-	/** Всі доступні івенти для вибору (отримуються напряму з ProfileService, де є HttpService для них) */
-	readonly allEvents = this._profileService.allEvents;
-
-	/** Пошук по проєктах */
 	projectSearch = signal('');
-	/** Пошук по заходах */
 	eventSearch = signal('');
-
-	/** Стан випадаючого списку проєктів */
 	projectDropdownOpen = signal(false);
-	/** Стан випадаючого списку заходів */
 	eventDropdownOpen = signal(false);
-
-	/** Заготовки соцмереж */
-	readonly socialPresets = SOCIAL_PRESETS;
-	/** Які соцмережі активовані (показано поле) */
 	activeSocials = new Set<string>();
 
-	// Main form fields
-	form = this.getEmptyForm();
-
-	// Tag input buffers (залишаються для role/achievement)
+	form = this._emptyForm();
 	roleInput = '';
 	achievementInput = '';
 
-	/** Відфільтровані проєкти по рядку пошуку */
-	filteredProjects = computed(() => {
+	readonly filteredProjects = computed(() => {
 		const q = this.projectSearch().trim().toLowerCase();
-		if (!q) return this.allProjects();
-		return this.allProjects().filter((p) =>
-			p.data?.title?.toLowerCase().includes(q)
-		);
+		return q
+			? this.allProjects().filter((p) => p.data?.title?.toLowerCase().includes(q))
+			: this.allProjects();
 	});
 
-	/** Відфільтровані івенти по рядку пошуку */
-	filteredEvents = computed(() => {
+	readonly filteredEvents = computed(() => {
 		const q = this.eventSearch().trim().toLowerCase();
-		if (!q) return this.allEvents();
-		return this.allEvents().filter((e) =>
-			this.getEventTitle(e._id!).toLowerCase().includes(q)
-		);
+		return q
+			? this.allEvents().filter((e) => this.getEventTitle(e._id!).toLowerCase().includes(q))
+			: this.allEvents();
 	});
+
+	// ─── Lifecycle ──────────────────────────────────────────
 
 	ngOnInit(): void {
 		this.projectsLoading.set(true);
@@ -101,34 +94,19 @@ export class ManageProfilesComponent implements OnInit {
 		});
 	}
 
-	openAddModal() {
+	// ─── Modal ──────────────────────────────────────────────
+
+	openAddModal(): void {
 		this.editingProfile.set(null);
-		this.form = this.getEmptyForm();
+		this.form = this._emptyForm();
 		this.roleInput = '';
 		this.achievementInput = '';
-		this.activeSocials = new Set<string>();
-		this.isModalOpen.set(true);
-		document.body.style.overflow = 'hidden';
+		this.activeSocials = new Set();
+		this._openModal();
 	}
 
-	triggerFileInput() {
-		this.fileInputRef?.nativeElement.click();
-	}
-
-	onFileChange(event: Event) {
-		const input = event.target as HTMLInputElement;
-		const file = input.files?.[0];
-		if (!file) return;
-		const reader = new FileReader();
-		reader.onload = () => {
-			this.form = { ...this.form, avatar: reader.result as string };
-		};
-		reader.readAsDataURL(file);
-	}
-
-	openEditModal(profile: Profile) {
+	openEditModal(profile: Profile): void {
 		this.editingProfile.set(profile);
-
 		this.form = {
 			name: profile.name,
 			role: profile.role,
@@ -141,27 +119,37 @@ export class ManageProfilesComponent implements OnInit {
 			events: [...(profile.events ?? [])],
 			socials: { ...(profile.socials ?? {}) },
 		};
-
-		// Визначаємо які соцмережі вже заповнені -> активуємо чекбокси
-		this.activeSocials = new Set<string>(
+		this.activeSocials = new Set(
 			Object.entries(this.form.socials)
 				.filter(([, val]) => !!val)
-				.map(([key]) => key),
+				.map(([key]) => key)
 		);
-
 		this.roleInput = '';
 		this.achievementInput = '';
-		this.isModalOpen.set(true);
-		document.body.style.overflow = 'hidden';
+		this._openModal();
 	}
 
-	closeModal() {
+	closeModal(): void {
 		this.isModalOpen.set(false);
 		this.editingProfile.set(null);
 		document.body.style.overflow = '';
 	}
 
-	// --- Соцмережі ---
+	// ─── Avatar ─────────────────────────────────────────────
+
+	triggerFileInput(): void {
+		this.fileInputRef?.nativeElement.click();
+	}
+
+	onFileChange(event: Event): void {
+		const file = (event.target as HTMLInputElement).files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = () => { this.form = { ...this.form, avatar: reader.result as string }; };
+		reader.readAsDataURL(file);
+	}
+
+	// ─── Socials ────────────────────────────────────────────
 
 	isSocialActive(key: string): boolean {
 		return this.activeSocials.has(key);
@@ -173,9 +161,7 @@ export class ManageProfilesComponent implements OnInit {
 			delete this.form.socials[key];
 		} else {
 			this.activeSocials.add(key);
-			if (!this.form.socials[key]) {
-				this.form.socials[key] = '';
-			}
+			if (!this.form.socials[key]) this.form.socials[key] = '';
 		}
 	}
 
@@ -186,71 +172,60 @@ export class ManageProfilesComponent implements OnInit {
 			.map(([key, value]) => ({ key, value }));
 	}
 
-	// --- Проєкти ---
+	// ─── Projects ───────────────────────────────────────────
 
 	isProjectSelected(id: string): boolean {
 		return this.form.projects.includes(id);
 	}
 
 	toggleProject(id: string): void {
-		if (this.form.projects.includes(id)) {
-			this.form.projects = this.form.projects.filter((p) => p !== id);
-		} else {
-			this.form.projects = [...this.form.projects, id];
-		}
+		this.form.projects = this.form.projects.includes(id)
+			? this.form.projects.filter((p) => p !== id)
+			: [...this.form.projects, id];
 	}
 
 	removeProject(id: string): void {
-		if (!id) return;
-		this.form.projects = this.form.projects.filter((p) => p !== id);
+		if (id) this.form.projects = this.form.projects.filter((p) => p !== id);
 	}
 
 	toggleProjectDropdown(): void {
 		this.projectDropdownOpen.set(!this.projectDropdownOpen());
-		if (this.projectDropdownOpen()) {
-			this.eventDropdownOpen.set(false);
-		}
+		if (this.projectDropdownOpen()) this.eventDropdownOpen.set(false);
 	}
 
 	getProjectTitle(id: string): string {
 		return this.allProjects().find((p) => p._id === id)?.data?.title ?? id;
 	}
 
-	// --- Івенти ---
+	// ─── Events ─────────────────────────────────────────────
 
 	isEventSelected(id: string): boolean {
 		return this.form.events.includes(id);
 	}
 
 	toggleEvent(id: string): void {
-		if (this.form.events.includes(id)) {
-			this.form.events = this.form.events.filter((e) => e !== id);
-		} else {
-			this.form.events = [...this.form.events, id];
-		}
+		this.form.events = this.form.events.includes(id)
+			? this.form.events.filter((e) => e !== id)
+			: [...this.form.events, id];
 	}
 
 	removeEvent(id: string): void {
-		if (!id) return;
-		this.form.events = this.form.events.filter((e) => e !== id);
+		if (id) this.form.events = this.form.events.filter((e) => e !== id);
 	}
 
 	toggleEventDropdown(): void {
 		this.eventDropdownOpen.set(!this.eventDropdownOpen());
-		if (this.eventDropdownOpen()) {
-			this.projectDropdownOpen.set(false);
-		}
+		if (this.eventDropdownOpen()) this.projectDropdownOpen.set(false);
 	}
 
 	getEventTitle(id: string): string {
-		const evt: any = this.allEvents().find((e) => e._id === id);
-		if (!evt) return id;
-		return evt.title || evt.name || evt.data?.title || id;
+		const e = this.allEvents().find((ev) => ev._id === id) as any;
+		return e ? e.title ?? e.name ?? e.data?.title ?? id : id;
 	}
 
-	// --- Tag helpers ---
+	// ─── Tags ───────────────────────────────────────────────
 
-	addTag(field: 'roles' | 'achievements', inputKey: 'roleInput' | 'achievementInput') {
+	addTag(field: TagField, inputKey: TagInput): void {
 		const value = this[inputKey].trim();
 		if (!value) return;
 		if (!this.form[field].includes(value)) {
@@ -259,35 +234,30 @@ export class ManageProfilesComponent implements OnInit {
 		this[inputKey] = '';
 	}
 
-	removeTag(field: 'roles' | 'achievements', tag: string) {
+	removeTag(field: TagField, tag: string): void {
 		this.form[field] = this.form[field].filter((t) => t !== tag);
 	}
 
-	onTagKeydown(event: KeyboardEvent, field: 'roles' | 'achievements', inputKey: 'roleInput' | 'achievementInput') {
+	onTagKeydown(event: KeyboardEvent, field: TagField, inputKey: TagInput): void {
 		if (event.key === 'Enter') {
 			event.preventDefault();
 			this.addTag(field, inputKey);
 		}
 	}
 
-	save() {
-		const editing = this.editingProfile();
-		// Беремо першу роль з тегів; якщо немає — беремо поле role; якщо і воно порожнє — ім'я
-		const primaryRole = this.form.roles[0] || this.form.role || this.form.name;
+	// ─── Save / Delete ──────────────────────────────────────
 
+	save(): void {
+		const editing = this.editingProfile();
+		const primaryRole = this.form.roles[0] || this.form.role || this.form.name;
 		const cleanSocials: ProfileSocials = {};
+
 		for (const key of Array.from(this.activeSocials)) {
 			const val = this.form.socials[key]?.trim();
 			if (val) cleanSocials[key] = val;
 		}
 
-		const payload = {
-			...this.form,
-			role: primaryRole,
-			socials: cleanSocials,
-		};
-
-		console.log('[ManageProfiles] save payload:', payload);
+		const payload = { ...this.form, role: primaryRole, socials: cleanSocials };
 
 		if (editing) {
 			this._profileService.updateProfile({ ...editing, ...payload });
@@ -298,7 +268,7 @@ export class ManageProfilesComponent implements OnInit {
 		this.closeModal();
 	}
 
-	delete(id: string) {
+	delete(id: string): void {
 		if (confirm('Ви впевнені, що хочете видалити цей профіль?')) {
 			this._profileService.deleteProfile(id);
 		}
@@ -309,7 +279,14 @@ export class ManageProfilesComponent implements OnInit {
 		return avatar.includes('/') ? avatar : `developer/${avatar}.png`;
 	}
 
-	private getEmptyForm() {
+	// ─── Private helpers ────────────────────────────────────
+
+	private _openModal(): void {
+		this.isModalOpen.set(true);
+		document.body.style.overflow = 'hidden';
+	}
+
+	private _emptyForm() {
 		return {
 			name: '',
 			role: '',

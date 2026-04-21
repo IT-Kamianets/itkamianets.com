@@ -17,7 +17,11 @@
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 0 24px;
+	padding: 0 16px;
+
+	@media (min-width: 480px) {
+		padding: 0 24px;
+	}
 }
 
 /* ── Divider ── */
@@ -45,11 +49,15 @@
 /* ── Hero ── */
 .page-hero {
 	position: relative;
-	padding: 62px 0 50px;
+	padding: 40px 0 36px;
 	text-align: center;
 	background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=600&fit=crop');
 	background-size: cover;
 	background-position: center;
+
+	@media (min-width: 640px) {
+		padding: 62px 0 50px;
+	}
 }
 .page-hero .section-divider-bar {
 	position: absolute;
@@ -77,7 +85,7 @@
 	margin-bottom: 12px;
 }
 .page-hero__subtitle {
-	font-size: 1.05rem;
+	font-size: clamp(0.9rem, 2.5vw, 1.05rem);
 	color: rgba(255, 255, 255, 0.85);
 	line-height: 1.7;
 	max-width: 600px;
@@ -160,10 +168,10 @@
 	&:has(> .team-card:only-child) {
 		justify-content: center;
 	}
-}
-@media (max-width: 640px) {
-	.team-grid {
+
+	@media (max-width: 400px) {
 		grid-template-columns: 1fr;
+		gap: 16px;
 	}
 }
 
@@ -201,6 +209,11 @@
 	min-width: 300px;
 	border: 2px solid var(--c-primary);
 	box-shadow: var(--shadow-primary);
+
+	@media (max-width: 400px) {
+		min-width: 0;
+		width: 100%;
+	}
 
 	@media (hover: hover) {
 		&:hover {

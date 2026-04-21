@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, switchMap } from 'rxjs';
@@ -34,9 +34,7 @@ export class ProfileDetailComponent {
 	readonly profile = computed((): Profile | null | undefined => {
 		const id = this._routeId();
 		if (!id) return null;
-		const fromList = this._profileService.profiles().find((p) => p._id === id);
-		if (fromList) return fromList;
-		return this._fetchedProfile();
+		return this._profileService.profiles().find((p) => p._id === id) ?? this._fetchedProfile();
 	});
 
 	private readonly _allProjects = toSignal(this._projectService.getAll(), { initialValue: [] });
@@ -44,27 +42,24 @@ export class ProfileDetailComponent {
 
 	readonly profileProjects = computed(() => {
 		const ids = this.profile()?.projects ?? [];
-		if (!ids.length) return [];
-		return this._allProjects().filter((p) => p._id && ids.includes(p._id));
+		return ids.length ? this._allProjects().filter((p) => p._id && ids.includes(p._id)) : [];
 	});
 
 	readonly profileEvents = computed(() => {
 		const ids = this.profile()?.events ?? [];
-		if (!ids.length) return [];
-		return this._allEvents().filter((e) => e._id && ids.includes(e._id));
+		return ids.length ? this._allEvents().filter((e) => e._id && ids.includes(e._id)) : [];
 	});
 
-	readonly socialEntries = computed(() => {
-		const socials = this.profile()?.socials ?? {};
-		return Object.entries(socials)
+	readonly socialEntries = computed(() =>
+		Object.entries(this.profile()?.socials ?? {})
 			.filter(([, val]) => !!val)
 			.map(([key, value]) => ({
 				key,
 				value,
 				label: key.charAt(0).toUpperCase() + key.slice(1),
-				initial: this.getSocialInitial(key),
-			}));
-	});
+				initial: this._socialInitial(key),
+			}))
+	);
 
 	readonly profileRoles = computed(() => {
 		const p = this.profile();
@@ -74,7 +69,14 @@ export class ProfileDetailComponent {
 		return [];
 	});
 
-	getSocialInitial(key: string): string {
+	photoSrc(avatar: string | undefined): string {
+		if (!avatar) return '';
+		return avatar.includes('/') ? avatar : `developer/${avatar}.png`;
+	}
+
+	// ─── Private helpers ────────────────────────────────────
+
+	private _socialInitial(key: string): string {
 		const map: Record<string, string> = {
 			linkedin: 'in',
 			github: '{ }',
@@ -86,10 +88,5 @@ export class ProfileDetailComponent {
 			twitter: 'X',
 		};
 		return map[key] ?? key.slice(0, 2).toUpperCase();
-	}
-
-	photoSrc(avatar: string | undefined): string {
-		if (!avatar) return '';
-		return avatar.includes('/') ? avatar : `developer/${avatar}.png`;
 	}
 }

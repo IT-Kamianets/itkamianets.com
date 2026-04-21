@@ -196,6 +196,18 @@
 		font-size: 0.9rem;
 		font-weight: 600;
 		color: var(--c-text-secondary);
+
+		&--link {
+			text-decoration: none;
+			cursor: pointer;
+			transition: color 0.18s;
+
+			&:hover {
+				color: #2563eb;
+				text-decoration: underline;
+				text-underline-offset: 3px;
+			}
+		}
 	}
 }
 

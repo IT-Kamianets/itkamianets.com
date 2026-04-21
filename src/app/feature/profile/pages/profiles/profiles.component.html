@@ -17,7 +17,7 @@
 	<div class="container">
 		<!-- Фільтри -->
 		<div class="profiles-filters">
-			@for (filter of filters; track filter.value) {
+			@for (filter of availableFilters(); track filter.value) {
 			<button class="profiles-filter-btn" [class.profiles-filter-btn--active]="activeFilter() === filter.value"
 				(click)="setFilter(filter.value)" type="button">
 				{{ filter.label }}

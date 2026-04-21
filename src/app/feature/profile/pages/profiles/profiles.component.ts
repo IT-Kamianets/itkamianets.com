@@ -3,16 +3,6 @@ import { Router } from '@angular/router';
 import { ProfileService } from '../../profile.service';
 import { Profile } from '../../profile.types';
 
-const ROLE_FILTERS = [
-	{ label: 'Усі', value: '' },
-	{ label: 'Засновники', value: 'head' },
-	{ label: 'Розробники', value: 'Фронтенд-розробник' },
-	{ label: 'Дизайнери', value: 'UI/UX дизайнер' },
-	{ label: 'QA', value: 'QA спеціаліст' },
-	{ label: 'SMM', value: 'SMM спеціаліст' },
-	{ label: 'Судді', value: 'Суддя хакатону' },
-] as const;
-
 @Component({
 	selector: 'app-feature-profiles',
 	imports: [],
@@ -24,17 +14,23 @@ export class ProfilesComponent {
 	private readonly _router = inject(Router);
 	private readonly _profileService = inject(ProfileService);
 
-	readonly filters = ROLE_FILTERS;
-	readonly activeFilter = signal<string>('');
+	readonly activeFilter = signal('');
+
+	/** Динамічні фільтри на основі реальних ролей профілів */
+	readonly availableFilters = computed(() => {
+		const roles = [...new Set(
+			this._profileService.profiles()
+				.map((p) => p.role?.trim())
+				.filter((r): r is string => !!r)
+		)].sort((a, b) => a.localeCompare(b, 'uk'));
+
+		return [{ label: 'Усі', value: '' }, ...roles.map((r) => ({ label: r, value: r }))];
+	});
 
 	readonly visibleProfiles = computed<Profile[]>(() => {
 		const filter = this.activeFilter();
-
-		const allProfiles = this._profileService.profiles();
-
-		if (filter === 'head') return allProfiles.filter((p) => p.isHead);
-		if (filter !== '') return allProfiles.filter((p) => p.role === filter);
-		return allProfiles;
+		const all = this._profileService.profiles();
+		return filter ? all.filter((p) => p.role === filter) : all;
 	});
 
 	setFilter(value: string): void {
@@ -45,14 +41,14 @@ export class ProfilesComponent {
 		this._router.navigate(['/profile', id]);
 	}
 
-	getSocialEntries(socialMap: Record<string, string> | undefined) {
-		if (!socialMap) return [];
-		return Object.entries(socialMap)
-			.filter(([_, value]) => !!value && value !== '')
+	getSocialEntries(socials: Record<string, string> | undefined) {
+		if (!socials) return [];
+		return Object.entries(socials)
+			.filter(([, value]) => !!value)
 			.map(([key, value]) => ({
 				key,
 				value: value.startsWith('http') ? value : `https://${value}`,
-				label: key
+				label: key,
 			}));
 	}
 
