@@ -213,11 +213,9 @@
 
 .table-bio {
 	font-size: 0.8125rem;
-	color: var(--c-text-secondary);
+	color: var(--c-text-muted);
 	margin: 0;
 	line-height: 1.4;
-	
-	/* Truncate bio to max 2 lines */
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	line-clamp: 2;
@@ -233,7 +231,7 @@
 
 .table-socials {
 	display: flex;
-	gap: 4px;
+	gap: 8px;
 	flex-wrap: wrap;
 }
 
@@ -282,26 +280,6 @@
 	}
 }
 
-.table-activity {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-}
-
-.table-bio {
-	font-size: 0.82rem;
-	color: var(--c-text-muted);
-	margin: 0;
-	width: 100%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.table-socials {
-	display: flex;
-	gap: 8px;
-}
 
 .table-social-icon {
 	display: flex;

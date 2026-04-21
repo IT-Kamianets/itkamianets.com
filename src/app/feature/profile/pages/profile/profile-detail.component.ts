@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID, computed, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { filter, map, switchMap } from 'rxjs';
+import { EMPTY, filter, map, switchMap } from 'rxjs';
 import { ProfileService } from '../../profile.service';
 import { ProjectService } from '../../../project/project.service';
 import { Profile } from '../../profile.types';
@@ -22,11 +23,15 @@ export class ProfileDetailComponent {
 		this._route.paramMap.pipe(map((p) => p.get('id') ?? ''))
 	);
 
+	private readonly _isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
 	private readonly _fetchedProfile = toSignal<Profile | null>(
 		this._route.paramMap.pipe(
 			map((p) => p.get('id')),
 			filter((id): id is string => !!id),
-			switchMap((id) => this._profileService.fetchById(id))
+			switchMap((id) =>
+				this._isBrowser ? this._profileService.fetchById(id) : EMPTY
+			)
 		),
 		{ initialValue: null }
 	);

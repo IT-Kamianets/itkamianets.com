@@ -18,12 +18,14 @@ export class ProfilesComponent {
 
 	/** Динамічні фільтри на основі реальних ролей профілів */
 	readonly availableFilters = computed(() => {
-		const roles = [...new Set(
-			this._profileService.profiles()
-				.map((p) => p.role?.trim())
-				.filter((r): r is string => !!r)
-		)].sort((a, b) => a.localeCompare(b, 'uk'));
-
+		const roleSet = new Set<string>();
+		for (const p of this._profileService.profiles()) {
+			if (p.role?.trim()) roleSet.add(p.role.trim());
+			for (const r of p.roles ?? []) {
+				if (r?.trim()) roleSet.add(r.trim());
+			}
+		}
+		const roles = [...roleSet].sort((a, b) => a.localeCompare(b, 'uk'));
 		return [{ label: 'Усі', value: '' }, ...roles.map((r) => ({ label: r, value: r }))];
 	});
 

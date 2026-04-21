@@ -3,11 +3,13 @@ import {
 	Component,
 	ElementRef,
 	OnInit,
+	PLATFORM_ID,
 	ViewChild,
 	computed,
 	inject,
 	signal,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProfileService } from '../../profile.service';
@@ -48,6 +50,7 @@ export class ManageProfilesComponent implements OnInit {
 
 	private readonly _profileService = inject(ProfileService);
 	private readonly _projectService = inject(ProjectService);
+	private readonly _isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
 	readonly profiles = this._profileService.profiles;
 	readonly isModalOpen = signal(false);
@@ -132,7 +135,7 @@ export class ManageProfilesComponent implements OnInit {
 	closeModal(): void {
 		this.isModalOpen.set(false);
 		this.editingProfile.set(null);
-		document.body.style.overflow = '';
+		if (this._isBrowser) document.body.style.overflow = '';
 	}
 
 	// ─── Avatar ─────────────────────────────────────────────
@@ -144,6 +147,14 @@ export class ManageProfilesComponent implements OnInit {
 	onFileChange(event: Event): void {
 		const file = (event.target as HTMLInputElement).files?.[0];
 		if (!file) return;
+		if (!file.type.startsWith('image/')) {
+			alert('Будь ласка, виберіть файл зображення.');
+			return;
+		}
+		if (file.size > 2 * 1024 * 1024) {
+			alert('Файл занадто великий. Максимальний розмір — 2 МБ.');
+			return;
+		}
 		const reader = new FileReader();
 		reader.onload = () => { this.form = { ...this.form, avatar: reader.result as string }; };
 		reader.readAsDataURL(file);
@@ -169,7 +180,10 @@ export class ManageProfilesComponent implements OnInit {
 		if (!socials) return [];
 		return Object.entries(socials)
 			.filter(([, val]) => !!val)
-			.map(([key, value]) => ({ key, value }));
+			.map(([key, value]) => ({
+				key,
+				value: value.startsWith('http') ? value : `https://${value}`,
+			}));
 	}
 
 	// ─── Projects ───────────────────────────────────────────
@@ -283,7 +297,7 @@ export class ManageProfilesComponent implements OnInit {
 
 	private _openModal(): void {
 		this.isModalOpen.set(true);
-		document.body.style.overflow = 'hidden';
+		if (this._isBrowser) document.body.style.overflow = 'hidden';
 	}
 
 	private _emptyForm() {

@@ -28,7 +28,9 @@
 		<!-- Сітка -->
 		<div class="team-grid">
 			@for (member of visibleProfiles(); track member._id) {
-			<div class="team-card" (click)="navigateToProfile(member._id)">
+			<div class="team-card" role="link" tabindex="0"
+				(click)="navigateToProfile(member._id)"
+				(keydown.enter)="navigateToProfile(member._id)">
 				@if (member.avatar) {
 				<img [src]="photoSrc(member.avatar)" [alt]="member.name" class="team-card__avatar" loading="eager"
 					style="object-fit: cover; image-rendering: auto" />
