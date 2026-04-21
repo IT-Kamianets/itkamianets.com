@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { UserService } from '../user/user.service';
 import { JobProposal } from './job-proposal.interface';
 
@@ -46,7 +46,6 @@ export class JobProposalService {
 	update(proposal: JobProposal): Observable<JobProposal | null> {
 		this._syncToken();
 		const payload = { 
-			_id: proposal._id, 
 			...proposal,
 			data: proposal 
 		};

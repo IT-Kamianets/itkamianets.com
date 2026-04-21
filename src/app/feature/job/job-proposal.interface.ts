@@ -1,6 +1,5 @@
-import { CrudDocument } from 'wacom';
-
-export interface JobProposal extends CrudDocument<JobProposal> {
+export interface JobProposal {
+	_id: string;
 	candidateName: string;
 	email: string;
 	phone?: string;

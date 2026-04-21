@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { JobService } from '../../job.service';
-import { Job } from '../../job.interface';
+import { Job, JobData } from '../../job.interface';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -45,16 +45,18 @@ export class JobsComponent {
 	protected readonly isSaving = signal(false);
 
 	private _newJobData(): Job {
-		return {
+		const data: JobData = {
 			title: '',
 			description: '',
 			requirements: [],
 			status: 'active',
-			authorName: '',
-			authorId: '',
-			published: false,
 			preview: '',
 			company: ''
+		};
+		return {
+			_id: '',
+			...data,
+			data
 		} as Job;
 	}
 
@@ -65,7 +67,6 @@ export class JobsComponent {
 			reader.onload = (e) => {
 				const job = this.selectedJob();
 				if (job) {
-					// Створюємо новий об'єкт, щоб Angular помітив зміну
 					this.selectedJob.set({
 						...job,
 						preview: e.target?.result as string 
@@ -77,12 +78,11 @@ export class JobsComponent {
 	}
 
 	protected create() {
-		this.selectedJob.set(this._newJobData() as Job);
+		this.selectedJob.set(this._newJobData());
 		this.displayDialog.set(true);
 	}
 
 	protected edit(job: Job) {
-		// Глибоке копіювання, щоб не змінювати оригінал до збереження
 		this.selectedJob.set(JSON.parse(JSON.stringify(job)));
 		this.displayDialog.set(true);
 	}
@@ -90,6 +90,16 @@ export class JobsComponent {
 	protected save() {
 		const job = this.selectedJob();
 		if (!job || this.isSaving()) return;
+
+		// Sync root properties back to data object
+		job.data = {
+			title: job.title,
+			description: job.description,
+			company: job.company,
+			requirements: job.requirements,
+			status: job.status,
+			preview: job.preview
+		};
 
 		this.isSaving.set(true);
 		const obs = job._id ? this.jobService.update(job) : this.jobService.create(job);
@@ -101,23 +111,14 @@ export class JobsComponent {
 					this.displayDialog.set(false);
 					this.selectedJob.set(null);
 				} else {
-					console.warn('Server returned empty result for save');
-					this._showError('Не вдалося зберегти вакансію. Переконайтеся, що ви увійшли в систему.');
+					this._showError('Не вдалося зберегти вакансію.');
 				}
 				this.jobService.load();
 			},
 			error: (err) => {
 				console.error('Save error:', err);
 				this.isSaving.set(false);
-				if (err.name === 'TimeoutError') {
-					this._showError('Сервер не відповідає занадто довго. Спробуйте пізніше або повідомте адміністратора.');
-				} else if (err.status === 504) {
-					this._showError('Сервер тимчасово не відповідає. Спробуйте через кілька хвилин.');
-				} else if (err.status === 0) {
-					this._showError('Не вдається підключитися до сервера. Перевірте інтернет-з\'єднання.');
-				} else {
-					this._showError('Помилка під час збереження. Спробуйте ще раз.');
-				}
+				this._showError('Помилка під час збереження. Спробуйте ще раз.');
 				this.jobService.load();
 			}
 		});

@@ -13,28 +13,6 @@ export const routes: Routes = [
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 65460afd3fec1163b0ef7e3e41b73b8e6e58e66c
-				path: 'our-work',
-				loadComponent: () =>
-					import('./pages/our-work/our-work.component').then(
-						(m) => m.OurWorkComponent,
-					),
-			},
-
-			{
-<<<<<<< HEAD
-				path: 'jobs',
-				loadComponent: () =>
-					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
-			},
-			{
->>>>>>> 2afd0d29802756d20c45c43f0bfdb3d9dae8ae87
-=======
->>>>>>> 65460afd3fec1163b0ef7e3e41b73b8e6e58e66c
 				path: 'education',
 				loadComponent: () =>
 					import('./pages/education/education.component').then(
