@@ -2,10 +2,9 @@
 	<div class="manage-reviews__shell mx-auto max-w-[1500px]">
 		<header class="manage-reviews__header">
 			<div class="manage-reviews__headline">
-				<h1 class="manage-reviews__title">Reviews</h1>
+				<h1 class="manage-reviews__title">Відгуки</h1>
 				<p class="manage-reviews__subtitle">
-					Керуйте публікаціями відгуків: створюйте, переглядайте, редагуйте та
-					видаляйте записи.
+					Керуйте відгуками з API: створюйте, переглядайте, редагуйте, видаляйте та модеруйте їх в одному місці.
 				</p>
 				<p class="manage-reviews__queue">{{ pendingQueueLabel() }}</p>
 			</div>
@@ -13,15 +12,30 @@
 			<div class="manage-reviews__header-actions">
 				<a routerLink="/reviews" class="manage-reviews__link-button">
 					<span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
-					Перейти до reviews
+					Відкрити публічні відгуки
 				</a>
 
-				<button type="button" (click)="startCreate()" class="manage-reviews__add-button">
+				<button
+					type="button"
+					(click)="startCreate()"
+					class="manage-reviews__add-button"
+					[disabled]="isSubmitting() || isListLoading()"
+				>
 					<span class="material-symbols-outlined" aria-hidden="true">add</span>
-					Додати відгук
+					Створити відгук
 				</button>
 			</div>
 		</header>
+
+		@if (feedbackMessage()) {
+			<div
+				class="manage-reviews__feedback-banner"
+				[class.manage-reviews__feedback-banner--error]="feedbackTone() === 'error'"
+				[class.manage-reviews__feedback-banner--success]="feedbackTone() === 'success'"
+			>
+				{{ feedbackMessage() }}
+			</div>
+		}
 
 		@if (isFormVisible()) {
 			<form
@@ -36,7 +50,7 @@
 							{{ editingReviewId() ? 'Редагування відгуку' : 'Новий відгук' }}
 						</p>
 						<h2 class="manage-reviews__editor-title">
-							{{ editingReviewId() ? 'Оновіть дані запису' : 'Створіть новий запис для reviews' }}
+							{{ editingReviewId() ? 'Оновити дані відгуку' : 'Створити новий відгук' }}
 						</h2>
 					</div>
 
@@ -50,6 +64,7 @@
 							(click)="closeForm()"
 							class="manage-reviews__icon-button"
 							aria-label="Закрити форму"
+							[disabled]="isSubmitting()"
 						>
 							<span class="material-symbols-outlined" aria-hidden="true">close</span>
 						</button>
@@ -67,7 +82,7 @@
 
 				<div class="manage-reviews__editor-grid">
 					<label class="manage-reviews__field manage-reviews__field--wide">
-						<span>Компанія з каталогу</span>
+						<span>Компанія</span>
 						<select
 							[ngModel]="form().companyId"
 							(ngModelChange)="form.set({ ...form(), companyId: $event })"
@@ -78,17 +93,6 @@
 								<option [value]="company.id">{{ company.label }}</option>
 							}
 						</select>
-					</label>
-
-					<label class="manage-reviews__field manage-reviews__field--wide">
-						<span>Або введіть нову компанію</span>
-						<input
-							type="text"
-							placeholder="Наприклад, Soft River Studio"
-							[ngModel]="form().customCompanyName"
-							(ngModelChange)="form.set({ ...form(), customCompanyName: $event })"
-							name="customCompanyName"
-						/>
 					</label>
 
 					<label class="manage-reviews__field">
@@ -104,7 +108,7 @@
 					</label>
 
 					<label class="manage-reviews__field">
-						<span>Рейтинг</span>
+						<span>Оцінка</span>
 						<select
 							[ngModel]="form().rating"
 							(ngModelChange)="updateRating($event)"
@@ -126,11 +130,24 @@
 						/>
 					</label>
 
+					<label class="manage-reviews__field">
+						<span>Статус</span>
+						<select
+							[ngModel]="form().status"
+							(ngModelChange)="form.set({ ...form(), status: $event })"
+							name="status"
+						>
+							<option value="pending">На перевірці</option>
+							<option value="published">Опубліковано</option>
+							<option value="rejected">Відхилено</option>
+						</select>
+					</label>
+
 					<label class="manage-reviews__field manage-reviews__field--full">
 						<span>Текст відгуку</span>
 						<textarea
 							rows="6"
-							placeholder="Опишіть сильні сторони співпраці, результат і можливі зауваження..."
+							placeholder="Опишіть співпрацю, результат і важливі деталі."
 							[ngModel]="form().text"
 							(ngModelChange)="form.set({ ...form(), text: $event })"
 							name="text"
@@ -139,10 +156,20 @@
 				</div>
 
 				<div class="manage-reviews__editor-actions">
-					<button type="submit" class="manage-reviews__primary-button">
-						{{ editingReviewId() ? 'Зберегти зміни' : 'Створити відгук' }}
+					<button
+						type="submit"
+						class="manage-reviews__primary-button"
+						[disabled]="isSubmitting()"
+						[class.manage-reviews__button--loading]="isSubmitting()"
+					>
+						{{ isSubmitting() ? 'Завантаження...' : editingReviewId() ? 'Зберегти' : 'Створити' }}
 					</button>
-					<button type="button" (click)="cancelEdit()" class="manage-reviews__secondary-button">
+					<button
+						type="button"
+						(click)="cancelEdit()"
+						class="manage-reviews__secondary-button"
+						[disabled]="isSubmitting()"
+					>
 						Скасувати
 					</button>
 				</div>
@@ -183,8 +210,8 @@
 						<strong>{{ reviewCounts().all }}</strong>
 					</div>
 					<div class="manage-reviews__stat">
-						<span>Підтверджено</span>
-						<strong>{{ reviewCounts().approved }}</strong>
+						<span>Опубліковано</span>
+						<strong>{{ reviewCounts().published }}</strong>
 					</div>
 					<div class="manage-reviews__stat">
 						<span>На перевірці</span>
@@ -197,15 +224,22 @@
 				</div>
 			</div>
 
-			<div class="manage-reviews__table-wrap">
+			<div class="manage-reviews__table-wrap" [class.manage-reviews__table-wrap--loading]="isListLoading()">
+				@if (isListLoading()) {
+					<div class="manage-reviews__table-loading">
+						<span class="manage-reviews__spinner" aria-hidden="true"></span>
+						<span>Завантаження...</span>
+					</div>
+				}
+
 				@if (filteredReviews().length) {
 					<table class="manage-reviews__table">
 						<thead>
 							<tr>
-								<th>Фото</th>
+								<th>Логотип</th>
 								<th>Автор</th>
 								<th>Опис</th>
-								<th>Рейтинг</th>
+								<th>Оцінка</th>
 								<th>Статус</th>
 								<th>Компанія</th>
 								<th>Дата</th>
@@ -264,7 +298,7 @@
 										<div class="manage-reviews__status-stack">
 											<span
 												class="manage-reviews__status"
-												[class.manage-reviews__status--approved]="review.status === 'approved'"
+												[class.manage-reviews__status--published]="review.status === 'published'"
 												[class.manage-reviews__status--pending]="review.status === 'pending'"
 												[class.manage-reviews__status--rejected]="review.status === 'rejected'"
 											>
@@ -272,9 +306,30 @@
 											</span>
 
 											<div class="manage-reviews__status-actions">
-												<button type="button" (click)="approve(review)">OK</button>
-												<button type="button" (click)="markPending(review)">Wait</button>
-												<button type="button" (click)="reject(review)">No</button>
+												<button
+													type="button"
+													(click)="setStatus(review, 'published')"
+													[disabled]="isReviewBusy(review.id)"
+													[class.manage-reviews__button--loading]="isReviewBusy(review.id) && review.status !== 'published'"
+												>
+													{{ isReviewBusy(review.id) && review.status !== 'published' ? 'Завантаження...' : 'Опубліковано' }}
+												</button>
+												<button
+													type="button"
+													(click)="setStatus(review, 'pending')"
+													[disabled]="isReviewBusy(review.id)"
+													[class.manage-reviews__button--loading]="isReviewBusy(review.id) && review.status !== 'pending'"
+												>
+													{{ isReviewBusy(review.id) && review.status !== 'pending' ? 'Завантаження...' : 'На перевірці' }}
+												</button>
+												<button
+													type="button"
+													(click)="setStatus(review, 'rejected')"
+													[disabled]="isReviewBusy(review.id)"
+													[class.manage-reviews__button--loading]="isReviewBusy(review.id) && review.status !== 'rejected'"
+												>
+													{{ isReviewBusy(review.id) && review.status !== 'rejected' ? 'Завантаження...' : 'Відхилено' }}
+												</button>
 											</div>
 										</div>
 									</td>
@@ -291,12 +346,13 @@
 										<div class="manage-reviews__actions">
 											<a [routerLink]="['/reviews', review.id]" class="manage-reviews__action-button">
 												<span class="material-symbols-outlined" aria-hidden="true">visibility</span>
-												Перегляд
+												Переглянути
 											</a>
 											<button
 												type="button"
 												(click)="startEdit(review)"
 												class="manage-reviews__action-button"
+												[disabled]="isReviewBusy(review.id) || isSubmitting()"
 											>
 												<span class="material-symbols-outlined" aria-hidden="true">edit</span>
 												Редагувати
@@ -305,9 +361,11 @@
 												type="button"
 												(click)="remove(review)"
 												class="manage-reviews__action-button manage-reviews__action-button--danger"
+												[disabled]="isReviewBusy(review.id)"
+												[class.manage-reviews__button--loading]="isReviewBusy(review.id)"
 											>
 												<span class="material-symbols-outlined" aria-hidden="true">delete</span>
-												Видалити
+												{{ isReviewBusy(review.id) ? 'Завантаження...' : 'Видалити' }}
 											</button>
 										</div>
 									</td>
@@ -317,11 +375,8 @@
 					</table>
 				} @else {
 					<div class="manage-reviews__empty">
-						<h2>Нічого не знайдено</h2>
-						<p>
-							Змініть пошуковий запит або оберіть інший статус. Якщо записів ще немає,
-							створіть перший відгук через кнопку зверху.
-						</p>
+						<h2>Відгуків не знайдено</h2>
+						<p>Змініть пошук або фільтр, або створіть перший відгук кнопкою вище.</p>
 					</div>
 				}
 			</div>

@@ -14,17 +14,17 @@ import { Event } from '../../../feature/event/event.interface';
 export class ManageEventsComponent {
 	protected readonly eventService = inject(EventService);
 	protected readonly events = this.eventService.events;
-	
+
 	protected isModalOpen = signal(false);
 	protected editingEvent = signal<Event | null>(null);
-	
+
 	protected form = {
 		title: '',
 		description: '',
 		date: '',
 		time: '',
 		location: '',
-		type: 'Нетворкінг'
+		type: 'РќРµС‚РІРѕСЂРєС–РЅРі',
 	};
 
 	openAddModal() {
@@ -35,7 +35,7 @@ export class ManageEventsComponent {
 			date: '',
 			time: '',
 			location: '',
-			type: 'Нетворкінг'
+			type: 'РќРµС‚РІРѕСЂРєС–РЅРі',
 		};
 		this.isModalOpen.set(true);
 	}
@@ -48,7 +48,7 @@ export class ManageEventsComponent {
 			date: event.date,
 			time: event.time,
 			location: event.location,
-			type: event.type
+			type: event.type,
 		};
 		this.isModalOpen.set(true);
 	}
@@ -61,22 +61,27 @@ export class ManageEventsComponent {
 	save() {
 		const editing = this.editingEvent();
 		if (editing) {
-			this.eventService.update({
-				...editing,
-				...this.form
-			});
+			this.eventService
+				.update({
+					...editing,
+					...this.form,
+				})
+				.subscribe();
 		} else {
-			this.eventService.add({
-				...this.form,
-				link: '#'
-			});
+			this.eventService
+				.add({
+					...this.form,
+					link: '',
+				})
+				.subscribe();
 		}
+
 		this.closeModal();
 	}
 
-	delete(id: number) {
-		if (confirm('Ви впевнені, що хочете видалити цю подію?')) {
-			this.eventService.delete(id);
+	delete(id: string) {
+		if (confirm('Р’Рё РІРїРµРІРЅРµРЅС–, С‰Рѕ С…РѕС‡РµС‚Рµ РІРёРґР°Р»РёС‚Рё С†СЋ РїРѕРґС–СЋ?')) {
+			this.eventService.delete(id).subscribe();
 		}
 	}
 }

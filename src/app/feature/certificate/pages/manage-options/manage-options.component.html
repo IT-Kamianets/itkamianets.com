@@ -3,23 +3,18 @@
 		<div class="sm:flex sm:items-center mb-10">
 			<div class="sm:flex-auto">
 				<div class="flex items-center gap-4">
-					<a routerLink="/manage/profile" class="p-2 hover:bg-[var(--c-bg-tertiary)] rounded-lg transition-colors text-[var(--c-text-secondary)]" title="Назад до профілю">
+					<a routerLink="/manage/profile" class="p-2 hover:bg-[var(--c-bg-tertiary)] rounded-lg transition-colors text-[var(--c-text-secondary)]" title="РќР°Р·Р°Рґ РґРѕ РїСЂРѕС„С–Р»СЋ">
 						<span class="material-symbols-outlined align-middle" aria-hidden="true">arrow_back</span>
 					</a>
-					<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Керування шаблонами сертифікатів</h1>
+					<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">РљРµСЂСѓРІР°РЅРЅСЏ С€Р°Р±Р»РѕРЅР°РјРё СЃРµСЂС‚РёС„С–РєР°С‚С–РІ</h1>
 				</div>
 				<p class="mt-2 text-sm text-[var(--c-text-muted)]">
-					Створюйте та редагуйте шаблони для швидкої видачі сертифікатів з попередньо заповненими даними.
+					РЎС‚РІРѕСЂСЋР№С‚Рµ С‚Р° СЂРµРґР°РіСѓР№С‚Рµ С€Р°Р±Р»РѕРЅРё РґР»СЏ С€РІРёРґРєРѕС— РІРёРґР°С‡С– СЃРµСЂС‚РёС„С–РєР°С‚С–РІ Р· РїРѕРїРµСЂРµРґРЅСЊРѕ Р·Р°РїРѕРІРЅРµРЅРёРјРё РґР°РЅРёРјРё.
 				</p>
 			</div>
 			<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-2">
-				@if (options().length === 0) {
-					<button (click)="seed()" class="block rounded-md bg-[var(--c-bg-tertiary)] px-3 py-2 text-center text-sm font-semibold text-[var(--c-text-secondary)] shadow-sm hover:opacity-90 transition-opacity border border-[var(--c-border)]">
-						Завантажити демо-дані
-					</button>
-				}
 				<button (click)="create()" class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity">
-					+ Створити шаблон
+					+ РЎС‚РІРѕСЂРёС‚Рё С€Р°Р±Р»РѕРЅ
 				</button>
 			</div>
 		</div>
@@ -27,37 +22,37 @@
 		@if (editingOption()) {
 			<div class="job-form bg-[var(--c-bg-secondary)] p-8 rounded-2xl border border-[var(--c-border)] mb-10 shadow-lg">
 				<h2 class="text-xl font-bold mb-6 text-[var(--c-text-secondary)]">
-					{{ editingOption()?._id ? 'Редагувати шаблон' : 'Новий шаблон' }}
+					{{ editingOption()?._id ? 'Р РµРґР°РіСѓРІР°С‚Рё С€Р°Р±Р»РѕРЅ' : 'РќРѕРІРёР№ С€Р°Р±Р»РѕРЅ' }}
 				</h2>
 
 				<div class="grid gap-6">
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
-							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Назва шаблону (Title)</label>
-							<input type="text" [(ngModel)]="form.title" name="title" placeholder="Наприклад: Випускник курсу..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">РќР°Р·РІР° С€Р°Р±Р»РѕРЅСѓ (Title)</label>
+							<input type="text" [(ngModel)]="form.title" name="title" placeholder="РќР°РїСЂРёРєР»Р°Рґ: Р’РёРїСѓСЃРєРЅРёРє РєСѓСЂСЃСѓ..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 						</div>
 
 						<div>
-							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Дизайн (Стиль)</label>
+							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Р”РёР·Р°Р№РЅ (РЎС‚РёР»СЊ)</label>
 							<select [(ngModel)]="form.templateStyle" name="templateStyle" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
-								<option value="classic">Класичний (Classic)</option>
-								<option value="modern">Сучасний (Modern)</option>
-								<option value="minimalist">Мінімалістичний (Minimalist)</option>
+								<option value="classic">РљР»Р°СЃРёС‡РЅРёР№ (Classic)</option>
+								<option value="modern">РЎСѓС‡Р°СЃРЅРёР№ (Modern)</option>
+								<option value="minimalist">РњС–РЅС–РјР°Р»С–СЃС‚РёС‡РЅРёР№ (Minimalist)</option>
 							</select>
 						</div>
 					</div>
 
 					<div>
-						<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Опис (Description)</label>
-						<textarea [(ngModel)]="form.description" name="description" rows="4" placeholder="Опис, який буде відображено на сертифікаті..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all"></textarea>
+						<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">РћРїРёСЃ (Description)</label>
+						<textarea [(ngModel)]="form.description" name="description" rows="4" placeholder="РћРїРёСЃ, СЏРєРёР№ Р±СѓРґРµ РІС–РґРѕР±СЂР°Р¶РµРЅРѕ РЅР° СЃРµСЂС‚РёС„С–РєР°С‚С–..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all"></textarea>
 					</div>
 
 					<div class="flex justify-end gap-4 mt-6 border-t border-[var(--c-border)] pt-6">
 						<button (click)="cancel()" class="px-8 py-3 rounded-xl font-bold text-[var(--c-text-muted)] hover:bg-[var(--c-bg-tertiary)] transition-all">
-							Скасувати
+							РЎРєР°СЃСѓРІР°С‚Рё
 						</button>
 						<button (click)="save()" class="px-10 py-3 rounded-xl font-bold bg-[var(--c-primary)] text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-all">
-							Зберегти
+							Р—Р±РµСЂРµРіС‚Рё
 						</button>
 					</div>
 				</div>
@@ -71,11 +66,11 @@
 						<table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
 							<thead class="bg-[var(--c-bg-tertiary)]">
 								<tr>
-									<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">Назва шаблону</th>
-									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Опис</th>
-									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Стиль</th>
+									<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">РќР°Р·РІР° С€Р°Р±Р»РѕРЅСѓ</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">РћРїРёСЃ</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">РЎС‚РёР»СЊ</th>
 									<th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-										<span class="sr-only">Дії</span>
+										<span class="sr-only">Р”С–С—</span>
 									</th>
 								</tr>
 							</thead>
@@ -83,10 +78,10 @@
 								@for (opt of options(); track opt._id) {
 									<tr class="hover:bg-[var(--c-bg-tertiary)] transition-colors">
 										<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-[var(--c-text-primary)] sm:pl-6">
-											{{ opt.data?.['title'] || 'Без назви' }}
+											{{ opt.data?.['title'] || 'Р‘РµР· РЅР°Р·РІРё' }}
 										</td>
 										<td class="px-3 py-4 text-sm text-[var(--c-text-muted)] max-w-xs truncate">
-											{{ opt.data?.['description'] || 'Без опису' }}
+											{{ opt.data?.['description'] || 'Р‘РµР· РѕРїРёСЃСѓ' }}
 										</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm">
 											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset" 
@@ -105,9 +100,9 @@
 										<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 											<div class="flex justify-end gap-2">
 												<button (click)="edit(opt)" class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]">
-													<span class="material-symbols-outlined mr-1 text-sm">edit</span> Ред.
+													<span class="material-symbols-outlined mr-1 text-sm">edit</span> Р РµРґ.
 												</button>
-												<button (click)="delete(opt)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white" aria-label="Видалити шаблон">
+												<button (click)="delete(opt)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white" aria-label="Р’РёРґР°Р»РёС‚Рё С€Р°Р±Р»РѕРЅ">
 													<span class="material-symbols-outlined mr-1 text-sm">delete</span>
 												</button>
 											</div>
@@ -116,7 +111,7 @@
 								} @empty {
 									<tr>
 										<td colspan="4" class="py-10 text-center text-sm text-[var(--c-text-muted)] font-medium italic">
-											Шаблонів поки не додано
+											РЁР°Р±Р»РѕРЅС–РІ РїРѕРєРё РЅРµ РґРѕРґР°РЅРѕ
 										</td>
 									</tr>
 								}

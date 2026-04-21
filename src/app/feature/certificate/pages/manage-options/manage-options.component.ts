@@ -21,22 +21,18 @@ export class ManageOptionsComponent {
 		this.optionService.getAll().subscribe();
 	}
 
-	protected seed() {
-		this.optionService.seedDemoOptions();
-	}
-
 	protected readonly editingOption = signal<CertificateOption | null>(null);
 	protected form = {
 		title: '',
 		description: '',
-		templateStyle: 'classic'
+		templateStyle: 'classic',
 	};
 
 	protected create() {
 		this.form = {
 			title: '',
 			description: '',
-			templateStyle: 'classic'
+			templateStyle: 'classic',
 		};
 		this.editingOption.set(this.optionService.new() as CertificateOption);
 	}
@@ -46,7 +42,7 @@ export class ManageOptionsComponent {
 		this.form = {
 			title: data['title'] || '',
 			description: data['description'] || '',
-			templateStyle: data['templateStyle'] || 'classic'
+			templateStyle: data['templateStyle'] || 'classic',
 		};
 		this.editingOption.set(option);
 	}
@@ -63,7 +59,7 @@ export class ManageOptionsComponent {
 					this.editingOption.set(null);
 					this.cdr.markForCheck();
 				} else {
-					alert('Помилка: сервер відхилив оновлення шаблону.');
+					alert('РџРѕРјРёР»РєР°: СЃРµСЂРІРµСЂ РІС–РґС…РёР»РёРІ РѕРЅРѕРІР»РµРЅРЅСЏ С€Р°Р±Р»РѕРЅСѓ.');
 				}
 			});
 		} else {
@@ -72,25 +68,25 @@ export class ManageOptionsComponent {
 					this.editingOption.set(null);
 					this.cdr.markForCheck();
 				} else {
-					alert('Помилка: сервер відхилив створення шаблону.');
+					alert('РџРѕРјРёР»РєР°: СЃРµСЂРІРµСЂ РІС–РґС…РёР»РёРІ СЃС‚РІРѕСЂРµРЅРЅСЏ С€Р°Р±Р»РѕРЅСѓ.');
 				}
 			});
 		}
 	}
 
 	protected delete(option: CertificateOption) {
-		if (confirm('Ви впевнені, що хочете видалити цей шаблон?')) {
+		if (confirm('Р’Рё РІРїРµРІРЅРµРЅС–, С‰Рѕ С…РѕС‡РµС‚Рµ РІРёРґР°Р»РёС‚Рё С†РµР№ С€Р°Р±Р»РѕРЅ?')) {
 			this.optionService.delete(option).subscribe({
 				next: (success) => {
 					if (success) {
 						this.cdr.markForCheck();
 					} else {
-						alert('Помилка: не вдалося видалити шаблон.');
+						alert('РџРѕРјРёР»РєР°: РЅРµ РІРґР°Р»РѕСЃСЏ РІРёРґР°Р»РёС‚Рё С€Р°Р±Р»РѕРЅ.');
 					}
 				},
 				error: () => {
-					alert('Критична помилка при видаленні шаблону.');
-				}
+					alert('РљСЂРёС‚РёС‡РЅР° РїРѕРјРёР»РєР° РїСЂРё РІРёРґР°Р»РµРЅРЅС– С€Р°Р±Р»РѕРЅСѓ.');
+				},
 			});
 		}
 	}

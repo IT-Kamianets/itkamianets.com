@@ -190,12 +190,21 @@
 	&__list {
 		display: grid;
 		gap: 1rem;
+		min-height: 24rem;
 		padding: 1.5rem 2rem 2rem;
+	}
+
+	&__list--loading {
+		pointer-events: none;
 	}
 
 	&__card {
 		padding: 1.5rem;
 		box-shadow: 0 14px 38px color-mix(in srgb, var(--c-text-secondary) 7%, transparent);
+	}
+
+	&__card--skeleton {
+		overflow: hidden;
 	}
 
 	&__card-header {
@@ -212,6 +221,10 @@
 		flex-direction: column;
 		align-items: flex-end;
 		gap: 0.5rem;
+	}
+
+	&__card-meta--skeleton {
+		min-width: 9rem;
 	}
 
 	&__card-body {
@@ -267,10 +280,103 @@
 		color: var(--c-primary);
 	}
 
+	&__rating-value {
+		margin-left: 0.35rem;
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: var(--c-text-secondary);
+	}
+
+	&__review-text {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 4;
+	}
+
 	&__empty {
 		margin: 1.5rem 2rem 2rem;
+		min-height: 24rem;
 		padding: 2.5rem 1.5rem;
 		text-align: center;
+		align-content: center;
+	}
+
+	&__skeleton-line,
+	&__skeleton-stars,
+	&__skeleton-chip,
+	&__skeleton-button {
+		position: relative;
+		overflow: hidden;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--c-border) 72%, var(--c-bg-tertiary));
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			transform: translateX(-100%);
+			background: linear-gradient(
+				90deg,
+				transparent,
+				color-mix(in srgb, white 62%, transparent),
+				transparent
+			);
+			animation: reviews-shimmer 1.5s infinite;
+		}
+	}
+
+	&__skeleton-line {
+		height: 0.9rem;
+	}
+
+	&__skeleton-line--title {
+		width: min(15rem, 72%);
+		height: 1.25rem;
+	}
+
+	&__skeleton-line--subtitle {
+		width: 10rem;
+		margin-top: 0.95rem;
+	}
+
+	&__skeleton-line--text {
+		width: min(28rem, 92%);
+		margin-top: 0.8rem;
+	}
+
+	&__skeleton-line--date {
+		width: 6rem;
+		align-self: flex-end;
+	}
+
+	&__skeleton-line--body {
+		width: 100%;
+		margin-bottom: 0.8rem;
+	}
+
+	&__skeleton-line--body-short {
+		width: 72%;
+	}
+
+	&__skeleton-stars {
+		width: 7rem;
+		height: 1.25rem;
+	}
+
+	&__skeleton-chip {
+		width: 7.5rem;
+		height: 2rem;
+	}
+
+	&__skeleton-button {
+		width: 9.5rem;
+		height: 2.8rem;
+		border-radius: 999px;
+	}
+
+	&__skeleton-button--ghost {
+		width: 10.75rem;
 	}
 
 	@media (max-width: 960px) {
@@ -293,7 +399,8 @@
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
-		&__card-meta {
+		&__card-meta,
+		&__card-meta--skeleton {
 			align-items: flex-start;
 		}
 	}
@@ -315,5 +422,11 @@
 		&__card-footer {
 			align-items: flex-start;
 		}
+	}
+}
+
+@keyframes reviews-shimmer {
+	100% {
+		transform: translateX(100%);
 	}
 }

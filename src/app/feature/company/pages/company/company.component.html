@@ -199,7 +199,8 @@
 								>
 								<input
 									type="text"
-									[(ngModel)]="reviewForm.author"
+									[ngModel]="reviewForm().author"
+									(ngModelChange)="reviewForm.set({ ...reviewForm(), author: $event })"
 									name="reviewAuthor"
 									required
 									class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-sm text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
@@ -214,7 +215,7 @@
 									@for (star of ratingRange; track star) {
 										<button
 											type="button"
-											(click)="reviewForm.rating = star"
+											(click)="updateDraftRating(star)"
 											class="transition-transform hover:scale-110"
 										>
 											<svg
@@ -222,7 +223,7 @@
 												height="24"
 												viewBox="0 0 24 24"
 												[attr.fill]="
-													star <= reviewForm.rating
+													star <= reviewForm().rating
 														? 'var(--c-primary)'
 														: 'none'
 												"
@@ -243,15 +244,23 @@
 									>Текст відгуку</label
 								>
 								<textarea
-									[(ngModel)]="reviewForm.text"
+									[ngModel]="reviewForm().text"
+									(ngModelChange)="reviewForm.set({ ...reviewForm(), text: $event })"
 									name="reviewText"
 									rows="3"
 									required
 									class="w-full rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-2 text-sm text-[var(--c-text-primary)] focus:border-[var(--c-primary)] focus:outline-none"
 								></textarea>
 							</div>
+							@if (reviewFormMessage()) {
+								<p class="text-sm font-medium text-emerald-600">{{ reviewFormMessage() }}</p>
+							}
+							@if (reviewFormError()) {
+								<p class="text-sm font-medium text-red-600">{{ reviewFormError() }}</p>
+							}
 							<button
 								type="submit"
+								[disabled]="isSubmittingReview()"
 								class="self-start rounded-full bg-[var(--c-primary)] px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-opacity"
 							>
 								Надіслати

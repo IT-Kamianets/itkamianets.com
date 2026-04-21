@@ -20,15 +20,15 @@ import {
 	deleteReview,
 	getReviews,
 	updateReview,
-} from '../../api/reviewApi';
+} from '../../api/reviews';
 
 interface ReviewFormValue {
 	companyId: string;
-	customCompanyName: string;
 	author: string;
 	rating: 1 | 2 | 3 | 4 | 5;
 	text: string;
 	date: string;
+	status: Review['status'];
 }
 
 interface ReviewCompanyOption {
@@ -61,10 +61,9 @@ interface ManageReviewItem {
 	text: string;
 	date: string;
 	status: Review['status'];
-	rawStatus: string;
 }
 
-type ReviewFilter = 'all' | 'approved' | 'pending' | 'rejected';
+type ReviewFilter = 'all' | Review['status'];
 
 @Component({
 	selector: 'app-manage-reviews',
@@ -81,7 +80,7 @@ export class ManageReviewsComponent implements OnInit {
 	private _formHighlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
-	protected readonly filterOptions: ReviewFilter[] = ['all', 'pending', 'approved', 'rejected'];
+	protected readonly filterOptions: ReviewFilter[] = ['all', 'pending', 'published', 'rejected'];
 	protected readonly companies = computed(() => this._companyService.companies());
 	protected readonly companyOptions = computed<ReviewCompanyOption[]>(() =>
 		this.companies()
@@ -103,7 +102,7 @@ export class ManageReviewsComponent implements OnInit {
 
 		return {
 			all: reviews.length,
-			approved: reviews.filter((review) => review.status === 'approved').length,
+			published: reviews.filter((review) => review.status === 'published').length,
 			pending: reviews.filter((review) => review.status === 'pending').length,
 			rejected: reviews.filter((review) => review.status === 'rejected').length,
 		};
@@ -148,12 +147,18 @@ export class ManageReviewsComponent implements OnInit {
 	protected readonly highlightForm = signal(false);
 	protected readonly isFormVisible = signal(false);
 	protected readonly form = signal<ReviewFormValue>(this._createEmptyForm());
+	protected readonly isListLoading = signal(false);
+	protected readonly isSubmitting = signal(false);
+	protected readonly processingReviewId = signal<string | null>(null);
+	protected readonly feedbackMessage = signal('');
+	protected readonly feedbackTone = signal<'success' | 'error'>('success');
 
 	async ngOnInit() {
 		await this._refreshReviews();
 	}
 
 	protected startCreate() {
+		this._clearFeedback();
 		this.isFormVisible.set(true);
 		this.editingReviewId.set(null);
 		this.form.set(this._createEmptyForm());
@@ -161,29 +166,31 @@ export class ManageReviewsComponent implements OnInit {
 	}
 
 	protected startEdit(review: ManageReviewItem) {
+		this._clearFeedback();
 		this.isFormVisible.set(true);
 		this.editingReviewId.set(review.id);
 		this.form.set({
 			companyId: review.companyId,
-			customCompanyName: '',
 			author: review.author,
 			rating: review.rating,
 			text: review.text,
 			date: review.date.slice(0, 10),
+			status: review.status,
 		});
 		this._scrollToForm();
 	}
 
 	protected async save() {
 		const value = this.form();
-		const companyId =
-			value.customCompanyName.trim()
-				? this._companyService.createLocalCompany(value.customCompanyName)
-				: value.companyId;
+		const companyId = value.companyId.trim();
+		this._clearFeedback();
 
 		if (!companyId || !value.author.trim() || !value.text.trim() || !value.date) {
+			this._setFeedback('Помилка', 'error');
 			return;
 		}
+
+		this.isSubmitting.set(true);
 
 		const existingReview = this._getCurrentEditingReview();
 		const payload = {
@@ -193,41 +200,63 @@ export class ManageReviewsComponent implements OnInit {
 				rating: value.rating,
 				text: value.text.trim(),
 				date: new Date(value.date).toISOString(),
-				status: existingReview?.rawStatus || 'published',
+				status: value.status || existingReview?.status || 'pending',
 			},
 		};
 
 		if (existingReview?.apiId) {
-			await updateReview(existingReview.apiId, payload);
+			const response = await updateReview(existingReview.apiId, payload);
+			if (response === null) {
+				this._setFeedback('Помилка', 'error');
+				this.isSubmitting.set(false);
+				return;
+			}
+
+			this._setFeedback('Оновлено', 'success');
 		} else {
-			await createReview(payload);
+			const response = await createReview(payload);
+			if (response === null) {
+				this._setFeedback('Помилка', 'error');
+				this.isSubmitting.set(false);
+				return;
+			}
+
+			this._setFeedback('Успішно створено', 'success');
 		}
 
 		await this._refreshReviews();
+		this.isSubmitting.set(false);
 		this.closeForm();
 	}
 
-	protected async approve(review: ManageReviewItem) {
-		await this._updateStatus(review.id, 'published');
-	}
-
-	protected async reject(review: ManageReviewItem) {
-		await this._updateStatus(review.id, 'rejected');
-	}
-
-	protected async markPending(review: ManageReviewItem) {
-		await this._updateStatus(review.id, 'pending');
+	protected async setStatus(review: ManageReviewItem, status: Review['status']) {
+		await this._updateStatus(review.id, status);
 	}
 
 	protected async remove(review: ManageReviewItem) {
 		const currentReview = this._findReview(review.id);
+		this._clearFeedback();
 
 		if (!currentReview?.apiId) {
 			return;
 		}
 
-		await deleteReview(currentReview.apiId);
+		if (typeof window !== 'undefined' && !window.confirm('Підтвердити видалення?')) {
+			return;
+		}
+
+		this.processingReviewId.set(review.id);
+
+		const response = await deleteReview(currentReview.apiId);
+		if (response === null) {
+			this._setFeedback('Помилка', 'error');
+			this.processingReviewId.set(null);
+			return;
+		}
+
 		await this._refreshReviews();
+		this.processingReviewId.set(null);
+		this._setFeedback('Видалено', 'success');
 
 		if (this.editingReviewId() === review.id) {
 			this.closeForm();
@@ -262,8 +291,8 @@ export class ManageReviewsComponent implements OnInit {
 	}
 
 	protected getStatusLabel(status: ReviewFilter) {
-		if (status === 'approved') {
-			return 'Підтверджено';
+		if (status === 'published') {
+			return 'Опубліковано';
 		}
 
 		if (status === 'rejected') {
@@ -300,16 +329,21 @@ export class ManageReviewsComponent implements OnInit {
 		this.isFormVisible.set(false);
 		this.editingReviewId.set(null);
 		this.form.set(this._createEmptyForm());
+		this.isSubmitting.set(false);
+	}
+
+	protected isReviewBusy(reviewId: string) {
+		return this.processingReviewId() === reviewId;
 	}
 
 	private _createEmptyForm(): ReviewFormValue {
 		return {
 			companyId: '',
-			customCompanyName: '',
 			author: '',
 			rating: 5 as Review['rating'],
 			text: '',
 			date: new Date().toISOString().slice(0, 10),
+			status: 'pending',
 		};
 	}
 
@@ -339,16 +373,21 @@ export class ManageReviewsComponent implements OnInit {
 	}
 
 	private async _refreshReviews() {
+		this.isListLoading.set(true);
 		const reviews = await getReviews<ApiReviewItem[]>();
 
-		this._reviews.set(
-			Array.isArray(reviews) ? reviews.map((review) => this._mapReview(review)) : [],
-		);
+		if (reviews === null) {
+			this._setFeedback('Помилка', 'error');
+			this.isListLoading.set(false);
+			return;
+		}
+
+		this._reviews.set(Array.isArray(reviews) ? reviews.map((review) => this._mapReview(review)) : []);
+		this.isListLoading.set(false);
 	}
 
 	private _mapReview(review: ApiReviewItem): ManageReviewItem {
 		const data = review.data || {};
-		const rawStatus = data.status || 'pending';
 		const routeId = String(review._id || review.id || '');
 
 		return {
@@ -359,8 +398,7 @@ export class ManageReviewsComponent implements OnInit {
 			rating: this._normalizeRating(data.rating),
 			text: data.text || '',
 			date: data.date || new Date().toISOString(),
-			status: this._mapStatus(rawStatus),
-			rawStatus,
+			status: this._normalizeStatus(data.status),
 		};
 	}
 
@@ -370,13 +408,13 @@ export class ManageReviewsComponent implements OnInit {
 		return normalized as 1 | 2 | 3 | 4 | 5;
 	}
 
-	private _mapStatus(status: string): Review['status'] {
-		if (status === 'published') {
-			return 'approved';
+	private _normalizeStatus(status: string | undefined): Review['status'] {
+		if (status === 'published' || status === 'rejected' || status === 'pending') {
+			return status;
 		}
 
-		if (status === 'rejected') {
-			return 'rejected';
+		if (status === 'approved') {
+			return 'published';
 		}
 
 		return 'pending';
@@ -392,14 +430,17 @@ export class ManageReviewsComponent implements OnInit {
 		return reviewId ? this._findReview(reviewId) : null;
 	}
 
-	private async _updateStatus(id: string, status: 'published' | 'pending' | 'rejected') {
+	private async _updateStatus(id: string, status: Review['status']) {
 		const review = this._findReview(id);
+		this._clearFeedback();
 
 		if (!review?.apiId) {
 			return;
 		}
 
-		await updateReview(review.apiId, {
+		this.processingReviewId.set(id);
+
+		const response = await updateReview(review.apiId, {
 			data: {
 				author: review.author,
 				companyId: review.companyId,
@@ -410,6 +451,23 @@ export class ManageReviewsComponent implements OnInit {
 			},
 		});
 
+		if (response === null) {
+			this._setFeedback('Помилка', 'error');
+			this.processingReviewId.set(null);
+			return;
+		}
+
 		await this._refreshReviews();
+		this.processingReviewId.set(null);
+		this._setFeedback('Оновлено', 'success');
+	}
+
+	private _setFeedback(message: string, tone: 'success' | 'error') {
+		this.feedbackMessage.set(message);
+		this.feedbackTone.set(tone);
+	}
+
+	private _clearFeedback() {
+		this.feedbackMessage.set('');
 	}
 }

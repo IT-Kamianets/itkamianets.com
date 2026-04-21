@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CompanyService } from '../../../company/company.service';
-import { getReviews } from '../../api/reviewApi';
+import { getReviews } from '../../api/reviews';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
 
 interface ReviewListItem {
@@ -55,8 +55,11 @@ interface ApiReviewItem {
 export class ReviewsComponent implements OnInit {
 	private readonly _companyService = inject(CompanyService);
 	private readonly _reviews = signal<ApiReviewItem[]>([]);
+	protected readonly isLoading = signal(true);
+	protected readonly errorMessage = signal('');
 
 	protected readonly ratingRange = [1, 2, 3, 4, 5];
+	protected readonly skeletonCards = Array.from({ length: 3 }, (_, index) => index);
 	protected readonly breadcrumbs: Crumb[] = [
 		{ label: 'Головна', link: '/' },
 		{ label: 'Відгуки' },
@@ -77,7 +80,7 @@ export class ReviewsComponent implements OnInit {
 				const companyId = review.data?.companyId || review.companyId || '';
 				const company = companies.find((item) => item.id === companyId) || null;
 				const author = review.data?.author || review.author || 'Невідомий автор';
-				const text = review.data?.text || review.text || '';
+				const text = this._normalizeText(review.data?.text || review.text || '');
 				const date = review.data?.date || review.date || new Date().toISOString();
 				const rating = this._normalizeRating(review.data?.rating || review.rating);
 
@@ -119,13 +122,15 @@ export class ReviewsComponent implements OnInit {
 	);
 
 	async ngOnInit() {
-		const reviews = await getReviews<ApiReviewItem[]>();
-
-		this._reviews.set(Array.isArray(reviews) ? reviews : []);
+		await this._loadReviews();
 	}
 
 	protected trackReview(_index: number, review: ReviewListItem) {
 		return review.id;
+	}
+
+	protected async retryLoad() {
+		await this._loadReviews();
 	}
 
 	private _createExcerpt(text: string) {
@@ -140,5 +145,30 @@ export class ReviewsComponent implements OnInit {
 		const normalized = Math.min(5, Math.max(1, Number(value) || 5));
 
 		return normalized as 1 | 2 | 3 | 4 | 5;
+	}
+
+	private _normalizeText(value: string) {
+		return value.replace(/\s+/g, ' ').trim();
+	}
+
+	private async _loadReviews() {
+		this.isLoading.set(true);
+		this.errorMessage.set('');
+
+		try {
+			const reviews = await getReviews<ApiReviewItem[]>();
+
+			if (reviews === null) {
+				throw new Error('Не вдалося завантажити відгуки.');
+			}
+
+			this._reviews.set(Array.isArray(reviews) ? reviews : []);
+		} catch (error) {
+			console.error(error);
+			this._reviews.set([]);
+			this.errorMessage.set('Не вдалося завантажити відгуки. Спробуйте оновити сторінку ще раз.');
+		} finally {
+			this.isLoading.set(false);
+		}
 	}
 }

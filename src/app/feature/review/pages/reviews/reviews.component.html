@@ -33,24 +33,68 @@
 				<div class="reviews-page__hero-stats">
 					<div class="reviews-page__metric">
 						<span>Відгуків</span>
-						<strong>{{ reviewItems().length }}</strong>
+						<strong>{{ isLoading() ? '...' : reviewItems().length }}</strong>
 					</div>
 					<div class="reviews-page__metric">
 						<span>Середній рейтинг</span>
-						<strong>{{ averageRating() | number: '1.1-1' }}</strong>
+						<strong>{{ isLoading() ? '...' : (averageRating() | number: '1.1-1') }}</strong>
 					</div>
 					<div class="reviews-page__metric">
 						<span>Компаній</span>
-						<strong>{{ companiesCount() }}</strong>
+						<strong>{{ isLoading() ? '...' : companiesCount() }}</strong>
 					</div>
 					<div class="reviews-page__metric">
 						<span>Оцінок 5/5</span>
-						<strong>{{ topRatedCount() }}</strong>
+						<strong>{{ isLoading() ? '...' : topRatedCount() }}</strong>
 					</div>
 				</div>
 			</section>
 
-			@if (reviewItems().length) {
+			@if (isLoading()) {
+				<div class="reviews-page__list reviews-page__list--loading" aria-hidden="true">
+					@for (card of skeletonCards; track card) {
+						<article class="reviews-page__card reviews-page__card--skeleton">
+							<div class="reviews-page__card-header">
+								<div class="min-w-0 flex-1">
+									<div class="reviews-page__skeleton-line reviews-page__skeleton-line--title"></div>
+									<div class="reviews-page__skeleton-line reviews-page__skeleton-line--subtitle"></div>
+									<div class="reviews-page__skeleton-line reviews-page__skeleton-line--text"></div>
+								</div>
+								<div class="reviews-page__card-meta reviews-page__card-meta--skeleton">
+									<div class="reviews-page__skeleton-stars"></div>
+									<div class="reviews-page__skeleton-line reviews-page__skeleton-line--date"></div>
+								</div>
+							</div>
+
+							<div class="reviews-page__card-body">
+								<div class="reviews-page__skeleton-line reviews-page__skeleton-line--body"></div>
+								<div class="reviews-page__skeleton-line reviews-page__skeleton-line--body"></div>
+								<div class="reviews-page__skeleton-line reviews-page__skeleton-line--body-short"></div>
+							</div>
+
+							<div class="reviews-page__card-footer">
+								<div class="reviews-page__skeleton-chip"></div>
+								<div class="flex flex-wrap gap-3">
+									<div class="reviews-page__skeleton-button"></div>
+									<div class="reviews-page__skeleton-button reviews-page__skeleton-button--ghost"></div>
+								</div>
+							</div>
+						</article>
+					}
+				</div>
+			} @else if (errorMessage()) {
+				<div class="reviews-page__empty" role="alert" aria-live="polite">
+					<h2 class="text-xl font-black text-[var(--c-text-secondary)]">
+						Сталася помилка під час завантаження
+					</h2>
+					<p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[var(--c-text-muted)]">
+						{{ errorMessage() }}
+					</p>
+					<button type="button" class="reviews-page__button mt-6" (click)="retryLoad()">
+						Спробувати ще раз
+					</button>
+				</div>
+			} @else if (reviewItems().length) {
 				<div class="reviews-page__list">
 					@for (review of reviewItems(); track trackReview($index, review)) {
 						<article class="reviews-page__card">
@@ -94,6 +138,7 @@
 												star
 											</span>
 										}
+										<span class="reviews-page__rating-value">{{ review.rating }}/5</span>
 									</div>
 									<p class="text-xs uppercase tracking-[0.18em] text-[var(--c-text-muted)]">
 										{{ review.date | date: 'dd.MM.yyyy' }}
@@ -102,7 +147,7 @@
 							</div>
 
 							<div class="reviews-page__card-body">
-								<p class="text-sm leading-8 text-[var(--c-text-muted)] sm:text-base">
+								<p class="reviews-page__review-text text-sm leading-8 text-[var(--c-text-muted)] sm:text-base">
 									{{ review.excerpt }}
 								</p>
 							</div>

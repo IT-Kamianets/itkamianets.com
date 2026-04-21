@@ -38,6 +38,25 @@
 		padding: 2rem;
 	}
 
+	&__feedback-banner {
+		padding: 1rem 1.2rem;
+		border-radius: 1rem;
+		font-size: 0.95rem;
+		font-weight: 700;
+	}
+
+	&__feedback-banner--error {
+		border: 1px solid color-mix(in srgb, var(--reviews-danger) 28%, var(--reviews-border));
+		background: color-mix(in srgb, var(--reviews-danger) 8%, white);
+		color: #b3261e;
+	}
+
+	&__feedback-banner--success {
+		border: 1px solid color-mix(in srgb, #22c55e 28%, var(--reviews-border));
+		background: color-mix(in srgb, #22c55e 8%, white);
+		color: #15803d;
+	}
+
 	&__headline {
 		max-width: 52rem;
 	}
@@ -401,7 +420,36 @@
 	}
 
 	&__table-wrap {
+		position: relative;
 		overflow-x: auto;
+	}
+
+	&__table-wrap--loading {
+		min-height: 18rem;
+	}
+
+	&__table-loading {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		background: color-mix(in srgb, white 76%, var(--reviews-panel));
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: #4e5f84;
+		backdrop-filter: blur(3px);
+	}
+
+	&__spinner {
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid color-mix(in srgb, var(--reviews-blue) 20%, white);
+		border-top-color: var(--reviews-blue);
+		border-radius: 999px;
+		animation: manage-reviews-spin 0.7s linear infinite;
 	}
 
 	&__table {
@@ -544,7 +592,7 @@
 		color: var(--reviews-blue);
 	}
 
-	&__status--approved {
+	&__status--published {
 		background: color-mix(in srgb, #22c55e 14%, white);
 		color: #15803d;
 	}
@@ -611,6 +659,18 @@
 			border-color: var(--reviews-danger);
 			color: var(--reviews-danger);
 		}
+	}
+
+	&__button--loading {
+		cursor: wait;
+	}
+
+	button:disabled,
+	a[aria-disabled='true'] {
+		opacity: 0.66;
+		cursor: not-allowed;
+		pointer-events: none;
+		transform: none;
 	}
 
 	&__empty {
@@ -701,5 +761,11 @@
 		&__secondary-button {
 			width: 100%;
 		}
+	}
+}
+
+@keyframes manage-reviews-spin {
+	to {
+		transform: rotate(360deg);
 	}
 }

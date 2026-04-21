@@ -10,10 +10,9 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
-import { CompanyService } from '../../../company/company.service';
-import { ReviewService } from '../../../company/review.service';
-import { getReviewById } from '../../api/reviewApi';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
+import { CompanyService } from '../../../company/company.service';
+import { fetchReview } from '../../api/reviews';
 
 interface ApiReviewData {
 	_id?: string;
@@ -47,21 +46,17 @@ interface ReviewDetail {
 })
 export class ReviewComponent {
 	private readonly _route = inject(ActivatedRoute);
-	private readonly _reviewService = inject(ReviewService);
 	private readonly _companyService = inject(CompanyService);
 	private readonly _reviewResponse = signal<ApiReviewData | null>(null);
+
+	protected readonly isLoading = signal(true);
+	protected readonly errorMessage = signal('');
+	protected readonly ratingRange = [1, 2, 3, 4, 5];
+	protected readonly skeletonBlocks = Array.from({ length: 3 }, (_, index) => index);
 
 	private readonly _reviewId = toSignal(
 		this._route.paramMap.pipe(map((params) => params.get('id') || '')),
 		{ initialValue: '' },
-	);
-	private readonly _localReviewId = computed(() => {
-		const normalized = Number(this._reviewId());
-
-		return Number.isFinite(normalized) && normalized > 0 ? normalized : 0;
-	});
-	private readonly _localReview = computed(() =>
-		this._localReviewId() ? this._reviewService.getPublishedById(this._localReviewId())() : null,
 	);
 
 	constructor() {
@@ -69,11 +64,8 @@ export class ReviewComponent {
 			const reviewId = this._reviewId();
 
 			if (!reviewId) {
-				this._reviewResponse.set(null);
-				return;
-			}
-
-			if (this._localReview()) {
+				this.isLoading.set(false);
+				this.errorMessage.set('Некоректне посилання на відгук.');
 				this._reviewResponse.set(null);
 				return;
 			}
@@ -82,21 +74,7 @@ export class ReviewComponent {
 		});
 	}
 
-	protected readonly ratingRange = [1, 2, 3, 4, 5];
 	protected readonly review = computed<ReviewDetail | null>(() => {
-		const localReview = this._localReview();
-		if (localReview) {
-			return {
-				id: String(localReview.id),
-				author: localReview.author,
-				companyId: localReview.companyId,
-				rating: localReview.rating,
-				text: localReview.text,
-				date: localReview.date,
-				status: localReview.status,
-			};
-		}
-
 		const response = this._reviewResponse();
 		const data = response?.data;
 
@@ -109,35 +87,22 @@ export class ReviewComponent {
 			author: data.author || 'Невідомий автор',
 			companyId: data.companyId || '',
 			rating: this._normalizeRating(data.rating),
-			text: data.text || '',
+			text: this._normalizeText(data.text || ''),
 			date: data.date || new Date().toISOString(),
 			status: data.status || '',
 		};
 	});
+
 	protected readonly company = computed(() => {
 		const review = this.review();
 		if (!review) {
 			return null;
 		}
 
-		return (
-			this._companyService.companies().find((company) => company.id === review.companyId) ||
-			null
-		);
+		return this._companyService.companies().find((company) => company.id === review.companyId) || null;
 	});
-	protected readonly relatedReviews = computed(() => {
-		const review = this.review();
-		if (!review) {
-			return [];
-		}
 
-		return this._reviewService
-			.publishedReviews()
-			.filter((item) => item.companyId === review.companyId && String(item.id) !== review.id)
-			.slice(0, 3);
-	});
 	protected readonly reviewSummary = computed(() => {
-		const review = this.review();
 		const company = this.company();
 
 		return {
@@ -152,11 +117,6 @@ export class ReviewComponent {
 			employees: company?.employees || null,
 			founded: company?.founded || null,
 			verified: !!company?.verified,
-			totalCompanyReviews: review
-				? this._reviewService
-						.publishedReviews()
-						.filter((item) => item.companyId === review.companyId).length
-				: 0,
 		};
 	});
 
@@ -170,15 +130,60 @@ export class ReviewComponent {
 		];
 	});
 
-	private async _loadReview(id: string) {
-		const response = await getReviewById<ApiReviewData>(id);
+	protected async retryLoad() {
+		const reviewId = this._reviewId();
+		if (!reviewId) {
+			return;
+		}
 
-		this._reviewResponse.set(response);
+		await this._loadReview(reviewId);
+	}
+
+	protected getStatusLabel(status: string) {
+		if (status === 'published') {
+			return 'Опубліковано';
+		}
+
+		if (status === 'pending') {
+			return 'На перевірці';
+		}
+
+		if (status === 'rejected') {
+			return 'Відхилено';
+		}
+
+		return 'Невідомо';
+	}
+
+	private async _loadReview(id: string) {
+		this.isLoading.set(true);
+		this.errorMessage.set('');
+		this._reviewResponse.set(null);
+
+		try {
+			const response = await fetchReview<ApiReviewData>(id);
+
+			if (!response?.data) {
+				throw new Error('Відгук не знайдено.');
+			}
+
+			this._reviewResponse.set(response);
+		} catch (error) {
+			console.error(error);
+			this._reviewResponse.set(null);
+			this.errorMessage.set('Відгук не знайдено або він більше недоступний.');
+		} finally {
+			this.isLoading.set(false);
+		}
 	}
 
 	private _normalizeRating(value: number | string | undefined): 1 | 2 | 3 | 4 | 5 {
 		const normalized = Math.min(5, Math.max(1, Number(value) || 5));
 
 		return normalized as 1 | 2 | 3 | 4 | 5;
+	}
+
+	private _normalizeText(value: string) {
+		return value.replace(/\s+/g, ' ').trim();
 	}
 }

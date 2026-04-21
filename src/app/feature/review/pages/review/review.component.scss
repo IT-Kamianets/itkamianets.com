@@ -1,10 +1,15 @@
 .review-page {
 	&__shell {
+		min-height: 34rem;
 		border: 1px solid var(--c-border);
 		border-radius: calc(var(--radius-card) + 0.5rem);
 		background:
 			radial-gradient(circle at top right, color-mix(in srgb, var(--c-primary) 12%, transparent), transparent 26%),
 			linear-gradient(180deg, var(--c-bg-secondary), var(--c-bg-secondary));
+	}
+
+	&__shell--loading {
+		pointer-events: none;
 	}
 
 	&__hero {
@@ -52,6 +57,36 @@
 
 	&__article {
 		padding: 1.75rem;
+	}
+
+	&__meta-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin-top: 1.75rem;
+	}
+
+	&__meta-item {
+		padding: 0.9rem 1rem;
+		border: 1px solid var(--c-border);
+		border-radius: calc(var(--radius-card) - 0.35rem);
+		background: color-mix(in srgb, var(--c-bg-tertiary) 82%, white 18%);
+
+		span {
+			display: block;
+			font-size: 0.72rem;
+			text-transform: uppercase;
+			letter-spacing: 0.16em;
+			color: var(--c-text-muted);
+		}
+
+		strong {
+			display: block;
+			margin-top: 0.4rem;
+			font-size: 1rem;
+			color: var(--c-text-secondary);
+			word-break: break-word;
+		}
 	}
 
 	&__sidebar {
@@ -182,8 +217,65 @@
 	}
 
 	&__not-found {
+		min-height: 24rem;
 		padding: 2.5rem 1.5rem;
 		text-align: center;
+		align-content: center;
+	}
+
+	&__skeleton-line,
+	&__skeleton-stars {
+		position: relative;
+		overflow: hidden;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--c-border) 72%, var(--c-bg-tertiary));
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			transform: translateX(-100%);
+			background: linear-gradient(
+				90deg,
+				transparent,
+				color-mix(in srgb, white 62%, transparent),
+				transparent
+			);
+			animation: review-shimmer 1.5s infinite;
+		}
+	}
+
+	&__skeleton-line {
+		height: 1rem;
+	}
+
+	&__skeleton-line--eyebrow {
+		width: 7rem;
+		height: 0.85rem;
+	}
+
+	&__skeleton-line--title {
+		width: min(22rem, 85%);
+		height: 1.8rem;
+	}
+
+	&__skeleton-line--rating {
+		width: 5rem;
+		height: 2rem;
+	}
+
+	&__skeleton-line--text {
+		width: min(30rem, 100%);
+	}
+
+	&__skeleton-line--body {
+		width: 100%;
+		margin-bottom: 0.9rem;
+	}
+
+	&__skeleton-stars {
+		width: 7rem;
+		height: 1.4rem;
 	}
 
 	@media (max-width: 1100px) {
@@ -211,5 +303,15 @@
 		&__stats {
 			grid-template-columns: 1fr 1fr;
 		}
+
+		&__meta-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+@keyframes review-shimmer {
+	100% {
+		transform: translateX(100%);
 	}
 }
