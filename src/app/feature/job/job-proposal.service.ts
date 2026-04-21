@@ -1,12 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { JobProposal } from './job-proposal.interface';
-import { Observable, tap, map } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { HttpService } from 'wacom';
+import { UserService } from '../user/user.service';
+import { JobProposal } from './job-proposal.interface';
 
 @Injectable({ providedIn: 'root' })
 export class JobProposalService {
-	private http = inject(HttpService);
-	private API = `/api/itjobproposal`;
+	private readonly _http = inject(HttpService);
+	private readonly _userService = inject(UserService);
+	private readonly _basePath = '/api/itjobproposal';
 
 	readonly proposals = signal<JobProposal[]>([]);
 
@@ -15,68 +17,77 @@ export class JobProposalService {
 	}
 
 	load(): void {
-		this.http.get(`${this.API}/get`).subscribe({
+		this._syncToken();
+
+		this._http.get(`${this._basePath}/get`).subscribe({
 			next: (docs: any) => {
 				const data = Array.isArray(docs) ? docs : (docs?.data || []);
 				if (Array.isArray(data)) {
-					this.proposals.set(data.map((d: any) => this._fromDoc(d)));
+					this.proposals.set(data.map((d: any) => this._mapToProposal(d)));
 				}
 			}
 		});
 	}
 
-	create(proposal: Partial<JobProposal>): Observable<any> {
-		const payload = {
-			...proposal.data,
-			jobId: proposal.data?.jobId,
-			data: proposal.data
-		};
-		return this.http.post(`${this.API}/create`, payload).pipe(
+	create(proposal: Partial<JobProposal>): Observable<JobProposal | null> {
+		this._syncToken();
+
+		return this._http.post(`${this._basePath}/create`, proposal).pipe(
 			map(doc => {
-				const fullDoc = { ...doc, ...proposal.data, data: doc?.data || proposal.data };
-				const mapped = this._fromDoc(fullDoc);
+				const mapped = this._mapToProposal(doc || proposal);
 				this.proposals.update(list => [mapped, ...list]);
 				return mapped;
-			})
+			}),
+			catchError(() => of(null))
 		);
 	}
 
-	update(proposal: JobProposal): Observable<any> {
-		const payload = {
-			_id: proposal._id,
-			...proposal.data,
-			jobId: proposal.data.jobId,
-			data: proposal.data
-		};
-		return this.http.post(`${this.API}/update`, payload).pipe(
+	update(proposal: JobProposal): Observable<JobProposal | null> {
+		this._syncToken();
+
+		const payload = { _id: proposal._id, ...proposal };
+		return this._http.post(`${this._basePath}/update`, payload).pipe(
 			map(doc => {
-				const fullDoc = { ...proposal, ...doc, ...proposal.data, data: doc?.data || proposal.data };
-				const mapped = this._fromDoc(fullDoc);
+				const mapped = this._mapToProposal(doc || proposal);
 				this.proposals.update(list => list.map(item => item._id === proposal._id ? mapped : item));
 				return mapped;
-			})
+			}),
+			catchError(() => of(null))
 		);
 	}
 
-	delete(proposal: JobProposal): Observable<any> {
-		return this.http.post(`${this.API}/delete`, { _id: proposal._id }).pipe(
-			tap(() => {
+	delete(proposal: JobProposal): Observable<boolean> {
+		this._syncToken();
+
+		return this._http.post(`${this._basePath}/delete`, { _id: proposal._id }).pipe(
+			map(() => {
 				this.proposals.update(list => list.filter(item => item._id !== proposal._id));
-			})
+				return true;
+			}),
+			catchError(() => of(false))
 		);
 	}
 
-	private _fromDoc(doc: any): JobProposal {
-		const d = doc.data || {};
+	private _mapToProposal(doc: any): JobProposal {
+		const source = doc.data ? { ...doc, ...doc.data } : doc;
 		return {
-			_id: doc._id || doc.id,
-			data: {
-				candidateName: doc.candidateName || d.candidateName || '',
-				email: doc.email || d.email || '',
-				cvUrl: doc.cvUrl || d.cvUrl || '',
-				jobId: doc.jobId || d.jobId || '',
-				status: doc.status || d.status || 'new'
-			}
+			_id: doc._id || doc.id || '',
+			candidateName: source.candidateName || '',
+			email: source.email || '',
+			phone: source.phone || '',
+			cvUrl: source.cvUrl || '',
+			message: source.message || '',
+			jobId: source.jobId || '',
+			status: source.status || 'new'
 		} as JobProposal;
+	}
+
+	private _syncToken(): void {
+		const token = this._userService.user().token?.trim() || '';
+		if (token) {
+			this._http.set('token', token);
+		} else {
+			this._http.remove('token');
+		}
 	}
 }

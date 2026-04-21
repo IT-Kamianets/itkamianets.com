@@ -44,6 +44,7 @@ export class JobComponent implements OnInit {
 	protected proposal = {
 		candidateName: '',
 		email: '',
+		phone: '',
 		cvUrl: '',
 		message: ''
 	};
@@ -72,22 +73,27 @@ export class JobComponent implements OnInit {
 		this.isSending.set(true);
 
 		this.jobProposalService.create({
-			data: { 
-				...this.proposal,
-				jobId: currentJob._id,
-				status: 'new'
-			}
+			candidateName: this.proposal.candidateName,
+			email: this.proposal.email,
+			phone: this.proposal.phone,
+			cvUrl: this.proposal.cvUrl,
+			message: this.proposal.message,
+			jobId: currentJob._id,
+			status: 'new'
 		}).subscribe({
-			next: () => {
+			next: (result) => {
 				this.isSending.set(false);
-				this.isSubmitted.set(true);
-				this.isApplying.set(false);
-				this.proposal = {
-					candidateName: '',
-					email: '',
-					cvUrl: '',
-					message: ''
-				};
+				if (result) {
+					this.isSubmitted.set(true);
+					this.isApplying.set(false);
+					this.proposal = {
+						candidateName: '',
+						email: '',
+						phone: '',
+						cvUrl: '',
+						message: ''
+					};
+				}
 			},
 			error: (err) => {
 				this.isSending.set(false);

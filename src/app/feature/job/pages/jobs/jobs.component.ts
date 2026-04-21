@@ -17,6 +17,6 @@ export class JobsComponent {
 	protected readonly jobs = computed(() => this.jobService.jobs());
 
 	protected readonly activeJobs = computed(() => {
-		return this.jobs().filter((job: Job) => job.data?.status === 'active');
+		return this.jobs().filter((job: Job) => job.status === 'active');
 	});
 }

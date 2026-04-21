@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { CrudDocument } from 'wacom';
 =======
 import { CrudDocument } from '@wawjs/ngx-crud';
@@ -13,7 +14,18 @@ export interface JobData {
 	status: 'active' | 'closed';
 	preview: string;
 }
+=======
+import { CrudDocument } from 'wacom';
+>>>>>>> 65460afd3fec1163b0ef7e3e41b73b8e6e58e66c
 
 export interface Job extends CrudDocument<Job> {
-	data: JobData;
+	title: string;
+	description: string;
+	requirements: string[];
+	status: 'active' | 'closed';
+	authorName: string;
+	authorId: string;
+	published: boolean;
+	preview: string;
+	company: string;
 }

@@ -37,10 +37,10 @@
 									<td class="whitespace-nowrap py-6 pl-8 pr-3">
 										<div class="flex items-center gap-3">
 											<div class="h-10 w-10 rounded-full bg-[var(--c-primary)]/10 flex items-center justify-center text-[var(--c-primary)] font-black text-xs uppercase">
-												{{ proposal.data.applicantName.substring(0, 2) }}
+												{{ proposal.candidateName.substring(0, 2) }}
 											</div>
 											<div class="text-sm font-black text-[var(--c-text-secondary)]">
-												{{ proposal.data.applicantName }}
+												{{ proposal.candidateName }}
 											</div>
 										</div>
 									</td>
@@ -53,21 +53,21 @@
 										<div class="text-sm space-y-1">
 											<div class="flex items-center gap-1.5 text-[var(--c-text-primary)] font-bold">
 												<span class="material-symbols-outlined text-xs">mail</span>
-												{{ proposal.data.applicantEmail }}
+												{{ proposal.email }}
 											</div>
 											<div class="flex items-center gap-1.5 text-[var(--c-text-muted)] font-medium">
 												<span class="material-symbols-outlined text-xs">call</span>
-												{{ proposal.data.applicantPhone }}
+												{{ proposal.phone }}
 											</div>
 										</div>
 									</td>
 									<td class="px-3 py-6">
-										<p class="text-sm text-[var(--c-text-muted)] max-w-xs truncate font-medium" [title]="proposal.data.message">
-											{{ proposal.data.message }}
+										<p class="text-sm text-[var(--c-text-muted)] max-w-xs truncate font-medium" [title]="proposal.message">
+											{{ proposal.message }}
 										</p>
 									</td>
 									<td class="relative whitespace-nowrap py-6 pl-3 pr-8 text-right text-sm font-medium">
-										<button 
+										<button
 											(click)="deleteProposal(proposal)"
 											class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all">
 											<span class="material-symbols-outlined">delete</span>
