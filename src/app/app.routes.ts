@@ -13,6 +13,11 @@ export const routes: Routes = [
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
 			{
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 65460afd3fec1163b0ef7e3e41b73b8e6e58e66c
 				path: 'our-work',
 				loadComponent: () =>
 					import('./pages/our-work/our-work.component').then(
@@ -21,6 +26,15 @@ export const routes: Routes = [
 			},
 
 			{
+<<<<<<< HEAD
+				path: 'jobs',
+				loadComponent: () =>
+					import('./pages/jobs/jobs.component').then((m) => m.JobsComponent),
+			},
+			{
+>>>>>>> 2afd0d29802756d20c45c43f0bfdb3d9dae8ae87
+=======
+>>>>>>> 65460afd3fec1163b0ef7e3e41b73b8e6e58e66c
 				path: 'education',
 				loadComponent: () =>
 					import('./pages/education/education.component').then(
@@ -215,6 +229,10 @@ export const routes: Routes = [
 				loadChildren: () =>
 					import('./feature/certificate/public.routes').then((m) => m.routes),
 			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/sale/public.routes').then((m) => m.routes),
+			},
 		],
 	},
 	{
@@ -406,6 +424,10 @@ export const routes: Routes = [
 				path: '',
 				loadChildren: () =>
 					import('./feature/certificate/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/sale/manage.routes').then((m) => m.routes),
 			},
 		],
 	},
