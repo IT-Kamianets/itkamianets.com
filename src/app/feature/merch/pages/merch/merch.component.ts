@@ -73,7 +73,7 @@ export class MerchComponent {
 	placeOrder() {
 		if (!this.customer.name || !this.customer.phone || this.cart().length === 0) return;
 
-		const orderData = {
+		const order = {
 			items: this.cart().map(i => ({
 				productId: i._id,
 				name: i.name,
@@ -85,7 +85,7 @@ export class MerchComponent {
 			status: 'pending' as const
 		};
 
-		this.os.create({ data: orderData } as any);
+		this.os.create(order as any);
 		
 		this.cart.set([]);
 		this.isCartVisible.set(false);
