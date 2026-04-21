@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ThemeService } from '@wawjs/ngx-ui';
+import { ThemeService } from 'wacom';
 
 @Component({
 	selector: 'app-root',

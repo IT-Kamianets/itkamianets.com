@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField, pattern, required, submit } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
-import { HttpService } from '@wawjs/ngx-http';
-import { ThemeMode, ThemeService } from '@wawjs/ngx-ui';
+import { HttpService } from 'wacom';
+import { ThemeMode, ThemeService } from 'wacom';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { UserService } from '../../feature/user/user.service';
@@ -65,13 +65,13 @@ export class SignComponent {
 	}
 
 	private _login(payload: SignModel) {
-		this._http.post('/api/user/login', payload, (user) => this._set(user), {
+		this._http.post('/api/user/login', payload, (user: any) => this._set(user), {
 			err: () => this._setStatus('error', 'Не вдалося увійти.'),
 		});
 	}
 
 	private _sign(payload: SignModel) {
-		this._http.post('/api/user/sign', payload, (user) => this._set(user), {
+		this._http.post('/api/user/sign', payload, (user: any) => this._set(user), {
 			err: () => this._setStatus('error', 'Не вдалося зареєструватися.'),
 		});
 	}

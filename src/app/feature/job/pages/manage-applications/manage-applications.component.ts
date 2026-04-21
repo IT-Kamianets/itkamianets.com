@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { JobProposalService } from '../../job-proposal.service';
 import { JobService } from '../../job.service';
-import { TableModule as Table } from 'primeng/table';
-import { ButtonModule as Button } from 'primeng/button';
-import { TagModule as Tag } from 'primeng/tag';
-import { ConfirmDialog } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @Component({
 	selector: 'app-manage-applications',
 	standalone: true,
-	imports: [CommonModule, RouterLink, Table, Button, Tag, ConfirmDialog],
+	imports: [CommonModule, RouterLink, TableModule, ButtonModule, TagModule, ConfirmDialogModule, TooltipModule],
 	providers: [ConfirmationService],
 	templateUrl: './manage-applications.component.html',
 	styleUrl: './manage-applications.component.scss',

@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpService } from '@wawjs/ngx-http';
+import { HttpService } from 'wacom';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { CertificateOption } from './certificate-option.interface';
 

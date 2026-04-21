@@ -3,92 +3,57 @@
 	<div class="sm:flex sm:items-center mb-10">
 		<div class="sm:flex-auto">
 			<div class="flex items-center gap-3">
-				<a routerLink="/manage" class="inline-flex items-center justify-center rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-2 text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] hover:text-[var(--c-primary)] transition-all">
-					<span class="material-symbols-outlined text-xl">arrow_back</span>
+				<a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-600 hover:border-[#256eff] hover:text-[#256eff] transition-all shadow-sm">
+					<span class="pi pi-arrow-left font-bold"></span>
 				</a>
-				<h1 class="text-2xl font-black leading-tight text-[var(--c-text-secondary)] sm:text-4xl">Заявки</h1>
+				<h1 class="text-3xl font-black text-slate-800">Заявки</h1>
 			</div>
-			<p class="mt-2 text-sm text-[var(--c-text-muted)] max-w-2xl">
-				Переглядайте та керуйте отриманими відгуками на вакансії та проєкти.
-			</p>
 		</div>
 	</div>
 
-	<!-- Applications Table -->
-	<div class="mt-8 flow-root">
-		<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-			<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-				<div class="overflow-hidden rounded-[2.5rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-sm">
-					<table class="min-w-full divide-y divide-[var(--c-border)]">
-						<thead class="bg-[var(--c-bg-tertiary)]">
-							<tr>
-								<th scope="col" class="py-5 pl-8 pr-3 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Кандидат</th>
-								<th scope="col" class="px-3 py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Вакансія</th>
-								<th scope="col" class="px-3 py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Контакти</th>
-								<th scope="col" class="px-3 py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Повідомлення</th>
-								<th scope="col" class="relative py-5 pl-3 pr-8">
-									<span class="sr-only">Дії</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
-							@for (proposal of proposals(); track proposal._id) {
-								<tr class="hover:bg-[var(--c-bg-primary)]/30 transition-colors group">
-									<td class="whitespace-nowrap py-6 pl-8 pr-3">
-										<div class="flex items-center gap-3">
-											<div class="h-10 w-10 rounded-full bg-[var(--c-primary)]/10 flex items-center justify-center text-[var(--c-primary)] font-black text-xs uppercase">
-												{{ proposal.candidateName.substring(0, 2) }}
-											</div>
-											<div class="text-sm font-black text-[var(--c-text-secondary)]">
-												{{ proposal.candidateName }}
-											</div>
-										</div>
-									</td>
-									<td class="px-3 py-6">
-										<span class="inline-flex items-center rounded-lg bg-[var(--c-bg-primary)] px-3 py-1 text-xs font-bold text-[var(--c-text-secondary)] border border-[var(--c-border)]">
-											{{ getJobTitle(proposal.jobId) }}
-										</span>
-									</td>
-									<td class="px-3 py-6">
-										<div class="text-sm space-y-1">
-											<div class="flex items-center gap-1.5 text-[var(--c-text-primary)] font-bold">
-												<span class="material-symbols-outlined text-xs">mail</span>
-												{{ proposal.email }}
-											</div>
-											<div class="flex items-center gap-1.5 text-[var(--c-text-muted)] font-medium">
-												<span class="material-symbols-outlined text-xs">call</span>
-												{{ proposal.phone }}
-											</div>
-										</div>
-									</td>
-									<td class="px-3 py-6">
-										<p class="text-sm text-[var(--c-text-muted)] max-w-xs truncate font-medium" [title]="proposal.message">
-											{{ proposal.message }}
-										</p>
-									</td>
-									<td class="relative whitespace-nowrap py-6 pl-3 pr-8 text-right text-sm font-medium">
-										<button
-											(click)="deleteProposal(proposal)"
-											class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all">
-											<span class="material-symbols-outlined">delete</span>
-										</button>
-									</td>
-								</tr>
-							} @empty {
-								<tr>
-									<td colspan="5" class="py-24 text-center">
-										<div class="inline-flex h-20 w-20 items-center justify-center rounded-full bg-[var(--c-bg-primary)] mb-4">
-											<span class="material-symbols-outlined text-4xl text-[var(--c-text-muted)] opacity-30">inbox</span>
-										</div>
-										<p class="text-lg font-black text-[var(--c-text-secondary)]">Заявок поки немає</p>
-										<p class="text-sm text-[var(--c-text-muted)] font-medium">Очікуйте на відгуки від зацікавлених кандидатів</p>
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
+	<!-- Data Table -->
+	<div class="bg-white rounded-[2rem] border-2 border-slate-100 shadow-xl overflow-hidden">
+		<p-table [value]="proposals()" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+			<ng-template pTemplate="header">
+				<tr class="bg-slate-50">
+					<th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Кандидат</th>
+					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Вакансія</th>
+					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Контакти</th>
+					<th class="py-5 text-center text-xs font-black uppercase text-slate-400 tracking-widest">Дії</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-proposal>
+				<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+					<td class="py-6 pl-8">
+						<div class="text-sm font-black text-slate-700">{{ proposal.candidateName }}</div>
+					</td>
+					<td class="py-6">
+						<span class="px-3 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-black uppercase">
+							{{ getJobTitle(proposal.jobId) }}
+						</span>
+					</td>
+					<td class="py-6">
+						<div class="text-xs font-bold text-slate-500 flex flex-col gap-1">
+							<span class="flex items-center gap-1.5"><i class="pi pi-envelope text-[10px]"></i> {{ proposal.email }}</span>
+							<span class="flex items-center gap-1.5"><i class="pi pi-phone text-[10px]"></i> {{ proposal.phone }}</span>
+						</div>
+					</td>
+					<td class="py-6 text-center">
+                        <button
+                            (click)="deleteProposal(proposal)"
+                            class="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-[#f43f5e] text-white shadow-md hover:scale-105 active:scale-95 transition-all">
+                            <span class="pi pi-trash text-sm"></span>
+                        </button>
+					</td>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="4" class="py-24 text-center">
+						<p class="text-lg font-black text-slate-300 uppercase tracking-widest">Заявок поки немає</p>
+					</td>
+				</tr>
+			</ng-template>
+		</p-table>
 	</div>
 </div>

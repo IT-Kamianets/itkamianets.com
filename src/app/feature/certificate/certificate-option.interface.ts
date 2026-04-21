@@ -1,4 +1,4 @@
-import { CrudDocument } from '@wawjs/ngx-crud';
+import { CrudDocument } from 'wacom';
 
 export interface CertificateOptionData {
 	title: string;

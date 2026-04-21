@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ThemeMode, ThemeService } from '@wawjs/ngx-ui';
+import { ThemeMode, ThemeService } from 'wacom';
 import { UserService } from '../../feature/user/user.service';
 
 @Component({

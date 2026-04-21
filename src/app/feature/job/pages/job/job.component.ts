@@ -5,12 +5,12 @@ import { RouterLink } from '@angular/router';
 import { JobService } from '../../job.service';
 import { JobProposalService } from '../../job-proposal.service';
 import { Job } from '../../job.interface';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { Textarea } from 'primeng/textarea';
-import { Dialog } from 'primeng/dialog';
-import { Tag } from 'primeng/tag';
-import { Message } from 'primeng/message';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { DialogModule } from 'primeng/dialog';
+import { TagModule } from 'primeng/tag';
+import { MessageModule } from 'primeng/message';
 
 @Component({
 	selector: 'app-job-detail',
@@ -19,12 +19,12 @@ import { Message } from 'primeng/message';
 		CommonModule, 
 		FormsModule, 
 		RouterLink,
-		Button,
-		InputText,
-		Textarea,
-		Dialog,
-		Tag,
-		Message
+		ButtonModule,
+		InputTextModule,
+		TextareaModule,
+		DialogModule,
+		TagModule,
+		MessageModule
 	],
 	templateUrl: './job.component.html',
 	styleUrl: './job.component.scss',

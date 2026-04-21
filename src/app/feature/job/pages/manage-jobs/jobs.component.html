@@ -3,87 +3,55 @@
     <div class="sm:flex sm:items-center mb-10">
         <div class="sm:flex-auto">
             <div class="flex items-center gap-3">
-                <a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] text-[var(--c-text-secondary)] hover:border-[var(--c-primary)] hover:text-[var(--c-primary)] transition-all">
-                    <span class="material-symbols-outlined text-xl">arrow_back</span>
+                <a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-600 hover:border-[#256eff] hover:text-[#256eff] transition-all">
+                    <span class="pi pi-arrow-left font-bold"></span>
                 </a>
-                <h1 class="text-2xl font-black leading-tight text-[var(--c-text-secondary)] sm:text-4xl">Керування вакансіями</h1>
+                <h1 class="text-3xl font-black text-slate-800">Керування вакансіями</h1>
             </div>
-            <p class="mt-2 text-sm text-[var(--c-text-muted)] max-w-2xl">
-                Створюйте та редагуйте вакансії для IT-спільноти Кам'янця-Подільського.
-            </p>
         </div>
-        <div class="mt-6 sm:ml-16 sm:mt-0 sm:flex-none">
-            <p-button label="Створити вакансію" icon="pi pi-plus" (onClick)="create()" severity="primary" [rounded]="true"></p-button>
+        <div class="mt-4 sm:mt-0">
+            <button
+                (click)="create()"
+                class="bg-[#256eff] text-white px-6 py-3 rounded-full font-black text-sm tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg flex items-center gap-2">
+                <span class="pi pi-plus"></span>
+                СТВОРИТИ ВАКАНСІЮ
+            </button>
         </div>
     </div>
 
-    <!-- PrimeNG Table -->
-    <div class="bg-[var(--c-bg-secondary)] rounded-[2.5rem] border border-[var(--c-border)] shadow-sm overflow-hidden">
+    <!-- Data Table -->
+    <div class="bg-white rounded-[2rem] border-2 border-slate-100 shadow-xl overflow-hidden">
         <p-table [value]="jobs()" [paginator]="true" [rows]="10" responsiveLayout="scroll">
             <ng-template pTemplate="header">
-                <tr>
-                    <th pSortableColumn="title" class="!bg-[var(--c-bg-tertiary)] !py-5 !pl-8 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Назва <p-sortIcon field="title"></p-sortIcon></th>
-                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Зображення</th>
-                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Вимоги</th>
-                    <th class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Опис</th>
-                    <th pSortableColumn="status" class="!bg-[var(--c-bg-tertiary)] !py-5 text-left text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Статус <p-sortIcon field="status"></p-sortIcon></th>
-                    <th style="width: 150px" class="!bg-[var(--c-bg-tertiary)] !py-5 text-center text-xs font-black uppercase tracking-widest text-[var(--c-text-muted)]">Дії</th>
+                <tr class="bg-slate-50">
+                    <th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Назва</th>
+                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Компанія</th>
+                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Статус</th>
+                    <th class="py-5 text-center text-xs font-black uppercase text-slate-400 tracking-widest">Дії</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-job>
-                <tr class="hover:bg-[var(--c-bg-primary)]/30 transition-colors">
-                    <td class="!py-6 !pl-8 font-bold text-[var(--c-text-secondary)]">{{job.title}}</td>
-                    <td class="!py-6">
-                        @if (job.preview) {
-                            <img [src]="job.preview" [alt]="job.title" class="h-12 w-16 rounded-lg object-cover border border-[var(--c-border)]" />
-                        } @else {
-                            <div class="h-12 w-16 rounded-lg bg-[var(--c-bg-primary)] border border-[var(--c-border)] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-2xl text-[var(--c-text-muted)] opacity-40">image</span>
-                            </div>
-                        }
+                <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                    <td class="py-6 pl-8 font-black text-slate-700">{{job.title}}</td>
+                    <td class="py-6 font-bold text-slate-500">{{job.company || '—'}}</td>
+                    <td class="py-6">
+                        <span [class]="job.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'" class="px-3 py-1 rounded-lg text-xs font-black uppercase tracking-tighter">
+                            {{ job.status === 'active' ? 'Активна' : 'Закрита' }}
+                        </span>
                     </td>
-                    <td class="!py-6">
-                        <div class="flex flex-wrap gap-1 max-w-xs">
-                            @for (req of job.requirements.slice(0, 3); track $index) {
-                                <span class="inline-flex items-center rounded-md bg-[var(--c-bg-primary)] px-2 py-1 text-xs font-medium text-[var(--c-text-secondary)] border border-[var(--c-border)]">
-                                    {{ req }}
-                                </span>
-                            }
-                            @if (job.requirements.length > 3) {
-                                <span class="inline-flex items-center rounded-md bg-[var(--c-bg-tertiary)] px-2 py-1 text-xs font-medium text-[var(--c-text-muted)]">
-                                    +{{ job.requirements.length - 3 }}
-                                </span>
-                            }
-                        </div>
-                    </td>
-                    <td class="!py-6">
-                        <p class="text-sm text-[var(--c-text-muted)] max-w-xs line-clamp-2">
-                            {{ job.description || '—' }}
-                        </p>
-                    </td>
-                    <td class="!py-6">
-                        <p-tag [severity]="job.status === 'active' ? 'success' : 'danger'" [value]="job.status === 'active' ? 'Активна' : 'Закрита'"></p-tag>
-                    </td>
-                    <td>
-                        <div class="flex gap-2 justify-center">
+                    <td class="py-6">
+                        <div class="flex gap-3 justify-center">
                             <button
                                 (click)="edit(job)"
-                                class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[var(--c-primary)] hover:bg-[var(--c-primary)] hover:text-white transition-all">
-                                <span class="material-symbols-outlined">edit</span>
+                                class="h-10 w-10 flex items-center justify-center rounded-xl bg-[#256eff] text-white shadow-md hover:scale-105 transition-transform">
+                                <span class="pi pi-pencil text-sm"></span>
                             </button>
                             <button
                                 (click)="delete(job)"
-                                class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all">
-                                <span class="material-symbols-outlined">delete</span>
+                                class="h-10 w-10 flex items-center justify-center rounded-xl bg-[#f43f5e] text-white shadow-md hover:scale-105 transition-transform">
+                                <span class="pi pi-trash text-sm"></span>
                             </button>
                         </div>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="6" class="py-24 text-center">
-                        <p class="text-lg font-black text-[var(--c-text-secondary)]">Вакансій не знайдено</p>
                     </td>
                 </tr>
             </ng-template>
@@ -91,60 +59,34 @@
     </div>
 
     <!-- Edit/Create Dialog -->
-    <p-dialog [(visible)]="displayDialog" [header]="selectedJob()?._id ? 'Редагувати вакансію' : 'Створити вакансію'" [modal]="true" [style]="{width: '100%', maxWidth: '600px'}" [draggable]="false" [resizable]="false">
+    <p-dialog [(visible)]="displayDialog" [header]="selectedJob()?._id ? 'РЕДАГУВАТИ' : 'СТВОРИТИ'" [modal]="true" [style]="{width: '100%', maxWidth: '500px'}" [draggable]="false" [resizable]="false">
         @if (selectedJob(); as current) {
-            <div class="flex flex-col gap-5 py-4">
+            <div class="flex flex-col gap-5 py-6">
                 <div class="flex flex-col gap-2">
-                    <label for="title" class="font-bold text-[var(--c-text-secondary)]">Назва вакансії</label>
-                    <input pInputText id="title" [(ngModel)]="current.title" placeholder="Наприклад: Senior Angular Developer" class="w-full" />
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Назва вакансії</label>
+                    <input pInputText [(ngModel)]="current.title" class="w-full !rounded-xl !p-4 !border-2" placeholder="Назва..." />
                 </div>
-
                 <div class="flex flex-col gap-2">
-                    <label class="font-bold text-[var(--c-text-secondary)]">Зображення</label>
-                    <div class="group relative flex aspect-video w-full flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[var(--c-border)] bg-[var(--c-bg-primary)] transition-all hover:border-[var(--c-primary)]">
-                        @if (current.preview) {
-                            <img [src]="current.preview" class="h-full w-full object-cover" />
-                            <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                                <p-button icon="pi pi-trash" (onClick)="current.preview = ''" severity="danger" [rounded]="true"></p-button>
-                            </div>
-                        } @else {
-                            <label class="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2">
-                                <span class="pi pi-cloud-upload text-4xl text-[var(--c-text-muted)]"></span>
-                                <span class="text-sm font-black text-[var(--c-text-muted)] uppercase tracking-wider">Натисніть для завантаження</span>
-                                <input type="file" (change)="onImageUpload($event)" accept="image/*" class="hidden" />
-                            </label>
-                        }
-                    </div>
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Компанія</label>
+                    <input pInputText [(ngModel)]="current.company" class="w-full !rounded-xl !p-4 !border-2" placeholder="Назва компанії..." />
                 </div>
-
                 <div class="flex flex-col gap-2">
-                    <label class="font-bold text-[var(--c-text-secondary)]">Статус вакансії</label>
-                    <div class="flex gap-6">
-                        <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="radio" id="active" name="status" value="active" [(ngModel)]="current.status" class="w-5 h-5 cursor-pointer accent-[var(--c-primary)]">
-                            <span class="text-sm font-bold text-[var(--c-text-secondary)] group-hover:text-[var(--c-primary)]">АКТИВНА</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="radio" id="closed" name="status" value="closed" [(ngModel)]="current.status" class="w-5 h-5 cursor-pointer accent-rose-500">
-                            <span class="text-sm font-bold text-[var(--c-text-secondary)] group-hover:text-rose-500">ЗАКРИТА</span>
-                        </label>
-                    </div>
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Вимоги (через кому)</label>
+                    <input pInputText [ngModel]="getRequirementString(current)" (ngModelChange)="setRequirements($event)" class="w-full !rounded-xl !p-4 !border-2" placeholder="Angular, Git, CSS..." />
                 </div>
-
                 <div class="flex flex-col gap-2">
-                    <label for="requirements" class="font-bold text-[var(--c-text-secondary)]">Вимоги (через кому)</label>
-                    <input pInputText id="requirements" [ngModel]="getRequirementString(current)" (ngModelChange)="setRequirements($event)" placeholder="Angular, TypeScript, Tailwind" class="w-full" />
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <label for="description" class="font-bold text-[var(--c-text-secondary)]">Опис вакансії</label>
-                    <textarea pTextarea id="description" [(ngModel)]="current.description" rows="5" placeholder="Опишіть роль та умови..." class="w-full"></textarea>
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Опис</label>
+                    <textarea pTextarea [(ngModel)]="current.description" rows="4" class="w-full !rounded-xl !p-4 !border-2" placeholder="Деталі..."></textarea>
                 </div>
             </div>
         }
         <ng-template pTemplate="footer">
-            <p-button label="Скасувати" (onClick)="displayDialog.set(false)" [text]="true" severity="secondary"></p-button>
-            <p-button label="Зберегти" (onClick)="save()" [loading]="isSaving()" severity="primary"></p-button>
+            <div class="flex gap-3 justify-end pb-4">
+                <button (click)="displayDialog.set(false)" class="px-6 py-2 text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">СКАСУВАТИ</button>
+                <button (click)="save()" [disabled]="isSaving()" class="bg-[#256eff] text-white px-8 py-2 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 disabled:opacity-50 shadow-lg">
+                    {{ isSaving() ? 'ЗБЕРЕЖЕННЯ...' : 'ЗБЕРЕГТИ' }}
+                </button>
+            </div>
         </ng-template>
     </p-dialog>
 

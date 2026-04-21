@@ -4,14 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { JobService } from '../../job.service';
 import { Job } from '../../job.interface';
-import { TableModule as Table } from 'primeng/table';
-import { Dialog } from 'primeng/dialog';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { ConfirmDialog } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { Textarea } from 'primeng/textarea';
-import { Tag } from 'primeng/tag';
+import { TextareaModule } from 'primeng/textarea';
+import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
 	selector: 'app-manage-jobs',
@@ -20,13 +21,14 @@ import { Tag } from 'primeng/tag';
 		CommonModule,
 		FormsModule,
 		RouterLink,
-		Table,
-		Dialog,
-		Button,
-		InputText,
-		Textarea,
-		ConfirmDialog,
-		Tag
+		TableModule,
+		DialogModule,
+		ButtonModule,
+		InputTextModule,
+		TextareaModule,
+		ConfirmDialogModule,
+		TagModule,
+		TooltipModule
 	],
 	providers: [ConfirmationService],
 	templateUrl: './jobs.component.html',
@@ -51,7 +53,8 @@ export class JobsComponent {
 			authorName: '',
 			authorId: '',
 			published: false,
-			preview: ''
+			preview: '',
+			company: ''
 		} as Job;
 	}
 
@@ -65,7 +68,7 @@ export class JobsComponent {
 					// Створюємо новий об'єкт, щоб Angular помітив зміну
 					this.selectedJob.set({
 						...job,
-						 ...job, preview: e.target?.result as string 
+						preview: e.target?.result as string 
 					});
 				}
 			};

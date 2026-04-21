@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from '@wawjs/ngx-http';
+import { HttpService } from 'wacom';
 import { NEW_USER } from './user.const';
 import { User } from './user.interface';
 
