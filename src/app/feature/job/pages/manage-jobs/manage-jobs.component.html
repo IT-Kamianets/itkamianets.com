@@ -24,16 +24,28 @@
         <p-table [value]="jobs()" [paginator]="true" [rows]="10" responsiveLayout="scroll">
             <ng-template pTemplate="header">
                 <tr class="bg-slate-50">
-                    <th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Назва</th>
-                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Компанія</th>
+                    <th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 tracking-widest w-20">Фото</th>
+                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Назва</th>
                     <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Статус</th>
-                    <th class="py-5 text-center text-xs font-black uppercase text-slate-400 tracking-widest">Дії</th>
+                    <th class="py-5 text-center text-xs font-black uppercase text-slate-400 tracking-widest">
+                        <div class="flex justify-center pr-4">Дії</div>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-job>
                 <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                    <td class="py-6 pl-8 font-black text-slate-700">{{job.title}}</td>
-                    <td class="py-6 font-bold text-slate-500">{{job.company || '—'}}</td>
+                    <td class="py-4 pl-8">
+                        <div class="h-12 w-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200">
+                            @if (job.preview) {
+                                <img [src]="job.preview" class="h-full w-full object-cover" />
+                            } @else {
+                                <div class="h-full w-full flex items-center justify-center">
+                                    <span class="pi pi-image text-slate-300"></span>
+                                </div>
+                            }
+                        </div>
+                    </td>
+                    <td class="py-6 font-black text-slate-700">{{job.title}}</td>
                     <td class="py-6">
                         <span [class]="job.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'" class="px-3 py-1 rounded-lg text-xs font-black uppercase tracking-tighter">
                             {{ job.status === 'active' ? 'Активна' : 'Закрита' }}
@@ -62,6 +74,45 @@
     <p-dialog [(visible)]="displayDialog" [header]="selectedJob()?._id ? 'РЕДАГУВАТИ' : 'СТВОРИТИ'" [modal]="true" [style]="{width: '100%', maxWidth: '500px'}" [draggable]="false" [resizable]="false">
         @if (selectedJob(); as current) {
             <div class="flex flex-col gap-5 py-6">
+                <!-- Status & Image Section -->
+                <div class="flex items-start gap-4">
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Прев'ю</label>
+                        <div class="relative group cursor-pointer h-32 w-full rounded-xl border-2 border-dashed border-slate-200 overflow-hidden hover:border-[#256eff] transition-all flex items-center justify-center bg-slate-50">
+                            @if (current.preview) {
+                                <img [src]="current.preview" class="h-full w-full object-cover" />
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="pi pi-camera text-white text-xl"></span>
+                                </div>
+                            } @else {
+                                <div class="flex flex-col items-center gap-1 text-slate-400">
+                                    <span class="pi pi-image text-2xl"></span>
+                                    <span class="text-[8px] font-black uppercase tracking-widest text-center px-2">Фото</span>
+                                </div>
+                            }
+                            <input type="file" (change)="onImageUpload($event)" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" />
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2 w-32">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Статус</label>
+                        <div class="flex flex-col gap-2">
+                            <button 
+                                (click)="current.status = 'active'"
+                                [class]="current.status === 'active' ? 'bg-green-500 text-white shadow-lg' : 'bg-slate-100 text-slate-400'"
+                                class="py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                                Активна
+                            </button>
+                            <button 
+                                (click)="current.status = 'closed'"
+                                [class]="current.status === 'closed' ? 'bg-red-500 text-white shadow-lg' : 'bg-slate-100 text-slate-400'"
+                                class="py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                                Закрита
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Назва вакансії</label>
                     <input pInputText [(ngModel)]="current.title" class="w-full !rounded-xl !p-4 !border-2" placeholder="Назва..." />

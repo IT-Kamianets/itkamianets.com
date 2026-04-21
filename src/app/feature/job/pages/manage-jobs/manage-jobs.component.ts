@@ -31,11 +31,11 @@ import { TooltipModule } from 'primeng/tooltip';
 		TooltipModule
 	],
 	providers: [ConfirmationService],
-	templateUrl: './jobs.component.html',
-	styleUrl: './jobs.component.scss',
+	templateUrl: './manage-jobs.component.html',
+	styleUrl: './manage-jobs.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobsComponent {
+export class ManageJobsComponent {
 	protected readonly jobService = inject(JobService);
 	protected readonly confirmationService = inject(ConfirmationService);
 	protected readonly jobs = computed(() => this.jobService.jobs());
@@ -98,7 +98,10 @@ export class JobsComponent {
 			company: job.company,
 			requirements: job.requirements,
 			status: job.status,
-			preview: job.preview
+			preview: job.preview,
+			published: job.status === 'active',
+			authorName: job.authorName,
+			authorId: job.authorId
 		};
 
 		this.isSaving.set(true);

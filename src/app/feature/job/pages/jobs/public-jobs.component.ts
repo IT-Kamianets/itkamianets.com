@@ -5,14 +5,14 @@ import { Job } from '../../job.interface';
 import { JobService } from '../../job.service';
 
 @Component({
-	selector: 'app-jobs',
+	selector: 'app-public-jobs',
 	standalone: true,
 	imports: [CommonModule, RouterLink],
-	templateUrl: './jobs.component.html',
-	styleUrl: './jobs.component.scss',
+	templateUrl: './public-jobs.component.html',
+	styleUrl: './public-jobs.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobsComponent {
+export class PublicJobsComponent {
 	protected readonly jobService = inject(JobService);
 	protected readonly jobs = computed(() => this.jobService.jobs());
 

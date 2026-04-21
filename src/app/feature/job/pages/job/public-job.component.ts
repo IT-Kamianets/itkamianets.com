@@ -13,7 +13,7 @@ import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 
 @Component({
-	selector: 'app-job-detail',
+	selector: 'app-public-job',
 	standalone: true,
 	imports: [
 		CommonModule, 
@@ -26,11 +26,11 @@ import { MessageModule } from 'primeng/message';
 		TagModule,
 		MessageModule
 	],
-	templateUrl: './job.component.html',
-	styleUrl: './job.component.scss',
+	templateUrl: './public-job.component.html',
+	styleUrl: './public-job.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobComponent implements OnInit {
+export class PublicJobComponent implements OnInit {
 	@Input() id!: string;
 
 	private readonly jobService = inject(JobService);

@@ -1,5 +1,4 @@
-export interface JobProposal {
-	_id: string;
+export interface JobProposalData {
 	candidateName: string;
 	email: string;
 	phone?: string;
@@ -7,4 +6,9 @@ export interface JobProposal {
 	message: string;
 	jobId: string;
 	status: 'new' | 'reviewed' | 'rejected';
+}
+
+export interface JobProposal extends JobProposalData {
+	_id: string;
+	data: JobProposalData;
 }

@@ -12,15 +12,15 @@ import { TooltipModule } from 'primeng/tooltip';
 
 
 @Component({
-	selector: 'app-manage-applications',
+	selector: 'app-manage-job-proposals',
 	standalone: true,
 	imports: [CommonModule, RouterLink, TableModule, ButtonModule, TagModule, ConfirmDialogModule, TooltipModule],
 	providers: [ConfirmationService],
-	templateUrl: './manage-applications.component.html',
-	styleUrl: './manage-applications.component.scss',
+	templateUrl: './manage-job-proposals.component.html',
+	styleUrl: './manage-job-proposals.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageApplicationsComponent {
+export class ManageJobProposalsComponent {
 	private readonly jobProposalService = inject(JobProposalService);
 	private readonly jobService = inject(JobService);
 	private readonly confirmationService = inject(ConfirmationService);

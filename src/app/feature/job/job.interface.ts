@@ -5,6 +5,9 @@ export interface JobData {
 	requirements: string[];
 	status: 'active' | 'closed';
 	preview: string;
+	published?: boolean;
+	authorName?: string;
+	authorId?: string;
 }
 
 export interface Job extends JobData {

@@ -6,14 +6,14 @@ export const routes: Routes = [
 		path: 'jobs',
 		canActivate: [authenticatedGuard],
 		loadComponent: () =>
-			import('./pages/manage-jobs/jobs.component').then((m) => m.JobsComponent),
+			import('./pages/manage-jobs/manage-jobs.component').then((m) => m.ManageJobsComponent),
 	},
 	{
 		path: 'applications',
 		canActivate: [authenticatedGuard],
 		loadComponent: () =>
-			import('./pages/manage-applications/manage-applications.component').then(
-				(m) => m.ManageApplicationsComponent,
+			import('./pages/manage-applications/manage-job-proposals.component').then(
+				(m) => m.ManageJobProposalsComponent,
 			),
 	},
 ];

@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from '@wawjs/ngx-http';
+import { HttpService } from 'wacom';
 import { UserService } from '../user/user.service';
-import { JobProposal } from './job-proposal.interface';
+import { JobProposal, JobProposalData } from './job-proposal.interface';
 
 @Injectable({ providedIn: 'root' })
 export class JobProposalService {
@@ -26,10 +26,16 @@ export class JobProposalService {
 		});
 	}
 
-	create(proposal: Partial<JobProposal>): Observable<JobProposal | null> {
+	create(proposal: Partial<JobProposalData>): Observable<JobProposal | null> {
 		this._syncToken();
 		const payload = {
-			...proposal,
+			candidateName: proposal.candidateName || '',
+			email: proposal.email || '',
+			phone: proposal.phone || '',
+			cvUrl: proposal.cvUrl || '',
+			message: proposal.message || '',
+			jobId: proposal.jobId || '',
+			status: proposal.status || 'new',
 			data: proposal
 		};
 		return this._http.post(`${this._basePath}/create`, payload).pipe(
@@ -45,9 +51,17 @@ export class JobProposalService {
 
 	update(proposal: JobProposal): Observable<JobProposal | null> {
 		this._syncToken();
-		const payload = { 
-			...proposal,
-			data: proposal 
+		const d = proposal.data || {} as JobProposalData;
+		const payload = {
+			_id: proposal._id,
+			candidateName: d.candidateName || '',
+			email: d.email || '',
+			phone: d.phone || '',
+			cvUrl: d.cvUrl || '',
+			message: d.message || '',
+			jobId: d.jobId || '',
+			status: d.status || 'new',
+			data: d
 		};
 		return this._http.post(`${this._basePath}/update`, payload).pipe(
 			map(doc => {
@@ -72,16 +86,20 @@ export class JobProposalService {
 	}
 
 	private _mapToProposal(doc: any): JobProposal {
-		const source = doc.data ? { ...doc, ...doc.data } : doc;
+		const d = doc.data || {};
+		const proposalData: JobProposalData = {
+			candidateName: doc.candidateName || d.candidateName || '',
+			email: doc.email || d.email || '',
+			phone: doc.phone || d.phone || '',
+			cvUrl: doc.cvUrl || d.cvUrl || '',
+			message: doc.message || d.message || '',
+			jobId: doc.jobId || d.jobId || '',
+			status: doc.status || d.status || 'new'
+		};
 		return {
-			_id: doc._id || source._id || '',
-			candidateName: source.candidateName || '',
-			email: source.email || '',
-			phone: source.phone || '',
-			cvUrl: source.cvUrl || '',
-			message: source.message || '',
-			jobId: source.jobId || '',
-			status: source.status || 'new'
+			_id: doc._id || doc.id || '',
+			...proposalData,
+			data: proposalData
 		} as JobProposal;
 	}
 

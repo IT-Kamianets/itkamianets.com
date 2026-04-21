@@ -30,6 +30,9 @@ export class UserService {
 
 		try {
 			const user = JSON.parse(storedUser) as User;
+			if (user.token) {
+				this._http.set('token', user.token);
+			}
 			this.setUser(user);
 		} catch {
 			localStorage.removeItem(this._storageKey);
