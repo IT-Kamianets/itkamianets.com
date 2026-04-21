@@ -1,13 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { UserService } from '../user/user.service';
 import { Profile } from './profile.types';
 import { EventService } from '../event/event.service';
 import { computed } from '@angular/core';
 
 const API = `/api/itprofile`;
-const EVENT_API = `/api/itevent`;
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -33,7 +32,7 @@ export class ProfileService {
 	constructor() {
 		this._syncToken();
 		this._http.get(`${API}/get`).subscribe({
-			next: (docs) => {
+			next: (docs: unknown) => {
 				if (Array.isArray(docs)) {
 					this.profiles.set(docs.map((d) => this._fromDoc(d)));
 				}
@@ -64,7 +63,7 @@ export class ProfileService {
 					console.warn('[ProfileService] add: бекенд повернув не валідний документ:', doc);
 				}
 			},
-			error: (err) => console.error('[ProfileService] add error:', err),
+			error: (err: unknown) => console.error('[ProfileService] add error:', err),
 		});
 	}
 
@@ -82,7 +81,7 @@ export class ProfileService {
 						list.map((c) => (c._id === profile._id ? (doc?._id ? this._fromDoc(doc) : profile) : c)),
 					);
 				},
-				error: (err) => console.error('[ProfileService] update error:', err),
+				error: (err: unknown) => console.error('[ProfileService] update error:', err),
 			});
 	}
 

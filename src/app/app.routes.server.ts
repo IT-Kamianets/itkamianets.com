@@ -13,7 +13,7 @@ const MANAGE_CLIENT_ROUTES = [
 	'manage/jobs',
 	'manage/events',
 	'manage/competitions',
-	'manage/people',
+	'manage/profiles',
 	'manage/manage-options',
 	'manage/manage-certificates',
 	'manage/cv-generation',
