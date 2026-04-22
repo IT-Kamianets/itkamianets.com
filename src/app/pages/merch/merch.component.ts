@@ -7,18 +7,13 @@ import {
 	effect,
 	inject,
 	signal,
+	OnInit,
 } from '@angular/core';
-
-interface MerchItem {
-	id: number;
-	name: string;
-	price: number;
-	image: string;
-	description: string;
-}
+import { MerchService } from '../../feature/merch/merch.service';
+import { MerchProduct } from '../../feature/merch/merch.interface';
 
 interface CartItem {
-	product: MerchItem;
+	product: MerchProduct;
 	quantity: number;
 }
 
@@ -28,9 +23,18 @@ interface CartItem {
 	styleUrl: './merch.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MerchComponent {
+export class MerchComponent implements OnInit {
 	private platformId = inject(PLATFORM_ID);
 	private isBrowser = isPlatformBrowser(this.platformId);
+	private _merchService = inject(MerchService);
+
+	products = signal<MerchProduct[]>([]);
+	cart = signal<CartItem[]>([]);
+	showCart = signal(false);
+	toasts = signal<{ id: number; message: string }[]>([]);
+	showShippingForm = signal(false);
+
+	private toastIdCounter = 0;
 
 	constructor() {
 		effect(() => {
@@ -43,63 +47,15 @@ export class MerchComponent {
 		});
 	}
 
-	readonly products: MerchItem[] = [
-		{
-			id: 1,
-			name: 'Чашка IT-Kamianets',
-			price: 250,
-			image: 'Cup',
-			description:
-				'Керамічна чашка 330 мл з логотипом IT-Kamianets. Ідеальна для ранкової кави під час кодингу.',
-		},
-		{
-			id: 2,
-			name: 'Футболка IT-Kamianets',
-			price: 550,
-			image: 'T-shirt',
-			description:
-				'Бавовняна футболка чорного кольору з мінімалістичним принтом IT-Kamianets на грудях.',
-		},
-		{
-			id: 3,
-			name: 'Стікер IT-Kamianets для ноутбука',
-			price: 50,
-			image: 'Sticker',
-			description:
-				'Вінілова наклейка з логотипом IT-Kamianets. Водостійка, підходить для ноутбуків, телефонів та пляшок.',
-		},
-		{
-			id: 4,
-			name: 'Худі IT-Kamianets',
-			price: 950,
-			image: 'Skinny',
-			description:
-				'Тепле худі з капюшоном та вишитим логотипом IT-Kamianets. Ідеальне для холодних вечорів з кодом.',
-		},
-		{
-			id: 5,
-			name: 'Кепка IT-Kamianets',
-			price: 350,
-			image: 'Cap',
-			description:
-				'Стильна кепка з вишитим логотипом IT-Kamianets. Регульований розмір та 100% бавовна.',
-		},
-		{
-			id: 6,
-			name: 'Шкарпетки IT-Kamianets',
-			price: 150,
-			image: 'Socks',
-			description:
-				'Комплект з 3 пар шкарпеток з IT-принтами. Ідеальне для холодних вечорів з кодом. Розмір 39–45.',
-		},
-	];
+	ngOnInit(): void {
+		this._loadProducts();
+	}
 
-	cart = signal<CartItem[]>([]);
-	showCart = signal(false);
-	toasts = signal<{ id: number; message: string }[]>([]);
-	showShippingForm = signal(false);
-
-	private toastIdCounter = 0;
+	private _loadProducts(): void {
+		this._merchService.getAll().subscribe((items) => {
+			this.products.set(items);
+		});
+	}
 
 	private addToast(message: string, duration: number): void {
 		const id = ++this.toastIdCounter;
@@ -162,12 +118,12 @@ export class MerchComponent {
 		this.cart().reduce((sum, item) => sum + item.product.price * item.quantity, 0),
 	);
 
-	addToCart(product: MerchItem): void {
+	addToCart(product: MerchProduct): void {
 		this.cart.update((items) => {
-			const existing = items.find((i) => i.product.id === product.id);
+			const existing = items.find((i) => i.product._id === product._id);
 			if (existing) {
 				return items.map((i) =>
-					i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
+					i.product._id === product._id ? { ...i, quantity: i.quantity + 1 } : i,
 				);
 			}
 			return [...items, { product, quantity: 1 }];
@@ -175,15 +131,15 @@ export class MerchComponent {
 		this.addToast('Товар додано у кошик', 2000);
 	}
 
-	removeFromCart(productId: number): void {
-		this.cart.update((items) => items.filter((i) => i.product.id !== productId));
+	removeFromCart(productId: string): void {
+		this.cart.update((items) => items.filter((i) => i.product._id !== productId));
 	}
 
-	updateQuantity(productId: number, delta: number): void {
+	updateQuantity(productId: string, delta: number): void {
 		this.cart.update((items) =>
 			items
 				.map((i) =>
-					i.product.id === productId ? { ...i, quantity: i.quantity + delta } : i,
+					i.product._id === productId ? { ...i, quantity: i.quantity + delta } : i,
 				)
 				.filter((i) => i.quantity > 0),
 		);

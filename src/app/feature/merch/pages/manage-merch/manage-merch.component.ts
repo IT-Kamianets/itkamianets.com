@@ -75,7 +75,6 @@ export class ManageMerchComponent {
 	});
 
 	constructor() {
-		this._merchService.seedDemoIfEmpty();
 		this._loadProducts();
 	}
 

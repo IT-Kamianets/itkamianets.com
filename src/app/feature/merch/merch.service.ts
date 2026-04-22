@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { HttpService } from 'wacom';
 import { UserService } from '../user/user.service';
@@ -11,6 +11,14 @@ export class MerchService {
 	private readonly _http = inject(HttpService);
 	private readonly _userService = inject(UserService);
 	private readonly _basePath = '/api/itproduct';
+
+	readonly products = signal<MerchProduct[]>([]);
+
+	constructor() {
+		this.getAll().subscribe((items) => {
+			this.products.set(items);
+		});
+	}
 
 	getAll(): Observable<MerchProduct[]> {
 		this._syncToken();
@@ -31,7 +39,13 @@ export class MerchService {
 		this._syncToken();
 
 		return this._http.post(`${this._basePath}/create`, data).pipe(
-			map((item: unknown) => (item ? this._mapToProduct(item) : null)),
+			map((item: unknown) => {
+				const product = item ? this._mapToProduct(item) : null;
+				if (product) {
+					this.products.update((items) => [...items, product]);
+				}
+				return product;
+			}),
 			catchError(() => of(null)),
 		);
 	}
@@ -40,7 +54,13 @@ export class MerchService {
 		this._syncToken();
 
 		return this._http.post(`${this._basePath}/update`, data).pipe(
-			map((item: unknown) => (item ? this._mapToProduct(item) : null)),
+			map((item: unknown) => {
+				const product = item ? this._mapToProduct(item) : null;
+				if (product) {
+					this.products.update((items) => items.map((i) => (i._id === product._id ? product : i)));
+				}
+				return product;
+			}),
 			catchError(() => of(null)),
 		);
 	}
@@ -49,33 +69,50 @@ export class MerchService {
 		this._syncToken();
 
 		return this._http.post(`${this._basePath}/delete`, { _id: id }).pipe(
-			map(() => true),
+			map(() => {
+				this.products.update((items) => items.filter((i) => i._id !== id));
+				return true;
+			}),
 			catchError(() => of(false)),
 		);
 	}
 
 	seedDemoIfEmpty(): void {
-		this.getAll().subscribe((items) => {
-			if (items.length === 0) {
-				const demoProducts = [
-					{
-						name: 'Чашка IT-Kamianets',
-						price: 250,
-						image: 'assets/Cup.png',
-						description: 'Керамічна чашка 330 мл з логотипом IT-Kamianets.',
-					},
-					{
-						name: 'Футболка IT-Kamianets',
-						price: 550,
-						image: 'assets/T-shirt.png',
-						description: 'Бавовняна футболка чорного кольору.',
-					},
-				];
+		const demoProducts = [
+			{
+				name: 'Чашка IT-Kamianets',
+				price: 250,
+				image: 'assets/Cup.png',
+				description: 'Керамічна чашка 330 мл з логотипом IT-Kamianets. Ідеальна для ранкової кави під час кодингу.',
+			},
+			{
+				name: 'Футболка IT-Kamianets',
+				price: 550,
+				image: 'assets/T-shirt.png',
+				description: 'Бавовняна футболка чорного кольору з мінімалістичним принтом IT-Kamianets на грудях.',
+			},
+			{
+				name: 'Худі IT-Kamianets',
+				price: 950,
+				image: 'assets/Skinny.png',
+				description: 'Тепле худі з капюшоном та вишитим логотипом IT-Kamianets. Ідеальне для холодних вечорів з кодом.',
+			},
+			{
+				name: 'Кепка IT-Kamianets',
+				price: 350,
+				image: 'assets/Cap.png',
+				description: 'Стильна кепка з вишитим логотипом IT-Kamianets. Регульований розмір та 100% бавовна.',
+			},
+			{
+				name: 'Шкарпетки IT-Kamianets',
+				price: 150,
+				image: 'assets/Socks.png',
+				description: 'Комплект з 3 пар шкарпеток з IT-принтами. Ідеальне для холодних вечорів з кодом. Розмір 39–45.',
+			},
+		];
 
-				demoProducts.forEach((product) => {
-					this.create({ data: product }).subscribe();
-				});
-			}
+		demoProducts.forEach((product) => {
+			this.create({ data: product }).subscribe();
 		});
 	}
 
