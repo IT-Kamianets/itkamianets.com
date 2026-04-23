@@ -100,16 +100,7 @@ export const routes: Routes = [
 						(m) => m.CompanyComponent,
 					),
 			},
-			{
-				path: 'profiles',
-				loadComponent: () =>
-					import('./pages/profiles/profiles.component').then((m) => m.ProfilesComponent),
-			},
-			{
-				path: 'profile/:id',
-				loadComponent: () =>
-					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
-			},
+
 			{
 				path: '',
 				loadChildren: () =>
@@ -205,6 +196,10 @@ export const routes: Routes = [
 				loadChildren: () =>
 					import('./feature/certificate/public.routes').then((m) => m.routes),
 			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/sale/public.routes').then((m) => m.routes),
+			},
 		],
 	},
 	{
@@ -237,14 +232,6 @@ export const routes: Routes = [
 				redirectTo: 'profile',
 			},
 			{
-				path: 'events',
-				canActivate: [authenticatedGuard],
-				loadComponent: () =>
-					import('./pages/manage/events/events.component').then(
-						(m) => m.ManageEventsComponent,
-					),
-			},
-			{
 				path: 'profile',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
@@ -252,6 +239,15 @@ export const routes: Routes = [
 						(m) => m.ProfileComponent,
 					),
 			},
+			{
+				path: 'events',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/events/events.component').then(
+						(m) => m.ManageEventsComponent,
+					),
+			},
+
 			{
 				path: 'schools',
 				canActivate: [authenticatedGuard],
@@ -282,6 +278,16 @@ export const routes: Routes = [
 						(m) => m.ManagePeopleComponent,
 					),
 			},
+      {
+				path: 'competitions',
+				canActivate: [authenticatedGuard],
+				data: { title: 'Competitions' },
+				loadComponent: () =>
+					import('./pages/manage/competitions/competitions.component').then(
+						(m) => m.ManageCompetitionsComponent,
+					),
+			},
+
 			{
 				path: 'cv-generation',
 				canActivate: [authenticatedGuard],
@@ -393,6 +399,10 @@ export const routes: Routes = [
 				path: '',
 				loadChildren: () =>
 					import('./feature/certificate/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/sale/manage.routes').then((m) => m.routes),
 			},
 		],
 	},

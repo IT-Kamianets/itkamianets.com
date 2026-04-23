@@ -1,0 +1,395 @@
+<div class="manage-page">
+	<div class="manage-container">
+		<div class="manage-header">
+			<div class="manage-header__info">
+				<h1 class="manage-header__title">Управління Профілями</h1>
+				<p class="manage-header__subtitle">Список публічних профілів екосистеми IT Kamianets.</p>
+			</div>
+			<button class="btn btn--primary" (click)="openAddModal()">Створити профіль</button>
+		</div>
+
+		<div class="manage-card">
+			<table class="manage-table">
+				<thead>
+					<tr>
+						<th class="col-profile">Профіль</th>
+						<th class="col-roles">Ролі</th>
+						<th class="col-bio">Біографія</th>
+						<th class="col-activity">Участь</th>
+						<th class="col-contacts">Контакти</th>
+						<th class="col-actions">Дії</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (person of profiles(); track person._id) {
+					<tr>
+						<td class="col-profile">
+							<div class="table-profile">
+								@if (person.avatar) {
+								<img [src]="photoSrc(person.avatar)" [alt]="person.name" class="table-profile__img"
+									loading="lazy" decoding="async" />
+								} @else {
+								<div class="table-profile__fallback">
+									<span class="material-symbols-outlined" aria-hidden="true">person</span>
+								</div>
+								}
+								<a [routerLink]="['/profile', person._id]" target="_blank" rel="noopener noreferrer"
+						class="table-profile__name table-profile__name--link"
+						title="Відкрити публічний профіль">{{ person.name }}</a>
+							</div>
+						</td>
+						<td class="col-roles">
+							<div class="table-role">
+								<span class="table-badge">{{ person.role }}</span>
+								@if (person.isHead) {
+								<span class="table-badge table-badge--lead">Team Lead</span>
+								}
+							</div>
+						</td>
+						<td class="col-bio">
+							<p class="table-bio">{{ person.bio || (person.role + ' у ' + person.university) }}</p>
+						</td>
+						<td class="col-activity">
+							<div class="table-activity">
+								@if ((person.projects?.length || 0) > 0) {
+								<span class="table-badge table-badge--green" title="Проєкти">
+									<span class="material-symbols-outlined table-badge__icon" style="font-size: 14px;">work</span>
+									{{ person.projects!.length }}
+								</span>
+								}
+								@if ((person.events?.length || 0) > 0) {
+								<span class="table-badge table-badge--yellow" title="Заходи">
+									<span class="material-symbols-outlined table-badge__icon" style="font-size: 14px;">event</span>
+									{{ person.events!.length }}
+								</span>
+								}
+							</div>
+						</td>
+						<td class="col-contacts">
+							<div class="table-socials">
+								@for (entry of getSocialEntries(person.socials); track entry.key) {
+									<a [href]="entry.value" target="_blank" rel="noopener noreferrer"
+										class="table-social-icon"
+										[class]="'table-social-icon--' + entry.key"
+										[title]="entry.key">
+										@switch (entry.key) {
+											@case ('x') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+												</svg>
+											}
+											@case ('twitter') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+												</svg>
+											}
+											@case ('facebook') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+												</svg>
+											}
+											@case ('instagram') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/>
+												</svg>
+											}
+											@case ('telegram') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+												</svg>
+											}
+											@case ('linkedin') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+												</svg>
+											}
+											@case ('github') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+												</svg>
+											}
+											@case ('upwork') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-2.539 0-4.51 1.649-5.31 4.366-1.214-1.832-2.148-4.032-2.687-5.886H7.828v7.112c-.002 1.406-1.141 2.546-2.547 2.548-1.405-.002-2.543-1.143-2.545-2.548V3.498H0v7.112c0 2.914 2.37 5.303 5.281 5.303 2.913 0 5.283-2.389 5.283-5.303v-1.19c.529 1.107 1.182 2.229 1.974 3.221l-1.673 7.873h2.797l1.213-5.71c1.063.679 2.285 1.109 3.686 1.109 3 0 5.439-2.452 5.439-5.45 0-3-2.439-5.439-5.439-5.439z"/>
+												</svg>
+											}
+											@case ('tiktok') {
+												<svg class="table-social-svg" fill="currentColor" viewBox="0 0 24 24">
+													<path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.26c.01 3.23-2.34 6.22-5.54 6.6-3.23.4-6.38-1.43-7.23-4.57-.86-3.08.79-6.33 3.75-7.48 2.87-1.1 6.13-.1 8.24 2.05L12 9.4c0-.98-.6-1.85-1.55-2.18-2.07-.72-4.38.38-5.11 2.45-.63 1.92.35 4.09 2.22 4.8.18.06.37.1.58.11 1.09.03 2.11-.2 3.12-.5v-4.1zm.08 12.3c-1.59 1-3.69.45-4.58-1.25-.87-1.55-.3-3.6 1.25-4.5z"/>
+												</svg>
+											}
+											@default {
+												<span class="material-symbols-outlined" style="font-size: 16px">link</span>
+											}
+										}
+									</a>
+								}
+							</div>
+						</td>
+						<td class="col-actions">
+							<div class="table-actions">
+								<button class="action-btn action-btn--edit" (click)="openEditModal(person)" title="Редагувати">
+									<span class="material-symbols-outlined" aria-hidden="true">edit</span>
+								</button>
+								<button class="action-btn action-btn--delete" (click)="delete(person._id)" title="Видалити">
+									<span class="material-symbols-outlined" aria-hidden="true">delete</span>
+								</button>
+							</div>
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	@if (isModalOpen()) {
+	<div class="modal-overlay" (click)="closeModal()">
+		<div class="modal-content" (click)="$event.stopPropagation()">
+			<div class="modal-header">
+				<h2 class="modal-title">{{ editingProfile() ? 'Редагувати профіль' : 'Створити профіль' }}</h2>
+				<button type="button" class="modal-close" (click)="closeModal()">
+					<span class="material-symbols-outlined" aria-hidden="true">close</span>
+				</button>
+			</div>
+
+			<form (ngSubmit)="save()" class="modal-form">
+
+				<!-- Avatar + Name + Photo URL -->
+				<input #fileInput type="file" accept="image/*" class="hidden-file-input"
+					(change)="onFileChange($event)" />
+
+				<div class="form-row-avatar">
+					<div class="form-avatar-wrap">
+						<button type="button" class="form-avatar-preview" (click)="triggerFileInput()">
+							@if (form.avatar) {
+							<img [src]="form.avatar.startsWith('data:') ? form.avatar : photoSrc(form.avatar)"
+								alt="Прев'ю" />
+							} @else {
+							<span class="material-symbols-outlined" aria-hidden="true">person</span>
+							}
+						</button>
+						<span class="form-avatar-label" (click)="triggerFileInput()">Додати фото</span>
+					</div>
+					<div class="form-fields">
+						<div class="form-group">
+							<label class="form-label">ІМ'Я *</label>
+							<input type="text" [(ngModel)]="form.name" name="name" class="form-input"
+								placeholder="Іван Іванов" required />
+						</div>
+						<div class="form-group">
+							<label class="form-label">URL ФОТО</label>
+							<input type="text" [(ngModel)]="form.avatar" name="avatar" class="form-input"
+								placeholder="URL фото або завантажте зліва..." />
+						</div>
+					</div>
+				</div>
+
+				<!-- BIO -->
+				<div class="form-group">
+					<label class="form-label">БІО</label>
+					<textarea [(ngModel)]="form.bio" name="bio" class="form-input form-textarea"
+						placeholder="Розкажіть про себе, стаж, університет та роки участі..." rows="3"></textarea>
+				</div>
+
+				<!-- ROLES tag input -->
+				<div class="form-group">
+					<label class="form-label">РОЛІ</label>
+					@if (form.roles.length > 0) {
+					<div class="tag-list">
+						@for (tag of form.roles; track tag) {
+						<span class="tag tag--blue">
+							{{ tag }}
+							<button type="button" class="tag__remove" (click)="removeTag('roles', tag)">×</button>
+						</span>
+						}
+					</div>
+					}
+					<div class="tag-input-row">
+						<input type="text" [(ngModel)]="roleInput" name="roleInput" class="form-input"
+							placeholder="Введіть роль та натисніть Enter"
+							(keydown)="onTagKeydown($event, 'roles', 'roleInput')" />
+						<button type="button" class="tag-add-btn tag-add-btn--blue"
+							(click)="addTag('roles', 'roleInput')">+ Додати</button>
+					</div>
+				</div>
+
+				<!-- ACHIEVEMENTS tag input -->
+				<div class="form-group">
+					<label class="form-label">ДОСЯГНЕННЯ</label>
+					@if (form.achievements.length > 0) {
+					<div class="tag-list">
+						@for (tag of form.achievements; track tag) {
+						<span class="tag tag--orange">
+							{{ tag }}
+							<button type="button" class="tag__remove"
+								(click)="removeTag('achievements', tag)">×</button>
+						</span>
+						}
+					</div>
+					}
+					<div class="tag-input-row">
+						<input type="text" [(ngModel)]="achievementInput" name="achievementInput" class="form-input"
+							placeholder="Введіть досягнення та натисніть Enter"
+							(keydown)="onTagKeydown($event, 'achievements', 'achievementInput')" />
+						<button type="button" class="tag-add-btn tag-add-btn--orange"
+							(click)="addTag('achievements', 'achievementInput')">+ Додати</button>
+					</div>
+				</div>
+
+				<!-- PROJECTS — dropdown multi-select -->
+				<div class="form-group">
+					<label class="form-label">ПРОЄКТИ</label>
+					@if (projectsLoading()) {
+					<p class="form-hint">Завантаження проєктів...</p>
+					} @else if (allProjects().length === 0) {
+					<p class="form-hint">Проєктів не знайдено</p>
+					} @else {
+					@if (form.projects.length > 0) {
+					<div class="tag-list">
+						@for (id of form.projects; track id) {
+						<span class="tag tag--green">
+							{{ getProjectTitle(id) }}
+							<button type="button" class="tag__remove" (click)="removeProject(id)">×</button>
+						</span>
+						}
+					</div>
+					}
+					<div class="dropdown-container">
+						<button type="button" class="form-input dropdown-trigger" (click)="toggleProjectDropdown()">
+							Виберіть проєкти...
+							<span class="material-symbols-outlined" aria-hidden="true">
+								{{ projectDropdownOpen() ? 'expand_less' : 'expand_more' }}
+							</span>
+						</button>
+						@if (projectDropdownOpen()) {
+						<div class="dropdown-panel">
+							@if (allProjects().length > 5) {
+							<div class="checkbox-search">
+								<span class="material-symbols-outlined checkbox-search__icon">search</span>
+								<input type="text" [value]="projectSearch()"
+									(input)="projectSearch.set($any($event.target).value)"
+									placeholder="Пошук проєктів..." />
+							</div>
+							}
+							<div class="checkbox-list dropdown-list">
+								@for (project of filteredProjects(); track project._id) {
+								<label class="checkbox-item">
+									<input type="checkbox" [checked]="isProjectSelected(project._id!)"
+										(change)="toggleProject(project._id!)" />
+									<span class="checkbox-item__label">
+									{{ project.data.title }}
+									@if (project.data.category || project.data.completionDate) {
+									<span class="checkbox-item__meta">
+										{{ project.data.category }}
+										@if (project.data.category && project.data.completionDate) { • }
+										{{ project.data.completionDate }}
+									</span>
+									}
+								</span>
+								</label>
+								}
+								@if (filteredProjects().length === 0) {
+								<div class="checkbox-empty">Нічого не знайдено</div>
+								}
+							</div>
+						</div>
+						}
+					</div>
+					}
+				</div>
+
+				<!-- EVENTS — dropdown multi-select -->
+				<div class="form-group">
+					<label class="form-label">УЧАСТЬ У ЗАХОДАХ</label>
+					@if (allEvents().length === 0) {
+					<p class="form-hint">Заходів не знайдено</p>
+					} @else {
+					@if (form.events.length > 0) {
+					<div class="tag-list">
+						@for (id of form.events; track id) {
+						<span class="tag tag--yellow">
+							{{ getEventTitle(id) }}
+							<button type="button" class="tag__remove" (click)="removeEvent(id)">×</button>
+						</span>
+						}
+					</div>
+					}
+					<div class="dropdown-container">
+						<button type="button" class="form-input dropdown-trigger" (click)="toggleEventDropdown()">
+							Виберіть заходи...
+							<span class="material-symbols-outlined" aria-hidden="true">
+								{{ eventDropdownOpen() ? 'expand_less' : 'expand_more' }}
+							</span>
+						</button>
+						@if (eventDropdownOpen()) {
+						<div class="dropdown-panel">
+							@if (allEvents().length > 5) {
+							<div class="checkbox-search">
+								<span class="material-symbols-outlined checkbox-search__icon">search</span>
+								<input type="text" [value]="eventSearch()"
+									(input)="eventSearch.set($any($event.target).value)"
+									placeholder="Пошук заходів..." />
+							</div>
+							}
+							<div class="checkbox-list dropdown-list">
+								@for (event of filteredEvents(); track event._id) {
+								<label class="checkbox-item">
+									<input type="checkbox" [checked]="isEventSelected(event._id!)"
+										(change)="toggleEvent(event._id!)" />
+									<span class="checkbox-item__label">
+										{{ getEventTitle(event._id!) }}
+										@if (event.date) {
+										<span class="checkbox-item__meta">{{ event.date }}</span>
+										}
+									</span>
+								</label>
+								}
+								@if (filteredEvents().length === 0) {
+								<div class="checkbox-empty">Нічого не знайдено</div>
+								}
+							</div>
+						</div>
+						}
+					</div>
+					}
+				</div>
+
+				<!-- SOCIAL NETWORKS -->
+				<div class="form-group">
+					<label class="form-label">СОЦІАЛЬНІ МЕРЕЖІ</label>
+					<div class="social-presets">
+						@for (preset of socialPresets; track preset.key) {
+						<div class="social-preset" [class.is-active]="isSocialActive(preset.key)">
+							<label class="social-preset__toggle">
+								<input type="checkbox" [checked]="isSocialActive(preset.key)"
+									(change)="toggleSocial(preset.key)" />
+								<span class="social-preset__name" [style.color]="preset.color">{{ preset.label }}</span>
+							</label>
+							@if (isSocialActive(preset.key)) {
+							<div class="social-preset__input-wrap">
+								<input type="url" [(ngModel)]="form.socials[preset.key]" [name]="'social_' + preset.key"
+									class="form-input" [placeholder]="preset.placeholder" />
+							</div>
+							}
+						</div>
+						}
+					</div>
+				</div>
+
+				<!-- Team Lead checkbox -->
+				<div class="form-checkbox">
+					<input type="checkbox" [(ngModel)]="form.isHead" name="isHead" id="isHeadInput" />
+					<label for="isHeadInput">Керівник (Team Lead)</label>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn--outline" (click)="closeModal()">Скасувати</button>
+					<button type="submit" class="btn btn--primary">Зберегти профіль</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	}
+</div>
