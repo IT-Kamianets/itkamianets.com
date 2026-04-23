@@ -17,7 +17,7 @@ export class SaleComponent {
 	private readonly _route = inject(ActivatedRoute);
 	private readonly _saleService = inject(SaleService);
 
-	private readonly _idParams = toSignal(this._route.paramMap);
+	private readonly _idParams = toSignal(this._route.queryParamMap);
 	protected readonly sale = signal<Sale | null>(null);
 	protected readonly isLoading = signal(false);
 	protected readonly apiError = signal('');

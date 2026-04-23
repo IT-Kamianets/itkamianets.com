@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpService } from 'wacom';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { HttpService } from '@wawjs/ngx-http';
 import { firstValueFrom, from, of, throwError } from 'rxjs';
-import { Competition, CompetitionData } from './competition.interface';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
+import { Competition, CompetitionData } from './competition.interface';
 
 @Injectable({
 	providedIn: 'root',
@@ -40,10 +40,12 @@ export class CompetitionService {
 		this._syncToken();
 		const token = this._tokenInBody();
 		return firstValueFrom(
-			this._http.post(`${this._endpoint}/fetch`, token ? { _id, id: _id, token } : { _id, id: _id }).pipe(
-				map((resp: unknown) => this._toCompetition(this._unwrapDocResponse(resp))),
-				catchError(() => of(null)),
-			),
+			this._http
+				.post(`${this._endpoint}/fetch`, token ? { _id, id: _id, token } : { _id, id: _id })
+				.pipe(
+					map((resp: unknown) => this._toCompetition(this._unwrapDocResponse(resp))),
+					catchError(() => of(null)),
+				),
 		);
 	}
 
@@ -75,7 +77,12 @@ export class CompetitionService {
 						if (!this._isOkResponse(resp)) {
 							const details = this._apiMessage(resp) || this._stringifySafe(resp);
 							return throwError(
-								() => new Error(details ? `Update відхилено API: ${details}` : 'Update відхилено API.'),
+								() =>
+									new Error(
+										details
+											? `Update відхилено API: ${details}`
+											: 'Update відхилено API.',
+									),
 							);
 						}
 
@@ -95,7 +102,10 @@ export class CompetitionService {
 		const token = this._tokenInBody();
 		return firstValueFrom(
 			this._http
-				.post(`${this._endpoint}/delete`, token ? { _id, id: _id, token } : { _id, id: _id })
+				.post(
+					`${this._endpoint}/delete`,
+					token ? { _id, id: _id, token } : { _id, id: _id },
+				)
 				.pipe(
 					mergeMap((resp: unknown) => {
 						// Якщо HTTP 200, але тіло порожнє (undefined/null) — вважаємо успіхом.
@@ -107,7 +117,12 @@ export class CompetitionService {
 						if (!this._isOkResponse(resp)) {
 							const details = this._apiMessage(resp) || this._stringifySafe(resp);
 							return throwError(
-								() => new Error(details ? `Delete відхилено API: ${details}` : 'Delete відхилено API.'),
+								() =>
+									new Error(
+										details
+											? `Delete відхилено API: ${details}`
+											: 'Delete відхилено API.',
+									),
 							);
 						}
 
@@ -158,7 +173,9 @@ export class CompetitionService {
 			return [];
 		}
 
-		return resp.map((item) => this._toCompetition(item)).filter((item): item is Competition => !!item);
+		return resp
+			.map((item) => this._toCompetition(item))
+			.filter((item): item is Competition => !!item);
 	}
 
 	private _toCompetition(item: unknown) {
@@ -226,9 +243,7 @@ export class CompetitionService {
 
 		const source = item as Record<string, unknown>;
 		const _id =
-			this.getString(source['_id']) ||
-			this.getString(source['id']) ||
-			(fallbackId ?? '');
+			this.getString(source['_id']) || this.getString(source['id']) || (fallbackId ?? '');
 
 		if (!_id || !fallbackData) {
 			return null;

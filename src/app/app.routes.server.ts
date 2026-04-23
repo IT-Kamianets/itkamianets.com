@@ -6,7 +6,7 @@ const COMPETITION_PRERENDER_URL =
 	process.env['API_BASE'] ??
 	'https://api.webart.work/api/itcompetition/get';
 
-const toCompetitionDocs = (payload: unknown): Array<{ _id?: unknown }> => {
+const toDocsWithId = (payload: unknown): Array<{ _id?: unknown }> => {
 	if (Array.isArray(payload)) {
 		return payload as Array<{ _id?: unknown }>;
 	}
@@ -25,6 +25,23 @@ const toCompetitionDocs = (payload: unknown): Array<{ _id?: unknown }> => {
 
 	return [];
 };
+
+const toPrerenderIdParams = (docs: Array<{ _id?: unknown }>): Array<{ id: string }> =>
+	docs
+		.map((doc) => {
+			if (typeof doc?._id === 'string') {
+				const id = doc._id.trim();
+				return id ? { id } : null;
+			}
+
+			if (doc?._id && typeof (doc._id as { toString?: () => string }).toString === 'function') {
+				const id = (doc._id as { toString: () => string }).toString().trim();
+				return id ? { id } : null;
+			}
+
+			return null;
+		})
+		.filter((item): item is { id: string } => !!item);
 
 const MANAGE_CLIENT_ROUTES = [
 	'manage',
@@ -69,6 +86,14 @@ export const serverRoutes: ServerRoute[] = [
 		renderMode: RenderMode.Server,
 	},
 	{
+		path: 'sales',
+		renderMode: RenderMode.Client,
+	},
+	{
+		path: 'sale',
+		renderMode: RenderMode.Client,
+	},
+	{
 		path: 'services/:id',
 		renderMode: RenderMode.Prerender,
 		getPrerenderParams: async () => SERVICE_IDS.map((id) => ({ id })),
@@ -86,26 +111,13 @@ export const serverRoutes: ServerRoute[] = [
 					return [];
 				}
 
-				const docs = toCompetitionDocs(await response.json());
+				const docs = toDocsWithId(await response.json());
 				if (!docs.length) {
 					console.error('[prerender] competition payload did not contain a valid docs array');
 					return [];
 				}
 
-				return docs
-					.map((doc) => {
-						if (typeof doc?._id === 'string') {
-							return { id: doc._id };
-						}
-
-						if (doc?._id && typeof (doc._id as { toString?: () => string }).toString === 'function') {
-							const id = (doc._id as { toString: () => string }).toString().trim();
-							return id ? { id } : null;
-						}
-
-						return null;
-					})
-					.filter((item): item is { id: string } => !!item);
+				return toPrerenderIdParams(docs);
 			} catch (error) {
 				console.error('[prerender] competition fetch/json error', error);
 				return [];

@@ -7,7 +7,7 @@ export const routes: Routes = [
 		loadComponent: () => import('./pages/sales/sales.component').then((m) => m.SalesComponent),
 	},
 	{
-		path: 'sale/:id',
+		path: 'sale',
 		data: { title: 'Sale details' },
 		loadComponent: () => import('./pages/sale/sale.component').then((m) => m.SaleComponent),
 	},

@@ -15,9 +15,7 @@ export const routes: Routes = [
 			{
 				path: 'our-work',
 				loadComponent: () =>
-					import('./pages/our-work/our-work.component').then(
-						(m) => m.OurWorkComponent,
-					),
+					import('./pages/our-work/our-work.component').then((m) => m.OurWorkComponent),
 			},
 			{
 				path: 'jobs',
@@ -68,9 +66,7 @@ export const routes: Routes = [
 			{
 				path: 'services',
 				loadComponent: () =>
-					import('./pages/services/services.component').then(
-						(m) => m.ServicesComponent,
-					),
+					import('./pages/services/services.component').then((m) => m.ServicesComponent),
 			},
 			{
 				path: 'services/:id',
@@ -103,28 +99,23 @@ export const routes: Routes = [
 
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/article/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/article/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/merch/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/merch/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/project/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/project/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/school/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/school/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/job/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/job/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -133,18 +124,15 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/event/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/event/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/profile/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/profile/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/course/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/course/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -153,28 +141,23 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/waiter/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/waiter/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/item/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/item/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/test/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/test/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/startup/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/startup/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/quest/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/quest/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -183,13 +166,11 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/company/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/company/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/review/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/review/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -269,24 +250,6 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/manage/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
-			{
-				path: 'people',
-				canActivate: [authenticatedGuard],
-				data: { title: 'People' },
-				loadComponent: () =>
-					import('./pages/manage/people/people.component').then(
-						(m) => m.ManagePeopleComponent,
-					),
-			},
-      {
-				path: 'competitions',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Competitions' },
-				loadComponent: () =>
-					import('./pages/manage/competitions/competitions.component').then(
-						(m) => m.ManageCompetitionsComponent,
-					),
-			},
 
 			{
 				path: 'cv-generation',
@@ -307,28 +270,23 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/article/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/article/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/merch/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/merch/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/project/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/project/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/school/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/school/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/job/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/job/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -337,18 +295,15 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/event/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/event/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/profile/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/profile/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/course/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/course/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -357,28 +312,23 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/waiter/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/waiter/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/item/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/item/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/test/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/test/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/startup/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/startup/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/quest/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/quest/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -387,13 +337,11 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/company/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/company/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/review/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/review/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
