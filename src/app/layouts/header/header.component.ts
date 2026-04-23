@@ -39,6 +39,12 @@ export class HeaderComponent {
 			title: 'Мерч',
 			href: '/merch',
 		},
+		{
+			_id: 'menu-waiters',
+			type: 'menu',
+			title: 'Waiters',
+			href: '/manage/waiters',
+		},
 	];
 
 	protected toggleTheme() {

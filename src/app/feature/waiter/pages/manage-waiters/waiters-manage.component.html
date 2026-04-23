@@ -1,0 +1,216 @@
+<section class="waiters-manage">
+	<header class="waiters-manage__header">
+		<div>
+			<p class="waiters-manage__eyebrow">Admin workspace</p>
+			<h1 class="waiters-manage__title">Waiters</h1>
+			<p class="waiters-manage__subtitle">
+				Створюйте та керуйте офіціантами: додайте, відредагуйте, активуйте або
+				видаліть запис.
+			</p>
+		</div>
+
+		<div class="waiters-manage__header-actions">
+			<input
+				pInputText
+				type="search"
+				placeholder="Пошук..."
+				class="waiters-manage__search"
+				[value]="searchQuery()"
+				(input)="onSearch($event)"
+				aria-label="Search waiters"
+			/>
+			<button
+				pButton
+				type="button"
+				class="waiters-manage__button waiters-manage__button--primary"
+				(click)="openCreate()"
+			>
+				<span class="material-symbols-outlined" aria-hidden="true">add</span>
+				<span>Додати</span>
+			</button>
+		</div>
+	</header>
+
+	<div class="waiters-manage__filters" role="tablist" aria-label="Waiter filters">
+		<button
+			pButton
+			type="button"
+			class="waiters-manage__filter"
+			[class.waiters-manage__filter--active]="statusFilter() === 'all'"
+			(click)="setStatusFilter('all')"
+		>
+			Усі
+		</button>
+		<button
+			pButton
+			type="button"
+			class="waiters-manage__filter"
+			[class.waiters-manage__filter--active]="statusFilter() === 'active'"
+			(click)="setStatusFilter('active')"
+		>
+			Активні
+		</button>
+		<button
+			pButton
+			type="button"
+			class="waiters-manage__filter"
+			[class.waiters-manage__filter--active]="statusFilter() === 'inactive'"
+			(click)="setStatusFilter('inactive')"
+		>
+			Неактивні
+		</button>
+	</div>
+
+	<div class="waiters-manage__card">
+		<p-table
+			[value]="visibleWaiters()"
+			[dataKey]="'id'"
+			[rowHover]="true"
+			styleClass="waiters-manage__table"
+		>
+			<ng-template pTemplate="header">
+				<tr>
+					<th class="waiters-manage__col-name">Імʼя</th>
+					<th class="waiters-manage__col-phone">Телефон</th>
+					<th class="waiters-manage__col-status">Статус</th>
+					<th>Нотатки</th>
+					<th class="waiters-manage__col-date">Створено</th>
+					<th class="waiters-manage__col-actions">Дії</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-waiter>
+				<tr>
+					<td class="waiters-manage__name">{{ waiter.name }}</td>
+					<td class="waiters-manage__muted">{{ waiter.phone || '—' }}</td>
+					<td>
+						<span
+							class="waiters-manage__badge"
+							[class.waiters-manage__badge--active]="waiter.active"
+							[class.waiters-manage__badge--inactive]="!waiter.active"
+						>
+							{{ waiter.active ? 'Активний' : 'Неактивний' }}
+						</span>
+					</td>
+					<td class="waiters-manage__muted">
+						<span class="waiters-manage__notes">{{ waiter.notes || '—' }}</span>
+					</td>
+					<td class="waiters-manage__muted">{{ formatDate(waiter.createdAt) }}</td>
+					<td class="waiters-manage__actions">
+						<button
+							pButton
+							type="button"
+							class="waiters-manage__button waiters-manage__button--ghost"
+							(click)="openEdit(waiter)"
+						>
+							<span class="material-symbols-outlined" aria-hidden="true">edit</span>
+							<span>Редагувати</span>
+						</button>
+						<button
+							pButton
+							type="button"
+							class="waiters-manage__button waiters-manage__button--ghost"
+							(click)="toggleActive(waiter)"
+						>
+							<span class="material-symbols-outlined" aria-hidden="true">
+								{{ waiter.active ? 'pause' : 'play_arrow' }}
+							</span>
+							<span>{{ waiter.active ? 'Деактивувати' : 'Активувати' }}</span>
+						</button>
+						<button
+							pButton
+							type="button"
+							class="waiters-manage__button waiters-manage__button--danger"
+							(click)="delete(waiter)"
+						>
+							<span class="material-symbols-outlined" aria-hidden="true">delete</span>
+							<span>Видалити</span>
+						</button>
+					</td>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="6" class="waiters-manage__empty">Немає офіціантів.</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</div>
+
+	<p-dialog
+		[visible]="isDialogOpen()"
+		(visibleChange)="onDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(96vw, 720px)' }"
+		styleClass="waiters-manage__dialog"
+	>
+		<ng-template pTemplate="header">
+			<div class="waiters-manage__dialog-title">
+				<span class="material-symbols-outlined" aria-hidden="true">
+					{{ editingId() ? 'edit' : 'add' }}
+				</span>
+				<span>{{ editingId() ? 'Редагувати офіціанта' : 'Додати офіціанта' }}</span>
+			</div>
+		</ng-template>
+
+		<form class="waiters-manage__form" (submit)="onSubmit($event)" novalidate>
+			<label class="waiters-manage__field">
+				<span class="waiters-manage__label">Імʼя</span>
+				<input
+					pInputText
+					type="text"
+					class="waiters-manage__input"
+					placeholder="Напр. Іван Петренко"
+					autocomplete="name"
+					[formField]="waiterForm.name"
+				/>
+				@if (waiterForm.name().touched() && waiterForm.name().invalid()) {
+					<span class="waiters-manage__error">{{ waiterForm.name().errors()[0]?.message }}</span>
+				}
+			</label>
+
+			<label class="waiters-manage__field">
+				<span class="waiters-manage__label">Телефон (необовʼязково)</span>
+				<input
+					pInputText
+					type="tel"
+					class="waiters-manage__input"
+					placeholder="+380..."
+					autocomplete="tel"
+					[formField]="waiterForm.phone"
+				/>
+			</label>
+
+			<label class="waiters-manage__field">
+				<span class="waiters-manage__label">Нотатки (необовʼязково)</span>
+				<textarea
+					pTextarea
+					rows="4"
+					class="waiters-manage__textarea"
+					placeholder="Напр. Старший офіціант, вечірні зміни..."
+					[formField]="waiterForm.notes"
+				></textarea>
+			</label>
+
+			<div class="waiters-manage__form-actions">
+				<button
+					pButton
+					type="button"
+					class="waiters-manage__button waiters-manage__button--ghost"
+					(click)="closeDialog()"
+				>
+					Скасувати
+				</button>
+				<button
+					pButton
+					type="submit"
+					class="waiters-manage__button waiters-manage__button--primary"
+				>
+					{{ editingId() ? 'Зберегти' : 'Створити' }}
+				</button>
+			</div>
+		</form>
+	</p-dialog>
+</section>
+

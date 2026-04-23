@@ -1,0 +1,251 @@
+:host {
+	display: block;
+	padding: var(--sp-6);
+	color: var(--c-text-primary);
+}
+
+.waiters-manage {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-5);
+}
+
+.waiters-manage__header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--sp-4);
+}
+
+.waiters-manage__eyebrow {
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-text-muted);
+	margin: 0 0 var(--sp-1);
+}
+
+.waiters-manage__title {
+	font-size: 28px;
+	font-weight: 700;
+	color: var(--c-text-secondary);
+	margin: 0;
+}
+
+.waiters-manage__subtitle {
+	margin: var(--sp-1) 0 0;
+	color: var(--c-text-muted);
+	max-width: 560px;
+}
+
+.waiters-manage__header-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: var(--sp-2);
+}
+
+.waiters-manage__search {
+	min-width: min(320px, 90vw);
+	border-radius: var(--radius-btn);
+	border: 1px solid var(--c-border);
+	background: var(--c-bg-primary);
+	color: var(--c-text-secondary);
+	padding: 8px 12px;
+}
+
+.waiters-manage__filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sp-2);
+}
+
+.waiters-manage__filter {
+	border-radius: 999px;
+	border: 1px solid var(--c-border);
+	background: transparent;
+	color: var(--c-text-secondary);
+	padding: 6px 14px;
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.waiters-manage__filter--active {
+	border-color: var(--c-primary);
+	color: var(--c-primary);
+	background: color-mix(in srgb, var(--c-primary) 10%, var(--c-bg-secondary));
+}
+
+.waiters-manage__card {
+	background: var(--c-bg-secondary);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow-card);
+	padding: var(--sp-3);
+}
+
+.waiters-manage__table {
+	width: 100%;
+}
+
+.waiters-manage__col-name {
+	width: 240px;
+}
+
+.waiters-manage__col-phone {
+	width: 170px;
+}
+
+.waiters-manage__col-status {
+	width: 140px;
+}
+
+.waiters-manage__col-date {
+	width: 140px;
+}
+
+.waiters-manage__col-actions {
+	width: 420px;
+}
+
+.waiters-manage__name {
+	font-weight: 600;
+	color: var(--c-text-secondary);
+}
+
+.waiters-manage__muted {
+	color: var(--c-text-muted);
+}
+
+.waiters-manage__notes {
+	display: inline-block;
+	max-width: 420px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: bottom;
+}
+
+.waiters-manage__badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	border: 1px solid var(--c-border);
+	font-weight: 600;
+	font-size: 12px;
+}
+
+.waiters-manage__badge--active {
+	border-color: color-mix(in srgb, #22c55e 45%, var(--c-border));
+	background: color-mix(in srgb, #22c55e 14%, var(--c-bg-secondary));
+	color: #16a34a;
+}
+
+.waiters-manage__badge--inactive {
+	border-color: color-mix(in srgb, #f97316 45%, var(--c-border));
+	background: color-mix(in srgb, #f97316 12%, var(--c-bg-secondary));
+	color: #ea580c;
+}
+
+.waiters-manage__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sp-2);
+	justify-content: flex-end;
+}
+
+.waiters-manage__button {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sp-1);
+	border-radius: var(--radius-btn);
+	border: 1px solid transparent;
+	padding: 6px 12px;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 1.2;
+}
+
+.waiters-manage__button--primary {
+	background: var(--c-primary);
+	color: #fff;
+	border-color: var(--c-primary);
+	box-shadow: var(--shadow-primary);
+}
+
+.waiters-manage__button--ghost {
+	background: transparent;
+	color: var(--c-text-secondary);
+	border-color: var(--c-border);
+}
+
+.waiters-manage__button--danger {
+	background: var(--c-bg-tertiary);
+	color: var(--c-secondary);
+	border-color: var(--c-secondary);
+}
+
+.waiters-manage__empty {
+	padding: var(--sp-4) 0;
+	text-align: center;
+	color: var(--c-text-muted);
+}
+
+.waiters-manage__dialog-title {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sp-2);
+	font-weight: 600;
+	color: var(--c-text-secondary);
+}
+
+.waiters-manage__form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-4);
+}
+
+.waiters-manage__field {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+}
+
+.waiters-manage__label {
+	font-weight: 600;
+	color: var(--c-text-secondary);
+}
+
+.waiters-manage__input {
+	width: 100%;
+	border-radius: var(--radius);
+	border: 1px solid var(--c-border);
+	background: var(--c-bg-primary);
+	color: var(--c-text-secondary);
+	padding: var(--sp-2) var(--sp-3);
+}
+
+.waiters-manage__textarea {
+	width: 100%;
+	border-radius: var(--radius);
+	border: 1px solid var(--c-border);
+	background: var(--c-bg-primary);
+	color: var(--c-text-secondary);
+	padding: var(--sp-2) var(--sp-3);
+}
+
+.waiters-manage__error {
+	color: var(--c-secondary);
+	font-size: 13px;
+}
+
+.waiters-manage__form-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--sp-2);
+}
+

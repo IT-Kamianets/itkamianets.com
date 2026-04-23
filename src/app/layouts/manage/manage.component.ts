@@ -21,6 +21,7 @@ export class ManageComponent {
 		{ label: 'Profiles', path: '/manage/profile', icon: 'account_circle' },
 		{ label: 'Merch', path: '/manage/merch', icon: 'shopping_bag' },
 		{ label: 'Orders', path: '/manage/orders', icon: 'receipt_long' },
+		{ label: 'Waiters', path: '/manage/waiters', icon: 'room_service' },
 		{ label: 'Companies', path: '/manage/companies', icon: 'apartment' },
 		{ label: 'Projects', path: '/manage/projects', icon: 'deployed_code' },
 		{ label: 'Articles', path: '/manage/articles', icon: 'article' },
