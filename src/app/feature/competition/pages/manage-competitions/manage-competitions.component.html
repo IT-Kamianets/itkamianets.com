@@ -1,0 +1,407 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+	<div class="sm:flex sm:items-center">
+		<div class="sm:flex-auto">
+			<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Керування змаганнями</h1>
+			<p class="mt-2 text-sm text-[var(--c-text-muted)]">Змагання</p>
+		</div>
+		<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+			<button
+				(click)="openCreateDialog()"
+				type="button"
+				class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+			>
+				Додати змагання
+			</button>
+		</div>
+	</div>
+
+	@if (error()) {
+		<p class="mt-4 text-sm text-red-400">{{ error() }}</p>
+	}
+
+	@if (isLoading()) {
+		<p class="mt-4 text-sm text-[var(--c-text-muted)]">Завантаження...</p>
+	} @else {
+		<div class="mt-8 flow-root">
+			<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+				<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+					<div
+						class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg border border-[var(--c-border)]"
+					>
+						<table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
+							<thead class="bg-[var(--c-bg-tertiary)]">
+								<tr>
+									<th
+										scope="col"
+										class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6"
+									>
+										ID
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Назва
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Опис
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Сезон
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Формат
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Період
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Приз
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Теги
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Місце проведення
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Учасники
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Спонсори
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Ліміт команд
+									</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">
+										Статус
+									</th>
+									<th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+										<span class="sr-only">Дії</span>
+									</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-[var(--c-border)]">
+								@for (competition of competitions(); track competition._id) {
+									<tr>
+										<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-[var(--c-text-secondary)] sm:pl-6">
+											{{ competition._id }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-primary)]">
+											{{ competition.title }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.description || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.season || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.format || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.period || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.prize || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.tags || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.location || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.participants || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.sponsors || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											{{ competition.maxTeams || '-' }}
+										</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-[var(--c-text-muted)]">
+											<span
+												class="inline-flex items-center rounded-md bg-[var(--c-bg-tertiary)] px-2 py-1 text-xs font-medium text-[var(--c-primary)] ring-1 ring-inset ring-[var(--c-border)]"
+											>
+												{{ competition.isActive ? 'Active' : 'Inactive' }}
+											</span>
+										</td>
+										<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+											<div class="flex justify-end gap-2">
+												<button
+													(click)="openEditDialog(competition)"
+													[disabled]="isSaving()"
+													class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)] disabled:opacity-60"
+												>
+													<span class="material-symbols-outlined mr-1 text-sm" aria-hidden="true">edit</span>
+													Редагувати
+												</button>
+												<button
+													(click)="removeCompetition(competition._id)"
+													[disabled]="isSaving()"
+													class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white disabled:opacity-60"
+												>
+													<span class="material-symbols-outlined mr-1 text-sm" aria-hidden="true">delete</span>
+													Видалити
+												</button>
+											</div>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	<p-dialog
+		[visible]="isDialogVisible()"
+		(visibleChange)="isDialogVisible.set($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: '44rem', maxWidth: '95vw' }"
+		[header]="dialogMode() === 'create' ? 'Створити змагання' : 'Редагувати змагання'"
+		(onHide)="closeDialog()"
+	>
+		<div class="manage-competitions__dialog-content">
+			<div class="manage-competitions__field">
+				<label for="competition-title" class="manage-competitions__label">Назва</label>
+				<input
+					id="competition-title"
+					pInputText
+					type="text"
+					class="manage-competitions__input"
+					[ngModel]="formTitle()"
+					(ngModelChange)="formTitle.set($event)"
+					placeholder="Назва змагання"
+				/>
+			</div>
+			<div class="manage-competitions__field">
+				<label for="competition-description" class="manage-competitions__label">Опис</label>
+				<textarea
+					id="competition-description"
+					pTextarea
+					class="manage-competitions__textarea"
+					[ngModel]="formDescription()"
+					(ngModelChange)="formDescription.set($event)"
+					placeholder="Короткий опис змагання"
+				></textarea>
+			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-season" class="manage-competitions__label">Сезон</label>
+					<input
+						id="competition-season"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formSeason()"
+						(ngModelChange)="formSeason.set($event)"
+						placeholder="Spring 2026"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-format" class="manage-competitions__label">Формат</label>
+					<input
+						id="competition-format"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formFormat()"
+						(ngModelChange)="formFormat.set($event)"
+						placeholder="Team / Solo"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-period" class="manage-competitions__label">Період</label>
+					<input
+						id="competition-period"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formPeriod()"
+						(ngModelChange)="formPeriod.set($event)"
+						placeholder="01.04 - 30.04"
+					/>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-2">
+				<div class="manage-competitions__field">
+					<label for="competition-prize" class="manage-competitions__label">Приз</label>
+					<input
+						id="competition-prize"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formPrize()"
+						(ngModelChange)="formPrize.set($event)"
+						placeholder="1000$ або стажування"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-tags" class="manage-competitions__label">Теги</label>
+					<input
+						id="competition-tags"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formTags()"
+						(ngModelChange)="formTags.set($event)"
+						placeholder="Angular, API, UX"
+					/>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-location" class="manage-competitions__label">Місце проведення</label>
+					<input
+						id="competition-location"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formLocation()"
+						(ngModelChange)="formLocation.set($event)"
+						placeholder="Онлайн / Кам'янець-Подільський"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-participants" class="manage-competitions__label">Кількість учасників</label>
+					<input
+						id="competition-participants"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formParticipants()"
+						(ngModelChange)="formParticipants.set($event)"
+						placeholder="Наприклад: 120 або 20 команд"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-sponsors" class="manage-competitions__label">Спонсори</label>
+					<textarea
+						id="competition-sponsors"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formSponsors()"
+						(ngModelChange)="formSponsors.set($event)"
+						placeholder="Кожного спонсора з нового рядка"
+					></textarea>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-2">
+				<div class="manage-competitions__field">
+					<label for="competition-max-teams" class="manage-competitions__label">Ліміт команд</label>
+					<input
+						id="competition-max-teams"
+						pInputText
+						type="text"
+						class="manage-competitions__input"
+						[ngModel]="formMaxTeams()"
+						(ngModelChange)="formMaxTeams.set($event)"
+						placeholder="Наприклад: 10"
+					/>
+				</div>
+				<div class="manage-competitions__field">
+					<label class="manage-competitions__label">Поточні команди</label>
+					<div class="manage-competitions__input" aria-disabled="true">
+						Вказуються в «Команди (JSON)»
+					</div>
+				</div>
+			</div>
+			<div class="manage-competitions__grid-3">
+				<div class="manage-competitions__field">
+					<label for="competition-stages" class="manage-competitions__label">Етапи</label>
+					<textarea
+						id="competition-stages"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formStages()"
+						(ngModelChange)="formStages.set($event)"
+						placeholder="Кожен етап з нового рядка"
+					></textarea>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-requirements" class="manage-competitions__label">Вимоги</label>
+					<textarea
+						id="competition-requirements"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formRequirements()"
+						(ngModelChange)="formRequirements.set($event)"
+						placeholder="Кожну вимогу з нового рядка"
+					></textarea>
+				</div>
+				<div class="manage-competitions__field">
+					<label for="competition-benefits" class="manage-competitions__label">Переваги</label>
+					<textarea
+						id="competition-benefits"
+						pTextarea
+						class="manage-competitions__textarea manage-competitions__textarea--list"
+						[ngModel]="formBenefits()"
+						(ngModelChange)="formBenefits.set($event)"
+						placeholder="Кожну перевагу з нового рядка"
+					></textarea>
+				</div>
+			</div>
+			<div class="manage-competitions__field">
+				<label for="competition-judges-json" class="manage-competitions__label">Журі (JSON)</label>
+				<textarea
+					id="competition-judges-json"
+					pTextarea
+					class="manage-competitions__textarea manage-competitions__textarea--json"
+					[ngModel]="formJudgesJson()"
+					(ngModelChange)="formJudgesJson.set($event)"
+					spellcheck="false"
+					placeholder='Масив об’єктів: [ { "name": "", "photo": "judges/photo.jpg або https://…", "description": "" } ]'
+				></textarea>
+			</div>
+			<div class="manage-competitions__field">
+				<label for="competition-teams-json" class="manage-competitions__label">Команди (JSON)</label>
+				<textarea
+					id="competition-teams-json"
+					pTextarea
+					class="manage-competitions__textarea manage-competitions__textarea--json"
+					[ngModel]="formTeamsJson()"
+					(ngModelChange)="formTeamsJson.set($event)"
+					spellcheck="false"
+					placeholder='Масив команд (як на сторінці хакатону): id, name, framework, qa, themeRepo, themeRepoUrl, themeWebsiteUrl, description, highlights[], members[] або developers[] — учасник: username, fullName, note, projects: [{ name, url }]'
+				></textarea>
+			</div>
+			<div class="manage-competitions__field">
+				<label for="competition-active" class="manage-competitions__label">Статус</label>
+				<div class="manage-competitions__checkbox">
+					<p-checkbox
+						inputId="competition-active"
+						[ngModel]="formIsActive()"
+						(ngModelChange)="formIsActive.set($event)"
+						[binary]="true"
+					/>
+					<span>{{ formIsActive() ? 'Active' : 'Inactive' }}</span>
+				</div>
+			</div>
+		</div>
+		<ng-template pTemplate="footer">
+			<div class="manage-competitions__dialog-actions">
+				<button
+					pButton
+					type="button"
+					class="manage-competitions__secondary"
+					label="Скасувати"
+					severity="secondary"
+					[outlined]="true"
+					(click)="closeDialog()"
+				></button>
+				<button
+					pButton
+					type="button"
+					class="manage-competitions__primary"
+					icon="pi pi-check"
+					[label]="dialogMode() === 'create' ? 'Створити' : 'Зберегти'"
+					(click)="submitDialog()"
+					[disabled]="isSaving()"
+				></button>
+			</div>
+		</ng-template>
+	</p-dialog>
+</div>
