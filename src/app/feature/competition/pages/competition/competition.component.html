@@ -1,0 +1,373 @@
+<section class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
+	<a
+		routerLink="/competitions"
+		class="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--c-border)] px-4 py-2 text-sm font-medium text-[var(--c-text-secondary)] transition-colors duration-200 hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]"
+	>
+		<span class="material-symbols-outlined text-base" aria-hidden="true"> arrow_back </span>
+		До списку змагань
+	</a>
+
+	@if (isLoading()) {
+		<p class="text-sm text-[var(--c-text-muted)]">Завантаження...</p>
+	} @else if (!competition()) {
+		<div
+			class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+		>
+			<h1 class="text-2xl font-bold text-[var(--c-text-secondary)]">Змагання не знайдено</h1>
+			<p class="mt-3 text-sm text-[var(--c-text-primary)]">
+				Перевірте посилання або поверніться до загального списку.
+			</p>
+		</div>
+	} @else {
+		<div
+			class="overflow-hidden rounded-[2rem] border border-[var(--c-border)] bg-[linear-gradient(140deg,rgba(30,41,59,0.96),rgba(8,145,178,0.72))] text-white shadow-[var(--shadow-card)]"
+		>
+			<div class="grid gap-6 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1.35fr_0.95fr]">
+				<div class="flex flex-col gap-4">
+					<p class="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">Змагання</p>
+					<h1 class="max-w-3xl text-5xl font-black leading-tight text-white">{{ title() }}</h1>
+					<p class="max-w-2xl text-lg leading-8 text-slate-100">{{ description() }}</p>
+					@if (tags().length) {
+						<div class="mt-4 flex flex-wrap items-center gap-2">
+							<p class="text-sm font-semibold text-cyan-100">Теги:</p>
+							@for (tag of tags(); track tag) {
+								<span class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-white">
+									{{ tag }}
+								</span>
+							}
+						</div>
+					}
+				</div>
+				<div class="grid gap-3 rounded-[1.5rem] border border-white/10 bg-white/10 p-5 backdrop-blur">
+					@for (item of heroStats(); track item.label) {
+						<div class="rounded-xl border border-white/10 bg-white/5 p-4">
+							<p class="text-xs uppercase tracking-[0.14em] text-cyan-100">{{ item.label }}</p>
+							<p class="mt-2 text-lg font-semibold text-white">{{ item.value }}</p>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+
+		<div class="grid gap-6 xl:grid-cols-3">
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)] xl:col-span-2"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">Етапи</p>
+				<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">Як проходить змагання</h2>
+				<div class="mt-6 grid gap-3">
+					@for (stage of stages(); track stage; let index = $index) {
+						<div
+							class="flex items-start gap-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4"
+						>
+							<div
+								class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--c-primary)] text-xs font-bold text-white"
+							>
+								{{ index + 1 }}
+							</div>
+							<p class="pt-1 text-base text-[var(--c-text-primary)]">{{ stage }}</p>
+						</div>
+					}
+				</div>
+			</section>
+
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">
+					Ключова інформація
+				</p>
+				<div class="mt-4 grid gap-3">
+					@for (card of metaCards(); track card.label) {
+						<div class="rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4">
+							<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-primary)]">
+								{{ card.label }}
+							</p>
+							<p class="mt-2 text-base text-[var(--c-text-primary)]">{{ card.value }}</p>
+						</div>
+					}
+				</div>
+			</section>
+		</div>
+
+		<div class="grid gap-6 xl:grid-cols-2">
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">Для участі</p>
+				<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">Вимоги</h2>
+				<ul class="mt-5 grid gap-3">
+					@for (requirement of requirements(); track requirement) {
+						<li
+							class="rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-base text-[var(--c-text-primary)]"
+						>
+							{{ requirement }}
+						</li>
+					}
+				</ul>
+			</section>
+
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">
+					Що отримає учасник
+				</p>
+				<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">Переваги</h2>
+				<ul class="mt-5 grid gap-3">
+					@for (benefit of benefits(); track benefit) {
+						<li
+							class="rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-base text-[var(--c-text-primary)]"
+						>
+							{{ benefit }}
+						</li>
+					}
+				</ul>
+			</section>
+		</div>
+
+		@if (judges().length) {
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--c-primary)]">Журі</p>
+				<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">{{ judgesSubtitle() }}</h2>
+				<div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+					@for (judge of judges(); track judge.name + '-' + $index) {
+						<article
+							class="flex h-full flex-col rounded-[1.5rem] border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4"
+						>
+							@if (judge.photo) {
+								<img
+									[src]="judge.photo"
+									[alt]="judge.name"
+									class="h-72 w-full rounded-[1.25rem] object-cover sm:h-56 xl:h-48"
+									loading="lazy"
+								/>
+							} @else {
+								<div
+									class="flex h-72 w-full items-center justify-center rounded-[1.25rem] border border-dashed border-[var(--c-border)] bg-[var(--c-bg-secondary)] text-[var(--c-text-muted)] sm:h-56 xl:h-48"
+									aria-hidden="true"
+								>
+									<span class="material-symbols-outlined text-5xl">person</span>
+								</div>
+							}
+							<p class="mt-4 text-lg font-semibold text-[var(--c-text-secondary)]">
+								{{ judge.name }}
+							</p>
+							<p class="mt-2 text-sm leading-6 text-[var(--c-text-primary)]">
+								{{ judge.description || 'Опис буде додано.' }}
+							</p>
+						</article>
+					}
+				</div>
+			</section>
+		}
+
+		@if (teams().length) {
+			<div class="grid gap-6">
+				<div class="flex items-center justify-between gap-4">
+					<div>
+						<p class="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--c-primary)]">
+							Команди
+						</p>
+						<h2 class="mt-2 text-3xl font-black text-[var(--c-text-secondary)]">
+							{{ teamsSubtitle() }}
+						</h2>
+					</div>
+				</div>
+
+				<div class="grid gap-6 xl:grid-cols-3">
+					@for (team of teams(); track team.id) {
+						<article
+							class="flex h-full flex-col rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+						>
+							<div class="flex items-start justify-between gap-4">
+								<div class="min-w-0 flex-1">
+									<h3 class="text-2xl font-bold text-[var(--c-text-secondary)]">
+										{{ team.name }}
+									</h3>
+									@if (team.framework) {
+										<p
+											class="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-primary)]"
+										>
+											{{ team.framework }}
+										</p>
+									}
+									@if (team.themeRepoUrl || team.themeWebsiteUrl) {
+										<div class="mt-3 flex flex-wrap gap-3 text-sm">
+											@if (team.themeRepoUrl) {
+												<a
+													[href]="team.themeRepoUrl"
+													target="_blank"
+													rel="noopener noreferrer"
+													class="inline-flex items-center gap-2 font-medium text-[var(--c-text-secondary)] transition-colors duration-200 hover:text-[var(--c-primary)]"
+												>
+													{{ team.themeRepo || 'Репозиторій' }}
+													<span class="material-symbols-outlined text-base" aria-hidden="true">
+														open_in_new
+													</span>
+												</a>
+											}
+											@if (team.themeWebsiteUrl) {
+												<a
+													[href]="team.themeWebsiteUrl"
+													target="_blank"
+													rel="noopener noreferrer"
+													class="inline-flex items-center gap-2 font-medium text-[var(--c-text-secondary)] transition-colors duration-200 hover:text-[var(--c-primary)]"
+												>
+													Сайт / демо
+													<span class="material-symbols-outlined text-base" aria-hidden="true">
+														open_in_new
+													</span>
+												</a>
+											}
+										</div>
+									}
+									@if (team.description) {
+										<p class="mt-3 text-sm leading-7 text-[var(--c-text-primary)]">
+											{{ team.description }}
+										</p>
+									}
+									@if (team.qa) {
+										<p class="mt-3 text-sm leading-7 text-[var(--c-text-primary)]">
+											Тестувальник: {{ team.qa }}
+										</p>
+									}
+								</div>
+								@if (team.members.length) {
+									<span
+										class="shrink-0 rounded-full bg-[var(--c-bg-tertiary)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--c-text-muted)]"
+									>
+										{{ team.members.length }} учасників
+									</span>
+								}
+							</div>
+
+							@if (team.highlights.length) {
+								<div class="mt-6 flex flex-wrap gap-2">
+									@for (highlight of team.highlights; track highlight) {
+										<span
+											class="rounded-full border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-2 text-xs font-medium text-[var(--c-text-secondary)]"
+										>
+											{{ highlight }}
+										</span>
+									}
+								</div>
+							}
+
+							@if (team.members.length) {
+								<div class="mt-6">
+									<p
+										class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-primary)]"
+									>
+										Учасники команди
+									</p>
+									<div class="mt-4 grid gap-3">
+										@for (member of team.members; track member.displayName + '-' + $index) {
+											<article
+												class="rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4"
+											>
+												<p class="text-lg font-semibold text-[var(--c-text-secondary)]">
+													{{ member.displayName }}
+												</p>
+												@if (member.subtitle) {
+													<p class="mt-1 text-sm text-[var(--c-text-muted)]">
+														{{ member.subtitle }}
+													</p>
+												}
+												@if (member.projects.length) {
+													<ul class="mt-4 grid gap-2 text-sm text-[var(--c-text-primary)]">
+														@for (project of member.projects; track project.name + project.url) {
+															<li
+																class="rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] px-3 py-2"
+															>
+																<a
+																	[href]="project.url"
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	class="inline-flex items-center gap-2 font-medium text-[var(--c-text-secondary)] transition-colors duration-200 hover:text-[var(--c-primary)]"
+																>
+																	{{ project.name }}
+																	<span
+																		class="material-symbols-outlined text-base"
+																		aria-hidden="true"
+																	>
+																		open_in_new
+																	</span>
+																</a>
+															</li>
+														}
+													</ul>
+												}
+												@if (member.note) {
+													<p class="mt-3 text-sm text-[var(--c-text-muted)]">
+														{{ member.note }}
+													</p>
+												}
+											</article>
+										}
+									</div>
+								</div>
+							}
+						</article>
+					}
+				</div>
+			</div>
+		}
+
+		<div class="grid gap-6 xl:grid-cols-2">
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">
+					Місце проведення
+				</p>
+				<p class="mt-3 text-base text-[var(--c-text-primary)]">
+					@if (location()) {
+						{{ location() }}
+					} @else {
+						Локація буде уточнена ближче до старту змагання.
+					}
+				</p>
+			</section>
+
+			<section
+				class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6 shadow-[var(--shadow-card)]"
+			>
+				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--c-primary)]">Спонсори</p>
+				@if (sponsors().length) {
+					<ul class="mt-5 grid gap-3">
+						@for (sponsor of sponsors(); track sponsor) {
+							<li
+								class="rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-4 py-3 text-base text-[var(--c-text-primary)]"
+							>
+								{{ sponsor }}
+							</li>
+						}
+					</ul>
+				} @else {
+					<p class="mt-3 text-base text-[var(--c-text-primary)]">
+						Партнери та спонсори змагання будуть оголошені пізніше.
+					</p>
+				}
+			</section>
+		</div>
+
+		@if (extraEntries().length) {
+			<div class="rounded-[1.75rem] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-6">
+				<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">Додаткова інформація</h2>
+				<div class="mt-6 grid gap-4 md:grid-cols-2">
+					@for (entry of extraEntries(); track entry.key) {
+						<div class="rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-4">
+							<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-primary)]">
+								{{ entry.key }}
+							</p>
+							<p class="mt-2 text-base text-[var(--c-text-primary)]">{{ entry.value }}</p>
+						</div>
+					}
+				</div>
+			</div>
+		}
+	}
+</section>

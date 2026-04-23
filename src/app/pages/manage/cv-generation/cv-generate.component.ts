@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CvPdfService, CvPayload } from './cv-pdf.service';
+import { CV_THEME_OPTIONS, CvThemeId } from '../../../feature/cv-generation/templates/cv-theme.config';
 
 type PreviewState = 'idle' | 'generating' | 'done';
 type ViewMode = 'form' | 'preview';
@@ -22,6 +23,8 @@ export class CvGenerateComponent implements OnDestroy {
 
 	protected readonly state = signal<PreviewState>('idle');
 	protected readonly viewMode = signal<ViewMode>('form');
+	protected readonly themeOptions = CV_THEME_OPTIONS;
+	protected readonly themeOpen = signal(false);
 	protected readonly safePdfUrl = signal<SafeResourceUrl | null>(null);
 	protected readonly pdfBlob = signal<Blob | null>(null);
 	protected readonly errorMessage = signal('');
@@ -32,6 +35,38 @@ export class CvGenerateComponent implements OnDestroy {
 	protected readonly canDownload = computed(() => this.state() === 'done' && !!this.pdfBlob());
 	protected readonly canViewPreview = computed(() => this.state() === 'done' && !!this.safePdfUrl());
 	protected readonly canReturnToForm = computed(() => this.viewMode() === 'preview');
+
+	protected selectedThemeLabel(): string {
+		const current = this.form.controls.theme.value;
+		return this.themeOptions.find((option) => option.value === current)?.label || 'Оберіть тему';
+	}
+
+	@HostListener('document:click', ['$event'])
+	onDocumentClick(event: MouseEvent): void {
+		const target = event.target as HTMLElement | null;
+		if (!target) {
+			return;
+		}
+
+		if (!target.closest('.multi-select--theme')) {
+			this.themeOpen.set(false);
+		}
+	}
+
+	protected toggleThemeDropdown(): void {
+		this.themeOpen.set(!this.themeOpen());
+	}
+
+	protected selectTheme(theme: CvThemeId): void {
+		if (this.form.controls.theme.value !== theme) {
+			this.form.controls.theme.setValue(theme);
+			this.form.controls.theme.markAsDirty();
+			this.form.controls.theme.markAsTouched();
+			this.form.controls.theme.updateValueAndValidity();
+		}
+
+		this.themeOpen.set(false);
+	}
 
 	protected canGenerate(): boolean {
 		if (this.form.invalid || this.state() === 'generating') {
@@ -52,10 +87,11 @@ export class CvGenerateComponent implements OnDestroy {
 	}
 
 	protected readonly form = this._fb.group({
+		theme: this._fb.control<CvThemeId>('light', { nonNullable: true, validators: [Validators.required] }),
 		fullName: this._fb.control('', { nonNullable: true, validators: [Validators.required, this._fullNameValidator()] }),
 		age: this._fb.control('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d+$/)] }),
 		role: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
-		phone: this._fb.control('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^[+\d]+$/)] }),
+		phone: this._fb.control('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^[+\d\s]+$/)] }),
 		email: this._fb.control('', {
 			nonNullable: true,
 			validators: [Validators.required, Validators.email],
@@ -107,7 +143,7 @@ export class CvGenerateComponent implements OnDestroy {
 		}
 
 		const raw = this.form.getRawValue();
-		const { imageBase64, ...otherValues } = raw as { imageBase64?: unknown; [key: string]: unknown };
+		const { imageBase64, theme, ...otherValues } = raw as { imageBase64?: unknown; theme?: unknown; [key: string]: unknown };
 		return Object.values(otherValues).some((value) => Boolean(String(value).trim()));
 	}
 
@@ -138,7 +174,7 @@ export class CvGenerateComponent implements OnDestroy {
 			}
 
 			if (label === 'Номер телефону') {
-				return 'У полі Номер телефону дозволені лише цифри та символ +.';
+				return 'Дозволені лише цифри, + і пробіл.';
 			}
 
 			if (label === 'Посилання на GitHub' || label === 'Посилання на LinkedIn') {
@@ -159,6 +195,7 @@ export class CvGenerateComponent implements OnDestroy {
 
 	protected clear(): void {
 		this.form.reset({
+			theme: 'light',
 			fullName: '',
 			age: '',
 			role: '',
@@ -201,8 +238,9 @@ export class CvGenerateComponent implements OnDestroy {
 
 		try {
 			const payload = this._buildPayload();
+			const theme = this.form.controls.theme.value;
 			const signature = this._buildSignature(this.form.getRawValue());
-			const blob = await this._pdfService.generatePdfBlob(payload);
+			const blob = await this._pdfService.generatePdfBlob(payload, theme);
 
 			const elapsed = Date.now() - startedAt;
 			if (elapsed < 2000) {
@@ -217,7 +255,8 @@ export class CvGenerateComponent implements OnDestroy {
 			this.pdfBlob.set(blob);
 			this.state.set('done');
 			this._generatedSignature.set(signature);
-		} catch {
+		} catch (error) {
+			console.error('CV generation failed:', error);
 			this._clearPreviewObjectUrl();
 			this.safePdfUrl.set(null);
 			this.pdfBlob.set(null);
@@ -249,7 +288,7 @@ export class CvGenerateComponent implements OnDestroy {
 		}
 
 		try {
-			await this._pdfService.download(this._buildPayload(), this._buildFileName());
+			await this._pdfService.download(this._buildPayload(), this._buildFileName(), this.form.controls.theme.value);
 		} catch {
 			this.errorMessage.set('Не вдалося завантажити CV.');
 		}
@@ -263,7 +302,7 @@ export class CvGenerateComponent implements OnDestroy {
 		this.errorMessage.set('');
 
 		try {
-			const file = await this._pdfService.toFile(this._buildPayload(), this._buildFileName());
+			const file = await this._pdfService.toFile(this._buildPayload(), this._buildFileName(), this.form.controls.theme.value);
 			if (!navigator.share || !navigator.canShare || !navigator.canShare({ files: [file] })) {
 				this.errorMessage.set('Ваш браузер не підтримує поділитися файлом.');
 				return;
@@ -316,6 +355,7 @@ export class CvGenerateComponent implements OnDestroy {
 
 	private _buildSignature(raw: ReturnType<typeof this.form.getRawValue>): string {
 		const normalized = {
+			theme: raw.theme,
 			fullName: raw.fullName.trim(),
 			age: raw.age.trim(),
 			role: raw.role.trim(),
