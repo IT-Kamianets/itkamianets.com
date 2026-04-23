@@ -390,6 +390,11 @@ export const routes: Routes = [
 				loadChildren: () =>
 					import('./feature/certificate/manage.routes').then((m) => m.routes),
 			},
+			{
+				path: 'salaries',
+				loadComponent: () =>
+					import('./pages/salaries/salaries.component').then((m) => m.SalariesComponent ),
+			},
 		],
 	},
 	{

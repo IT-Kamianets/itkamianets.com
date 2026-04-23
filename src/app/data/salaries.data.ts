@@ -1,0 +1,88 @@
+import { SalaryData } from '../feature/salary/salary.interface';
+
+export const SALARIES: SalaryData[] = [
+	// Frontend technologies
+	{
+		id: 'react',
+		name: 'React',
+		category: 'frontend',
+		averageSalary: 2800,
+		openJobs: 156,
+		competitorsHiring: 34,
+		trend: 'up',
+	},
+	{
+		id: 'angular',
+		name: 'Angular',
+		category: 'frontend',
+		averageSalary: 2650,
+		openJobs: 89,
+		competitorsHiring: 22,
+		trend: 'stable',
+	},
+	{
+		id: 'vue',
+		name: 'Vue.js',
+		category: 'frontend',
+		averageSalary: 2550,
+		openJobs: 47,
+		competitorsHiring: 12,
+		trend: 'up',
+	},
+	{
+		id: 'typescript',
+		name: 'TypeScript',
+		category: 'frontend',
+		averageSalary: 2950,
+		openJobs: 203,
+		competitorsHiring: 41,
+		trend: 'up',
+	},
+
+	// Backend technologies
+	{
+		id: 'nodejs',
+		name: 'Node.js',
+		category: 'backend',
+		averageSalary: 2750,
+		openJobs: 178,
+		competitorsHiring: 39,
+		trend: 'up',
+	},
+	{
+		id: 'python',
+		name: 'Python',
+		category: 'backend',
+		averageSalary: 2850,
+		openJobs: 224,
+		competitorsHiring: 48,
+		trend: 'up',
+	},
+	{
+		id: 'java',
+		name: 'Java',
+		category: 'backend',
+		averageSalary: 2900,
+		openJobs: 167,
+		competitorsHiring: 35,
+		trend: 'stable',
+	},
+	{
+		id: 'csharp',
+		name: 'C#/.NET',
+		category: 'backend',
+		averageSalary: 2800,
+		openJobs: 134,
+		competitorsHiring: 28,
+		trend: 'stable',
+	},
+	{
+		id: 'go',
+		name: 'Go',
+		category: 'backend',
+		averageSalary: 3050,
+		openJobs: 92,
+		competitorsHiring: 19,
+		trend: 'up',
+	},
+];
