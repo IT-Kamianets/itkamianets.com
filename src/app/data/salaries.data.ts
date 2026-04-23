@@ -29,15 +29,6 @@ export const SALARIES: SalaryData[] = [
 		competitorsHiring: 12,
 		trend: 'up',
 	},
-	{
-		id: 'typescript',
-		name: 'TypeScript',
-		category: 'frontend',
-		averageSalary: 2950,
-		openJobs: 203,
-		competitorsHiring: 41,
-		trend: 'up',
-	},
 
 	// Backend technologies
 	{

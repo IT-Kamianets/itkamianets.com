@@ -15,9 +15,7 @@ export const routes: Routes = [
 			{
 				path: 'our-work',
 				loadComponent: () =>
-					import('./pages/our-work/our-work.component').then(
-						(m) => m.OurWorkComponent,
-					),
+					import('./pages/our-work/our-work.component').then((m) => m.OurWorkComponent),
 			},
 			{
 				path: 'jobs',
@@ -44,24 +42,15 @@ export const routes: Routes = [
 					import('./pages/events/events.component').then((m) => m.EventsComponent),
 			},
 			{
+				path: 'salaries',
+				loadComponent: () =>
+				import('./pages/salaries/salaries.component').then((m) => m.SalariesComponent ),
+			},
+			{
 				path: 'hackathon',
 				loadComponent: () =>
 					import('./pages/hackathon/hackathon.component').then(
 						(m) => m.HackathonComponent,
-					),
-			},
-			{
-				path: 'competitions',
-				loadComponent: () =>
-					import('./pages/competitions/competitions.component').then(
-						(m) => m.CompetitionsComponent,
-					),
-			},
-			{
-				path: 'competition',
-				loadComponent: () =>
-					import('./pages/competition/competition.component').then(
-						(m) => m.CompetitionComponent,
 					),
 			},
 			{
@@ -82,9 +71,7 @@ export const routes: Routes = [
 			{
 				path: 'services',
 				loadComponent: () =>
-					import('./pages/services/services.component').then(
-						(m) => m.ServicesComponent,
-					),
+					import('./pages/services/services.component').then((m) => m.ServicesComponent),
 			},
 			{
 				path: 'services/:id',
@@ -114,40 +101,26 @@ export const routes: Routes = [
 						(m) => m.CompanyComponent,
 					),
 			},
+
 			{
-				path: 'profiles',
-				loadComponent: () =>
-					import('./pages/profiles/profiles.component').then((m) => m.ProfilesComponent),
-			},
-			{
-				path: 'profile/:id',
-				loadComponent: () =>
-					import('./pages/profile/profile.component').then((m) => m.MemberProfileComponent),
+				path: '',
+				loadChildren: () => import('./feature/article/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/article/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/merch/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/merch/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/project/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/project/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/school/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/school/public.routes').then((m) => m.routes),
-			},
-			{
-				path: '',
-				loadChildren: () =>
-					import('./feature/job/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/job/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -156,38 +129,40 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/event/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/event/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/profile/public.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/course/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
 				loadChildren: () =>
-					import('./feature/profile/public.routes').then((m) => m.routes),
+					import('./feature/achievmeent/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/course/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/waiter/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/item/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/item/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/test/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/test/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/startup/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/startup/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/quest/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/quest/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -196,20 +171,29 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/company/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/company/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/review/public.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/review/public.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
 				loadChildren: () =>
 					import('./feature/certificate/public.routes').then((m) => m.routes),
 			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/sale/public.routes').then((m) => m.routes),
+			},
 		],
+	},
+	{
+		path: 'cv-generation',
+		loadComponent: () =>
+			import('./pages/cv-generation-public/cv-generation-public.component').then(
+				(m) => m.CvGenerationPublicComponent,
+			),
 	},
 	{
 		path: '',
@@ -234,14 +218,6 @@ export const routes: Routes = [
 				redirectTo: 'profile',
 			},
 			{
-				path: 'events',
-				canActivate: [authenticatedGuard],
-				loadComponent: () =>
-					import('./pages/manage/events/events.component').then(
-						(m) => m.ManageEventsComponent,
-					),
-			},
-			{
 				path: 'profile',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>
@@ -249,6 +225,15 @@ export const routes: Routes = [
 						(m) => m.ProfileComponent,
 					),
 			},
+			{
+				path: 'events',
+				canActivate: [authenticatedGuard],
+				loadComponent: () =>
+					import('./pages/manage/events/events.component').then(
+						(m) => m.ManageEventsComponent,
+					),
+			},
+
 			{
 				path: 'schools',
 				canActivate: [authenticatedGuard],
@@ -270,24 +255,7 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/manage/jobs/jobs.component').then((m) => m.JobsComponent),
 			},
-			{
-				path: 'competitions',
-				canActivate: [authenticatedGuard],
-				data: { title: 'Competitions' },
-				loadComponent: () =>
-					import('./pages/manage/competitions/competitions.component').then(
-						(m) => m.ManageCompetitionsComponent,
-					),
-			},
-			{
-				path: 'people',
-				canActivate: [authenticatedGuard],
-				data: { title: 'People' },
-				loadComponent: () =>
-					import('./pages/manage/people/people.component').then(
-						(m) => m.ManagePeopleComponent,
-					),
-			},
+
 			{
 				path: 'cv-generation',
 				canActivate: [authenticatedGuard],
@@ -307,28 +275,23 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/article/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/article/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/merch/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/merch/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/project/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/project/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/school/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/school/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/job/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/job/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -337,38 +300,40 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/event/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/event/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/profile/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () => import('./feature/course/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
 				loadChildren: () =>
-					import('./feature/profile/manage.routes').then((m) => m.routes),
+					import('./feature/achievmeent/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/course/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/waiter/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/item/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/item/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/test/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/test/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/startup/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/startup/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/quest/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/quest/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -377,13 +342,11 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/company/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/company/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/review/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/review/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
@@ -391,9 +354,8 @@ export const routes: Routes = [
 					import('./feature/certificate/manage.routes').then((m) => m.routes),
 			},
 			{
-				path: 'salaries',
-				loadComponent: () =>
-					import('./pages/salaries/salaries.component').then((m) => m.SalariesComponent ),
+				path: '',
+				loadChildren: () => import('./feature/sale/manage.routes').then((m) => m.routes),
 			},
 		],
 	},
