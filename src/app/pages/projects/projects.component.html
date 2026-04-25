@@ -1,0 +1,88 @@
+<div class="projects-page">
+	<section class="projects-hero">
+		<div class="projects-hero__overlay"></div>
+		<div class="projects-hero__content">
+			<span class="projects-hero__eyebrow">Портфоліо</span>
+			<h1 class="projects-hero__title">Проєкти IT Kamianets</h1>
+			<p class="projects-hero__subtitle">
+				Добірка сайтів і продуктів, які команда запускала разом зі студентами та партнерами.
+			</p>
+		</div>
+	</section>
+
+	<section class="projects-list">
+		<div class="container">
+			<div class="projects-grid">
+				@for (project of projects; track project.id) {
+					<article class="project-card">
+						<div class="project-card__media">
+							<img
+								[src]="project.image"
+								[alt]="project.imageAlt"
+								loading="lazy"
+								referrerpolicy="no-referrer"
+							/>
+						</div>
+
+						<div class="project-card__body">
+							<div class="project-card__top">
+								<h2 class="project-card__title">{{ project.title }}</h2>
+								<time class="project-card__date" [attr.datetime]="project.dateTime">
+									{{ project.dateLabel }}
+								</time>
+							</div>
+
+							@if (project.description) {
+								<p class="project-card__description">{{ project.description }}</p>
+							}
+
+							@if (project.contributors.length) {
+								<div class="project-card__contributors">
+									<span class="project-card__contributors-label">Учасники</span>
+									<div class="project-card__contributors-list">
+										@for (contributor of project.contributors; track contributor.url) {
+											<a
+												[href]="contributor.url"
+												target="_blank"
+												rel="noopener noreferrer"
+												class="project-card__contributor"
+												[title]="contributor.name"
+												[attr.aria-label]="'GitHub профіль ' + contributor.name"
+											>
+												<img
+													[src]="contributor.avatar"
+													[alt]="contributor.name"
+													loading="lazy"
+													referrerpolicy="no-referrer"
+												/>
+											</a>
+										}
+									</div>
+								</div>
+							}
+
+							<div class="project-card__actions">
+								<a
+									[href]="project.githubUrl"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="project-card__link"
+								>
+									GitHub
+								</a>
+								<a
+									[href]="project.websiteUrl"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="project-card__link project-card__link--primary"
+								>
+									Відкрити сайт
+								</a>
+							</div>
+						</div>
+					</article>
+				}
+			</div>
+		</div>
+	</section>
+</div>
