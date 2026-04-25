@@ -32,7 +32,14 @@
 					<td>{{ sale.description || '—' }}</td>
 					<td><code>{{ dataPreview(sale.data) }}</code></td>
 					<td class="manage-sales__actions">
-						<a pButton [routerLink]="['/sale', sale._id]" class="manage-sales__button manage-sales__button--ghost">View</a>
+						<a
+							pButton
+							[routerLink]="['/sale']"
+							[queryParams]="{ id: sale._id }"
+							class="manage-sales__button manage-sales__button--ghost"
+						>
+							View
+						</a>
 						<button pButton type="button" class="manage-sales__button manage-sales__button--ghost" (click)="openEdit(sale)">
 							Edit
 						</button>

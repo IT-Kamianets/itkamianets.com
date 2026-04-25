@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { Project, ProjectData } from './project.interface';

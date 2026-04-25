@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { NEW_USER } from './user.const';
 import { User } from './user.interface';
 
@@ -30,9 +30,6 @@ export class UserService {
 
 		try {
 			const user = JSON.parse(storedUser) as User;
-			if (user.token) {
-				this._http.set('token', user.token);
-			}
 			this.setUser(user);
 		} catch {
 			localStorage.removeItem(this._storageKey);

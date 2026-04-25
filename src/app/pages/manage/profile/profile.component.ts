@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';

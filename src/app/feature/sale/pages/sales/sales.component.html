@@ -37,7 +37,8 @@
 					<td class="sales-page__actions">
 						<a
 							pButton
-							[routerLink]="['/sale', sale._id]"
+							[routerLink]="['/sale']"
+							[queryParams]="{ id: sale._id }"
 							class="sales-page__button sales-page__button--ghost"
 						>
 							View
