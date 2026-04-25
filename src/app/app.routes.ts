@@ -42,6 +42,11 @@ export const routes: Routes = [
 					import('./pages/events/events.component').then((m) => m.EventsComponent),
 			},
 			{
+				path: 'salaries',
+				loadComponent: () =>
+				import('./pages/salaries/salaries.component').then((m) => m.SalariesComponent ),
+			},
+			{
 				path: 'hackathon',
 				loadComponent: () =>
 					import('./pages/hackathon/hackathon.component').then(
