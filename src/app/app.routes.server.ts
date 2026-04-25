@@ -49,6 +49,7 @@ const MANAGE_CLIENT_ROUTES = [
 	'manage/merch',
 	'manage/companies',
 	'manage/projects',
+	'manage/tests',
 	'manage/items',
 	'manage/schools',
 	'manage/jobs',
@@ -79,6 +80,14 @@ export const serverRoutes: ServerRoute[] = [
 	},
 	{
 		path: 'certificate/:id',
+		renderMode: RenderMode.Server,
+	},
+	{
+		path: 'test/:id',
+		renderMode: RenderMode.Server,
+	},
+	{
+		path: 'sale/:id',
 		renderMode: RenderMode.Server,
 	},
 	{

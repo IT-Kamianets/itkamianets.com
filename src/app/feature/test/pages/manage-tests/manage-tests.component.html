@@ -1,0 +1,305 @@
+<section class="tests-manage">
+	<div class="tests-manage__topbar">
+		<div class="tests-manage__heading">
+			<h1 class="tests-manage__title">Tests</h1>
+			<p class="tests-manage__subtitle">
+				Керуйте перевірками навичок: створюйте питання, варіанти відповідей і правильні
+				відповіді.
+			</p>
+		</div>
+		<div class="tests-manage__actions">
+			<button
+				pButton
+				type="button"
+				class="tests-manage__add-btn"
+				(click)="openCreateDialog()"
+			>
+				Додати тест
+			</button>
+		</div>
+	</div>
+
+	@if (toasts().length) {
+		<div class="tests-manage__toast-stack" role="status" aria-live="polite">
+			@for (toast of toasts(); track toast.id) {
+				<div class="tests-manage__toast">{{ toast.message }}</div>
+			}
+		</div>
+	}
+
+	@if (apiError()) {
+		<p class="test-form__error tests-manage__api-error">{{ apiError() }}</p>
+	}
+
+	<section class="publications">
+		<p-table [value]="tests()" [dataKey]="'_id'" styleClass="publications__p-table">
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Назва</th>
+					<th>Опис</th>
+					<th>Питання</th>
+					<th>Дії</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-test>
+				<tr>
+					<td class="publications__title">{{ test.data.title }}</td>
+					<td class="publications__description">{{ test.data.description }}</td>
+					<td>
+						<span class="publications__tag"
+							>{{ test.data.questions.length }} питань</span
+						>
+					</td>
+					<td>
+						<div class="publications__actions">
+							<button type="button" class="table-btn" (click)="openEdit(test)">
+								<span
+									class="material-symbols-outlined table-btn__icon"
+									aria-hidden="true"
+									>edit</span
+								>
+								Редагувати
+							</button>
+							<button
+								type="button"
+								class="table-btn table-btn--danger"
+								(click)="askDelete(test)"
+							>
+								<span
+									class="material-symbols-outlined table-btn__icon"
+									aria-hidden="true"
+									>delete</span
+								>
+								Видалити
+							</button>
+						</div>
+					</td>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="4" class="publications__empty">
+						Поки що немає опублікованих тестів.
+					</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</section>
+
+	<p-dialog
+		[visible]="isDialogOpen()"
+		(visibleChange)="onDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(760px, 96vw)' }"
+		styleClass="test-dialog"
+	>
+		<ng-template pTemplate="header">
+			<h2 class="test-dialog__title">
+				{{ editTestId() ? 'Редагування тесту' : 'Додати тест' }}
+			</h2>
+		</ng-template>
+
+		<form class="test-form test-form--dialog" [formGroup]="form" (ngSubmit)="saveTest()">
+			<div class="test-form__grid">
+				<div class="test-form__field test-form__field--wide">
+					<label class="test-form__label" for="test-title">Назва тесту</label>
+					<input id="test-title" pInputText type="text" formControlName="title" />
+					@if (submitted() && form.controls.title.invalid) {
+						<p class="test-form__error">Вкажіть назву тесту (мінімум 2 символи).</p>
+					}
+				</div>
+
+				<div class="test-form__field test-form__field--wide">
+					<label class="test-form__label" for="test-description">Опис тесту</label>
+					<textarea
+						id="test-description"
+						rows="3"
+						formControlName="description"
+					></textarea>
+					@if (submitted() && form.controls.description.invalid) {
+						<p class="test-form__error">Опис обов'язковий (мінімум 10 символів).</p>
+					}
+				</div>
+			</div>
+
+			<div class="question-list">
+				<div class="question-list__header">
+					<h3>Питання</h3>
+					<button
+						pButton
+						type="button"
+						class="btn btn--secondary"
+						(click)="addQuestion()"
+					>
+						Додати питання
+					</button>
+				</div>
+
+				@for (
+					questionGroup of questionControls.controls;
+					track $index;
+					let questionIndex = $index
+				) {
+					<div class="question-editor">
+						<div class="question-editor__header">
+							<strong>Питання {{ questionIndex + 1 }}</strong>
+							<button
+								type="button"
+								class="question-editor__remove"
+								[disabled]="questionControls.length <= 1"
+								(click)="removeQuestion(questionIndex)"
+								aria-label="Видалити питання"
+							>
+								<span class="material-symbols-outlined" aria-hidden="true"
+									>delete</span
+								>
+							</button>
+						</div>
+
+						<div class="test-form__field test-form__field--wide">
+							<label class="test-form__label" [for]="'question-' + questionIndex"
+								>Текст питання</label
+							>
+							<input
+								[id]="'question-' + questionIndex"
+								pInputText
+								type="text"
+								[formControl]="questionGroup.controls.question"
+							/>
+							@if (submitted() && isQuestionTextInvalid(questionIndex)) {
+								<p class="test-form__error">Питання не може бути порожнім.</p>
+							}
+						</div>
+
+						<div class="options-list">
+							<label class="test-form__label">Варіанти відповідей</label>
+							@for (
+								optionControl of optionControls(questionIndex).controls;
+								track $index;
+								let optionIndex = $index
+							) {
+								<div class="option-row">
+									<input
+										type="radio"
+										[name]="'correct-' + questionIndex"
+										[checked]="
+											questionGroup.controls.correct.value === optionIndex
+										"
+										(change)="setCorrectOption(questionIndex, optionIndex)"
+										[attr.aria-label]="
+											'Позначити правильну відповідь ' + (optionIndex + 1)
+										"
+									/>
+									<input
+										pInputText
+										type="text"
+										[formControl]="optionControl"
+										[placeholder]="'Варіант ' + (optionIndex + 1)"
+									/>
+									<button
+										type="button"
+										class="option-row__remove"
+										[disabled]="optionControls(questionIndex).length <= 2"
+										(click)="removeOption(questionIndex, optionIndex)"
+										aria-label="Видалити варіант"
+									>
+										<span class="material-symbols-outlined" aria-hidden="true"
+											>close</span
+										>
+									</button>
+								</div>
+							}
+							<button
+								type="button"
+								class="option-row__add"
+								(click)="addOption(questionIndex)"
+							>
+								<span class="material-symbols-outlined" aria-hidden="true"
+									>add</span
+								>
+								Додати варіант
+							</button>
+							@if (submitted() && areOptionsInvalid(questionIndex)) {
+								<p class="options-list__error">
+									Додайте щонайменше два заповнені варіанти відповіді.
+								</p>
+							}
+							@if (submitted() && isCorrectOptionInvalid(questionIndex)) {
+								<p class="options-list__error">
+									Позначена правильна відповідь має бути заповнена.
+								</p>
+							}
+						</div>
+					</div>
+				}
+			</div>
+
+			<div class="test-form__actions">
+				<button pButton type="button" class="btn btn--ghost" (click)="closeDialog()">
+					Скасувати
+				</button>
+				<button
+					pButton
+					type="button"
+					class="btn btn--secondary"
+					(click)="openDraftPreview()"
+				>
+					Попередній перегляд
+				</button>
+				<button pButton type="submit" class="btn btn--primary">Зберегти</button>
+			</div>
+		</form>
+	</p-dialog>
+
+	@if (isPreviewOpen() && previewTest(); as test) {
+		<div class="overlay" (click)="closePreview()">
+			<div
+				class="overlay__dialog overlay__dialog--preview"
+				(click)="$event.stopPropagation()"
+			>
+				<button type="button" class="overlay__close" (click)="closePreview()">×</button>
+				<div class="test-card">
+					<div class="test-card__body">
+						<div class="test-card__header">
+							<h3 class="test-card__title">{{ test.data.title }}</h3>
+							<span class="test-card__badge"
+								>{{ test.data.questions.length }} питань</span
+							>
+						</div>
+						<p class="test-card__desc">{{ test.data.description }}</p>
+						<div class="test-card__questions">
+							@for (question of test.data.questions; track $index) {
+								<p>{{ $index + 1 }}. {{ question.question }}</p>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	@if (deleteCandidate(); as test) {
+		<div class="overlay" (click)="cancelDelete()">
+			<div
+				class="overlay__dialog overlay__dialog--confirm"
+				(click)="$event.stopPropagation()"
+			>
+				<h3>Видалити тест?</h3>
+				<p>
+					Ви впевнені, що хочете видалити тест <strong>{{ test.data.title }}</strong
+					>?
+				</p>
+				<div class="overlay__actions">
+					<button type="button" class="btn btn--ghost" (click)="cancelDelete()">
+						Ні
+					</button>
+					<button type="button" class="btn btn--danger" (click)="confirmDelete()">
+						Так, видалити
+					</button>
+				</div>
+			</div>
+		</div>
+	}
+</section>
