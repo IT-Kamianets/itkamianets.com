@@ -3,57 +3,140 @@
 	<div class="sm:flex sm:items-center mb-10">
 		<div class="sm:flex-auto">
 			<div class="flex items-center gap-3">
-				<a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-600 hover:border-[#256eff] hover:text-[#256eff] transition-all shadow-sm">
-					<span class="pi pi-arrow-left font-bold"></span>
+				<a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-[#256eff] hover:text-[#256eff] transition-all shadow-sm">
+					<span class="material-symbols-outlined">arrow_back</span>
 				</a>
-				<h1 class="text-3xl font-black text-slate-800">Заявки</h1>
+				<h1 class="text-3xl font-black text-slate-800 dark:text-white">Заявки від кандидатів</h1>
 			</div>
 		</div>
 	</div>
 
 	<!-- Data Table -->
-	<div class="bg-white rounded-[2rem] border-2 border-slate-100 shadow-xl overflow-hidden">
-		<p-table [value]="proposals()" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+	<div class="bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-100 dark:border-slate-700 shadow-xl overflow-hidden">
+		<p-table [value]="proposals()" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-striped">
 			<ng-template pTemplate="header">
-				<tr class="bg-slate-50">
-					<th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Кандидат</th>
-					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Вакансія</th>
-					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Контакти</th>
-					<th class="py-5 text-center text-xs font-black uppercase text-slate-400 tracking-widest">Дії</th>
+				<tr class="bg-slate-50 dark:bg-slate-900/50">
+					<th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest" pSortableColumn="candidateName">Кандидат <p-sortIcon field="candidateName"></p-sortIcon></th>
+					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Вакансія</th>
+					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Контакти</th>
+					<th class="py-5 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest" pSortableColumn="status">Статус <p-sortIcon field="status"></p-sortIcon></th>
+					<th class="py-5 text-center text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Дії</th>
 				</tr>
 			</ng-template>
 			<ng-template pTemplate="body" let-proposal>
-				<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+				<tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors">
 					<td class="py-6 pl-8">
-						<div class="text-sm font-black text-slate-700">{{ proposal.candidateName }}</div>
+						<div class="text-sm font-black text-slate-700 dark:text-slate-200">{{ proposal.candidateName }}</div>
 					</td>
 					<td class="py-6">
-						<span class="px-3 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-black uppercase">
+						<span class="px-3 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#256eff] dark:text-blue-400 text-[10px] font-black uppercase tracking-tighter border border-[#256eff] border-opacity-10">
 							{{ getJobTitle(proposal.jobId) }}
 						</span>
 					</td>
 					<td class="py-6">
-						<div class="text-xs font-bold text-slate-500 flex flex-col gap-1">
-							<span class="flex items-center gap-1.5"><i class="pi pi-envelope text-[10px]"></i> {{ proposal.email }}</span>
-							<span class="flex items-center gap-1.5"><i class="pi pi-phone text-[10px]"></i> {{ proposal.phone }}</span>
+						<div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex flex-col gap-1">
+							<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[12px] text-slate-300 dark:text-slate-600">mail</span> {{ proposal.email }}</span>
+							<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[12px] text-slate-300 dark:text-slate-600">phone</span> {{ proposal.phone || '—' }}</span>
 						</div>
 					</td>
+					<td class="py-6">
+                        <p-tag [value]="getStatusLabel(proposal.status)" [severity]="getStatusSeverity(proposal.status)" class="uppercase font-black text-[9px]"></p-tag>
+					</td>
 					<td class="py-6 text-center">
-                        <button
-                            (click)="deleteProposal(proposal)"
-                            class="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-[#f43f5e] text-white shadow-md hover:scale-105 active:scale-95 transition-all">
-                            <span class="pi pi-trash text-sm"></span>
-                        </button>
+                        <div class="flex gap-2 justify-center">
+                            <button
+                                (click)="viewDetails(proposal)"
+                                class="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-[#256eff] text-white shadow-md hover:scale-105 active:scale-95 transition-all"
+                                pTooltip="Переглянути">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                            <button
+                                (click)="deleteProposal(proposal)"
+                                class="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-[#f43f5e] text-white shadow-md hover:scale-105 active:scale-95 transition-all"
+                                pTooltip="Видалити">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </div>
 					</td>
 				</tr>
 			</ng-template>
 			<ng-template pTemplate="emptymessage">
 				<tr>
-					<td colspan="4" class="py-24 text-center">
-						<p class="text-lg font-black text-slate-300 uppercase tracking-widest">Заявок поки немає</p>
+					<td colspan="5" class="py-24 text-center">
+						<div class="flex flex-col items-center gap-3">
+                            <span class="material-symbols-outlined text-5xl text-slate-100 dark:text-slate-800">inbox</span>
+                            <p class="text-sm font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest">Заявок поки немає</p>
+                        </div>
 					</td>
 				</tr>
 			</ng-template>
 		</p-table>
 	</div>
+
+    <!-- Detail Dialog -->
+    <p-dialog [(visible)]="displayDetailDialog" header="ДЕТАЛІ ЗАЯВКИ" [modal]="true" [style]="{width: '100%', maxWidth: '500px'}" [draggable]="false" [resizable]="false" styleClass="dark:bg-slate-800">
+        @if (selectedProposal(); as p) {
+            <div class="flex flex-col gap-6 py-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Кандидат</label>
+                        <div class="font-bold text-slate-800 dark:text-slate-200">{{ p.candidateName }}</div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Статус</label>
+                        <p-selectButton 
+                            [options]="statusOptions" 
+                            [(ngModel)]="p.status" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            class="custom-status-select"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Вакансія</label>
+                    <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700 font-bold text-slate-600 dark:text-slate-300">
+                        {{ getJobTitle(p.jobId) }}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Email</label>
+                        <a [href]="'mailto:' + p.email" class="text-blue-500 dark:text-blue-400 font-bold hover:underline">{{ p.email }}</a>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Телефон</label>
+                        <div class="font-bold text-slate-800 dark:text-slate-200">{{ p.phone || '—' }}</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Резюме (CV)</label>
+                    <a [href]="p.cvUrl" target="_blank" class="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-900/50 text-[#256eff] dark:text-blue-400 font-black text-xs hover:brightness-95 transition-all">
+                        <span class="material-symbols-outlined mr-2">description</span>
+                        ВІДКРИТИ ФАЙЛ
+                    </a>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Повідомлення</label>
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap">
+                        {{ p.message || 'Без повідомлення' }}
+                    </div>
+                </div>
+            </div>
+        }
+        <ng-template pTemplate="footer">
+            <div class="flex gap-3 justify-end pb-4">
+                <button (click)="displayDetailDialog.set(false)" class="px-6 py-2 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest hover:text-slate-600 dark:hover:text-slate-300 transition-colors">ЗАКРИТИ</button>
+                <button (click)="saveStatus()" class="bg-[#256eff] text-white px-8 py-2 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 shadow-lg">
+                    ЗБЕРЕГТИ СТАТУС
+                </button>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+	<p-confirmDialog></p-confirmDialog>
 </div>

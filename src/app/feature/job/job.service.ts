@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Job, JobData } from './job.interface';
 import { Observable, tap, map, catchError, of } from 'rxjs';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { UserService } from '../user/user.service';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +10,9 @@ export class JobService {
 	private userService = inject(UserService);
 	private API = `/api/itjob`;
 
-	readonly jobs = signal<Job[]>([]);
+	private _jobs = signal<Job[]>([]);
+	readonly docs = this._jobs.asReadonly();
+	readonly jobs = this.docs;
 
 	constructor() {
 		this.load();
@@ -21,11 +23,37 @@ export class JobService {
 		this.http.get(`${this.API}/get`).subscribe({
 			next: (docs: any) => {
 				if (Array.isArray(docs)) {
-					this.jobs.set(docs.map((d: any) => this._fromDoc(d)));
+					this._jobs.set(docs.map((d: any) => this._fromDoc(d)));
 				}
 			},
-			error: (err) => console.error('Load jobs error:', err)
+			error: (err: any) => console.error('Load jobs error:', err)
 		});
+	}
+
+	new(): Job {
+		return {
+			_id: '',
+			title: '',
+			description: '',
+			company: '',
+			requirements: [],
+			status: 'active',
+			preview: '',
+			published: false,
+			authorName: '',
+			authorId: '',
+			data: {
+				title: '',
+				description: '',
+				company: '',
+				requirements: [],
+				status: 'active',
+				preview: '',
+				published: false,
+				authorName: '',
+				authorId: ''
+			}
+		} as Job;
 	}
 
 	create(job: Partial<Job>): Observable<Job | null> {
@@ -34,15 +62,16 @@ export class JobService {
 		
 		// СУВОРО: Тільки дозволені поля в корені
 		const payload: any = {
-			title: d.title || '',
-			description: d.description || '',
-			preview: d.preview || '',
-			published: d.status === 'active',
-			status: d.status || 'active',
-			requirements: d.requirements || [],
+			title: d.title || job.title || '',
+			description: d.description || job.description || '',
+			preview: d.preview || job.preview || '',
+			published: d.status === 'active' || job.status === 'active',
+			status: d.status || job.status || 'active',
+			requirements: d.requirements || job.requirements || [],
 			// Все інше - в data
 			data: {
-				company: d.company || ''
+				...d,
+				company: d.company || job.company || ''
 			}
 		};
 
@@ -50,10 +79,10 @@ export class JobService {
 			map(doc => {
 				if (!doc || doc === 'false') return null;
 				const mapped = this._fromDoc(doc);
-				this.jobs.update(list => [mapped, ...list]);
+				this._jobs.update(list => [mapped, ...list]);
 				return mapped;
 			}),
-			catchError(err => {
+			catchError((err: any) => {
 				console.error('Create error:', err);
 				return of(null);
 			})
@@ -66,14 +95,15 @@ export class JobService {
 		
 		const payload: any = {
 			_id: job._id, // Для update ID обов'язковий
-			title: d.title || '',
-			description: d.description || '',
-			preview: d.preview || '',
-			published: d.status === 'active',
-			status: d.status || 'active',
-			requirements: d.requirements || [],
+			title: d.title || job.title || '',
+			description: d.description || job.description || '',
+			preview: d.preview || job.preview || '',
+			published: d.status === 'active' || job.status === 'active',
+			status: d.status || job.status || 'active',
+			requirements: d.requirements || job.requirements || [],
 			data: {
-				company: d.company || ''
+				...d,
+				company: d.company || job.company || ''
 			}
 		};
 
@@ -81,10 +111,10 @@ export class JobService {
 			map(doc => {
 				if (!doc || doc === 'false') return null;
 				const mapped = this._fromDoc(doc);
-				this.jobs.update(list => list.map(item => item._id === job._id ? mapped : item));
+				this._jobs.update(list => list.map(item => item._id === job._id ? mapped : item));
 				return mapped;
 			}),
-			catchError(err => {
+			catchError((err: any) => {
 				console.error('Update error:', err);
 				return of(null);
 			})
@@ -96,10 +126,10 @@ export class JobService {
 		return this.http.post(`${this.API}/delete`, { _id: job._id }).pipe(
 			map(res => {
 				if (res === 'false') return false;
-				this.jobs.update(list => list.filter(item => item._id !== job._id));
+				this._jobs.update(list => list.filter(item => item._id !== job._id));
 				return true;
 			}),
-			catchError(err => {
+			catchError((err: any) => {
 				console.error('Delete error:', err);
 				return of(false);
 			})

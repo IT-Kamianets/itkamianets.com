@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from 'wacom';
+import { HttpService } from '@wawjs/ngx-http';
 import { UserService } from '../user/user.service';
 import { JobProposal, JobProposalData } from './job-proposal.interface';
 
@@ -10,7 +10,9 @@ export class JobProposalService {
 	private readonly _userService = inject(UserService);
 	private readonly _basePath = '/api/itjobproposal';
 
-	readonly proposals = signal<JobProposal[]>([]);
+	private readonly _proposals = signal<JobProposal[]>([]);
+	readonly docs = this._proposals.asReadonly();
+	readonly proposals = this.docs;
 
 	constructor() {
 		this.load();
@@ -21,9 +23,27 @@ export class JobProposalService {
 		this._http.get(`${this._basePath}/get`).subscribe({
 			next: (docs: any) => {
 				const items = Array.isArray(docs) ? docs : (docs?.data || []);
-				this.proposals.set(items.map((d: any) => this._mapToProposal(d)));
-			}
+				this._proposals.set(items.map((d: any) => this._mapToProposal(d)));
+			},
+			error: (err: any) => console.error('Load proposals error:', err)
 		});
+	}
+
+	new(): JobProposal {
+		const proposalData: JobProposalData = {
+			candidateName: '',
+			email: '',
+			phone: '',
+			cvUrl: '',
+			message: '',
+			jobId: '',
+			status: 'new'
+		};
+		return {
+			_id: '',
+			...proposalData,
+			data: proposalData
+		} as JobProposal;
 	}
 
 	create(proposal: Partial<JobProposalData>): Observable<JobProposal | null> {
@@ -42,7 +62,7 @@ export class JobProposalService {
 			map(doc => {
 				if (!doc) return null;
 				const mapped = this._mapToProposal(doc);
-				this.proposals.update(list => [mapped, ...list]);
+				this._proposals.update(list => [mapped, ...list]);
 				return mapped;
 			}),
 			catchError(() => of(null))
@@ -54,20 +74,20 @@ export class JobProposalService {
 		const d = proposal.data || {} as JobProposalData;
 		const payload = {
 			_id: proposal._id,
-			candidateName: d.candidateName || '',
-			email: d.email || '',
-			phone: d.phone || '',
-			cvUrl: d.cvUrl || '',
-			message: d.message || '',
-			jobId: d.jobId || '',
-			status: d.status || 'new',
+			candidateName: d.candidateName || proposal.candidateName || '',
+			email: d.email || proposal.email || '',
+			phone: d.phone || proposal.phone || '',
+			cvUrl: d.cvUrl || proposal.cvUrl || '',
+			message: d.message || proposal.message || '',
+			jobId: d.jobId || proposal.jobId || '',
+			status: d.status || proposal.status || 'new',
 			data: d
 		};
 		return this._http.post(`${this._basePath}/update`, payload).pipe(
 			map(doc => {
 				if (!doc) return proposal;
 				const mapped = this._mapToProposal(doc);
-				this.proposals.update(list => list.map(item => item._id === proposal._id ? mapped : item));
+				this._proposals.update(list => list.map(item => item._id === proposal._id ? mapped : item));
 				return mapped;
 			}),
 			catchError(() => of(null))
@@ -78,7 +98,7 @@ export class JobProposalService {
 		this._syncToken();
 		return this._http.post(`${this._basePath}/delete`, { _id: proposal._id }).pipe(
 			map(() => {
-				this.proposals.update(list => list.filter(item => item._id !== proposal._id));
+				this._proposals.update(list => list.filter(item => item._id !== proposal._id));
 				return true;
 			}),
 			catchError(() => of(false))

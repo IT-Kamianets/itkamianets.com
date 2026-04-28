@@ -1,20 +1,34 @@
-import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { JobProposalService } from '../../job-proposal.service';
 import { JobService } from '../../job.service';
+import { JobProposal } from '../../job-proposal.interface';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
-
+import { DialogModule } from 'primeng/dialog';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
 	selector: 'app-manage-job-proposals',
 	standalone: true,
-	imports: [CommonModule, RouterLink, TableModule, ButtonModule, TagModule, ConfirmDialogModule, TooltipModule],
+	imports: [
+		CommonModule, 
+		RouterLink, 
+		FormsModule,
+		TableModule, 
+		ButtonModule, 
+		TagModule, 
+		ConfirmDialogModule, 
+		TooltipModule,
+		DialogModule,
+		SelectButtonModule
+	],
 	providers: [ConfirmationService],
 	templateUrl: './manage-job-proposals.component.html',
 	styleUrl: './manage-job-proposals.component.scss',
@@ -36,7 +50,35 @@ export class ManageJobProposalsComponent {
 		return jobsMap;
 	});
 
-	protected deleteProposal(proposal: any) {
+	protected readonly displayDetailDialog = signal(false);
+	protected readonly selectedProposal = signal<JobProposal | null>(null);
+
+	protected readonly statusOptions = [
+		{ label: 'Нова', value: 'new' },
+		{ label: 'Розглянута', value: 'reviewed' },
+		{ label: 'Відхилена', value: 'rejected' }
+	];
+
+	protected viewDetails(proposal: JobProposal) {
+		this.selectedProposal.set({ ...proposal });
+		this.displayDetailDialog.set(true);
+	}
+
+	protected updateStatus(proposal: JobProposal, status: any) {
+		const updated = { ...proposal, status };
+		this.jobProposalService.update(updated).subscribe();
+	}
+
+	protected saveStatus() {
+		const proposal = this.selectedProposal();
+		if (proposal) {
+			this.jobProposalService.update(proposal).subscribe(() => {
+				this.displayDetailDialog.set(false);
+			});
+		}
+	}
+
+	protected deleteProposal(proposal: JobProposal) {
 		this.confirmationService.confirm({
 			message: 'Ви впевнені, що хочете видалити цю заявку?',
 			header: 'Підтвердження видалення',
@@ -50,7 +92,7 @@ export class ManageJobProposalsComponent {
 							console.warn('Failed to delete proposal');
 						}
 					},
-					error: (err) => console.error('Delete error:', err)
+					error: (err: any) => console.error('Delete error:', err)
 				});
 			}
 		});
@@ -58,5 +100,23 @@ export class ManageJobProposalsComponent {
 
 	protected getJobTitle(jobId: string): string {
 		return this.jobs()[jobId] || 'Завантаження...';
+	}
+
+	protected getStatusSeverity(status: string): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
+		switch (status) {
+			case 'new': return 'info';
+			case 'reviewed': return 'success';
+			case 'rejected': return 'danger';
+			default: return 'secondary';
+		}
+	}
+
+	protected getStatusLabel(status: string): string {
+		switch (status) {
+			case 'new': return 'Нова';
+			case 'reviewed': return 'Розглянута';
+			case 'rejected': return 'Відхилена';
+			default: return status;
+		}
 	}
 }

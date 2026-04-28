@@ -3,51 +3,60 @@
     <div class="sm:flex sm:items-center mb-10">
         <div class="sm:flex-auto">
             <div class="flex items-center gap-3">
-                <a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-600 hover:border-[#256eff] hover:text-[#256eff] transition-all">
-                    <span class="pi pi-arrow-left font-bold"></span>
+                <a routerLink="/manage" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-[#256eff] hover:text-[#256eff] transition-all shadow-sm">
+                    <span class="material-symbols-outlined">arrow_back</span>
                 </a>
-                <h1 class="text-3xl font-black text-slate-800">Керування вакансіями</h1>
+                <h1 class="text-3xl font-black text-slate-800 dark:text-white">Керування вакансіями</h1>
             </div>
         </div>
         <div class="mt-4 sm:mt-0">
             <button
                 (click)="create()"
                 class="bg-[#256eff] text-white px-6 py-3 rounded-full font-black text-sm tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg flex items-center gap-2">
-                <span class="pi pi-plus"></span>
+                <span class="material-symbols-outlined">add</span>
                 СТВОРИТИ ВАКАНСІЮ
             </button>
         </div>
     </div>
 
     <!-- Data Table -->
-    <div class="bg-white rounded-[2rem] border-2 border-slate-100 shadow-xl overflow-hidden">
-        <p-table [value]="jobs()" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <div class="bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-100 dark:border-slate-700 shadow-xl overflow-hidden">
+        <p-table [value]="jobs()" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-striped">
             <ng-template pTemplate="header">
-                <tr class="bg-slate-50">
-                    <th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 tracking-widest w-20">Фото</th>
-                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Назва</th>
-                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 tracking-widest">Статус</th>
-                    <th class="py-5 text-center text-xs font-black uppercase text-slate-400 tracking-widest">
-                        <div class="flex justify-center pr-4">Дії</div>
-                    </th>
+                <tr class="bg-slate-50 dark:bg-slate-900/50">
+                    <th class="py-5 pl-8 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest w-20">Фото</th>
+                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest" pSortableColumn="title">Назва <p-sortIcon field="title"></p-sortIcon></th>
+                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Вимоги</th>
+                    <th class="py-5 text-left text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest" pSortableColumn="status">Статус <p-sortIcon field="status"></p-sortIcon></th>
+                    <th class="py-5 text-center text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Дії</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-job>
-                <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                <tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors">
                     <td class="py-4 pl-8">
-                        <div class="h-12 w-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200">
+                        <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-900 overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm">
                             @if (job.preview) {
                                 <img [src]="job.preview" class="h-full w-full object-cover" />
                             } @else {
                                 <div class="h-full w-full flex items-center justify-center">
-                                    <span class="pi pi-image text-slate-300"></span>
+                                    <span class="material-symbols-outlined text-slate-300 dark:text-slate-600">image</span>
                                 </div>
                             }
                         </div>
                     </td>
-                    <td class="py-6 font-black text-slate-700">{{job.title}}</td>
+                    <td class="py-6 font-black text-slate-700 dark:text-slate-200">{{job.title}}</td>
                     <td class="py-6">
-                        <span [class]="job.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'" class="px-3 py-1 rounded-lg text-xs font-black uppercase tracking-tighter">
+                        <div class="flex flex-wrap gap-1">
+                            @for (req of job.requirements?.slice(0, 2); track req) {
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 rounded text-[10px] font-bold uppercase tracking-tighter">{{req}}</span>
+                            }
+                            @if (job.requirements?.length > 2) {
+                                <span class="text-[10px] font-bold text-slate-300 dark:text-slate-600">...</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="py-6">
+                        <span [class]="job.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'" class="px-3 py-1 rounded-lg text-xs font-black uppercase tracking-tighter shadow-sm border border-current border-opacity-10">
                             {{ job.status === 'active' ? 'Активна' : 'Закрита' }}
                         </span>
                     </td>
@@ -55,13 +64,15 @@
                         <div class="flex gap-3 justify-center">
                             <button
                                 (click)="edit(job)"
-                                class="h-10 w-10 flex items-center justify-center rounded-xl bg-[#256eff] text-white shadow-md hover:scale-105 transition-transform">
-                                <span class="pi pi-pencil text-sm"></span>
+                                class="h-10 w-10 flex items-center justify-center rounded-xl bg-[#256eff] text-white shadow-md hover:scale-105 transition-transform active:scale-95"
+                                pTooltip="Редагувати">
+                                <span class="material-symbols-outlined">edit</span>
                             </button>
                             <button
                                 (click)="delete(job)"
-                                class="h-10 w-10 flex items-center justify-center rounded-xl bg-[#f43f5e] text-white shadow-md hover:scale-105 transition-transform">
-                                <span class="pi pi-trash text-sm"></span>
+                                class="h-10 w-10 flex items-center justify-center rounded-xl bg-[#f43f5e] text-white shadow-md hover:scale-105 transition-transform active:scale-95"
+                                pTooltip="Видалити">
+                                <span class="material-symbols-outlined">delete</span>
                             </button>
                         </div>
                     </td>
@@ -71,69 +82,93 @@
     </div>
 
     <!-- Edit/Create Dialog -->
-    <p-dialog [(visible)]="displayDialog" [header]="selectedJob()?._id ? 'РЕДАГУВАТИ' : 'СТВОРИТИ'" [modal]="true" [style]="{width: '100%', maxWidth: '500px'}" [draggable]="false" [resizable]="false">
+    <p-dialog [(visible)]="displayDialog" [header]="selectedJob()?._id ? 'РЕДАГУВАТИ ВАКАНСІЮ' : 'НОВА ВАКАНСІЯ'" [modal]="true" [style]="{width: '100%', maxWidth: '800px'}" [draggable]="false" [resizable]="false" styleClass="dark:bg-slate-800">
         @if (selectedJob(); as current) {
             <div class="flex flex-col gap-5 py-6">
                 <!-- Status & Image Section -->
                 <div class="flex items-start gap-4">
                     <div class="flex flex-col gap-2 flex-1">
-                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Прев'ю</label>
-                        <div class="relative group cursor-pointer h-32 w-full rounded-xl border-2 border-dashed border-slate-200 overflow-hidden hover:border-[#256eff] transition-all flex items-center justify-center bg-slate-50">
+                        <label class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Прев'ю</label>
+                        <div class="relative group cursor-pointer h-32 w-full rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 overflow-hidden hover:border-[#256eff] transition-all flex items-center justify-center bg-slate-50 dark:bg-slate-900">
                             @if (current.preview) {
                                 <img [src]="current.preview" class="h-full w-full object-cover" />
                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="pi pi-camera text-white text-xl"></span>
+                                    <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
                                 </div>
                             } @else {
-                                <div class="flex flex-col items-center gap-1 text-slate-400">
-                                    <span class="pi pi-image text-2xl"></span>
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-center px-2">Фото</span>
+                                <div class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-600">
+                                    <span class="material-symbols-outlined text-3xl">image</span>
+                                    <span class="text-[8px] font-black uppercase tracking-widest text-center px-2">Завантажити фото</span>
                                 </div>
                             }
                             <input type="file" (change)="onImageUpload($event)" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" />
                         </div>
                     </div>
                     
-                    <div class="flex flex-col gap-2 w-32">
-                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Статус</label>
-                        <div class="flex flex-col gap-2">
-                            <button 
-                                (click)="current.status = 'active'"
-                                [class]="current.status === 'active' ? 'bg-green-500 text-white shadow-lg' : 'bg-slate-100 text-slate-400'"
-                                class="py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                                Активна
-                            </button>
-                            <button 
-                                (click)="current.status = 'closed'"
-                                [class]="current.status === 'closed' ? 'bg-red-500 text-white shadow-lg' : 'bg-slate-100 text-slate-400'"
-                                class="py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                                Закрита
-                            </button>
-                        </div>
+                    <div class="flex flex-col gap-2 w-48">
+                        <label class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Статус</label>
+                        <p-selectButton 
+                            [options]="stateOptions" 
+                            [(ngModel)]="current.status" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            class="custom-status-select"
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Назва вакансії</label>
+                        <input pInputText [(ngModel)]="current.title" class="w-full !rounded-xl !p-4 !border-2 dark:bg-slate-900 dark:border-slate-700 dark:text-white" placeholder="Назва..." />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Компанія</label>
+                        <input pInputText [(ngModel)]="current.company" class="w-full !rounded-xl !p-4 !border-2 dark:bg-slate-900 dark:border-slate-700 dark:text-white" placeholder="Назва компанії..." />
                     </div>
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Назва вакансії</label>
-                    <input pInputText [(ngModel)]="current.title" class="w-full !rounded-xl !p-4 !border-2" placeholder="Назва..." />
+                    <label class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Вимоги (через кому)</label>
+                    <input pInputText [ngModel]="getRequirementString(current)" (ngModelChange)="setRequirements($event)" class="w-full !rounded-xl !p-4 !border-2 dark:bg-slate-900 dark:border-slate-700 dark:text-white" placeholder="Angular, Git, CSS..." />
                 </div>
+
+                <!-- Rich Text Editor -->
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Компанія</label>
-                    <input pInputText [(ngModel)]="current.company" class="w-full !rounded-xl !p-4 !border-2" placeholder="Назва компанії..." />
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Вимоги (через кому)</label>
-                    <input pInputText [ngModel]="getRequirementString(current)" (ngModelChange)="setRequirements($event)" class="w-full !rounded-xl !p-4 !border-2" placeholder="Angular, Git, CSS..." />
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Опис</label>
-                    <textarea pTextarea [(ngModel)]="current.description" rows="4" class="w-full !rounded-xl !p-4 !border-2" placeholder="Деталі..."></textarea>
+                    <label class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Опис вакансії</label>
+                    <div class="editor-container border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
+                        <div class="editor-toolbar flex flex-wrap gap-1 p-2 bg-slate-50 dark:bg-slate-800 border-b-2 border-slate-100 dark:border-slate-700">
+                            <div class="flex gap-1 p-1 bg-white dark:bg-slate-900 rounded-lg shadow-sm mr-2 border dark:border-slate-700">
+                                <button type="button" (click)="format('bold')" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded font-bold dark:text-white text-xs">B</button>
+                                <button type="button" (click)="format('italic')" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded italic dark:text-white text-xs">I</button>
+                                <button type="button" (click)="format('underline')" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded underline dark:text-white text-xs">U</button>
+                            </div>
+                            <div class="flex gap-1 p-1 bg-white dark:bg-slate-900 rounded-lg shadow-sm mr-2 border dark:border-slate-700">
+                                <button type="button" (click)="format('formatBlock', '<h1>')" class="px-2 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-[10px] font-bold dark:text-white">H1</button>
+                                <button type="button" (click)="format('formatBlock', '<h2>')" class="px-2 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-[10px] font-bold dark:text-white">H2</button>
+                            </div>
+                            <div class="flex gap-1 p-1 bg-white dark:bg-slate-900 rounded-lg shadow-sm border dark:border-slate-700">
+                                <button type="button" (click)="insertCustomImage()" class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded dark:text-white" title="URL">
+                                    <span class="material-symbols-outlined text-sm">link</span>
+                                </button>
+                                <label class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer dark:text-white" title="Завантажити">
+                                    <span class="material-symbols-outlined text-sm">image</span>
+                                    <input type="file" (change)="uploadPostImage($event)" accept="image/*" class="hidden">
+                                </label>
+                            </div>
+                        </div>
+                        <div
+                            #editorContent
+                            contenteditable="true"
+                            class="editor-content p-4 min-h-[250px] bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none prose prose-slate dark:prose-invert max-w-none">
+                        </div>
+                    </div>
                 </div>
             </div>
         }
         <ng-template pTemplate="footer">
             <div class="flex gap-3 justify-end pb-4">
-                <button (click)="displayDialog.set(false)" class="px-6 py-2 text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">СКАСУВАТИ</button>
+                <button (click)="displayDialog.set(false)" class="px-6 py-2 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest hover:text-slate-600 dark:hover:text-slate-300 transition-colors">СКАСУВАТИ</button>
                 <button (click)="save()" [disabled]="isSaving()" class="bg-[#256eff] text-white px-8 py-2 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 disabled:opacity-50 shadow-lg">
                     {{ isSaving() ? 'ЗБЕРЕЖЕННЯ...' : 'ЗБЕРЕГТИ' }}
                 </button>

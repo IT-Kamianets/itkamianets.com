@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -10,9 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { TextareaModule } from 'primeng/textarea';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
 	selector: 'app-manage-jobs',
@@ -25,10 +25,10 @@ import { TooltipModule } from 'primeng/tooltip';
 		DialogModule,
 		ButtonModule,
 		InputTextModule,
-		TextareaModule,
 		ConfirmDialogModule,
 		TagModule,
-		TooltipModule
+		TooltipModule,
+		SelectButtonModule
 	],
 	providers: [ConfirmationService],
 	templateUrl: './manage-jobs.component.html',
@@ -36,6 +36,8 @@ import { TooltipModule } from 'primeng/tooltip';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageJobsComponent {
+	@ViewChild('editorContent') editorContent!: ElementRef;
+	
 	protected readonly jobService = inject(JobService);
 	protected readonly confirmationService = inject(ConfirmationService);
 	protected readonly jobs = computed(() => this.jobService.jobs());
@@ -44,6 +46,11 @@ export class ManageJobsComponent {
 	protected readonly selectedJob = signal<Job | null>(null);
 	protected readonly isSaving = signal(false);
 
+	protected readonly stateOptions = [
+		{ label: 'Активна', value: 'active' },
+		{ label: 'Закрита', value: 'closed' }
+	];
+
 	private _newJobData(): Job {
 		const data: JobData = {
 			title: '',
@@ -51,7 +58,8 @@ export class ManageJobsComponent {
 			requirements: [],
 			status: 'active',
 			preview: '',
-			company: ''
+			company: '',
+			published: true
 		};
 		return {
 			_id: '',
@@ -60,38 +68,31 @@ export class ManageJobsComponent {
 		} as Job;
 	}
 
-	protected onImageUpload(event: Event) {
-		const file = (event.target as HTMLInputElement).files?.[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const job = this.selectedJob();
-				if (job) {
-					this.selectedJob.set({
-						...job,
-						preview: e.target?.result as string 
-					});
-				}
-			};
-			reader.readAsDataURL(file);
-		}
-	}
-
 	protected create() {
 		this.selectedJob.set(this._newJobData());
 		this.displayDialog.set(true);
+		setTimeout(() => {
+			if (this.editorContent) this.editorContent.nativeElement.innerHTML = '';
+		});
 	}
 
 	protected edit(job: Job) {
 		this.selectedJob.set(JSON.parse(JSON.stringify(job)));
 		this.displayDialog.set(true);
+		setTimeout(() => {
+			if (this.editorContent) this.editorContent.nativeElement.innerHTML = job.description || '';
+		});
 	}
 
 	protected save() {
 		const job = this.selectedJob();
 		if (!job || this.isSaving()) return;
 
-		// Sync root properties back to data object
+		// Get content from the rich text editor
+		if (this.editorContent) {
+			job.description = this.editorContent.nativeElement.innerHTML;
+		}
+
 		job.data = {
 			title: job.title,
 			description: job.description,
@@ -113,22 +114,15 @@ export class ManageJobsComponent {
 				if (result) {
 					this.displayDialog.set(false);
 					this.selectedJob.set(null);
-				} else {
-					this._showError('Не вдалося зберегти вакансію.');
 				}
 				this.jobService.load();
 			},
 			error: (err) => {
 				console.error('Save error:', err);
 				this.isSaving.set(false);
-				this._showError('Помилка під час збереження. Спробуйте ще раз.');
 				this.jobService.load();
 			}
 		});
-	}
-
-	private _showError(message: string) {
-		alert(message);
 	}
 
 	protected delete(job: Job) {
@@ -139,16 +133,45 @@ export class ManageJobsComponent {
 			acceptLabel: 'Так',
 			rejectLabel: 'Ні',
 			accept: () => {
-				this.jobService.delete(job).subscribe({
-					next: (success) => {
-						if (!success) {
-							console.warn('Failed to delete job');
-						}
-					},
-					error: (err) => console.error('Delete error:', err)
-				});
+				this.jobService.delete(job).subscribe();
 			}
 		});
+	}
+
+	// Editor Commands
+	protected format(command: string, value: string = '') {
+		document.execCommand(command, false, value);
+		if (this.editorContent) this.editorContent.nativeElement.focus();
+	}
+
+	protected insertCustomImage() {
+		const url = prompt('Введіть URL зображення:');
+		if (url) this.format('insertImage', url);
+	}
+
+	protected uploadPostImage(event: Event) {
+		const file = (event.target as HTMLInputElement).files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				this.format('insertImage', e.target?.result as string);
+			};
+			reader.readAsDataURL(file);
+		}
+	}
+
+	protected onImageUpload(event: Event) {
+		const file = (event.target as HTMLInputElement).files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const job = this.selectedJob();
+				if (job) {
+					this.selectedJob.set({ ...job, preview: e.target?.result as string });
+				}
+			};
+			reader.readAsDataURL(file);
+		}
 	}
 
 	protected getRequirementString(job: Job): string {
