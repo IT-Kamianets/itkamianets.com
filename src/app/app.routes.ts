@@ -250,13 +250,6 @@ export const routes: Routes = [
 					import('./pages/manage/merch/merch.component').then((m) => m.MerchComponent),
 			},
 			{
-				path: 'jobs',
-				canActivate: [authenticatedGuard],
-				loadComponent: () =>
-					import('./pages/manage/jobs/jobs.component').then((m) => m.JobsComponent),
-			},
-
-			{
 				path: 'cv-generation',
 				canActivate: [authenticatedGuard],
 				data: { title: 'CV Generation' },
