@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpService } from 'wacom';
-import { CertificateOption } from './certificate-option.interface';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of, tap } from 'rxjs';
+import { CertificateOption } from './certificate-option.interface';
 
 @Injectable({
 	providedIn: 'root',
@@ -24,11 +24,27 @@ export class CertificateOptionService {
 	}
 
 	new(): Partial<CertificateOption> {
-		return { data: {} };
+		return {
+			data: {
+				title: '',
+				description: '',
+				templateStyle: 'classic',
+			},
+		};
 	}
 
 	create(option: Partial<CertificateOption>): Observable<CertificateOption | null> {
-		return this._http.post('/api/itcertificateoption/create', option).pipe(
+		const data = option.data;
+		const payload = {
+			...option,
+			data: {
+				title: data?.title || '',
+				description: data?.description || '',
+				templateStyle: data?.templateStyle || 'classic',
+			},
+		};
+
+		return this._http.post('/api/itcertificateoption/create', payload).pipe(
 			map((res: unknown) => (res ? (res as CertificateOption) : null)),
 			tap((newOpt) => {
 				if (newOpt) {
@@ -40,22 +56,27 @@ export class CertificateOptionService {
 	}
 
 	update(option: CertificateOption): Observable<CertificateOption | null> {
-		return this._http
-			.post('/api/itcertificateoption/update', {
-				_id: option._id,
-				data: option.data,
-			})
-			.pipe(
-				map((res: unknown) => (res ? (res as CertificateOption) : null)),
-				tap((updatedOpt) => {
-					if (updatedOpt) {
-						this._options.update((opts) =>
-							opts.map((item) => (item._id === updatedOpt._id ? updatedOpt : item)),
-						);
-					}
-				}),
-				catchError(() => of(null)),
-			);
+		const data = option.data;
+		const payload = {
+			_id: option._id,
+			data: {
+				title: data?.title || '',
+				description: data?.description || '',
+				templateStyle: data?.templateStyle || 'classic',
+			},
+		};
+
+		return this._http.post('/api/itcertificateoption/update', payload).pipe(
+			map((res: unknown) => (res ? (res as CertificateOption) : null)),
+			tap((updatedOpt) => {
+				if (updatedOpt) {
+					this._options.update((opts) =>
+						opts.map((option) => (option._id === updatedOpt._id ? updatedOpt : option)),
+					);
+				}
+			}),
+			catchError(() => of(null)),
+		);
 	}
 
 	delete(option: CertificateOption): Observable<boolean> {

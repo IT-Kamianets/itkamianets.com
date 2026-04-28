@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { CertificateService } from '../../certificate.service';
 import { CertificateOptionService } from '../../certificate-option.service';
 import { CertificatePdfService } from '../../certificate-pdf.service';
-import { Certificate } from '../../certificate.interface';
+import { Certificate, CertificateData } from '../../certificate.interface';
 
 @Component({
 	selector: 'app-manage-certificates',
@@ -20,7 +20,7 @@ export class ManageCertificatesComponent {
 	private readonly _optionService = inject(CertificateOptionService);
 	private readonly _pdfService = inject(CertificatePdfService);
 	private readonly _cdr = inject(ChangeDetectorRef);
-	
+
 	protected readonly certificates = this._certService.docs;
 	protected readonly options = this._optionService.docs;
 
@@ -30,7 +30,7 @@ export class ManageCertificatesComponent {
 
 	protected readonly editingCert = signal<Certificate | null>(null);
 	protected readonly selectedTemplateId = signal<string>('');
-	protected readonly form = signal({
+	protected readonly form = signal<CertificateData>({
 		title: '',
 		recipientName: '',
 		description: '',
@@ -61,19 +61,19 @@ export class ManageCertificatesComponent {
 	}
 
 	protected edit(cert: Certificate) {
-		const data = cert.data || {};
+		const data = cert.data;
 		this.form.set({
-			title: data['title'] || '',
-			recipientName: data['recipientName'] || '',
-			description: data['description'] || '',
-			issueDate: data['issueDate'] ? this._toDateTimeLocal(data['issueDate']) : '',
-			templateStyle: data['templateStyle'] || 'classic'
+			title: data?.title || '',
+			recipientName: data?.recipientName || '',
+			description: data?.description || '',
+			issueDate: data?.issueDate ? this._toDateTimeLocal(data.issueDate) : '',
+			templateStyle: data?.templateStyle || 'classic'
 		});
 		this.selectedTemplateId.set('');
 		this.editingCert.set(cert);
 	}
 
-	protected updateFormField(field: string, value: any) {
+	protected updateFormField(field: keyof CertificateData, value: string) {
 		this.form.update(f => ({ ...f, [field]: value }));
 	}
 
@@ -123,12 +123,13 @@ export class ManageCertificatesComponent {
 	protected applyTemplate(optionId: string) {
 		this.selectedTemplateId.set(optionId);
 		const opt = this.options().find(o => o._id === optionId);
-		if (opt && opt.data) {
+		const data = opt?.data;
+		if (data) {
 			this.form.update(f => ({
 				...f,
-				title: opt.data?.['title'] || f.title,
-				description: opt.data?.['description'] || f.description,
-				templateStyle: opt.data?.['templateStyle'] || f.templateStyle
+				title: data.title || f.title,
+				description: data.description || f.description,
+				templateStyle: data.templateStyle || f.templateStyle
 			}));
 			this._cdr.markForCheck();
 		}

@@ -3,18 +3,18 @@
 		<div class="sm:flex sm:items-center mb-10">
 			<div class="sm:flex-auto">
 				<div class="flex items-center gap-4">
-					<a routerLink="/manage/profile" class="p-2 hover:bg-[var(--c-bg-tertiary)] rounded-lg transition-colors text-[var(--c-text-secondary)]" title="РќР°Р·Р°Рґ РґРѕ РїСЂРѕС„С–Р»СЋ">
+					<a routerLink="/manage/profile" class="p-2 hover:bg-[var(--c-bg-tertiary)] rounded-lg transition-colors text-[var(--c-text-secondary)]" title="Р СњР В°Р В·Р В°Р Т‘ Р Т‘Р С• Р С—РЎР‚Р С•РЎвЂћРЎвЂ“Р В»РЎР‹">
 						<span class="material-symbols-outlined align-middle" aria-hidden="true">arrow_back</span>
 					</a>
-					<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">РљРµСЂСѓРІР°РЅРЅСЏ С€Р°Р±Р»РѕРЅР°РјРё СЃРµСЂС‚РёС„С–РєР°С‚С–РІ</h1>
+					<h1 class="text-2xl font-semibold leading-6 text-[var(--c-text-secondary)]">Р С™Р ВµРЎР‚РЎС“Р Р†Р В°Р Р…Р Р…РЎРЏ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…Р В°Р СР С‘ РЎРѓР ВµРЎР‚РЎвЂљР С‘РЎвЂћРЎвЂ“Р С”Р В°РЎвЂљРЎвЂ“Р Р†</h1>
 				</div>
 				<p class="mt-2 text-sm text-[var(--c-text-muted)]">
-					РЎС‚РІРѕСЂСЋР№С‚Рµ С‚Р° СЂРµРґР°РіСѓР№С‚Рµ С€Р°Р±Р»РѕРЅРё РґР»СЏ С€РІРёРґРєРѕС— РІРёРґР°С‡С– СЃРµСЂС‚РёС„С–РєР°С‚С–РІ Р· РїРѕРїРµСЂРµРґРЅСЊРѕ Р·Р°РїРѕРІРЅРµРЅРёРјРё РґР°РЅРёРјРё.
+					Р РЋРЎвЂљР Р†Р С•РЎР‚РЎР‹Р в„–РЎвЂљР Вµ РЎвЂљР В° РЎР‚Р ВµР Т‘Р В°Р С–РЎС“Р в„–РЎвЂљР Вµ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…Р С‘ Р Т‘Р В»РЎРЏ РЎв‚¬Р Р†Р С‘Р Т‘Р С”Р С•РЎвЂ— Р Р†Р С‘Р Т‘Р В°РЎвЂЎРЎвЂ“ РЎРѓР ВµРЎР‚РЎвЂљР С‘РЎвЂћРЎвЂ“Р С”Р В°РЎвЂљРЎвЂ“Р Р† Р В· Р С—Р С•Р С—Р ВµРЎР‚Р ВµР Т‘Р Р…РЎРЉР С• Р В·Р В°Р С—Р С•Р Р†Р Р…Р ВµР Р…Р С‘Р СР С‘ Р Т‘Р В°Р Р…Р С‘Р СР С‘.
 				</p>
 			</div>
 			<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-2">
 				<button (click)="create()" class="block rounded-md bg-[var(--c-primary)] px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity">
-					+ РЎС‚РІРѕСЂРёС‚Рё С€Р°Р±Р»РѕРЅ
+					+ Р РЋРЎвЂљР Р†Р С•РЎР‚Р С‘РЎвЂљР С‘ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…
 				</button>
 			</div>
 		</div>
@@ -22,37 +22,37 @@
 		@if (editingOption()) {
 			<div class="job-form bg-[var(--c-bg-secondary)] p-8 rounded-2xl border border-[var(--c-border)] mb-10 shadow-lg">
 				<h2 class="text-xl font-bold mb-6 text-[var(--c-text-secondary)]">
-					{{ editingOption()?._id ? 'Р РµРґР°РіСѓРІР°С‚Рё С€Р°Р±Р»РѕРЅ' : 'РќРѕРІРёР№ С€Р°Р±Р»РѕРЅ' }}
+					{{ editingOption()?._id ? 'Р В Р ВµР Т‘Р В°Р С–РЎС“Р Р†Р В°РЎвЂљР С‘ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…' : 'Р СњР С•Р Р†Р С‘Р в„– РЎв‚¬Р В°Р В±Р В»Р С•Р Р…' }}
 				</h2>
 
 				<div class="grid gap-6">
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
-							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">РќР°Р·РІР° С€Р°Р±Р»РѕРЅСѓ (Title)</label>
-							<input type="text" [(ngModel)]="form.title" name="title" placeholder="РќР°РїСЂРёРєР»Р°Рґ: Р’РёРїСѓСЃРєРЅРёРє РєСѓСЂСЃСѓ..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
+							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Р СњР В°Р В·Р Р†Р В° РЎв‚¬Р В°Р В±Р В»Р С•Р Р…РЎС“ (Title)</label>
+							<input type="text" [(ngModel)]="form.title" name="title" placeholder="Р СњР В°Р С—РЎР‚Р С‘Р С”Р В»Р В°Р Т‘: Р вЂ™Р С‘Р С—РЎС“РЎРѓР С”Р Р…Р С‘Р С” Р С”РЎС“РЎР‚РЎРѓРЎС“..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
 						</div>
 
 						<div>
-							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Р”РёР·Р°Р№РЅ (РЎС‚РёР»СЊ)</label>
+							<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Р вЂќР С‘Р В·Р В°Р в„–Р Р… (Р РЋРЎвЂљР С‘Р В»РЎРЉ)</label>
 							<select [(ngModel)]="form.templateStyle" name="templateStyle" class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all">
-								<option value="classic">РљР»Р°СЃРёС‡РЅРёР№ (Classic)</option>
-								<option value="modern">РЎСѓС‡Р°СЃРЅРёР№ (Modern)</option>
-								<option value="minimalist">РњС–РЅС–РјР°Р»С–СЃС‚РёС‡РЅРёР№ (Minimalist)</option>
+								<option value="classic">Р С™Р В»Р В°РЎРѓР С‘РЎвЂЎР Р…Р С‘Р в„– (Classic)</option>
+								<option value="modern">Р РЋРЎС“РЎвЂЎР В°РЎРѓР Р…Р С‘Р в„– (Modern)</option>
+								<option value="minimalist">Р СљРЎвЂ“Р Р…РЎвЂ“Р СР В°Р В»РЎвЂ“РЎРѓРЎвЂљР С‘РЎвЂЎР Р…Р С‘Р в„– (Minimalist)</option>
 							</select>
 						</div>
 					</div>
 
 					<div>
-						<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">РћРїРёСЃ (Description)</label>
-						<textarea [(ngModel)]="form.description" name="description" rows="4" placeholder="РћРїРёСЃ, СЏРєРёР№ Р±СѓРґРµ РІС–РґРѕР±СЂР°Р¶РµРЅРѕ РЅР° СЃРµСЂС‚РёС„С–РєР°С‚С–..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all"></textarea>
+						<label class="block text-sm font-semibold text-[var(--c-text-muted)] mb-2">Р С›Р С—Р С‘РЎРѓ (Description)</label>
+						<textarea [(ngModel)]="form.description" name="description" rows="4" placeholder="Р С›Р С—Р С‘РЎРѓ, РЎРЏР С”Р С‘Р в„– Р В±РЎС“Р Т‘Р Вµ Р Р†РЎвЂ“Р Т‘Р С•Р В±РЎР‚Р В°Р В¶Р ВµР Р…Р С• Р Р…Р В° РЎРѓР ВµРЎР‚РЎвЂљР С‘РЎвЂћРЎвЂ“Р С”Р В°РЎвЂљРЎвЂ“..." class="w-full px-4 py-2 rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] text-[var(--c-text-primary)] focus:border-[var(--c-primary)] outline-none transition-all"></textarea>
 					</div>
 
 					<div class="flex justify-end gap-4 mt-6 border-t border-[var(--c-border)] pt-6">
 						<button (click)="cancel()" class="px-8 py-3 rounded-xl font-bold text-[var(--c-text-muted)] hover:bg-[var(--c-bg-tertiary)] transition-all">
-							РЎРєР°СЃСѓРІР°С‚Рё
+							Р РЋР С”Р В°РЎРѓРЎС“Р Р†Р В°РЎвЂљР С‘
 						</button>
 						<button (click)="save()" class="px-10 py-3 rounded-xl font-bold bg-[var(--c-primary)] text-white shadow-lg shadow-[var(--c-primary)]/20 hover:opacity-90 transition-all">
-							Р—Р±РµСЂРµРіС‚Рё
+							Р вЂ”Р В±Р ВµРЎР‚Р ВµР С–РЎвЂљР С‘
 						</button>
 					</div>
 				</div>
@@ -66,11 +66,11 @@
 						<table class="min-w-full divide-y divide-[var(--c-border)] bg-[var(--c-bg-secondary)]">
 							<thead class="bg-[var(--c-bg-tertiary)]">
 								<tr>
-									<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">РќР°Р·РІР° С€Р°Р±Р»РѕРЅСѓ</th>
-									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">РћРїРёСЃ</th>
-									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">РЎС‚РёР»СЊ</th>
+									<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-[var(--c-text-secondary)] sm:pl-6">Р СњР В°Р В·Р Р†Р В° РЎв‚¬Р В°Р В±Р В»Р С•Р Р…РЎС“</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Р С›Р С—Р С‘РЎРѓ</th>
+									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-[var(--c-text-secondary)]">Р РЋРЎвЂљР С‘Р В»РЎРЉ</th>
 									<th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-										<span class="sr-only">Р”С–С—</span>
+										<span class="sr-only">Р вЂќРЎвЂ“РЎвЂ”</span>
 									</th>
 								</tr>
 							</thead>
@@ -78,31 +78,31 @@
 								@for (opt of options(); track opt._id) {
 									<tr class="hover:bg-[var(--c-bg-tertiary)] transition-colors">
 										<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-[var(--c-text-primary)] sm:pl-6">
-											{{ opt.data?.['title'] || 'Р‘РµР· РЅР°Р·РІРё' }}
+											{{ opt.data?.title || 'Р‘РµР· РЅР°Р·РІРё' }}
 										</td>
 										<td class="px-3 py-4 text-sm text-[var(--c-text-muted)] max-w-xs truncate">
-											{{ opt.data?.['description'] || 'Р‘РµР· РѕРїРёСЃСѓ' }}
+											{{ opt.data?.description || 'Р‘РµР· РѕРїРёСЃСѓ' }}
 										</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm">
-											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset" 
-												[class.bg-blue-500/10]="opt.data?.['templateStyle'] === 'modern'"
-												[class.text-blue-500]="opt.data?.['templateStyle'] === 'modern'"
-												[class.ring-blue-500/20]="opt.data?.['templateStyle'] === 'modern'"
-												[class.bg-amber-500/10]="opt.data?.['templateStyle'] === 'classic'"
-												[class.text-amber-500]="opt.data?.['templateStyle'] === 'classic'"
-												[class.ring-amber-500/20]="opt.data?.['templateStyle'] === 'classic'"
-												[class.bg-slate-500/10]="opt.data?.['templateStyle'] === 'minimalist'"
-												[class.text-slate-500]="opt.data?.['templateStyle'] === 'minimalist'"
-												[class.ring-slate-500/20]="opt.data?.['templateStyle'] === 'minimalist'">
-												{{ opt.data?.['templateStyle'] || 'default' }}
+											<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+												[class.bg-blue-500/10]="opt.data?.templateStyle === 'modern'"
+												[class.text-blue-500]="opt.data?.templateStyle === 'modern'"
+												[class.ring-blue-500/20]="opt.data?.templateStyle === 'modern'"
+												[class.bg-amber-500/10]="opt.data?.templateStyle === 'classic'"
+												[class.text-amber-500]="opt.data?.templateStyle === 'classic'"
+												[class.ring-amber-500/20]="opt.data?.templateStyle === 'classic'"
+												[class.bg-slate-500/10]="opt.data?.templateStyle === 'minimalist'"
+												[class.text-slate-500]="opt.data?.templateStyle === 'minimalist'"
+												[class.ring-slate-500/20]="opt.data?.templateStyle === 'minimalist'">
+												{{ opt.data?.templateStyle || 'default' }}
 											</span>
 										</td>
 										<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 											<div class="flex justify-end gap-2">
 												<button (click)="edit(opt)" class="inline-flex items-center rounded-lg border border-[var(--c-border)] bg-[var(--c-bg-tertiary)] px-3 py-1.5 text-xs font-semibold text-[var(--c-text-secondary)] transition-all hover:border-[var(--c-primary)] hover:text-[var(--c-primary)]">
-													<span class="material-symbols-outlined mr-1 text-sm">edit</span> Р РµРґ.
+													<span class="material-symbols-outlined mr-1 text-sm">edit</span> Р В Р ВµР Т‘.
 												</button>
-												<button (click)="delete(opt)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white" aria-label="Р’РёРґР°Р»РёС‚Рё С€Р°Р±Р»РѕРЅ">
+												<button (click)="delete(opt)" class="inline-flex items-center rounded-lg border border-red-200/30 bg-red-50/5 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white" aria-label="Р вЂ™Р С‘Р Т‘Р В°Р В»Р С‘РЎвЂљР С‘ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…">
 													<span class="material-symbols-outlined mr-1 text-sm">delete</span>
 												</button>
 											</div>
@@ -111,7 +111,7 @@
 								} @empty {
 									<tr>
 										<td colspan="4" class="py-10 text-center text-sm text-[var(--c-text-muted)] font-medium italic">
-											РЁР°Р±Р»РѕРЅС–РІ РїРѕРєРё РЅРµ РґРѕРґР°РЅРѕ
+											Р РЃР В°Р В±Р В»Р С•Р Р…РЎвЂ“Р Р† Р С—Р С•Р С”Р С‘ Р Р…Р Вµ Р Т‘Р С•Р Т‘Р В°Р Р…Р С•
 										</td>
 									</tr>
 								}

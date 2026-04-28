@@ -1,0 +1,108 @@
+<div class="test-page">
+	<div class="container">
+		@if (test(); as test) {
+			@if (!isCompleted()) {
+				<div class="test-content">
+					<h1 class="test-title">{{ test.data.title }}</h1>
+					<p class="test-description">{{ test.data.description }}</p>
+
+					<div class="question-container">
+						<div class="question-header">
+							<span class="question-number"
+								>Питання {{ currentQuestionIndex() + 1 }} з
+								{{ test.data.questions.length }}</span
+							>
+							<div class="progress-bar">
+								<div
+									class="progress-bar__fill"
+									[style.width.%]="
+										((currentQuestionIndex() + 1) /
+											test.data.questions.length) *
+										100
+									"
+								></div>
+							</div>
+						</div>
+
+						@if (currentQuestion(); as question) {
+							<div class="question">
+								<h3 class="question-text">{{ question.question }}</h3>
+								<div class="options">
+									@for (option of question.options; track $index) {
+										<label class="option">
+											<input
+												type="radio"
+												name="answer"
+												[value]="$index"
+												[checked]="
+													answers()[currentQuestionIndex()] === $index
+												"
+												(change)="selectAnswer($index)"
+											/>
+											<span class="option-text">{{ option }}</span>
+										</label>
+									}
+								</div>
+							</div>
+						}
+
+						<div class="navigation">
+							<button
+								class="nav-btn nav-btn--secondary"
+								[disabled]="currentQuestionIndex() === 0"
+								(click)="previousQuestion()"
+							>
+								Назад
+							</button>
+							@if (currentQuestionIndex() < test.data.questions.length - 1) {
+								<button
+									class="nav-btn nav-btn--primary"
+									[disabled]="answers()[currentQuestionIndex()] === -1"
+									(click)="nextQuestion()"
+								>
+									Далі
+								</button>
+							} @else {
+								<button
+									class="nav-btn nav-btn--primary"
+									[disabled]="answers()[currentQuestionIndex()] === -1"
+									(click)="submitTest()"
+								>
+									Завершити тест
+								</button>
+							}
+						</div>
+					</div>
+				</div>
+			} @else {
+				<div class="result">
+					<h2 class="result-title">Тест завершено!</h2>
+					<div class="score">
+						<div class="score-circle">
+							<span class="score-number">{{ score() }}%</span>
+						</div>
+						@if (isSavingResult()) {
+							<p class="score-text">Зберігаємо результат...</p>
+						}
+						@if (apiError()) {
+							<p class="score-error">{{ apiError() }}</p>
+						}
+						<p class="score-text">
+							@if (score() >= 80) {
+								Відмінно! Ви добре знаєте матеріал.
+							} @else if (score() >= 60) {
+								Добре! Є над чим працювати.
+							} @else {
+								Варто повторити матеріал.
+							}
+						</p>
+					</div>
+					<button class="restart-btn" (click)="restartTest()">Пройти знову</button>
+					<a routerLink="/tests" class="back-btn">Повернутися до тестів</a>
+				</div>
+			}
+		} @else {
+			<div class="loading">Завантаження...</div>
+		}
+	</div>
+</div>

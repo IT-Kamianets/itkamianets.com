@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
+import { HttpService } from '@wawjs/ngx-http';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
-import { HttpService } from 'wacom';
 import { UserService } from '../../../feature/user/user.service';
 import { ProfileFormModel, ProfilePayload } from './profile.type';
 

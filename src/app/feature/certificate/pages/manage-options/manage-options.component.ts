@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, ChangeDetectorRef }
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CertificateOptionService } from '../../certificate-option.service';
-import { CertificateOption } from '../../certificate-option.interface';
+import { CertificateOption, CertificateOptionData } from '../../certificate-option.interface';
 
 @Component({
 	selector: 'app-manage-options',
@@ -22,7 +22,7 @@ export class ManageOptionsComponent {
 	}
 
 	protected readonly editingOption = signal<CertificateOption | null>(null);
-	protected form = {
+	protected form: CertificateOptionData = {
 		title: '',
 		description: '',
 		templateStyle: 'classic',
@@ -38,11 +38,11 @@ export class ManageOptionsComponent {
 	}
 
 	protected edit(option: CertificateOption) {
-		const data = option.data || {};
+		const data = option.data;
 		this.form = {
-			title: data['title'] || '',
-			description: data['description'] || '',
-			templateStyle: data['templateStyle'] || 'classic',
+			title: data?.title || '',
+			description: data?.description || '',
+			templateStyle: data?.templateStyle || 'classic',
 		};
 		this.editingOption.set(option);
 	}
@@ -59,7 +59,7 @@ export class ManageOptionsComponent {
 					this.editingOption.set(null);
 					this.cdr.markForCheck();
 				} else {
-					alert('РџРѕРјРёР»РєР°: СЃРµСЂРІРµСЂ РІС–РґС…РёР»РёРІ РѕРЅРѕРІР»РµРЅРЅСЏ С€Р°Р±Р»РѕРЅСѓ.');
+					alert('Р СџР С•Р СР С‘Р В»Р С”Р В°: РЎРѓР ВµРЎР‚Р Р†Р ВµРЎР‚ Р Р†РЎвЂ“Р Т‘РЎвЂ¦Р С‘Р В»Р С‘Р Р† Р С•Р Р…Р С•Р Р†Р В»Р ВµР Р…Р Р…РЎРЏ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…РЎС“.');
 				}
 			});
 		} else {
@@ -68,24 +68,24 @@ export class ManageOptionsComponent {
 					this.editingOption.set(null);
 					this.cdr.markForCheck();
 				} else {
-					alert('РџРѕРјРёР»РєР°: СЃРµСЂРІРµСЂ РІС–РґС…РёР»РёРІ СЃС‚РІРѕСЂРµРЅРЅСЏ С€Р°Р±Р»РѕРЅСѓ.');
+					alert('Р СџР С•Р СР С‘Р В»Р С”Р В°: РЎРѓР ВµРЎР‚Р Р†Р ВµРЎР‚ Р Р†РЎвЂ“Р Т‘РЎвЂ¦Р С‘Р В»Р С‘Р Р† РЎРѓРЎвЂљР Р†Р С•РЎР‚Р ВµР Р…Р Р…РЎРЏ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…РЎС“.');
 				}
 			});
 		}
 	}
 
 	protected delete(option: CertificateOption) {
-		if (confirm('Р’Рё РІРїРµРІРЅРµРЅС–, С‰Рѕ С…РѕС‡РµС‚Рµ РІРёРґР°Р»РёС‚Рё С†РµР№ С€Р°Р±Р»РѕРЅ?')) {
+		if (confirm('Р вЂ™Р С‘ Р Р†Р С—Р ВµР Р†Р Р…Р ВµР Р…РЎвЂ“, РЎвЂ°Р С• РЎвЂ¦Р С•РЎвЂЎР ВµРЎвЂљР Вµ Р Р†Р С‘Р Т‘Р В°Р В»Р С‘РЎвЂљР С‘ РЎвЂ Р ВµР в„– РЎв‚¬Р В°Р В±Р В»Р С•Р Р…?')) {
 			this.optionService.delete(option).subscribe({
 				next: (success) => {
 					if (success) {
 						this.cdr.markForCheck();
 					} else {
-						alert('РџРѕРјРёР»РєР°: РЅРµ РІРґР°Р»РѕСЃСЏ РІРёРґР°Р»РёС‚Рё С€Р°Р±Р»РѕРЅ.');
+						alert('Р СџР С•Р СР С‘Р В»Р С”Р В°: Р Р…Р Вµ Р Р†Р Т‘Р В°Р В»Р С•РЎРѓРЎРЏ Р Р†Р С‘Р Т‘Р В°Р В»Р С‘РЎвЂљР С‘ РЎв‚¬Р В°Р В±Р В»Р С•Р Р….');
 					}
 				},
 				error: () => {
-					alert('РљСЂРёС‚РёС‡РЅР° РїРѕРјРёР»РєР° РїСЂРё РІРёРґР°Р»РµРЅРЅС– С€Р°Р±Р»РѕРЅСѓ.');
+					alert('Р С™РЎР‚Р С‘РЎвЂљР С‘РЎвЂЎР Р…Р В° Р С—Р С•Р СР С‘Р В»Р С”Р В° Р С—РЎР‚Р С‘ Р Р†Р С‘Р Т‘Р В°Р В»Р ВµР Р…Р Р…РЎвЂ“ РЎв‚¬Р В°Р В±Р В»Р С•Р Р…РЎС“.');
 				},
 			});
 		}
