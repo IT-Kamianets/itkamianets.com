@@ -1,46 +1,117 @@
-<div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Керування замовленнями</h1>
+<section class="merch-manage">
+    <div class="merch-manage__topbar">
+        <div class="merch-manage__heading">
+            <h1 class="merch-manage__title">Замовлення</h1>
+            <p class="merch-manage__subtitle">
+                Керуйте замовленнями клієнтів: змінюйте статуси та переглядайте деталі доставки.
+            </p>
+        </div>
+        <div class="merch-manage__actions">
+            <button type="button" class="merch-manage__add-btn" (click)="load()">
+                Оновити список
+            </button>
+        </div>
+    </div>
 
-    <p-table [value]="os.orders()" [responsiveLayout]="'scroll'" styleClass="p-datatable-striped">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Дата</th>
-                <th>Клієнт</th>
-                <th>Товари</th>
-                <th>Сума</th>
-                <th>Статус</th>
-                <th>Дії</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-order>
-            <tr>
-                <td>{{ order._id | date:'short' }}</td>
-                <td>
-                    <div class="flex flex-col">
-                        <span class="font-bold">{{ order.data.customer.name }}</span>
-                        <span class="text-xs text-gray-500">{{ order.data.customer.phone }}</span>
+    @if (apiError()) {
+        <p class="merch-form__error merch-manage__api-error">{{ apiError() }}</p>
+    }
+
+    <section class="publications">
+        <p-table [value]="os.orders()" styleClass="publications__p-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Дата</th>
+                    <th>Клієнт</th>
+                    <th>Товари</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                    <th>Дії</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-order>
+                <tr>
+                    <td>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ (order.date || order.created) | date:'dd.MM.yyyy' }}</span>
+                            <span class="text-xs text-gray-500">{{ (order.date || order.created) | date:'HH:mm' }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ order.customer?.name }}</span>
+                            <span class="text-xs text-gray-500">{{ order.customer?.phone }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex flex-col gap-1">
+                            @for (item of (order.items || []); track $index) {
+                                <span class="text-xs">{{ item.quantity }}x {{ item.name }}</span>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <span class="font-bold text-[var(--c-primary)]">{{ order.total }} грн</span>
+                    </td>
+                    <td>
+                        <div class="flex flex-col gap-2">
+                            <p-tag [value]="order.status" [severity]="getSeverity(order.status)"></p-tag>
+                            <select [ngModel]="order.status" (ngModelChange)="updateStatus(order, $event)" 
+                                    class="status-select">
+                                @for (opt of statusOptions; track opt.value) {
+                                    <option [value]="opt.value">{{ opt.label }}</option>
+                                }
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="publications__actions">
+                            <button type="button" class="table-btn" (click)="showDetails(order)">
+                                <span class="material-symbols-outlined table-btn__icon" aria-hidden="true">visibility</span>
+                                Деталі
+                            </button>
+                            <button type="button" class="table-btn table-btn--danger" (click)="deleteOrder(order._id)">
+                                <span class="material-symbols-outlined table-btn__icon" aria-hidden="true">delete</span>
+                                Видалити
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="publications__empty">Замовлень поки що немає.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </section>
+
+    <p-dialog [(visible)]="isDetailsVisible" [modal]="true" [header]="'Деталі замовлення'" [style]="{ width: 'min(600px, 96vw)' }" styleClass="merch-dialog">
+        @if (selectedOrder()) {
+            <div class="flex flex-col gap-4 p-2">
+                <div class="details-section">
+                    <h3 class="font-bold border-b border-[var(--c-border)] mb-2 pb-1">Інформація про клієнта</h3>
+                    <p><strong>Ім'я:</strong> {{ selectedOrder().customer?.name }}</p>
+                    <p><strong>Телефон:</strong> {{ selectedOrder().customer?.phone }}</p>
+                    <p><strong>Місто:</strong> {{ selectedOrder().customer?.city }}</p>
+                    <p><strong>Адреса/Відділення:</strong> {{ selectedOrder().customer?.address }}</p>
+                    <p><strong>Перевізник:</strong> {{ selectedOrder().customer?.carrier }}</p>
+                </div>
+
+                <div class="details-section">
+                    <h3 class="font-bold border-b border-[var(--c-border)] mb-2 pb-1">Товари</h3>
+                    @for (item of (selectedOrder().items || []); track $index) {
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>{{ item.name }} x {{ item.quantity }}</span>
+                            <span class="font-bold">{{ item.price * item.quantity }} грн</span>
+                        </div>
+                    }
+                    <div class="border-t border-[var(--c-border)] mt-2 pt-2 flex justify-between font-bold text-lg">
+                        <span>Разом:</span>
+                        <span class="text-[var(--c-primary)]">{{ selectedOrder().total }} грн</span>
                     </div>
-                </td>
-                <td>
-                    <div class="flex flex-col gap-1">
-                        @for (item of order.data.items; track item.productId) {
-                            <span class="text-xs">{{ item.quantity }}x {{ item.name }}</span>
-                        }
-                    </div>
-                </td>
-                <td class="font-bold">{{ order.data.total }} грн</td>
-                <td>
-                    <p-tag [value]="order.data.status" [severity]="getSeverity(order.data.status)"></p-tag>
-                </td>
-                <td>
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="deleteOrder(order)"></p-button>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="6" class="text-center p-4">Замовлень поки немає.</td>
-            </tr>
-        </ng-template>
-    </p-table>
-</div>
+                </div>
+            </div>
+        }
+    </p-dialog>
+</section>

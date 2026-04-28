@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { MerchService } from '../../feature/merch/merch.service';
 import { MerchProduct } from '../../feature/merch/merch.interface';
+import { OrderService } from '../../feature/order/order.service';
 
 interface CartItem {
 	product: MerchProduct;
@@ -27,6 +28,7 @@ export class MerchComponent implements OnInit {
 	private platformId = inject(PLATFORM_ID);
 	private isBrowser = isPlatformBrowser(this.platformId);
 	private _merchService = inject(MerchService);
+	private _orderService = inject(OrderService);
 
 	products = signal<MerchProduct[]>([]);
 	cart = signal<CartItem[]>([]);
@@ -177,6 +179,30 @@ export class MerchComponent implements OnInit {
 		// Touch all fields to show errors
 		this.touched = { firstName: true, lastName: true, city: true, postOffice: true };
 		if (!this.isShippingValid) return;
+
+		const orderData = {
+			customer: {
+				firstName: this.shippingFirstName,
+				lastName: this.shippingLastName,
+				name: `${this.shippingFirstName} ${this.shippingLastName}`,
+				city: this.shippingCity,
+				address: this.shippingPostOffice,
+				carrier: this.shippingCarrier,
+				phone: '' // В оригінальній формі немає телефону, можна додати пізніше
+			},
+			items: this.cart().map(item => ({
+				productId: item.product._id,
+				name: item.product.name,
+				price: item.product.price,
+				quantity: item.quantity
+			})),
+			total: this.cartTotal(),
+			status: 'pending',
+			date: new Date()
+		};
+
+		this._orderService.create({ data: orderData }).subscribe();
+
 		this.cart.set([]);
 		this.showCart.set(false);
 		this.showShippingForm.set(false);

@@ -73,7 +73,7 @@ export class MerchComponent {
 	placeOrder() {
 		if (!this.customer.name || !this.customer.phone || this.cart().length === 0) return;
 
-		const order = {
+		const orderData = {
 			items: this.cart().map(i => ({
 				productId: i._id,
 				name: i.name,
@@ -82,13 +82,20 @@ export class MerchComponent {
 			})),
 			total: this.total(),
 			customer: { ...this.customer },
-			status: 'pending' as const
+			status: 'pending',
+			date: new Date()
 		};
 
-		this.os.create(order as any);
-		
-		this.cart.set([]);
-		this.isCartVisible.set(false);
-		alert('Замовлення успішно оформлено!');
+		this.os.create({
+			data: orderData
+		}).subscribe({
+			next: (res) => {
+				if (res) {
+					this.cart.set([]);
+					this.isCartVisible.set(false);
+					alert('Замовлення успішно оформлено!');
+				}
+			}
+		});
 	}
 }

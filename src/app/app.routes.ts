@@ -308,6 +308,11 @@ export const routes: Routes = [
 			{
 				path: '',
 				loadChildren: () =>
+					import('./feature/order/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
 					import('./feature/article/manage.routes').then((m) => m.routes),
 			},
 			{
