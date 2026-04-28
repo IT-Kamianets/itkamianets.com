@@ -15,12 +15,7 @@ import { RouterLink } from '@angular/router';
 import { Company } from '../../../company/company.interface';
 import { CompanyService } from '../../../company/company.service';
 import { Review } from '../../../company/review.interface';
-import {
-	createReview,
-	deleteReview,
-	getReviews,
-	updateReview,
-} from '../../api/reviews';
+import { ReviewsService } from '../../api/reviews.service';
 
 interface ReviewFormValue {
 	companyId: string;
@@ -74,6 +69,7 @@ type ReviewFilter = 'all' | Review['status'];
 })
 export class ManageReviewsComponent implements OnInit {
 	private readonly _companyService = inject(CompanyService);
+	private readonly _reviewsService = inject(ReviewsService);
 	private readonly _formPanel = viewChild<ElementRef<HTMLFormElement>>('formPanel');
 	private readonly _authorInput = viewChild<ElementRef<HTMLInputElement>>('authorInput');
 	private readonly _reviews = signal<ManageReviewItem[]>([]);
@@ -205,7 +201,7 @@ export class ManageReviewsComponent implements OnInit {
 		};
 
 		if (existingReview?.apiId) {
-			const response = await updateReview(existingReview.apiId, payload);
+			const response = await this._reviewsService.updateReview(existingReview.apiId, payload);
 			if (response === null) {
 				this._setFeedback('Помилка', 'error');
 				this.isSubmitting.set(false);
@@ -214,7 +210,7 @@ export class ManageReviewsComponent implements OnInit {
 
 			this._setFeedback('Оновлено', 'success');
 		} else {
-			const response = await createReview(payload);
+			const response = await this._reviewsService.createReview(payload);
 			if (response === null) {
 				this._setFeedback('Помилка', 'error');
 				this.isSubmitting.set(false);
@@ -247,7 +243,7 @@ export class ManageReviewsComponent implements OnInit {
 
 		this.processingReviewId.set(review.id);
 
-		const response = await deleteReview(currentReview.apiId);
+		const response = await this._reviewsService.deleteReview(currentReview.apiId);
 		if (response === null) {
 			this._setFeedback('Помилка', 'error');
 			this.processingReviewId.set(null);
@@ -374,7 +370,7 @@ export class ManageReviewsComponent implements OnInit {
 
 	private async _refreshReviews() {
 		this.isListLoading.set(true);
-		const reviews = await getReviews<ApiReviewItem[]>();
+		const reviews = await this._reviewsService.getReviews<ApiReviewItem[]>();
 
 		if (reviews === null) {
 			this._setFeedback('Помилка', 'error');
@@ -440,7 +436,7 @@ export class ManageReviewsComponent implements OnInit {
 
 		this.processingReviewId.set(id);
 
-		const response = await updateReview(review.apiId, {
+		const response = await this._reviewsService.updateReview(review.apiId, {
 			data: {
 				author: review.author,
 				companyId: review.companyId,

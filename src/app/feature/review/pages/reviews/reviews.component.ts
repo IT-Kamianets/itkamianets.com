@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CompanyService } from '../../../company/company.service';
-import { getReviews } from '../../api/reviews';
+import { ReviewsService } from '../../api/reviews.service';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
 
 interface ReviewListItem {
@@ -54,6 +54,7 @@ interface ApiReviewItem {
 })
 export class ReviewsComponent implements OnInit {
 	private readonly _companyService = inject(CompanyService);
+	private readonly _reviewsService = inject(ReviewsService);
 	private readonly _reviews = signal<ApiReviewItem[]>([]);
 	protected readonly isLoading = signal(true);
 	protected readonly errorMessage = signal('');
@@ -156,7 +157,7 @@ export class ReviewsComponent implements OnInit {
 		this.errorMessage.set('');
 
 		try {
-			const reviews = await getReviews<ApiReviewItem[]>();
+			const reviews = await this._reviewsService.getReviews<ApiReviewItem[]>();
 
 			if (reviews === null) {
 				throw new Error('Не вдалося завантажити відгуки.');

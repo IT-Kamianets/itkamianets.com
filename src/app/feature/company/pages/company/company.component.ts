@@ -7,7 +7,7 @@ import { filter, map, switchMap } from 'rxjs';
 import { Company } from '../../company.interface';
 import { CompanyService } from '../../company.service';
 import { Review } from '../../review.interface';
-import { createReview, getReviews } from '../../../review/api/reviews';
+import { ReviewsService } from '../../../review/api/reviews.service';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
 
 interface ApiReviewItem {
@@ -43,6 +43,7 @@ interface CompanyReviewItem {
 export class CompanyComponent {
 	private readonly _companyService = inject(CompanyService);
 	private readonly _route = inject(ActivatedRoute);
+	private readonly _reviewsService = inject(ReviewsService);
 	private readonly _reviews = signal<CompanyReviewItem[]>([]);
 
 	protected readonly reviewForm = signal({
@@ -114,7 +115,10 @@ export class CompanyComponent {
 		this.reviewFormMessage.set('');
 
 		try {
-			const response = await createReview<unknown, { data: Omit<CompanyReviewItem, 'id'> }>({
+			const response = await this._reviewsService.createReview<
+				unknown,
+				{ data: Omit<CompanyReviewItem, 'id'> }
+			>({
 				data: {
 					companyId: company.id,
 					author: value.author.trim(),
@@ -156,7 +160,7 @@ export class CompanyComponent {
 	}
 
 	private async _refreshReviews() {
-		const reviews = await getReviews<ApiReviewItem[]>();
+		const reviews = await this._reviewsService.getReviews<ApiReviewItem[]>();
 
 		this._reviews.set(Array.isArray(reviews) ? reviews.map((review) => this._mapReview(review)) : []);
 	}

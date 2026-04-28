@@ -12,7 +12,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { BreadcrumbComponent, Crumb } from '../../../../shared/components/breadcrumb.component';
 import { CompanyService } from '../../../company/company.service';
-import { fetchReview } from '../../api/reviews';
+import { ReviewsService } from '../../api/reviews.service';
 
 interface ApiReviewData {
 	_id?: string;
@@ -47,6 +47,7 @@ interface ReviewDetail {
 export class ReviewComponent {
 	private readonly _route = inject(ActivatedRoute);
 	private readonly _companyService = inject(CompanyService);
+	private readonly _reviewsService = inject(ReviewsService);
 	private readonly _reviewResponse = signal<ApiReviewData | null>(null);
 
 	protected readonly isLoading = signal(true);
@@ -161,7 +162,7 @@ export class ReviewComponent {
 		this._reviewResponse.set(null);
 
 		try {
-			const response = await fetchReview<ApiReviewData>(id);
+			const response = await this._reviewsService.fetchReview<ApiReviewData>(id);
 
 			if (!response?.data) {
 				throw new Error('Відгук не знайдено.');
