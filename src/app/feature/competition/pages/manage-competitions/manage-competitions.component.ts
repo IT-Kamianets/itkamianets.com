@@ -1,0 +1,368 @@
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ButtonDirective } from 'primeng/button';
+import { Checkbox } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { InputText } from 'primeng/inputtext';
+import { Textarea } from 'primeng/textarea';
+import { Competition, CompetitionData } from '../../competition.interface';
+import { CompetitionService } from '../../competition.service';
+
+type CompetitionRow = {
+	_id: string;
+	title: string;
+	description: string;
+	season: string;
+	format: string;
+	period: string;
+	prize: string;
+	tags: string;
+	location: string;
+	participants: string;
+	sponsors: string;
+	maxTeams: string;
+	isActive: boolean;
+	rawData: CompetitionData;
+};
+
+@Component({
+	imports: [FormsModule, InputText, Textarea, ButtonDirective, Checkbox, DialogModule],
+	templateUrl: './manage-competitions.component.html',
+	styleUrl: './manage-competitions.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ManageCompetitionsComponent implements OnInit {
+	private readonly _competitionService = inject(CompetitionService);
+
+	protected readonly competitions = signal<CompetitionRow[]>([]);
+	protected readonly isLoading = signal(true);
+	protected readonly isSaving = signal(false);
+	protected readonly error = signal('');
+	protected readonly isDialogVisible = signal(false);
+	protected readonly dialogMode = signal<'create' | 'edit'>('create');
+	protected readonly selectedCompetition = signal<CompetitionRow | null>(null);
+	protected readonly formTitle = signal('');
+	protected readonly formDescription = signal('');
+	protected readonly formSeason = signal('');
+	protected readonly formFormat = signal('');
+	protected readonly formPeriod = signal('');
+	protected readonly formPrize = signal('');
+	protected readonly formTags = signal('');
+	protected readonly formLocation = signal('');
+	protected readonly formParticipants = signal('');
+	protected readonly formSponsors = signal('');
+	protected readonly formMaxTeams = signal('');
+	protected readonly formStages = signal('');
+	protected readonly formRequirements = signal('');
+	protected readonly formBenefits = signal('');
+	protected readonly formJudgesJson = signal('');
+	protected readonly formTeamsJson = signal('');
+	protected readonly formIsActive = signal(true);
+
+	async ngOnInit() {
+		await this.load();
+	}
+
+	protected async load() {
+		this.isLoading.set(true);
+		const docs = await this._competitionService.getAll();
+		this.competitions.set(docs.map((doc) => this.toRow(doc)));
+		this.isLoading.set(false);
+	}
+
+	protected openCreateDialog() {
+		this.dialogMode.set('create');
+		this.selectedCompetition.set(null);
+		this.formTitle.set('');
+		this.formDescription.set('');
+		this.formSeason.set('');
+		this.formFormat.set('');
+		this.formPeriod.set('');
+		this.formPrize.set('');
+		this.formTags.set('');
+		this.formLocation.set('');
+		this.formParticipants.set('');
+		this.formSponsors.set('');
+		this.formMaxTeams.set('');
+		this.formStages.set('');
+		this.formRequirements.set('');
+		this.formBenefits.set('');
+		this.formJudgesJson.set('');
+		this.formTeamsJson.set('');
+		this.formIsActive.set(true);
+		this.error.set('');
+		this.isDialogVisible.set(true);
+	}
+
+	protected openEditDialog(row: CompetitionRow) {
+		this.dialogMode.set('edit');
+		this.selectedCompetition.set(row);
+		this.formTitle.set(row.title);
+		this.formDescription.set(row.description);
+		this.formSeason.set(row.season);
+		this.formFormat.set(row.format);
+		this.formPeriod.set(row.period);
+		this.formPrize.set(row.prize);
+		this.formTags.set(row.tags);
+		this.formLocation.set(row.location);
+		this.formParticipants.set(row.participants);
+		this.formSponsors.set(
+			this._pickStringList(row.rawData, ['sponsors', 'partners', 'supporters']).join('\n'),
+		);
+		this.formMaxTeams.set(
+			this._pickString(row.rawData, ['maxTeams', 'teamsLimit']) ||
+				String(this._pickNumber(row.rawData, ['maxTeams', 'teamsLimit']) || ''),
+		);
+		this.formStages.set(this._pickStringList(row.rawData, ['stages', 'timeline', 'steps']).join('\n'));
+		this.formRequirements.set(
+			this._pickStringList(row.rawData, ['requirements', 'criteria', 'conditions']).join('\n'),
+		);
+		this.formBenefits.set(
+			this._pickStringList(row.rawData, ['benefits', 'highlights', 'outcomes']).join('\n'),
+		);
+		{
+			const jury = row.rawData['judges'] ?? row.rawData['jury'];
+			this.formJudgesJson.set(Array.isArray(jury) ? JSON.stringify(jury, null, 2) : '');
+		}
+		{
+			const teams = row.rawData['teams'];
+			this.formTeamsJson.set(Array.isArray(teams) ? JSON.stringify(teams, null, 2) : '');
+		}
+		this.formIsActive.set(row.isActive);
+		this.error.set('');
+		this.isDialogVisible.set(true);
+	}
+
+	protected closeDialog() {
+		this.isDialogVisible.set(false);
+	}
+
+	protected async submitDialog() {
+		this.error.set('');
+		const judgesValue = this._parseOptionalJsonArray(this.formJudgesJson());
+		if (judgesValue === null) {
+			this.error.set('Поле «Журі (JSON)» має бути коректним JSON-масивом об’єктів.');
+			return;
+		}
+		const teamsValue = this._parseOptionalJsonArray(this.formTeamsJson());
+		if (teamsValue === null) {
+			this.error.set('Поле «Команди (JSON)» має бути коректним JSON-масивом.');
+			return;
+		}
+
+		this.isSaving.set(true);
+		const isCreate = this.dialogMode() === 'create';
+		const data = this._buildPayloadData(
+			isCreate ? (judgesValue ?? []) : judgesValue,
+			isCreate ? (teamsValue ?? []) : teamsValue,
+		);
+
+		let response = null;
+		try {
+			response = isCreate
+				? await this._competitionService.create(data)
+				: await this._competitionService.update(this.selectedCompetition()?._id || '', data);
+		} catch (error) {
+			this.error.set(error instanceof Error ? error.message : 'Не вдалося зберегти зміни через API.');
+			this.isSaving.set(false);
+			return;
+		}
+
+		if (!response) {
+			this.error.set(
+				isCreate
+					? 'Не вдалося створити змагання через API.'
+					: 'Не вдалося зберегти зміни через API (сервер не повернув оновлений документ).',
+			);
+			this.isSaving.set(false);
+			return;
+		}
+
+		this.isSaving.set(false);
+		this.error.set('');
+		this.isDialogVisible.set(false);
+		// Оновлюємо таблицю з відповіді API одразу (без залежності від GET /get кешу).
+		const updatedRow = this.toRow(response);
+		this.competitions.update((rows) =>
+			rows.map((row) => (row._id === updatedRow._id ? updatedRow : row)),
+		);
+		// І паралельно підтягнемо список (із cache-buster в сервісі).
+		await this.load();
+	}
+
+	protected async removeCompetition(id: string) {
+		const confirmed =
+			typeof window !== 'undefined' ? window.confirm('Видалити це змагання безповоротно?') : true;
+		if (!confirmed) {
+			return;
+		}
+
+		this.isSaving.set(true);
+		this.error.set('');
+		try {
+			const success = await this._competitionService.delete(id);
+			if (!success) {
+				this.error.set('Не вдалося видалити змагання через API.');
+			}
+		} catch (error) {
+			this.error.set(error instanceof Error ? error.message : 'Не вдалося видалити змагання через API.');
+		}
+		this.isSaving.set(false);
+		await this.load();
+	}
+
+	private toRow(doc: Competition): CompetitionRow {
+		return {
+			_id: doc._id,
+			title: this._pickString(doc.data, ['title', 'name']) || this._competitionService.getTitle(doc),
+			description: this._pickString(doc.data, ['description', 'summary', 'about']),
+			season: this._pickString(doc.data, ['season', 'year']),
+			format: this._pickString(doc.data, ['format', 'mode']),
+			period: this._pickString(doc.data, ['period', 'deadline', 'date']),
+			prize: this._pickString(doc.data, ['prize', 'reward']),
+			tags: this._pickStringArray(doc.data, ['tags', 'stack', 'topics']).join(', '),
+			location: this._pickString(doc.data, ['location', 'place', 'venue']),
+			participants:
+				this._pickString(doc.data, ['participants']) ||
+				String(this._pickNumber(doc.data, ['participants', 'teamsCount', 'membersCount']) || ''),
+			sponsors: this._pickStringArray(doc.data, ['sponsors', 'partners', 'supporters']).join(', '),
+			maxTeams:
+				this._pickString(doc.data, ['maxTeams', 'teamsLimit']) ||
+				String(this._pickNumber(doc.data, ['maxTeams', 'teamsLimit']) || ''),
+			isActive: this._competitionService.isActive(doc),
+			rawData: { ...doc.data },
+		};
+	}
+
+	private _buildPayloadData(
+		judgesPayload?: unknown[],
+		teamsPayload?: unknown[],
+	): CompetitionData {
+		const selected = this.selectedCompetition();
+		const data: CompetitionData = selected ? { ...selected.rawData } : {};
+
+		const removeKeys = [
+			'name',
+			'summary',
+			'about',
+			'year',
+			'mode',
+			'deadline',
+			'date',
+			'reward',
+			'stack',
+			'topics',
+			'status',
+			'published',
+			'place',
+			'venue',
+			'partners',
+			'supporters',
+			'teamsLimit',
+			'membersPerTeam',
+		];
+
+		for (const key of removeKeys) {
+			delete data[key];
+		}
+
+		data['title'] = this.formTitle().trim();
+		data['description'] = this.formDescription().trim();
+		data['season'] = this.formSeason().trim();
+		data['format'] = this.formFormat().trim();
+		data['period'] = this.formPeriod().trim();
+		data['prize'] = this.formPrize().trim();
+		data['active'] = this.formIsActive();
+		data['tags'] = this.formTags()
+			.split(',')
+			.map((tag) => tag.trim())
+			.filter((tag) => tag);
+		data['location'] = this.formLocation().trim();
+		data['participants'] = this.formParticipants().trim();
+		data['sponsors'] = this._parseMultiline(this.formSponsors());
+		data['maxTeams'] = this.formMaxTeams().trim();
+		data['stages'] = this._parseMultiline(this.formStages());
+		data['requirements'] = this._parseMultiline(this.formRequirements());
+		data['benefits'] = this._parseMultiline(this.formBenefits());
+		if (judgesPayload !== undefined) {
+			delete data['jury'];
+			data['judges'] = judgesPayload;
+		}
+		if (teamsPayload !== undefined) {
+			data['teams'] = teamsPayload;
+		}
+
+		return data;
+	}
+
+	private _parseOptionalJsonArray(raw: string) {
+		const trimmed = raw.trim();
+		if (!trimmed) {
+			return undefined;
+		}
+		try {
+			const value: unknown = JSON.parse(trimmed);
+			if (!Array.isArray(value)) {
+				return null;
+			}
+			return value;
+		} catch {
+			return null;
+		}
+	}
+
+	private _pickString(data: CompetitionData, keys: (keyof CompetitionData)[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (typeof value === 'string' && value.trim()) {
+				return value.trim();
+			}
+		}
+
+		return '';
+	}
+
+	private _pickStringArray(data: CompetitionData, keys: (keyof CompetitionData)[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (Array.isArray(value)) {
+				return value.map((item) => String(item)).filter((item) => item.trim());
+			}
+		}
+
+		return [];
+	}
+
+	private _pickNumber(data: CompetitionData, keys: (keyof CompetitionData)[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (typeof value === 'number' && Number.isFinite(value)) {
+				return value;
+			}
+
+			if (typeof value === 'string' && value.trim() && !Number.isNaN(Number(value))) {
+				return Number(value);
+			}
+		}
+
+		return null;
+	}
+
+	private _pickStringList(data: CompetitionData, keys: (keyof CompetitionData)[]) {
+		for (const key of keys) {
+			const value = data[key];
+			if (Array.isArray(value)) {
+				return value.map((item) => String(item).trim()).filter((item) => item);
+			}
+		}
+
+		return [];
+	}
+
+	private _parseMultiline(raw: string) {
+		return raw
+			.split(/[\n,;]+/)
+			.map((item) => item.trim())
+			.filter((item) => item);
+	}
+}

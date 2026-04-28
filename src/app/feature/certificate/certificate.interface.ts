@@ -1,7 +1,15 @@
-import { CrudDocument } from 'wacom';
+import { CrudDocument } from '@wawjs/ngx-crud';
+
+export interface CertificateData {
+	title: string;
+	recipientName: string;
+	description: string;
+	issueDate: string;
+	templateStyle: 'classic' | 'modern' | 'minimalist';
+}
 
 export interface Certificate extends CrudDocument<Certificate> {
 	name?: string;
 	description?: string;
-	data?: Record<string, any>;
+	data?: CertificateData;
 }

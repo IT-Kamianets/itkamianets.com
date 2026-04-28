@@ -17,7 +17,28 @@
 
 		<div class="cv-pane cv-pane--form" [class.cv-pane--hidden]="viewMode() !== 'form'">
 			<form class="cv-form" [formGroup]="form" (ngSubmit)="generateCv()">
-				<div class="cv-form__row cv-form__row--two">
+				<div class="cv-form__row cv-form__row--three">
+					<label class="cv-field">
+						<span>Тема CV</span>
+						<div class="multi-select multi-select--theme">
+							<button type="button" class="multi-select__toggle" (click)="toggleThemeDropdown()">
+								<span class="multi-select__value">{{ selectedThemeLabel() }}</span>
+								<span class="material-symbols-outlined" aria-hidden="true">{{ themeOpen() ? 'expand_less' : 'expand_more' }}</span>
+							</button>
+							<div class="multi-select__panel" [class.multi-select__panel--open]="themeOpen()">
+								@for (option of themeOptions; track option.value) {
+									<button type="button" class="multi-select__option" [class.multi-select__option--selected]="form.controls.theme.value === option.value" (click)="selectTheme(option.value)">
+										<span>{{ option.label }}</span>
+										@if (form.controls.theme.value === option.value) {
+											<span class="material-symbols-outlined multi-select__check" aria-hidden="true">check</span>
+										}
+									</button>
+								}
+							</div>
+						</div>
+						<p class="cv-field__error">{{ controlError(form.controls.theme, 'Тема CV') }}</p>
+					</label>
+
 					<div class="cv-field">
 					<span>Фото профілю</span>
 					<label class="cv-upload">
@@ -29,9 +50,9 @@
 					</div>
 
 					<label class="cv-field">
-					<span>Прізвище та ім'я</span>
-					<input type="text" formControlName="fullName" placeholder="Шевченко Тарас" />
-					<p class="cv-field__error">{{ controlError(form.controls.fullName, 'Прізвище та ім\'я') }}</p>
+						<span>Прізвище та ім'я</span>
+						<input type="text" formControlName="fullName" placeholder="Шевченко Тарас" />
+						<p class="cv-field__error">{{ controlError(form.controls.fullName, 'Прізвище та ім\'я') }}</p>
 					</label>
 				</div>
 
@@ -87,13 +108,13 @@
 
 				<div class="cv-form__row cv-form__row--two">
 					<label class="cv-field cv-field--textarea">
-						<span>Hard skills (не більше 20)</span>
+						<span>Hard skills (через кому, не більше 20)</span>
 						<textarea rows="3" formControlName="hardSkills" placeholder="Angular, TypeScript, RxJS"></textarea>
 						<p class="cv-field__error">{{ controlError(form.controls.hardSkills, 'Hard skills') }}</p>
 					</label>
 
 					<label class="cv-field cv-field--textarea">
-						<span>Soft skills (не більше 20)</span>
+						<span>Soft skills (через кому, не більше 20)</span>
 						<textarea rows="3" formControlName="softSkills" placeholder="Комунікація, Робота в команді, Тайм-менеджмент"></textarea>
 						<p class="cv-field__error">{{ controlError(form.controls.softSkills, 'Soft skills') }}</p>
 					</label>
