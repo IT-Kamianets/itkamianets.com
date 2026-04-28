@@ -53,7 +53,6 @@ type TextareaInput = TextareaItemRecord[] | ItemData;
 export class ManageTableComponent {
 	private readonly _itemService = inject(ItemService);
 	private readonly _userService = inject(UserService);
-	private _draftRowCounter = 0;
 
 	protected readonly mode = signal<TablePageMode>('simple');
 	protected readonly items = signal<Item[]>([]);
@@ -94,11 +93,34 @@ export class ManageTableComponent {
 			width: '9rem',
 		},
 	];
+	protected readonly jsonSavedColumns: TableColumn[] = [
+		{ key: '_id', label: 'Mongo ID', editable: false, width: '16rem' },
+		{ key: 'title', label: 'Title', editable: false },
+		{ key: 'type', label: 'Type', editable: false },
+		{ key: 'slug', label: 'Slug', editable: false },
+		{
+			key: 'published',
+			label: 'Published',
+			type: 'boolean',
+			align: 'center',
+			editable: false,
+			width: '9rem',
+		},
+		{ key: 'jsonPreview', label: 'Data preview', editable: false, width: '22rem' },
+	];
 
 	protected readonly rows = computed<ManageItemRow[]>(() =>
 		this.items().map((item, index) => this._itemToRow(item, index)),
 	);
 	protected readonly hasRows = computed(() => this.rows().length > 0);
+	protected readonly textareaSnapshot = computed(() =>
+		this._stringifyTextareaRecords(this.items()),
+	);
+	protected readonly textareaDirty = computed(
+		() =>
+			this._normalizeJsonText(this.textareaDraft()) !==
+			this._normalizeJsonText(this.textareaSnapshot()),
+	);
 
 	protected readonly excelDirtyCount = computed(() => {
 		const currentById = new Map(
@@ -219,26 +241,6 @@ export class ManageTableComponent {
 		});
 	}
 
-	protected addExcelRow(): void {
-		this.excelDraftRows.update((rows) => [
-			...rows,
-			{
-				order: rows.length + 1,
-				_id: this._nextDraftId(),
-				title: '',
-				type: 'generic',
-				slug: '',
-				published: false,
-				jsonPreview: 'Unsaved record',
-			},
-		]);
-
-		this._setStatus(
-			'info',
-			'Додано новий рядок. Заповніть поля та натисніть Save inline changes.',
-		);
-	}
-
 	protected handleSimpleSave(event: TableRowSaveEvent): void {
 		if (!this._ensureToken()) {
 			return;
@@ -343,10 +345,6 @@ export class ManageTableComponent {
 					};
 				}
 
-				if (current._id && this._isDraftId(current._id)) {
-					return null;
-				}
-
 				const currentIndex = this.items().findIndex((item) => item._id === current._id);
 				const currentSignature = this._compareSignature(
 					this._itemToRow(current, currentIndex === -1 ? 0 : currentIndex),
@@ -408,6 +406,21 @@ export class ManageTableComponent {
 		this.textareaDraft.set(value);
 	}
 
+	protected restoreTextareaDraft(): void {
+		this.textareaDraft.set(this.textareaSnapshot());
+		this._setStatus('info', 'JSON редактор синхронізовано з поточними item records.');
+	}
+
+	protected loadTextareaCreateExample(): void {
+		this.textareaDraft.set(this._buildTextareaCreateExample());
+		this._setStatus('info', 'У JSON редактор вставлено приклад для створення нового item.');
+	}
+
+	protected loadTextareaUpdateExample(): void {
+		this.textareaDraft.set(this._buildTextareaUpdateExample());
+		this._setStatus('info', 'У JSON редактор вставлено приклад для оновлення існуючого item.');
+	}
+
 	protected handleTextareaSave(event: TableTextareaSaveEvent): void {
 		if (!this._ensureToken()) {
 			return;
@@ -447,7 +460,7 @@ export class ManageTableComponent {
 
 				this._setStatus(
 					'success',
-					`JSON режим оновив ${successCount} записів. Відсутні у масиві записи не видаляються автоматично.`,
+					`JSON режим оновив ${successCount} записів. Поточний backend snapshot вже перезавантажено в редактор, а збережені записи видно в Saved records preview.`,
 				);
 				this.reload({ preserveStatus: true });
 			},
@@ -644,8 +657,11 @@ export class ManageTableComponent {
 				return '-';
 			}
 
-			const raw = JSON.stringify(previewData);
-			return raw.length > 140 ? `${raw.slice(0, 137)}...` : raw;
+			const summary = keys
+				.map((key) => `${key}: ${this._previewValue(previewData[key])}`)
+				.join('; ');
+
+			return summary.length > 180 ? `${summary.slice(0, 177)}...` : summary;
 		} catch {
 			return '-';
 		}
@@ -657,6 +673,46 @@ export class ManageTableComponent {
 				_id: item._id,
 				data: item.data,
 			})),
+			null,
+			2,
+		);
+	}
+
+	private _buildTextareaCreateExample(): string {
+		return JSON.stringify(
+			[
+				{
+					data: {
+						title: 'Example item',
+						type: 'generic',
+						slug: 'example-item',
+						published: false,
+						category: 'news',
+						image: '/assets/images/example.jpg',
+					},
+				},
+			],
+			null,
+			2,
+		);
+	}
+
+	private _buildTextareaUpdateExample(): string {
+		const [firstItem] = this.items();
+		if (!firstItem) {
+			return this._buildTextareaCreateExample();
+		}
+
+		return JSON.stringify(
+			[
+				{
+					_id: firstItem._id,
+					data: {
+						...firstItem.data,
+						title: `${this._pickString(firstItem.data, ['title', 'name', 'label']) || 'Updated item'} (updated)`,
+					},
+				},
+			],
 			null,
 			2,
 		);
@@ -728,15 +784,6 @@ export class ManageTableComponent {
 		return Boolean(row.title.trim() || row.type.trim() || row.slug.trim() || row.published);
 	}
 
-	private _nextDraftId(): string {
-		this._draftRowCounter += 1;
-		return `draft:${this._draftRowCounter}`;
-	}
-
-	private _isDraftId(id: string): boolean {
-		return id.startsWith('draft:');
-	}
-
 	private _pickString(data: ItemData, keys: string[]): string {
 		for (const key of keys) {
 			const value = data[key];
@@ -802,6 +849,36 @@ export class ManageTableComponent {
 	private _setStatus(tone: MessageTone, message: string): void {
 		this.statusTone.set(tone);
 		this.statusMessage.set(message);
+	}
+
+	private _normalizeJsonText(value: string): string {
+		return value.trim().replace(/\r\n/g, '\n');
+	}
+
+	private _previewValue(value: unknown): string {
+		if (Array.isArray(value)) {
+			return `[${value.length} items]`;
+		}
+
+		if (value && typeof value === 'object') {
+			const keys = Object.keys(value as Record<string, unknown>);
+			if (!keys.length) {
+				return '{empty}';
+			}
+
+			const label = keys.slice(0, 3).join(', ');
+			return keys.length > 3 ? `{${label}, ...}` : `{${label}}`;
+		}
+
+		if (typeof value === 'string') {
+			return value.length > 48 ? `${value.slice(0, 45)}...` : value;
+		}
+
+		if (typeof value === 'boolean') {
+			return value ? 'true' : 'false';
+		}
+
+		return value === null || value === undefined ? 'null' : String(value);
 	}
 
 	private _ensureToken(): boolean {

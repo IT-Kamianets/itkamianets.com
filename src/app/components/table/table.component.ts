@@ -79,6 +79,7 @@ export class TableComponent {
 	readonly deleteLabel = input('Delete');
 	readonly saveLabel = input('Save');
 	readonly updateLabel = input('Update');
+	readonly updateDisabled = input(false);
 	readonly dialogTitle = input('Edit row');
 	readonly textareaLabel = input('JSON array');
 	readonly textareaValue = input('[\n  {}\n]');

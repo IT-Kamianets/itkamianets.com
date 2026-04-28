@@ -252,6 +252,7 @@
 						type="button"
 						class="table-shell__button table-shell__button--primary"
 						(click)="saveTextarea()"
+						[disabled]="updateDisabled()"
 					>
 						{{ updateLabel() }}
 					</button>
