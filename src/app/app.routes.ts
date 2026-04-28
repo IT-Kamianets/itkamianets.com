@@ -271,6 +271,15 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'table',
+				canActivate: [authenticatedGuard],
+				data: { title: 'Content Table' },
+				loadComponent: () =>
+					import('./pages/manage/table/manage-table.component').then(
+						(m) => m.ManageTableComponent,
+					),
+			},
+			{
 				path: 'schools',
 				canActivate: [authenticatedGuard],
 				loadComponent: () =>

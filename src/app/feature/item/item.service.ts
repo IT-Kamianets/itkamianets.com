@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpService } from '@wawjs/ngx-http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { Item, ItemData } from './item.interface';
 
@@ -10,7 +10,7 @@ import { Item, ItemData } from './item.interface';
 export class ItemService {
 	private readonly _http = inject(HttpService);
 	private readonly _userService = inject(UserService);
-	private readonly _basePath = 'https://api.webart.work/api/ititem';
+	private readonly _basePath = '/api/ititem';
 	readonly items = signal<Item[]>([]);
 
 	getAll(): Observable<Item[]> {
@@ -24,7 +24,6 @@ export class ItemService {
 
 				return response.map((item) => this._mapToItem(item));
 			}),
-			catchError(() => of([])),
 		);
 	}
 
@@ -33,7 +32,6 @@ export class ItemService {
 
 		return this._http.post(`${this._basePath}/create`, { data }).pipe(
 			map((item: unknown) => (item ? this._mapToItem(item) : null)),
-			catchError(() => of(null)),
 		);
 	}
 
@@ -42,17 +40,13 @@ export class ItemService {
 
 		return this._http.post(`${this._basePath}/update`, { _id: id, data }).pipe(
 			map((item: unknown) => (item ? this._mapToItem(item) : null)),
-			catchError(() => of(null)),
 		);
 	}
 
 	delete(id: string): Observable<boolean> {
 		this._syncToken();
 
-		return this._http.post(`${this._basePath}/delete`, { _id: id }).pipe(
-			map(() => true),
-			catchError(() => of(false)),
-		);
+		return this._http.post(`${this._basePath}/delete`, { _id: id }).pipe(map(() => true));
 	}
 
 	fetchOne(id: string): Observable<Item | null> {
@@ -60,7 +54,6 @@ export class ItemService {
 
 		return this._http.post(`${this._basePath}/fetch`, { _id: id }).pipe(
 			map((item: unknown) => (item ? this._mapToItem(item) : null)),
-			catchError(() => of(null)),
 		);
 	}
 
