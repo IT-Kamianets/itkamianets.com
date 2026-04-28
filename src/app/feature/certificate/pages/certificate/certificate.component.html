@@ -1,169 +1,161 @@
-<section class="min-h-screen bg-slate-50 dark:bg-slate-900 py-12 px-4 flex justify-center items-start">
-	<div class="max-w-4xl w-full">
-		<header class="mb-8 flex items-center gap-4">
-			<a routerLink="/certificates" class="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors font-medium text-slate-700 dark:text-slate-300">
-				<span class="material-symbols-outlined align-middle" aria-hidden="true">arrow_back</span> Всі сертифікати
-			</a>
-		</header>
-
-		@if (certificate()) {
-			@switch (certificate()!.data?.['templateStyle']) {
+<div class="certificate-page">
+	@if (certificate()) {
+		<div class="certificate-container">
+			@switch (certificate()!.data?.templateStyle) {
 				@case ('modern') {
 					<!-- MODERN STYLE -->
-					<div class="certificate-container relative bg-slate-900 border border-slate-700 p-10 md:p-16 rounded-[2rem] shadow-2xl overflow-hidden text-center text-white">
-						<div class="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-indigo-500/20 to-fuchsia-500/20 rounded-full blur-3xl pointer-events-none"></div>
-						<div class="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-						<div class="relative z-10 flex flex-col items-center">
-							<div class="w-20 h-20 bg-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
-								<span class="material-symbols-outlined text-4xl" aria-hidden="true">rocket_launch</span>
+					<div class="certificate certificate--modern">
+						<div class="certificate__sidebar">
+							<div class="certificate__logo">ITK</div>
+							<div class="certificate__brand">IT KAMIANETS</div>
+						</div>
+						<div class="certificate__content">
+							<div class="certificate__header">
+								<h1 class="certificate__title">
+									{{ certificate()!.data?.title || 'CERTIFICATE OF COMPLETION' }}
+								</h1>
+								<p class="certificate__subtitle">CERTIFICATE OF ACHIEVEMENT</p>
 							</div>
-
-							<p class="uppercase tracking-[0.3em] text-indigo-400 font-bold mb-4 text-xs">
-								Official Document
-							</p>
-
-							<h1 class="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-fuchsia-400 mb-6 leading-tight">
-								{{ certificate()!.data?.['title'] || 'Документ без назви' }}
-							</h1>
-
-							<p class="text-slate-400 mb-8 max-w-xl mx-auto uppercase tracking-widest text-[10px] font-bold">
-								Вручається
-							</p>
-
-							<p class="text-3xl md:text-5xl font-bold text-white mb-10 tracking-wide">
-								{{ certificate()!.data?.['recipientName'] || 'Отримувач не вказаний' }}
-							</p>
-
-							@if (certificate()!.data?.['description']) {
-								<p class="text-lg text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed whitespace-pre-line bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50 shadow-inner">
-									{{ certificate()!.data?.['description'] }}
+							<div class="certificate__body">
+								<p class="certificate__presented">PRESENTED TO</p>
+								<p class="certificate__recipient">
+									{{ certificate()!.data?.recipientName || 'Recipient Name' }}
 								</p>
-							}
-
-							<div class="w-full flex justify-between items-center mt-8 pt-8 border-t border-slate-700/50">
-								<div class="text-left flex flex-col gap-1">
-									<span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">ID Документа</span>
-									<span class="font-mono text-slate-300">
-										{{ certificate()!._id }}
-									</span>
-								</div>
-								
-								@if (certificate()!.data?.['issueDate']) {
-									<div class="text-right flex flex-col gap-1">
-										<span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Дата видачі</span>
-										<span class="font-medium text-slate-300">
-											{{ certificate()!.data?.['issueDate'] | date: 'longDate' }}
-										</span>
-									</div>
+								@if (certificate()!.data?.description) {
+									<p class="certificate__description">
+										{{ certificate()!.data?.description }}
+									</p>
 								}
+							</div>
+							<div class="certificate__footer">
+								<div class="certificate__info">
+									<p class="certificate__info-label">DATE</p>
+									<p class="certificate__info-value">
+										{{
+											certificate()!.data?.issueDate
+												? (certificate()!.data?.issueDate
+													| date: 'longDate')
+												: 'N/A'
+										}}
+									</p>
+								</div>
+								<div class="certificate__info">
+									<p class="certificate__info-label">AUTHORITY</p>
+									<p class="certificate__info-value">IT Kamianets</p>
+								</div>
 							</div>
 						</div>
 					</div>
 				}
 				@case ('minimalist') {
 					<!-- MINIMALIST STYLE -->
-					<div class="certificate-container relative bg-white p-12 md:p-24 rounded-lg shadow-xl text-center border border-slate-100">
-						<div class="w-12 h-1 bg-black mx-auto mb-16"></div>
-
-						<h1 class="text-3xl md:text-5xl font-light text-black tracking-wide mb-12">
-							{{ certificate()!.data?.['title'] || 'Документ без назви' }}
-						</h1>
-
-						<p class="text-sm text-slate-400 uppercase tracking-[0.2em] mb-4">
-							Для
-						</p>
-
-						<p class="text-3xl md:text-4xl font-serif text-black mb-12">
-							{{ certificate()!.data?.['recipientName'] || 'Отримувач не вказаний' }}
-						</p>
-
-						@if (certificate()!.data?.['description']) {
-							<p class="text-md text-slate-600 max-w-lg mx-auto mb-20 font-light leading-relaxed whitespace-pre-line">
-								{{ certificate()!.data?.['description'] }}
+					<div class="certificate certificate--minimalist">
+						<div class="certificate__header-simple">
+							<p class="certificate__logo-simple">IT KAMIANETS</p>
+						</div>
+						<div class="certificate__body">
+							<p class="certificate__recipient-simple">
+								{{ certificate()!.data?.recipientName || 'Recipient Name' }}
 							</p>
-						}
-
-						<div class="w-full flex justify-between items-end">
-							<div class="text-left">
-								<p class="text-xs text-slate-400 mb-1">ID</p>
-								<p class="font-mono text-xs text-black">{{ certificate()!._id }}</p>
-							</div>
-							
-							@if (certificate()!.data?.['issueDate']) {
-								<div class="text-right border-b border-black pb-2 px-4">
-									<p class="text-sm font-light text-black">
-										{{ certificate()!.data?.['issueDate'] | date: 'longDate' }}
-									</p>
-								</div>
+							<p class="certificate__title-simple">
+								{{ certificate()!.data?.title || 'Certificate Title' }}
+							</p>
+							@if (certificate()!.data?.description) {
+								<p class="certificate__description-simple">
+									{{ certificate()!.data?.description }}
+								</p>
 							}
+						</div>
+						<div class="certificate__footer-simple">
+							<p class="certificate__date-simple">
+								{{
+									certificate()!.data?.issueDate
+										? (certificate()!.data?.issueDate | date: 'longDate')
+										: 'N/A'
+								}}
+							</p>
+							<p class="certificate__verified">Verified Certificate</p>
 						</div>
 					</div>
 				}
 				@default {
 					<!-- CLASSIC STYLE -->
-					<div class="certificate-container relative bg-[url('/assets/rice-paper.png')] bg-amber-50 dark:bg-amber-900/10 p-4 border-[12px] border-double border-amber-200 dark:border-amber-700/30 rounded-lg shadow-xl text-center">
-						<div class="border border-amber-300 dark:border-amber-700/50 p-8 md:p-16 h-full w-full">
-							<div class="w-24 h-24 mx-auto border-2 border-amber-400 dark:border-amber-600 rounded-full flex items-center justify-center text-4xl mb-8 text-amber-600 dark:text-amber-500">
-								<span class="material-symbols-outlined text-4xl" aria-hidden="true">school</span>
-							</div>
-							
-							<p class="uppercase tracking-widest text-amber-700 dark:text-amber-500 font-bold mb-4 text-xs font-serif">
-								Офіційний документ
-							</p>
-
-							<h1 class="text-4xl md:text-5xl font-serif text-slate-900 dark:text-amber-50 mb-6 leading-tight">
-								{{ certificate()!.data?.['title'] || 'Документ без назви' }}
-							</h1>
-							
-							<p class="text-lg text-slate-600 dark:text-amber-200/70 mb-8 max-w-xl mx-auto font-serif italic">
-								Нагороджується
-							</p>
-
-							<p class="text-3xl md:text-5xl font-serif font-bold text-amber-800 dark:text-amber-400 mb-12 border-b border-amber-300 dark:border-amber-700/50 pb-4 px-12 inline-block">
-								{{ certificate()!.data?.['recipientName'] || 'Отримувач не вказаний' }}
-							</p>
-
-							@if (certificate()!.data?.['description']) {
-								<p class="text-lg text-slate-700 dark:text-amber-100/80 max-w-2xl mx-auto mb-16 leading-relaxed whitespace-pre-line font-serif">
-									{{ certificate()!.data?.['description'] }}
-								</p>
-							}
-
-							<div class="w-full flex justify-between items-end mt-12 pt-8">
-								<div class="text-left font-serif">
-									<p class="text-xs text-slate-500 dark:text-amber-400/60 uppercase tracking-widest mb-1">Реєстраційний номер</p>
-									<p class="font-mono text-slate-800 dark:text-amber-200 text-sm">
-										{{ certificate()!._id }}
-									</p>
+					<div class="certificate certificate--classic">
+						<div class="certificate__border">
+							<div class="certificate__inner">
+								<div class="certificate__header-classic">
+									<p class="certificate__logo-classic">IT KAMIANETS</p>
 								</div>
-								
-								@if (certificate()!.data?.['issueDate']) {
-									<div class="text-right font-serif">
-										<p class="text-xs text-slate-500 dark:text-amber-400/60 uppercase tracking-widest mb-1">Дата видачі</p>
-										<p class="font-medium text-slate-800 dark:text-amber-200">
-											{{ certificate()!.data?.['issueDate'] | date: 'longDate' }}
+								<div class="certificate__body">
+									<p class="certificate__title-classic">
+										{{
+											certificate()!.data?.title ||
+												'CERTIFICATE OF COMPLETION'
+										}}
+									</p>
+									<p class="certificate__subheader-classic">
+										THIS IS TO CERTIFY THAT
+									</p>
+									<p class="certificate__recipient-classic">
+										{{ certificate()!.data?.recipientName || 'Recipient Name' }}
+									</p>
+									<div class="certificate__divider"></div>
+									@if (certificate()!.data?.description) {
+										<p class="certificate__description-classic">
+											{{ certificate()!.data?.description }}
+										</p>
+									}
+								</div>
+								<div class="certificate__footer-classic">
+									<div class="certificate__info-classic">
+										<div class="certificate__info-line"></div>
+										<p class="certificate__info-label-classic">DATE</p>
+										<p class="certificate__info-value-classic">
+											{{
+												certificate()!.data?.issueDate
+													? (certificate()!.data?.issueDate
+														| date: 'longDate')
+													: 'N/A'
+											}}
 										</p>
 									</div>
-								}
+									<div class="certificate__info-classic">
+										<div class="certificate__info-line"></div>
+										<p class="certificate__info-label-classic">SIGNATURE</p>
+										<p class="certificate__info-value-classic">
+											IT Kamianets Team
+										</p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				}
 			}
+		</div>
 
-		} @else {
-			<div class="bg-white dark:bg-slate-800 p-16 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-700 text-center">
-				@if (isLoading()) {
-					<span class="material-symbols-outlined text-6xl mb-6 animate-spin inline-block text-blue-500" aria-label="Завантаження">progress_activity</span>
-					<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Завантаження...</h2>
-					<p class="text-slate-500">Отримуємо деталі сертифікату з бази даних.</p>
-				} @else {
-					<span class="material-symbols-outlined text-6xl mb-6 text-slate-400" aria-hidden="true">search_off</span>
-					<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Сертифікат не знайдено</h2>
-					<p class="text-slate-500">За заданим ідентифікатором сертифікат відсутній або виникла помилка.</p>
-				}
-			</div>
-		}
-	</div>
-</section>
+		<!-- Back button -->
+		<div class="certificate-actions">
+			<a routerLink="/certificates" class="btn-back">
+				<span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+				<span>Всі сертифікати</span>
+			</a>
+		</div>
+	} @else {
+		<div class="certificate-loading">
+			@if (isLoading()) {
+				<span class="material-symbols-outlined loading-spinner" aria-label="Завантаження"
+					>progress_activity</span
+				>
+				<h2>Завантаження...</h2>
+				<p>Отримуємо деталі сертифікату з бази даних.</p>
+			} @else {
+				<span class="material-symbols-outlined not-found-icon" aria-hidden="true"
+					>search_off</span
+				>
+				<h2>Сертифікат не знайдено</h2>
+				<p>За заданим ідентифікатором сертифікат відсутній або виникла помилка.</p>
+			}
+		</div>
+	}
+</div>

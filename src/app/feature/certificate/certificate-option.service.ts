@@ -1,14 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpService } from 'wacom';
-import { CertificateOption } from './certificate-option.interface';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of, tap } from 'rxjs';
+import { CertificateOption } from './certificate-option.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class CertificateOptionService {
 	private readonly _http = inject(HttpService);
-	
+
 	private readonly _options = signal<CertificateOption[]>([]);
 	readonly docs = this._options.asReadonly();
 
@@ -25,79 +25,105 @@ export class CertificateOptionService {
 				this._options.set(items);
 				return items;
 			}),
-			catchError(() => of([]))
+			catchError(() => of([])),
 		);
 	}
 
 	new(): Partial<CertificateOption> {
-		return { data: {} };
+		return {
+			data: {
+				title: '',
+				description: '',
+				templateStyle: 'classic',
+			},
+		};
 	}
 
 	create(option: Partial<CertificateOption>): Observable<CertificateOption | null> {
-		return this._http.post('/api/itcertificateoption/create', option).pipe(
-			map((res: unknown) => res ? (res as CertificateOption) : null),
-			tap(newOpt => {
+		const data = option.data;
+		const payload = {
+			...option,
+			data: {
+				title: data?.title || '',
+				description: data?.description || '',
+				templateStyle: data?.templateStyle || 'classic',
+			},
+		};
+		return this._http.post('/api/itcertificateoption/create', payload).pipe(
+			map((res: unknown) => (res ? (res as CertificateOption) : null)),
+			tap((newOpt) => {
 				if (newOpt) {
-					this._options.update(opts => [...opts, newOpt]);
+					this._options.update((opts) => [...opts, newOpt]);
 				}
 			}),
-			catchError(() => of(null))
+			catchError(() => of(null)),
 		);
 	}
 
 	update(option: CertificateOption): Observable<CertificateOption | null> {
-		return this._http.post('/api/itcertificateoption/update', {
+		const data = option.data;
+		const payload = {
 			_id: option._id,
-			data: option.data
-		}).pipe(
-			map((res: unknown) => res ? (res as CertificateOption) : null),
-			tap(updatedOpt => {
+			data: {
+				title: data?.title || '',
+				description: data?.description || '',
+				templateStyle: data?.templateStyle || 'classic',
+			},
+		};
+		return this._http.post('/api/itcertificateoption/update', payload).pipe(
+			map((res: unknown) => (res ? (res as CertificateOption) : null)),
+			tap((updatedOpt) => {
 				if (updatedOpt) {
-					this._options.update(opts => opts.map(o => o._id === updatedOpt._id ? updatedOpt : o));
+					this._options.update((opts) =>
+						opts.map((o) => (o._id === updatedOpt._id ? updatedOpt : o)),
+					);
 				}
 			}),
-			catchError(() => of(null))
+			catchError(() => of(null)),
 		);
 	}
 
 	delete(option: CertificateOption): Observable<boolean> {
 		return this._http.post('/api/itcertificateoption/delete', { _id: option._id }).pipe(
 			map((res: unknown) => !!res),
-			tap(success => {
+			tap((success) => {
 				if (success) {
-					this._options.update(opts => opts.filter(o => o._id !== option._id));
+					this._options.update((opts) => opts.filter((o) => o._id !== option._id));
 				}
 			}),
-			catchError(() => of(false))
+			catchError(() => of(false)),
 		);
 	}
 
 	private _seedDemoOptions() {
-		const demoOptions = [
+		const demoOptions: Partial<CertificateOption>[] = [
 			{
 				data: {
 					title: 'Сертифікат про завершення курсу',
-					description: 'За успішне проходження повного курсу та захист фінального проєкту. Підтверджує набуті знання та практичні навички.',
+					description:
+						'За успішне проходження повного курсу та захист фінального проєкту. Підтверджує набуті знання та практичні навички.',
 					templateStyle: 'classic',
-				}
+				},
 			},
 			{
 				data: {
 					title: 'Диплом переможця хакатону',
-					description: 'За зайняте призове місце в хакатоні та видатні досягнення в розробці інноваційного продукту.',
+					description:
+						'За зайняте призове місце в хакатоні та видатні досягнення в розробці інноваційного продукту.',
 					templateStyle: 'modern',
-				}
+				},
 			},
 			{
 				data: {
 					title: 'Подяка спікеру',
-					description: 'За вагомий внесок у розвиток IT-спільноти, обмін досвідом та підготовку унікальної доповіді.',
+					description:
+						'За вагомий внесок у розвиток IT-спільноти, обмін досвідом та підготовку унікальної доповіді.',
 					templateStyle: 'minimalist',
-				}
-			}
+				},
+			},
 		];
 
-		demoOptions.forEach(opt => {
+		demoOptions.forEach((opt) => {
 			this.create(opt).subscribe();
 		});
 	}

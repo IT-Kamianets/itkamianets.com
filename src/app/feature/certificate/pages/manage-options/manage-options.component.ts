@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, ChangeDetectorRef }
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CertificateOptionService } from '../../certificate-option.service';
-import { CertificateOption } from '../../certificate-option.interface';
+import { CertificateOption, CertificateOptionData } from '../../certificate-option.interface';
 
 @Component({
 	selector: 'app-manage-options',
@@ -26,7 +26,7 @@ export class ManageOptionsComponent {
 	}
 
 	protected readonly editingOption = signal<CertificateOption | null>(null);
-	protected form = {
+	protected form: CertificateOptionData = {
 		title: '',
 		description: '',
 		templateStyle: 'classic'
@@ -42,11 +42,11 @@ export class ManageOptionsComponent {
 	}
 
 	protected edit(option: CertificateOption) {
-		const data = option.data || {};
+		const data = option.data;
 		this.form = {
-			title: data['title'] || '',
-			description: data['description'] || '',
-			templateStyle: data['templateStyle'] || 'classic'
+			title: data?.title || '',
+			description: data?.description || '',
+			templateStyle: data?.templateStyle || 'classic'
 		};
 		this.editingOption.set(option);
 	}
