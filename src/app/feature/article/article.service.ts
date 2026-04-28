@@ -12,7 +12,7 @@ export class ArticleService {
 
     /** Отримати всі новини */
     getAllArticles(): Observable<Article[]> {
-        return this.http.get<Article[]>(`${this.apiUrl}/get`);
+        return this.http.get<Article[]>(`${this.apiUrl}/get?ts=${Date.now()}`);
     }
 
     /** Отримати конкретну новину за ID */

@@ -28,32 +28,39 @@ export class ArticlesComponent implements OnInit {
         this.articleService.getAllArticles().subscribe({
             next: (response: any) => {
                 console.log('Дані з сервера:', response); // Дивимось в консоль (F12)
+                this.newsList.set(response);
                 
                 // Розумна перевірка формату даних
                 if (Array.isArray(response)) {
-                    this.newsList.set(response); // Якщо це чистий масив
-                } else if (response && response.data && Array.isArray(response.data)) {
-                    this.newsList.set(response.data); // Якщо дані лежать у полі data
-                } else if (response && response.articles && Array.isArray(response.articles)) {
-                    this.newsList.set(response.articles); // Якщо дані лежать у полі articles
-                } else {
-                    console.warn('Невідомий формат даних', response);
-                    this.newsList.set([]); 
-                }
+    this.newsList.set(response);
+
+} else if (response?.data && Array.isArray(response.data)) {
+    this.newsList.set(response.data);
+
+} else if (response?.articles && Array.isArray(response.articles)) {
+    this.newsList.set(response.articles);
+
+} else if (response?.result && Array.isArray(response.result)) { // ✅ ДОДАНО
+    this.newsList.set(response.result);
+
+} else {
+    console.warn('Невідомий формат даних', response);
+    this.newsList.set([]);
+}
             },
             error: (err) => console.error('Помилка завантаження новин', err)
         });
     }
 
     protected goToCreate(): void {
-        this.router.navigate(['/manage-articles']);
+        this.router.navigate(['../manage-articles'], { relativeTo: this.route });
     }
 
     protected handleEdit(event: Event, item: Article): void {
         event.stopPropagation();
         const targetId = item._id || item.id;
         if (targetId) {
-            this.router.navigate(['/manage-articles', targetId]);
+            this.router.navigate(['../manage-articles', targetId], { relativeTo: this.route });
         }
     }
 

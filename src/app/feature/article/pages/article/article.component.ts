@@ -30,6 +30,6 @@ export class ArticleComponent implements OnInit {
     }
 
     protected goBack(): void {
-        this.router.navigate(['/articles']);
+        this.router.navigate(['../articles'], { relativeTo: this.route });
     }
 }
