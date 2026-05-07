@@ -1,4 +1,4 @@
-import { Company } from '../app/feature/company/company.interface';
+import { Company, COMPANY_TYPES } from '../app/feature/company/company.interface';
 import { Item } from '../app/feature/item/item.interface';
 
 export const environment: {
@@ -13,9 +13,18 @@ export const environment: {
 	appVersion: '1.0.0',
 	production: true,
 	items: [],
-	companyId: 'demo',
+	companyId: '',
 	company: {
-		_id: '',
+		id: '',
 		name: '',
+		logo: '',
+		type: COMPANY_TYPES[0],
+		shortDescription: '',
+		description: '',
+		techStack: [],
+		services: [],
+		employees: 0,
+		founded: 0,
+		contacts: {},
 	},
 };

@@ -1,0 +1,161 @@
+<div class="certificate-page">
+	@if (certificate()) {
+		<div class="certificate-container">
+			@switch (certificate()!.data?.templateStyle) {
+				@case ('modern') {
+					<!-- MODERN STYLE -->
+					<div class="certificate certificate--modern">
+						<div class="certificate__sidebar">
+							<div class="certificate__logo">ITK</div>
+							<div class="certificate__brand">IT KAMIANETS</div>
+						</div>
+						<div class="certificate__content">
+							<div class="certificate__header">
+								<h1 class="certificate__title">
+									{{ certificate()!.data?.title || 'CERTIFICATE OF COMPLETION' }}
+								</h1>
+								<p class="certificate__subtitle">CERTIFICATE OF ACHIEVEMENT</p>
+							</div>
+							<div class="certificate__body">
+								<p class="certificate__presented">PRESENTED TO</p>
+								<p class="certificate__recipient">
+									{{ certificate()!.data?.recipientName || 'Recipient Name' }}
+								</p>
+								@if (certificate()!.data?.description) {
+									<p class="certificate__description">
+										{{ certificate()!.data?.description }}
+									</p>
+								}
+							</div>
+							<div class="certificate__footer">
+								<div class="certificate__info">
+									<p class="certificate__info-label">DATE</p>
+									<p class="certificate__info-value">
+										{{
+											certificate()!.data?.issueDate
+												? (certificate()!.data?.issueDate
+													| date: 'longDate')
+												: 'N/A'
+										}}
+									</p>
+								</div>
+								<div class="certificate__info">
+									<p class="certificate__info-label">AUTHORITY</p>
+									<p class="certificate__info-value">IT Kamianets</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+				@case ('minimalist') {
+					<!-- MINIMALIST STYLE -->
+					<div class="certificate certificate--minimalist">
+						<div class="certificate__header-simple">
+							<p class="certificate__logo-simple">IT KAMIANETS</p>
+						</div>
+						<div class="certificate__body">
+							<p class="certificate__recipient-simple">
+								{{ certificate()!.data?.recipientName || 'Recipient Name' }}
+							</p>
+							<p class="certificate__title-simple">
+								{{ certificate()!.data?.title || 'Certificate Title' }}
+							</p>
+							@if (certificate()!.data?.description) {
+								<p class="certificate__description-simple">
+									{{ certificate()!.data?.description }}
+								</p>
+							}
+						</div>
+						<div class="certificate__footer-simple">
+							<p class="certificate__date-simple">
+								{{
+									certificate()!.data?.issueDate
+										? (certificate()!.data?.issueDate | date: 'longDate')
+										: 'N/A'
+								}}
+							</p>
+							<p class="certificate__verified">Verified Certificate</p>
+						</div>
+					</div>
+				}
+				@default {
+					<!-- CLASSIC STYLE -->
+					<div class="certificate certificate--classic">
+						<div class="certificate__border">
+							<div class="certificate__inner">
+								<div class="certificate__header-classic">
+									<p class="certificate__logo-classic">IT KAMIANETS</p>
+								</div>
+								<div class="certificate__body">
+									<p class="certificate__title-classic">
+										{{
+											certificate()!.data?.title ||
+												'CERTIFICATE OF COMPLETION'
+										}}
+									</p>
+									<p class="certificate__subheader-classic">
+										THIS IS TO CERTIFY THAT
+									</p>
+									<p class="certificate__recipient-classic">
+										{{ certificate()!.data?.recipientName || 'Recipient Name' }}
+									</p>
+									<div class="certificate__divider"></div>
+									@if (certificate()!.data?.description) {
+										<p class="certificate__description-classic">
+											{{ certificate()!.data?.description }}
+										</p>
+									}
+								</div>
+								<div class="certificate__footer-classic">
+									<div class="certificate__info-classic">
+										<div class="certificate__info-line"></div>
+										<p class="certificate__info-label-classic">DATE</p>
+										<p class="certificate__info-value-classic">
+											{{
+												certificate()!.data?.issueDate
+													? (certificate()!.data?.issueDate
+														| date: 'longDate')
+													: 'N/A'
+											}}
+										</p>
+									</div>
+									<div class="certificate__info-classic">
+										<div class="certificate__info-line"></div>
+										<p class="certificate__info-label-classic">SIGNATURE</p>
+										<p class="certificate__info-value-classic">
+											IT Kamianets Team
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			}
+		</div>
+
+		<!-- Back button -->
+		<div class="certificate-actions">
+			<a routerLink="/certificates" class="btn-back">
+				<span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+				<span>Всі сертифікати</span>
+			</a>
+		</div>
+	} @else {
+		<div class="certificate-loading">
+			@if (isLoading()) {
+				<span class="material-symbols-outlined loading-spinner" aria-label="Завантаження"
+					>progress_activity</span
+				>
+				<h2>Завантаження...</h2>
+				<p>Отримуємо деталі сертифікату з бази даних.</p>
+			} @else {
+				<span class="material-symbols-outlined not-found-icon" aria-hidden="true"
+					>search_off</span
+				>
+				<h2>Сертифікат не знайдено</h2>
+				<p>За заданим ідентифікатором сертифікат відсутній або виникла помилка.</p>
+			}
+		</div>
+	}
+</div>

@@ -1,13 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-
-interface NewsItem {
-	id: number;
-	title: string;
-	excerpt: string;
-	image: string;
-	date: string;
-	category: 'events' | 'updates' | 'articles';
-}
+import { NewsItem } from '../../feature/item/item.interface';
 
 @Component({
 	selector: 'app-news',
@@ -21,7 +13,8 @@ export class NewsComponent {
 
 	readonly newsItems: NewsItem[] = [
 		{
-			id: 1,
+			_id: 'news-1',
+			type: 'news',
 			title: 'IT-Kamianets запускає програму стажування 2026',
 			excerpt:
 				'Ми відкриваємо нову хвилю набору для студентів та початківців у сфері веб-розробки. Долучайтесь до нашої команди та здобувайте реальний досвід роботи з комерційними проєктами.',
@@ -30,7 +23,8 @@ export class NewsComponent {
 			category: 'events',
 		},
 		{
-			id: 2,
+			_id: 'news-2',
+			type: 'news',
 			title: 'Оновлення портфоліо: 3 нові проєкти на Tailwind CSS',
 			excerpt:
 				'Наша команда завершила роботу над трьома новими веб-сайтами, створеними з використанням Tailwind CSS. Кожен проєкт демонструє сучасний підхід до дизайну та розробки.',
@@ -39,7 +33,8 @@ export class NewsComponent {
 			category: 'updates',
 		},
 		{
-			id: 3,
+			_id: 'news-3',
+			type: 'news',
 			title: 'Як ми будуємо веб-сайти: наш процес від А до Я',
 			excerpt:
 				'Від першої консультації до фінального запуску — дізнайтесь, як працює наша команда і чому клієнти обирають IT-Kamianets для реалізації своїх ідей.',
@@ -48,7 +43,8 @@ export class NewsComponent {
 			category: 'articles',
 		},
 		{
-			id: 4,
+			_id: 'news-4',
+			type: 'news',
 			title: 'Зустріч команди: підсумки січня 2026',
 			excerpt:
 				'Зібрались разом, обговорили досягнення минулого місяця, нові цілі та плани щодо розширення нашого впливу в регіоні.',
@@ -57,7 +53,8 @@ export class NewsComponent {
 			category: 'events',
 		},
 		{
-			id: 5,
+			_id: 'news-5',
+			type: 'news',
 			title: 'Новий мерч IT-Kamianets вже доступний!',
 			excerpt:
 				'Чашки, футболки та стікери з логотипом IT-Kamianets — тепер ви можете підтримати нашу спільноту та виглядати стильно.',
@@ -66,7 +63,8 @@ export class NewsComponent {
 			category: 'updates',
 		},
 		{
-			id: 6,
+			_id: 'news-6',
+			type: 'news',
 			title: '5 трендів веб-розробки у 2026 році',
 			excerpt:
 				'Angular, Tailwind, SSR, AI-інтеграції та доступність — розглядаємо ключові тренди, які визначатимуть веб у цьому році.',
@@ -75,7 +73,8 @@ export class NewsComponent {
 			category: 'articles',
 		},
 		{
-			id: 7,
+			_id: 'news-7',
+			type: 'news',
 			title: 'Хакатон IT-Kamianets: 24 години коду',
 			excerpt:
 				'Ми провели перший внутрішній хакатон, де розробники змагались у створенні MVP за 24 години. Результати вразили всіх — три проєкти вже готуються до запуску.',
@@ -84,7 +83,8 @@ export class NewsComponent {
 			category: 'events',
 		},
 		{
-			id: 8,
+			_id: 'news-8',
+			type: 'news',
 			title: 'Перехід на Angular 21: що змінилось',
 			excerpt:
 				'Ми мігрували всі наші проєкти на Angular 21. Сигнали, нові контрольні потоки та покращений SSR — ділимось досвідом та результатами.',
@@ -93,7 +93,8 @@ export class NewsComponent {
 			category: 'updates',
 		},
 		{
-			id: 9,
+			_id: 'news-9',
+			type: 'news',
 			title: 'Чому Tailwind CSS — це майбутнє стилізації',
 			excerpt:
 				'Порівнюємо utility-first підхід з класичними CSS-методологіями. Результати продуктивності та швидкості розробки вас здивують.',
@@ -102,7 +103,8 @@ export class NewsComponent {
 			category: 'articles',
 		},
 		{
-			id: 10,
+			_id: 'news-10',
+			type: 'news',
 			title: 'IT-Kamianets на конференції WebDev Summit 2025',
 			excerpt:
 				'Наша команда взяла участь у найбільшій веб-конференції України. Доповіді, нетворкінг та нові партнерства — розповідаємо подробиці.',
@@ -111,7 +113,8 @@ export class NewsComponent {
 			category: 'events',
 		},
 		{
-			id: 11,
+			_id: 'news-11',
+			type: 'news',
 			title: 'Запуск системи моніторингу для агрохолдингу',
 			excerpt:
 				'Успішно завершили та впровадили GPS-систему моніторингу полів для одного з найбільших агропідприємств Хмельницької області.',
@@ -120,7 +123,8 @@ export class NewsComponent {
 			category: 'updates',
 		},
 		{
-			id: 12,
+			_id: 'news-12',
+			type: 'news',
 			title: 'Як обрати правильний CSS-фреймворк для свого проєкту',
 			excerpt:
 				'Tailwind vs Bootstrap vs Bulma — детальний аналіз переваг, недоліків та найкращих сценаріїв використання кожного фреймворку.',

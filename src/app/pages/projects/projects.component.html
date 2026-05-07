@@ -1,59 +1,88 @@
 <div class="projects-page">
-	<section class="page-hero">
-		<div class="page-hero__overlay"></div>
-		<div class="page-hero__content">
-			<span class="section-label">Портфоліо</span>
-			<h1 class="page-hero__title">Наші проєкти</h1>
-			<p class="page-hero__subtitle">
-				Публікації, які керуються прямо з Control panel
+	<section class="projects-hero">
+		<div class="projects-hero__overlay"></div>
+		<div class="projects-hero__content">
+			<span class="projects-hero__eyebrow">Портфоліо</span>
+			<h1 class="projects-hero__title">Проєкти IT Kamianets</h1>
+			<p class="projects-hero__subtitle">
+				Добірка сайтів і продуктів, які команда запускала разом зі студентами та партнерами.
 			</p>
-		</div>
-
-		<div class="section-divider-bar">
-			<span class="section-divider-bar__line"></span>
 		</div>
 	</section>
 
-	<div class="container">
-		<div class="projects-grid projects-grid--top-space">
-			@if (!projects().length) {
-				<p class="projects-empty">Поки що немає опублікованих проєктів.</p>
-			}
+	<section class="projects-list">
+		<div class="container">
+			<div class="projects-grid">
+				@for (project of projects; track project.id) {
+					<article class="project-card">
+						<div class="project-card__media">
+							<img
+								[src]="project.image"
+								[alt]="project.imageAlt"
+								loading="lazy"
+								referrerpolicy="no-referrer"
+							/>
+						</div>
 
-			@for (p of projects(); track p.id) {
-				<div class="project-card">
-					<div class="project-card__img">
-						<img [src]="getImageSrc(p)" [alt]="p.title" loading="eager" />
-					</div>
-					<div class="project-card__body">
-						<div class="project-card__header">
-							<h3 class="project-card__title">{{ p.title }}</h3>
-							<span class="project-card__badge" [ngClass]="getBadgeClass(p)">
-								{{ getBadgeLabel(p) }}
-							</span>
-						</div>
-						<p class="project-card__desc">{{ p.description }}</p>
-						<div class="project-card__tags">
-							@for (tag of p.tags; track tag) {
-								<span class="project-card__tag">{{ tag }}</span>
+						<div class="project-card__body">
+							<div class="project-card__top">
+								<h2 class="project-card__title">{{ project.title }}</h2>
+								<time class="project-card__date" [attr.datetime]="project.dateTime">
+									{{ project.dateLabel }}
+								</time>
+							</div>
+
+							@if (project.description) {
+								<p class="project-card__description">{{ project.description }}</p>
 							}
+
+							@if (project.contributors.length) {
+								<div class="project-card__contributors">
+									<span class="project-card__contributors-label">Учасники</span>
+									<div class="project-card__contributors-list">
+										@for (contributor of project.contributors; track contributor.url) {
+											<a
+												[href]="contributor.url"
+												target="_blank"
+												rel="noopener noreferrer"
+												class="project-card__contributor"
+												[title]="contributor.name"
+												[attr.aria-label]="'GitHub профіль ' + contributor.name"
+											>
+												<img
+													[src]="contributor.avatar"
+													[alt]="contributor.name"
+													loading="lazy"
+													referrerpolicy="no-referrer"
+												/>
+											</a>
+										}
+									</div>
+								</div>
+							}
+
+							<div class="project-card__actions">
+								<a
+									[href]="project.githubUrl"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="project-card__link"
+								>
+									GitHub
+								</a>
+								<a
+									[href]="project.websiteUrl"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="project-card__link project-card__link--primary"
+								>
+									Відкрити сайт
+								</a>
+							</div>
 						</div>
-						<div class="project-card__links">
-							<a [href]="p.repoUrl" target="_blank" rel="noopener noreferrer" class="project-card__link">
-								GitHub
-							</a>
-							<a
-								[href]="p.liveUrl"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="project-card__link project-card__link--live"
-							>
-								Live
-							</a>
-						</div>
-					</div>
-				</div>
-			}
+					</article>
+				}
+			</div>
 		</div>
-	</div>
+	</section>
 </div>

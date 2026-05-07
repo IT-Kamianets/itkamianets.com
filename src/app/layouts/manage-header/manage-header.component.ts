@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ThemeMode, ThemeService } from 'wacom';
+import { ThemeMode, ThemeService } from '@wawjs/ngx-ui';
 import { UserService } from '../../feature/user/user.service';
 
 @Component({
@@ -11,8 +11,19 @@ import { UserService } from '../../feature/user/user.service';
 	styleUrl: './manage-header.component.scss',
 })
 export class ManageHeaderComponent {
+	@Input() publicMode = false;
+
 	protected readonly theme = inject(ThemeService);
 	protected readonly userService = inject(UserService);
+
+	protected onProfileClick(event: Event, isActive: boolean): void {
+		if (!isActive) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+	}
 
 	protected toggleTheme() {
 		const newMode: ThemeMode = this.theme.mode() === 'dark' ? 'light' : 'dark';

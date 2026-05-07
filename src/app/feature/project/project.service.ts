@@ -1,157 +1,128 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
-import { PROJECTS } from '../../data/projects.data';
-import { ManagedProject, ManagedProjectDraft, ProjectCategory } from './project.interface';
+import { Injectable, inject } from '@angular/core';
+import { HttpService } from '@wawjs/ngx-http';
+import { Observable, catchError, map, of } from 'rxjs';
+import { UserService } from '../user/user.service';
+import { Project, ProjectData } from './project.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ProjectService {
-	private readonly _platformId = inject(PLATFORM_ID);
-	private readonly _storageKey = 'itk_projects_v1';
+	private readonly _http = inject(HttpService);
+	private readonly _userService = inject(UserService);
+	private readonly _basePath = '/api/itproject';
 
-	readonly projects = signal<ManagedProject[]>(this._readInitialProjects());
+	getAll(): Observable<Project[]> {
+		this._syncToken();
 
-	constructor() {
-		this._save();
+		return this._http.get(`${this._basePath}/get`).pipe(
+			map((response: unknown) => {
+				if (!Array.isArray(response)) {
+					return [];
+				}
+
+				return response.map((item) => this._mapToProject(item));
+			}),
+			catchError(() => of([])),
+		);
 	}
 
-	createProject(draft: ManagedProjectDraft): ManagedProject {
-		const now = new Date().toISOString();
-		const project: ManagedProject = {
-			...draft,
-			id: this._createId(),
-			createdAt: now,
-			updatedAt: now,
+	create(projectData: ProjectData): Observable<Project | null> {
+		const payload = {
+			title: projectData.title,
+			description: projectData.description,
+			category: 'custom',
+			tags: projectData.tags,
+			repoUrl: projectData.githubLink,
+			liveUrl: projectData.websiteLink,
+			memberIds: projectData.team,
+			image: projectData.photo,
+			imageKind: projectData.imageKind,
+			data: projectData,
 		};
 
-		this.projects.update((list) => [project, ...list]);
-		this._save();
-		return project;
-	}
+		this._syncToken();
 
-	updateProject(id: string, draft: ManagedProjectDraft): void {
-		this.projects.update((list) =>
-			list.map((project) =>
-				project.id === id
-					? {
-						...project,
-						...draft,
-						updatedAt: new Date().toISOString(),
-					}
-					: project,
-			),
+		return this._http.post(`${this._basePath}/create`, payload).pipe(
+			map((item: unknown) => (item ? this._mapToProject(item) : null)),
+			catchError(() => of(null)),
 		);
-		this._save();
 	}
 
-	removeProject(id: string): void {
-		this.projects.update((list) => list.filter((project) => project.id !== id));
-		this._save();
+	update(id: string, projectData: ProjectData): Observable<Project | null> {
+		const payload = {
+			_id: id,
+			title: projectData.title,
+			description: projectData.description,
+			category: 'custom',
+			tags: projectData.tags,
+			repoUrl: projectData.githubLink,
+			liveUrl: projectData.websiteLink,
+			memberIds: projectData.team,
+			image: projectData.photo,
+			imageKind: projectData.imageKind,
+			data: projectData,
+		};
+
+		this._syncToken();
+
+		return this._http.post(`${this._basePath}/update`, payload).pipe(
+			map((item: unknown) => (item ? this._mapToProject(item) : null)),
+			catchError(() => of(null)),
+		);
 	}
 
-	getProjectById(id: string): ManagedProject | undefined {
-		return this.projects().find((project) => project.id === id);
+	delete(id: string): Observable<boolean> {
+		this._syncToken();
+
+		return this._http.post(`${this._basePath}/delete`, { _id: id }).pipe(
+			map(() => true),
+			catchError(() => of(false)),
+		);
 	}
 
-	private _readInitialProjects(): ManagedProject[] {
-		if (!isPlatformBrowser(this._platformId)) {
-			return this._defaultProjects();
-		}
+	fetchOne(id: string): Observable<Project | null> {
+		this._syncToken();
 
-		const raw = localStorage.getItem(this._storageKey);
-		if (!raw) {
-			return this._defaultProjects();
-		}
-
-		try {
-			const parsed = JSON.parse(raw) as unknown;
-			if (!Array.isArray(parsed)) {
-				return this._defaultProjects();
-			}
-
-			const normalized = parsed
-				.filter((item): item is Partial<ManagedProject> => typeof item === 'object' && item !== null)
-				.map((item) => this._normalizeProject(item))
-				.filter((item): item is ManagedProject => item !== null);
-
-			return normalized.length ? normalized : this._defaultProjects();
-		} catch {
-			localStorage.removeItem(this._storageKey);
-			return this._defaultProjects();
-		}
+		return this._http.post(`${this._basePath}/fetch`, { _id: id }).pipe(
+			map((item: unknown) => (item ? this._mapToProject(item) : null)),
+			catchError(() => of(null)),
+		);
 	}
 
-	private _normalizeProject(item: Partial<ManagedProject>): ManagedProject | null {
-		const title = (item.title || '').trim();
-		const description = (item.description || '').trim();
-		const repoUrl = (item.repoUrl || '').trim();
-		const liveUrl = (item.liveUrl || '').trim();
-		const image = (item.image || '').trim();
-
-		if (!title || !description || !repoUrl || !liveUrl || !image) {
-			return null;
-		}
+	private _mapToProject(item: any): Project {
+		const source = item.data ? { ...item, ...item.data } : item;
 
 		return {
-			id: item.id || this._createId(),
-			title,
-			description,
-			tags: Array.isArray(item.tags)
-				? item.tags.filter((tag): tag is string => typeof tag === 'string' && tag.trim().length > 0)
-				: [],
-			repoUrl,
-			liveUrl,
-			image,
-			imageKind: item.imageKind === 'upload' ? 'upload' : 'asset',
-			memberIds: Array.isArray(item.memberIds)
-				? item.memberIds.filter((id): id is number => Number.isInteger(id) && id > 0)
-				: [],
-			category: this._normalizeCategory(item.category),
-			createdAt: item.createdAt || new Date().toISOString(),
-			updatedAt: item.updatedAt || new Date().toISOString(),
+			_id: item._id,
+			createdAt: item.createdAt,
+			updatedAt: item.updatedAt,
+			data: {
+				title: source.title || '',
+				description: source.description || '',
+				photo: source.image || source.photo || '',
+				category: source.category || '',
+				tags: Array.isArray(source.tags) ? source.tags : [],
+				githubLink: source.repoUrl || source.githubLink || '',
+				websiteLink: source.liveUrl || source.websiteLink || '',
+				team: Array.isArray(source.memberIds)
+					? source.memberIds
+					: Array.isArray(source.team)
+						? source.team
+						: [],
+				completionDate: source.completionDate || source.completedAt || '',
+				imageKind: source.imageKind || 'asset',
+			},
 		};
 	}
 
-	private _normalizeCategory(category: ManagedProject['category'] | undefined): ProjectCategory {
-		if (category === 'theme-tailwind' || category === 'theme-bulma' || category === 'theme-bootstrap') {
-			return category;
+	private _syncToken(): void {
+		const token = this._userService.user().token?.trim() || '';
+
+		if (token) {
+			this._http.set('token', token);
+		} else {
+			this._http.remove('token');
 		}
-
-		return 'custom';
-	}
-
-	private _defaultProjects(): ManagedProject[] {
-		const now = new Date().toISOString();
-		return PROJECTS.map((project) => ({
-			id: `legacy-${project.id}`,
-			title: project.title,
-			description: project.description,
-			tags: [...project.tags],
-			repoUrl: project.repoUrl,
-			liveUrl: project.liveUrl,
-			image: project.image,
-			imageKind: 'asset' as const,
-			memberIds: [1],
-			category: project.category,
-			createdAt: now,
-			updatedAt: now,
-		}));
-	}
-
-	private _createId(): string {
-		if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-			return crypto.randomUUID();
-		}
-
-		return `project-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-	}
-
-	private _save(): void {
-		if (!isPlatformBrowser(this._platformId)) {
-			return;
-		}
-
-		localStorage.setItem(this._storageKey, JSON.stringify(this.projects()));
 	}
 }

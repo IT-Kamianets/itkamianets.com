@@ -1,0 +1,53 @@
+<div class="tests-page">
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Тести</span>
+			<h1 class="page-hero__title">Перевірка навичок</h1>
+			<p class="page-hero__subtitle">
+				Пройдіть тести для оцінки ваших знань та отримання сертифікатів
+			</p>
+		</div>
+
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<div class="tests-grid tests-grid--top-space">
+			@if (apiError()) {
+				<p class="tests-empty">{{ apiError() }}</p>
+			} @else if (!tests().length) {
+				<p class="tests-empty">Поки що немає опублікованих тестів.</p>
+			}
+
+			@for (test of tests(); track trackByTestId($index, test)) {
+				<div class="test-card">
+					<div class="test-card__body">
+						<div class="test-card__header">
+							<h3 class="test-card__title">{{ test.data.title }}</h3>
+							<span class="test-card__badge"
+								>{{ test.data.questions.length }} питань</span
+							>
+						</div>
+						<p class="test-card__desc">{{ test.data.description }}</p>
+						<div class="test-card__links">
+							<a
+								[routerLink]="['/test', test._id]"
+								class="test-card__link test-card__link--live"
+							>
+								<span
+									class="material-symbols-outlined test-card__link-icon"
+									aria-hidden="true"
+									>play_arrow</span
+								>
+								Пройти тест
+							</a>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>

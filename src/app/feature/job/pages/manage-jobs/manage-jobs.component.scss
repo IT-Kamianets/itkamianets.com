@@ -1,0 +1,89 @@
+.editor-content {
+	&:focus {
+		outline: none;
+	}
+
+	&.prose {
+		max-width: none;
+	}
+
+	h1 {
+		font-family: var(--ff-base);
+		color: var(--c-text-secondary);
+		border-left: 4px solid var(--c-primary);
+		padding-left: 1rem;
+		margin: 1.5rem 0 1rem;
+	}
+
+	h2 {
+		font-family: var(--ff-base);
+		color: var(--c-text-secondary);
+		margin: 1.25rem 0 0.75rem;
+	}
+
+	p {
+		color: var(--c-text-primary);
+		line-height: 1.6;
+		margin-bottom: 1rem;
+	}
+
+	img {
+		border-radius: 1.5rem;
+		box-shadow: var(--shadow-md);
+		margin: 2rem auto;
+		display: block;
+		border: 1px solid var(--c-border);
+	}
+
+	ul, ol {
+		padding-left: 1.5rem;
+		margin-bottom: 1rem;
+		li {
+			margin-bottom: 0.5rem;
+		}
+	}
+}
+
+// Custom select styling for the author dropdown
+select {
+	background-image: none;
+}
+
+// Smooth modal animations
+.animate-in {
+	animation-duration: 0.3s;
+	animation-timing-function: var(--easing);
+	animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+	from { opacity: 0; transform: scale(0.95); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in { animation-name: fadeIn; }
+.zoom-in-95 { animation-name: zoomIn; }
+
+// Hide scrollbar but allow scrolling for the modal
+.max-h-\[95vh\] {
+	scrollbar-width: thin;
+	scrollbar-color: var(--c-primary) transparent;
+	
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+	
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--c-primary);
+		border-radius: 20px;
+	}
+}

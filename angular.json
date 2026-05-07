@@ -52,7 +52,18 @@
 								"input": "src/assets"
 							}
 						],
-						"styles": ["src/styles.scss"],
+						"styles": [
+						"node_modules/leaflet/dist/leaflet.css",
+						"node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+						"node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+						"src/styles.scss"
+					],
+						"allowedCommonJsDependencies": [
+							"leaflet",
+							"leaflet.markercluster",
+							"pdfmake/build/pdfmake",
+							"pdfmake/build/vfs_fonts"
+						],
 						"server": "src/main.server.ts",
 						"outputMode": "server",
 						"security": {
@@ -73,7 +84,7 @@
 							"budgets": [
 								{
 									"type": "initial",
-									"maximumWarning": "500kB",
+									"maximumWarning": "650kB",
 									"maximumError": "1MB"
 								},
 								{

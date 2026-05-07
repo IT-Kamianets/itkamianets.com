@@ -1,26 +1,11 @@
-import { isPlatformBrowser } from '@angular/common';
-import {
-	ChangeDetectionStrategy,
-	Component,
-	Injector,
-	PLATFORM_ID,
-	inject,
-	signal,
-} from '@angular/core';
-import { form, minLength, pattern, required, submit, FormField } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { form, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
+import { HttpService } from '@wawjs/ngx-http';
+import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
-import { ButtonDirective } from 'primeng/button';
-import { HttpService } from 'wacom';
 import { UserService } from '../../../feature/user/user.service';
-
-type ProfileFormModel = {
-	name: string;
-	phone: string;
-	bio: string;
-};
-
-type ProfilePayload = Partial<ProfileFormModel> & Record<string, unknown>;
+import { ProfileFormModel, ProfilePayload } from './profile.type';
 
 @Component({
 	imports: [FormField, InputText, Textarea, ButtonDirective],
@@ -30,8 +15,7 @@ type ProfilePayload = Partial<ProfileFormModel> & Record<string, unknown>;
 })
 export class ProfileComponent {
 	protected readonly userService = inject(UserService);
-	private readonly _injector = inject(Injector);
-	private readonly _platformId = inject(PLATFORM_ID);
+	private readonly _http = inject(HttpService);
 
 	protected readonly isFetching = signal(false);
 	protected readonly isSaving = signal(false);
@@ -66,53 +50,51 @@ export class ProfileComponent {
 		}
 
 		await submit(this.profileForm, async (field) => {
-			const http = this._http();
-			if (!http) {
-				this.submitTone.set('error');
-				this.submitMessage.set('API профілю доступне лише у браузері.');
-				return;
-			}
-
 			this.isSaving.set(true);
 			this.submitMessage.set('');
 
 			const payload = field().value();
 			await new Promise<void>((resolve) => {
-				http.post('/api/user/update', payload, (resp: unknown) => {
-					this.applyUser(resp, payload);
-					this.submitTone.set('success');
-					this.submitMessage.set('Профіль оновлено.');
-					this.isSaving.set(false);
-					resolve();
-				}, {
-					err: () => {
-						this.submitTone.set('error');
-						this.submitMessage.set('Не вдалося оновити профіль.');
+				this._http.post(
+					'/api/user/update',
+					payload,
+					(resp: unknown) => {
+						this.applyUser(resp, payload);
+						this.submitTone.set('success');
+						this.submitMessage.set('Профіль оновлено.');
 						this.isSaving.set(false);
 						resolve();
 					},
-				});
+					{
+						err: () => {
+							this.submitTone.set('error');
+							this.submitMessage.set('Не вдалося оновити профіль.');
+							this.isSaving.set(false);
+							resolve();
+						},
+					},
+				);
 			});
 		});
 	}
 
 	private fetchMe(): void {
-		const http = this._http();
-		if (!http) {
-			return;
-		}
-
 		this.isFetching.set(true);
-		http.post('/api/user/fetchme', {}, (resp: unknown) => {
-			this.isFetching.set(false);
-			this.applyUser(resp);
-		}, {
-			err: () => {
+		this._http.post(
+			'/api/user/fetchme',
+			{},
+			(resp: unknown) => {
 				this.isFetching.set(false);
-				this.submitTone.set('error');
-				this.submitMessage.set('Не вдалося завантажити дані профілю.');
+				this.applyUser(resp);
 			},
-		});
+			{
+				err: () => {
+					this.isFetching.set(false);
+					this.submitTone.set('error');
+					this.submitMessage.set('Не вдалося завантажити дані профілю.');
+				},
+			},
+		);
 	}
 
 	private applyUser(resp: unknown, fallback?: ProfileFormModel): void {
@@ -140,13 +122,5 @@ export class ProfileComponent {
 		}
 
 		return '';
-	}
-
-	private _http(): HttpService | null {
-		if (!isPlatformBrowser(this._platformId)) {
-			return null;
-		}
-
-		return this._injector.get(HttpService);
 	}
 }

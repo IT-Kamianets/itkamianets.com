@@ -1,0 +1,106 @@
+<section class="manage-sales">
+	<header class="manage-sales__header">
+		<div>
+			<p class="manage-sales__eyebrow">Admin workspace</p>
+			<h1 class="manage-sales__title">Manage sales</h1>
+			<p class="manage-sales__subtitle">Create, update and delete sales records from API.</p>
+		</div>
+
+		<div class="manage-sales__header-actions">
+			<a pButton routerLink="/sales" class="manage-sales__button manage-sales__button--ghost">
+				Open sales list
+			</a>
+			<button pButton type="button" class="manage-sales__button manage-sales__button--primary" (click)="openCreate()">
+				Create sale
+			</button>
+		</div>
+	</header>
+
+	<div class="manage-sales__card">
+		<p-table [value]="sales()" [dataKey]="'_id'" [loading]="isLoading()" [rowHover]="true">
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Data preview</th>
+					<th>Actions</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-sale>
+				<tr>
+					<td>{{ sale.name || 'Untitled sale' }}</td>
+					<td>{{ sale.description || '—' }}</td>
+					<td><code>{{ dataPreview(sale.data) }}</code></td>
+					<td class="manage-sales__actions">
+						<a
+							pButton
+							[routerLink]="['/sale']"
+							[queryParams]="{ id: sale._id }"
+							class="manage-sales__button manage-sales__button--ghost"
+						>
+							View
+						</a>
+						<button pButton type="button" class="manage-sales__button manage-sales__button--ghost" (click)="openEdit(sale)">
+							Edit
+						</button>
+						<button pButton type="button" class="manage-sales__button manage-sales__button--danger" (click)="delete(sale)">
+							Delete
+						</button>
+					</td>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="4" class="manage-sales__empty">No sales yet.</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</div>
+
+	@if (apiError()) {
+		<p class="manage-sales__error">{{ apiError() }}</p>
+	}
+
+	<p-dialog
+		[visible]="isDialogOpen()"
+		(visibleChange)="onDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(96vw, 760px)' }"
+	>
+		<ng-template pTemplate="header">
+			<h2>{{ editingId() ? 'Edit sale' : 'Create sale' }}</h2>
+		</ng-template>
+
+		<div class="manage-sales__form">
+			<label class="manage-sales__field">
+				<span>Name</span>
+				<input type="text" [ngModel]="form().name" (ngModelChange)="setName($event)" placeholder="Black Friday Campaign" />
+			</label>
+
+			<label class="manage-sales__field">
+				<span>Description</span>
+				<textarea rows="3" [ngModel]="form().description" (ngModelChange)="setDescription($event)" placeholder="Seasonal campaign details"></textarea>
+			</label>
+
+			<label class="manage-sales__field">
+				<span>Data (JSON object)</span>
+				<textarea rows="12" [ngModel]="form().data" (ngModelChange)="setData($event)"></textarea>
+			</label>
+
+			@if (jsonError()) {
+				<p class="manage-sales__error">{{ jsonError() }}</p>
+			}
+
+			<div class="manage-sales__form-actions">
+				<button pButton type="button" class="manage-sales__button manage-sales__button--ghost" (click)="closeDialog()">
+					Cancel
+				</button>
+				<button pButton type="button" class="manage-sales__button manage-sales__button--primary" [disabled]="isSaving()" (click)="save()">
+					{{ editingId() ? 'Update sale' : 'Create sale' }}
+				</button>
+			</div>
+		</div>
+	</p-dialog>
+</section>

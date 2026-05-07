@@ -24,32 +24,19 @@ export class FooterComponent {
 
 	protected readonly navLinks = [
 		{ label: 'Головна', routerLink: '/' },
-		{ label: 'Послуги', routerLink: '/proposals' },
+		{ label: 'Послуги', routerLink: '/services' },
 		{ label: 'Проєкти', routerLink: '/projects' },
 		{ label: 'Квести', routerLink: '/quests' },
 		{ label: 'Команда', routerLink: '/team' },
 		{ label: 'Новини', routerLink: '/news' },
 		{ label: 'Мерч', routerLink: '/merch' },
+		{ label: 'CV Generation', routerLink: '/cv-generation' },
 	];
 
-	protected readonly serviceLinks = [
-		{
-			label: 'Агроіндустрія',
-			routerLink: '/proposals',
-			queryParams: { category: 'Агроіндустрія' },
-		},
-		{ label: 'Медицина', routerLink: '/proposals', queryParams: { category: 'Медицина' } },
-		{ label: 'Заклади', routerLink: '/proposals', queryParams: { category: 'Заклади' } },
-		{ label: 'Мистецтво', routerLink: '/proposals', queryParams: { category: 'Мистецтво' } },
-		{ label: 'Автомобілі', routerLink: '/proposals', queryParams: { category: 'Автомобілі' } },
-		{
-			label: 'Мода та одяг',
-			routerLink: '/proposals',
-			queryParams: { category: 'Мода та одяг' },
-		},
-		{ label: 'Туризм', routerLink: '/proposals', queryParams: { category: 'Туризм' } },
-		{ label: 'Спорт', routerLink: '/proposals', queryParams: { category: 'Спорт' } },
-		{ label: 'Освіта', routerLink: '/proposals', queryParams: { category: 'Освіта' } },
+	protected readonly serviceLinks: { label: string; routerLink: string; queryParams?: Record<string, string> }[] = [
+		{ label: 'IT Kamianets — базовий сайт', routerLink: '/services/it-kamianets' },
+		{ label: 'Web Art Work — розвиток сайту', routerLink: '/services/web-art-work' },
+		{ label: 'Всі послуги', routerLink: '/services' },
 	];
 
 	protected readonly socialLinks = [
