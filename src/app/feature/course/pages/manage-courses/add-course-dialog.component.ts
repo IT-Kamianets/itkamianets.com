@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { TextareaModule } from 'primeng/textarea';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { CourseService } from '../../course.service';
 
 @Component({
@@ -16,9 +17,11 @@ import { CourseService } from '../../course.service';
     DialogModule,
     ButtonModule,
     InputTextModule,
-    TextareaModule
+    ToastModule
   ],
+  providers: [MessageService],
   template: `
+    <p-toast></p-toast>
     <p-dialog
       [visible]="open()"
       (visibleChange)="open.set($event)"
@@ -39,6 +42,7 @@ import { CourseService } from '../../course.service';
             (change)="onFileChange($event)"
             accept="image/*"
             class="block w-full border rounded p-2"
+            [disabled]="isSubmitting()"
           />
 
           <div *ngIf="photoUrl" class="mt-2">
@@ -52,16 +56,17 @@ import { CourseService } from '../../course.service';
 
         <div>
           <label class="block font-semibold mb-1">Назва курсу</label>
-          <input pInputText [(ngModel)]="form.title" class="w-full" />
+          <input pInputText [(ngModel)]="form.title" class="w-full" [disabled]="isSubmitting()" />
         </div>
 
         <div>
           <label class="block font-semibold mb-1">Опис курсу</label>
-          <p-textarea
+          <textarea
             [(ngModel)]="form.description"
             rows="3"
-            class="w-full"
-          ></p-textarea>
+            class="w-full border rounded px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [disabled]="isSubmitting()"
+          ></textarea>
         </div>
 
         <div>
@@ -71,18 +76,19 @@ import { CourseService } from '../../course.service';
             [(ngModel)]="form.tags"
             class="w-full"
             placeholder="Введіть теги через кому"
+            [disabled]="isSubmitting()"
           />
         </div>
 
         <div class="flex gap-4">
           <div class="flex-1">
             <label class="block font-semibold mb-1">GitHub</label>
-            <input pInputText [(ngModel)]="form.github" class="w-full" />
+            <input pInputText [(ngModel)]="form.github" class="w-full" [disabled]="isSubmitting()" />
           </div>
 
           <div class="flex-1">
             <label class="block font-semibold mb-1">Вебсайт</label>
-            <input pInputText [(ngModel)]="form.website" class="w-full" />
+            <input pInputText [(ngModel)]="form.website" class="w-full" [disabled]="isSubmitting()" />
           </div>
         </div>
 
@@ -93,6 +99,7 @@ import { CourseService } from '../../course.service';
             [(ngModel)]="form.team"
             class="w-full"
             placeholder="Введіть імена через кому"
+            [disabled]="isSubmitting()"
           />
         </div>
       </div>
@@ -105,6 +112,7 @@ import { CourseService } from '../../course.service';
             label="Очистити"
             class="p-button-secondary"
             (click)="clear()"
+            [disabled]="isSubmitting()"
           ></button>
 
           <button
@@ -113,6 +121,8 @@ import { CourseService } from '../../course.service';
             label="Опублікувати"
             class="p-button-primary"
             (click)="submit()"
+            [loading]="isSubmitting()"
+            [disabled]="isSubmitting()"
           ></button>
         </div>
       </ng-template>
@@ -124,6 +134,7 @@ export class AddCourseDialogComponent {
   @Output() courseAdded = new EventEmitter<void>();
 
   open = signal(false);
+  isSubmitting = signal(false);
 
   photo: File | null = null;
   photoUrl: string | null = null;
@@ -138,6 +149,7 @@ export class AddCourseDialogComponent {
   };
 
   private courseService = inject(CourseService);
+  private messageService = inject(MessageService);
 
   show() {
     this.open.set(true);
@@ -179,6 +191,25 @@ export class AddCourseDialogComponent {
   }
 
   submit() {
+    // Валідація
+    if (!this.form.title?.trim()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Увага',
+        detail: 'Будь ласка, введіть назву курсу'
+      });
+      return;
+    }
+
+    if (!this.form.description?.trim()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Увага',
+        detail: 'Будь ласка, введіть опис курсу'
+      });
+      return;
+    }
+
     const data: any = {
       title: this.form.title,
       description: this.form.description,
@@ -198,10 +229,28 @@ export class AddCourseDialogComponent {
       photo: this.photoUrl
     };
 
-    this.courseService.createCourse(data).subscribe(() => {
-      this.courseAdded.emit();
-      this.closeDialog();
-      this.clear();
+    this.isSubmitting.set(true);
+    this.courseService.createCourse(data).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Успіх',
+          detail: 'Курс успішно додано!'
+        });
+        this.courseAdded.emit();
+        this.closeDialog();
+        this.clear();
+        this.isSubmitting.set(false);
+      },
+      error: (err) => {
+        console.error('Помилка при додаванні курсу:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Помилка',
+          detail: err?.error?.message || 'Не вдалося додати курс. Спробуйте ще раз.'
+        });
+        this.isSubmitting.set(false);
+      }
     });
   }
 }

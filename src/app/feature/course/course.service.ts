@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { HttpService } from '@wawjs/ngx-http';
 
 const API_BASE = '/api/itcourse';
@@ -9,7 +9,9 @@ export class CourseService {
   constructor(private http: HttpService) {}
 
   getCourses(): Observable<any> {
-    return this.http.get(`${API_BASE}/get`);
+    return this.http.get(`${API_BASE}/get`).pipe(
+      tap(res => console.log('getCourses response:', res))
+    );
   }
 
   fetchCourse(id: string): Observable<any> {
@@ -17,7 +19,12 @@ export class CourseService {
   }
 
   createCourse(data: any): Observable<any> {
-    return this.http.post(`${API_BASE}/create`, { data });
+    console.log('Creating course with data:', data);
+    return this.http.post(`${API_BASE}/create`, { data }).pipe(
+      tap(res => {
+        console.log('createCourse response:', res);
+      })
+    );
   }
 
   updateCourse(id: string, data: any): Observable<any> {
