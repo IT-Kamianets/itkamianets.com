@@ -1,6 +1,6 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from 'wacom';
 import { UserService } from '../user/user.service';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class OrderService {
 				const mapped = items.map((item: any) => ({
 					...item,
 					...(item.data || {}),
-					originalData: item.data
+					originalData: item.data,
 				}));
 				this._orders.set(mapped);
 				return mapped;
@@ -61,18 +61,29 @@ export class OrderService {
 			_id: order._id,
 			data: {
 				...currentData,
-				status: order.status
-			}
+				status: order.status,
+			},
 		};
 		return this._http.post(`${this._basePath}/update`, payload).pipe(
 			map((item: any) => {
 				if (item) {
 					// Оновлюємо локальний список відразу для швидкості
-					this._orders.update(items => items.map(i => i._id === order._id ? { ...i, status: order.status, data: payload.data, originalData: payload.data } : i));
+					this._orders.update((items) =>
+						items.map((i) =>
+							i._id === order._id
+								? {
+										...i,
+										status: order.status,
+										data: payload.data,
+										originalData: payload.data,
+									}
+								: i,
+						),
+					);
 				}
 				return item;
 			}),
-			catchError(() => of(null))
+			catchError(() => of(null)),
 		);
 	}
 

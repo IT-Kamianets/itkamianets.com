@@ -91,6 +91,10 @@ export const serverRoutes: ServerRoute[] = [
 		renderMode: RenderMode.Server,
 	},
 	{
+		path: 'job/:id',
+		renderMode: RenderMode.Server,
+	},
+	{
 		path: 'sales',
 		renderMode: RenderMode.Client,
 	},

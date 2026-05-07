@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { HttpService } from '@wawjs/ngx-http';
 import { Observable, catchError, map, of } from 'rxjs';
-import { HttpService } from 'wacom';
 import { UserService } from '../user/user.service';
 import { MerchProduct } from './merch.interface';
 
@@ -57,7 +57,9 @@ export class MerchService {
 			map((item: unknown) => {
 				const product = item ? this._mapToProduct(item) : null;
 				if (product) {
-					this.products.update((items) => items.map((i) => (i._id === product._id ? product : i)));
+					this.products.update((items) =>
+						items.map((i) => (i._id === product._id ? product : i)),
+					);
 				}
 				return product;
 			}),
@@ -83,31 +85,36 @@ export class MerchService {
 				name: 'Чашка IT-Kamianets',
 				price: 250,
 				image: 'assets/Cup.png',
-				description: 'Керамічна чашка 330 мл з логотипом IT-Kamianets. Ідеальна для ранкової кави під час кодингу.',
+				description:
+					'Керамічна чашка 330 мл з логотипом IT-Kamianets. Ідеальна для ранкової кави під час кодингу.',
 			},
 			{
 				name: 'Футболка IT-Kamianets',
 				price: 550,
 				image: 'assets/T-shirt.png',
-				description: 'Бавовняна футболка чорного кольору з мінімалістичним принтом IT-Kamianets на грудях.',
+				description:
+					'Бавовняна футболка чорного кольору з мінімалістичним принтом IT-Kamianets на грудях.',
 			},
 			{
 				name: 'Худі IT-Kamianets',
 				price: 950,
 				image: 'assets/Skinny.png',
-				description: 'Тепле худі з капюшоном та вишитим логотипом IT-Kamianets. Ідеальне для холодних вечорів з кодом.',
+				description:
+					'Тепле худі з капюшоном та вишитим логотипом IT-Kamianets. Ідеальне для холодних вечорів з кодом.',
 			},
 			{
 				name: 'Кепка IT-Kamianets',
 				price: 350,
 				image: 'assets/Cap.png',
-				description: 'Стильна кепка з вишитим логотипом IT-Kamianets. Регульований розмір та 100% бавовна.',
+				description:
+					'Стильна кепка з вишитим логотипом IT-Kamianets. Регульований розмір та 100% бавовна.',
 			},
 			{
 				name: 'Шкарпетки IT-Kamianets',
 				price: 150,
 				image: 'assets/Socks.png',
-				description: 'Комплект з 3 пар шкарпеток з IT-принтами. Ідеальне для холодних вечорів з кодом. Розмір 39–45.',
+				description:
+					'Комплект з 3 пар шкарпеток з IT-принтами. Ідеальне для холодних вечорів з кодом. Розмір 39–45.',
 			},
 		];
 
