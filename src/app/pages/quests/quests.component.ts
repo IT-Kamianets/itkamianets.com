@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ProjectService } from '../../feature/project/project.service';
-import { ManagedProject } from '../../feature/project/project.interface';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Quest } from '../../feature/quest/quest.interface';
+import { QuestService } from '../../feature/quest/quest.service';
 
 @Component({
 	selector: 'app-quests',
@@ -10,35 +10,45 @@ import { ManagedProject } from '../../feature/project/project.interface';
 	styleUrl: './quests.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuestsComponent {
-	private readonly _projectService = inject(ProjectService);
+export class QuestsComponent implements OnInit {
+	private readonly _questService = inject(QuestService);
 
-	readonly quests = computed(() => this._projectService.projects());
+	readonly quests = this._questService.quests;
+	readonly isLoading = signal(true);
 
-	getImageSrc(quest: ManagedProject): string {
-		return quest.imageKind === 'upload' ? quest.image : `project/${quest.image}.png`;
+	async ngOnInit() {
+		await this._questService.loadAll();
+		this.isLoading.set(false);
 	}
 
-	getBadgeLabel(quest: ManagedProject): string {
+	trackByQuestId(index: number, quest: Quest): string {
+		return quest._id || String(index);
+	}
+
+	getBadgeLabel(quest: Quest): string {
 		switch (quest.category) {
-			case 'theme-tailwind':
-				return 'Tailwind';
-			case 'theme-bulma':
-				return 'Bulma';
-			case 'theme-bootstrap':
-				return 'Bootstrap';
+			case 'Освітній':
+				return 'Навчання';
+			case 'Технічний':
+				return 'Tech';
+			case 'Командний':
+				return 'Команда';
+			case 'Кар’єрний':
+				return 'Карʼєра';
+			case 'Творчий':
+				return 'Ідея';
 			default:
-				return 'Quest';
+				return quest.category;
 		}
 	}
 
-	getBadgeClass(quest: ManagedProject): string {
+	getBadgeClass(quest: Quest): string {
 		switch (quest.category) {
-			case 'theme-tailwind':
+			case 'Освітній':
 				return 'project-card__badge--tailwind';
-			case 'theme-bulma':
+			case 'Командний':
 				return 'project-card__badge--bulma';
-			case 'theme-bootstrap':
+			case 'Технічний':
 				return 'project-card__badge--bootstrap';
 			default:
 				return 'project-card__badge--custom';
