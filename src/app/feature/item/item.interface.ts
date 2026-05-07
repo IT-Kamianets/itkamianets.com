@@ -1,78 +1,33 @@
-export type ItemType =
-	| 'menu'
-	| 'gallery'
-	| 'news'
-	| 'landing'
-	| 'job'
-	| 'merch'
-	| 'other';
+export type ItemData = Record<string, unknown>;
 
-export interface ItemPricingOptions {
-	price?: number;
-	priceFrom?: number;
-	priceTo?: number;
-	currency?: string;
-}
-
-export interface ItemInventoryOptions {
-	quantity?: number;
-	unit?: string;
+export interface Item {
+	_id: string;
+	data: ItemData;
 }
 
 export interface ItemOptions {
-	pricing?: ItemPricingOptions;
-	inventory?: ItemInventoryOptions;
 	menu?: {
 		exact?: boolean;
 		external?: boolean;
 		target?: '_self' | '_blank';
 	};
-	gallery?: {
-		alt?: string;
-		caption?: string;
-	};
-	news?: {
-		category?: string;
-		date?: string;
-	};
-	landing?: {
-		section?: string;
-		tags?: string[];
-	};
+	[key: string]: unknown;
 }
 
-export interface ItemBase {
+export interface MenuItem {
 	_id: string;
-	type: ItemType;
-	title: string;
-	summary?: string;
-	image?: string;
-	href?: string;
-	published?: boolean;
-	order?: number;
-	options?: ItemOptions;
-	name?: string;
-}
-
-export interface MenuItem extends ItemBase {
 	type: 'menu';
+	title: string;
 	href: string;
+	options?: ItemOptions;
 }
 
-export interface GalleryItem extends ItemBase {
-	type: 'gallery';
-	image: string;
-}
-
-export interface NewsItem extends ItemBase {
+export interface NewsItem {
+	_id: string;
 	type: 'news';
+	title: string;
 	excerpt: string;
+	image: string;
 	date: string;
 	category: 'events' | 'updates' | 'articles';
 }
-
-export interface LandingItem extends ItemBase {
-	type: 'landing';
-}
-
-export interface Item extends ItemBase {}

@@ -20,7 +20,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
 		role: 'Head of Team / Full-stack Developer',
 		avatar: 'Honchar_Denys',
 		internshipDates: 'Вер 2024 – Теперішній час',
-		university: 'WebArtWork',
+		university: 'Web Art Work',
 		isHead: true,
 		socials: { linkedin: '#', github: '#', upwork: '#' },
 	},

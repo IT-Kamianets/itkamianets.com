@@ -66,10 +66,10 @@
 
 		<!-- Products Grid -->
 		<div class="merch-grid">
-			@for (p of products; track p.id) {
+			@for (p of products(); track p._id) {
 				<div class="merch-card">
 					<div class="merch-card__img">
-						<img [src]="p.image + '.png'" [alt]="p.name" loading="lazy" />
+						<img [src]="p.image.startsWith('data:') ? p.image : p.image + '.png'" [alt]="p.name" loading="lazy" />
 					</div>
 					<div class="merch-card__body">
 						<h3 class="merch-card__name">{{ p.name }}</h3>
@@ -125,10 +125,10 @@
 					<p class="cart-panel__empty">Кошик порожній</p>
 				} @else {
 					<div class="cart-panel__items">
-						@for (item of cart(); track item.product.id) {
+						@for (item of cart(); track item.product._id) {
 							<div class="cart-item">
 								<img
-									[src]="item.product.image + '.png'"
+									[src]="item.product.image.startsWith('data:') ? item.product.image : item.product.image + '.png'"
 									[alt]="item.product.name"
 									class="cart-item__img"
 								/>
@@ -141,21 +141,21 @@
 								<div class="cart-item__controls">
 									<button
 										class="cart-item__btn"
-										(click)="updateQuantity(item.product.id, -1)"
+										(click)="updateQuantity(item.product._id, -1)"
 									>
 										−
 									</button>
 									<span class="cart-item__qty">{{ item.quantity }}</span>
 									<button
 										class="cart-item__btn"
-										(click)="updateQuantity(item.product.id, 1)"
+										(click)="updateQuantity(item.product._id, 1)"
 									>
 										+
 									</button>
 								</div>
 								<button
 									class="cart-item__remove"
-									(click)="removeFromCart(item.product.id)"
+									(click)="removeFromCart(item.product._id)"
 								>
 									<svg
 										width="16"

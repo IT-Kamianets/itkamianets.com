@@ -1,101 +1,79 @@
-<section class="manage-merch">
-	<div class="manage-merch__card">
-		<header class="manage-merch__header">
-			<div>
-				<p class="manage-merch__eyebrow">Manage</p>
-				<h1 class="manage-merch__title">Merch Management</h1>
-			</div>
-			<button class="manage-merch__button" (click)="toggleForm()">
-				<span class="material-symbols-outlined">{{ isFormVisible() ? 'close' : 'add' }}</span>
-				{{ isFormVisible() && editingId() === null ? 'Close Form' : 'Add Merch' }}
-			</button>
-		</header>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Керування мерчем</h1>
+        <p-button label="Додати товар" icon="pi pi-plus" (onClick)="showAddDialog()"></p-button>
+    </div>
 
-		@if (isFormVisible()) {
-			<div class="manage-merch__add-form" [class.manage-merch__add-form--editing]="editingId() !== null">
-				<h2 class="manage-merch__subtitle">
-					{{ editingId() !== null ? 'Edit Item' : 'Add New Item' }}
-				</h2>
-				<div class="manage-merch__form-grid">
-					<div class="manage-merch__field">
-						<label for="name">Name</label>
-						<input id="name" type="text" [(ngModel)]="newItem.name" placeholder="Item name" />
-					</div>
-					<div class="manage-merch__field">
-						<label for="price">Price (₴)</label>
-						<input id="price" type="number" [(ngModel)]="newItem.price" placeholder="0" />
-					</div>
-					<div class="manage-merch__field">
-						<label for="image">Photo</label>
-						<div class="manage-merch__file-input">
-							<input id="image" type="file" (change)="onFileSelected($event)" accept="image/*" />
-							@if (newItem.image) {
-								<div class="manage-merch__form-preview">
-									<img [src]="newItem.image" alt="Preview" />
-								</div>
-							}
-						</div>
-					</div>
-					<div class="manage-merch__field manage-merch__field--full">
-						<label for="description">Description</label>
-						<textarea
-							id="description"
-							[(ngModel)]="newItem.description"
-							placeholder="Brief description"
-						></textarea>
-					</div>
-					<div class="manage-merch__form-actions">
-						<button class="manage-merch__button" (click)="saveItem()" [disabled]="!newItem.name || newItem.price <= 0">
-							{{ editingId() !== null ? 'Save Changes' : 'Create Merch' }}
-						</button>
-						<button class="manage-merch__button manage-merch__button--outline" (click)="cancelEdit()">
-							Cancel
-						</button>
-					</div>
-				</div>
-			</div>
-		}
+    <p-table [value]="products()" [responsiveLayout]="'scroll'" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Зображення</th>
+                <th>Назва</th>
+                <th>Ціна</th>
+                <th>Опис</th>
+                <th style="width: 10rem">Дії</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <img [src]="product.image" [alt]="product.name" class="w-16 h-16 object-contain rounded border" />
+                </td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }} грн</td>
+                <td>{{ product.description }}</td>
+                <td>
+                    <div class="flex gap-2">
+                        <p-button icon="pi pi-pencil" severity="secondary" [rounded]="true" [text]="true" (onClick)="startEdit(product)"></p-button>
+                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="removeItem(product.id)"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center p-4">Товари не знайдені.</td>
+            </tr>
+        </ng-template>
+    </p-table>
 
-		<div class="manage-merch__table-container">
-			<table class="manage-merch__table">
-				<thead>
-					<tr>
-						<th>Image</th>
-						<th>Name</th>
-						<th>Price</th>
-						<th>Description</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@for (item of products(); track item.id) {
-						<tr [class.manage-merch__row--active]="editingId() === item.id">
-							<td>
-								<div class="manage-merch__img-preview">
-									<img [src]="item.image" [alt]="item.name" />
-								</div>
-							</td>
-							<td>{{ item.name }}</td>
-							<td>{{ item.price }} ₴</td>
-							<td>{{ item.description }}</td>
-							<td>
-								<div class="manage-merch__actions">
-									<button class="manage-merch__edit-btn" (click)="startEdit(item)" title="Edit">
-										<span class="material-symbols-outlined">edit</span>
-									</button>
-									<button class="manage-merch__delete-btn" (click)="removeItem(item.id)" title="Delete">
-										<span class="material-symbols-outlined">delete</span>
-									</button>
-								</div>
-							</td>
-						</tr>
-					} @empty {
-						<tr>
-							<td colspan="5" class="manage-merch__empty">No items found.</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-	</div>
-</section>
+    <p-dialog 
+        [header]="editingId() ? 'Редагувати товар' : 'Додати новий товар'" 
+        [(visible)]="isFormVisible" 
+        [modal]="true" 
+        [style]="{ width: '450px' }" 
+        (onHide)="cancelEdit()"
+    >
+        <div class="flex flex-col gap-4 pt-2">
+            <div class="flex flex-col gap-2">
+                <label for="name" class="font-semibold">Назва</label>
+                <input pInputText id="name" [(ngModel)]="newItem.name" placeholder="Введіть назву" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="price" class="font-semibold">Ціна (грн)</label>
+                <input pInputText id="price" type="number" [(ngModel)]="newItem.price" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="description" class="font-semibold">Опис</label>
+                <textarea pTextarea id="description" [(ngModel)]="newItem.description" rows="3" [autoResize]="true"></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="font-semibold">Зображення</label>
+                <div class="flex items-center gap-4">
+                    @if (newItem.image) {
+                        <img [src]="newItem.image" class="w-20 h-20 object-contain rounded border" />
+                    }
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*" class="text-sm" />
+                </div>
+            </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="cancelEdit()"></p-button>
+            <p-button label="Зберегти" icon="pi pi-check" (onClick)="saveItem()" [disabled]="!newItem.name || newItem.price <= 0"></p-button>
+        </ng-template>
+    </p-dialog>
+</div>

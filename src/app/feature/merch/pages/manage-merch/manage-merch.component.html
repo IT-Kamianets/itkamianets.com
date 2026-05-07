@@ -1,0 +1,242 @@
+<section class="merch-manage">
+	<div class="merch-manage__topbar">
+		<div class="merch-manage__heading">
+			<h1 class="merch-manage__title">Merch</h1>
+			<p class="merch-manage__subtitle">
+				Керуйте каталогом мерчу: додавайте нові товари, редагуйте ціни та опис.
+			</p>
+		</div>
+		<div class="merch-manage__actions">
+			<button pButton type="button" class="merch-manage__add-btn" (click)="openCreateDialog()">
+				Додати товар
+			</button>
+		</div>
+	</div>
+
+	@if (toasts().length) {
+		<div class="merch-manage__toast-stack" role="status" aria-live="polite">
+			@for (toast of toasts(); track toast.id) {
+				<div class="merch-manage__toast">{{ toast.message }}</div>
+			}
+		</div>
+	}
+
+	@if (apiError()) {
+		<p class="merch-form__error merch-manage__api-error">{{ apiError() }}</p>
+	}
+
+	<section class="publications">
+		<p-table [value]="products()" [dataKey]="'_id'" styleClass="publications__p-table">
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Фото</th>
+					<th>Назва</th>
+					<th>Ціна</th>
+					<th>Опис</th>
+					<th>Дії</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-product>
+				<tr>
+					<td>
+						<div class="publications__photo-cell">
+							<button type="button" class="publications__photo-button" (click)="openPhotoPreview(product)">
+								<img [src]="product.image || 'assets/logo.png'" [alt]="product.name" class="publications__photo" />
+							</button>
+						</div>
+					</td>
+					<td>{{ product.name }}</td>
+					<td>
+						<span class="font-bold text-[var(--c-primary)]">{{ product.price }} грн</span>
+					</td>
+					<td class="publications__description">{{ product.description }}</td>
+					<td>
+						<div class="publications__actions">
+							<button type="button" class="table-btn" (click)="openProductPreview(product)">
+								<span class="material-symbols-outlined table-btn__icon" aria-hidden="true">visibility</span>
+								Перегляд
+							</button>
+							<button type="button" class="table-btn" (click)="openEdit(product)">
+								<span class="material-symbols-outlined table-btn__icon" aria-hidden="true">edit</span>
+								Редагувати
+							</button>
+							<button type="button" class="table-btn table-btn--danger" (click)="askDelete(product)">
+								<span class="material-symbols-outlined table-btn__icon" aria-hidden="true">delete</span>
+								Видалити
+							</button>
+						</div>
+					</td>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="5" class="publications__empty">Товарів поки що немає.</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</section>
+
+	<p-dialog
+		[visible]="isCreateDialogOpen()"
+		(visibleChange)="onCreateDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(720px, 96vw)' }"
+		styleClass="merch-dialog"
+	>
+		<ng-template pTemplate="header">
+			<h2 class="merch-dialog__title">Додати товар</h2>
+		</ng-template>
+
+		<form class="merch-form merch-form--dialog" [formGroup]="createForm" (ngSubmit)="publishProduct()">
+			<div class="merch-form__grid">
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="merch-photo">Фото товару</label>
+					<label class="merch-form__file" for="merch-photo">
+						<input id="merch-photo" type="file" accept="image/*" (change)="onCreateImageChange($event)" />
+						<span class="merch-form__file-btn">Обрати фото</span>
+						<span class="merch-form__file-name">{{ createImageName() }}</span>
+					</label>
+					@if (createSubmitted() && createForm.controls.image.invalid) {
+						<p class="merch-form__error">Фото товару обов'язкове.</p>
+					}
+				</div>
+
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="merch-name">Назва товару</label>
+					<input id="merch-name" pInputText type="text" formControlName="name" />
+					@if (createSubmitted() && createForm.controls.name.invalid) {
+						<p class="merch-form__error">Вкажіть назву товару (мінімум 2 символи).</p>
+					}
+				</div>
+
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="merch-price">Ціна (грн)</label>
+					<input id="merch-price" pInputText type="number" formControlName="price" />
+					@if (createSubmitted() && createForm.controls.price.invalid) {
+						<p class="merch-form__error">Вкажіть коректну ціну.</p>
+					}
+				</div>
+
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="merch-description">Опис товару</label>
+					<textarea id="merch-description" rows="4" formControlName="description"></textarea>
+					@if (createSubmitted() && createForm.controls.description.invalid) {
+						<p class="merch-form__error">Опис обов'язковий (мінімум 10 символів).</p>
+					}
+				</div>
+			</div>
+
+			<div class="merch-form__actions">
+				<button pButton type="button" class="btn btn--ghost" (click)="clearCreateForm()">Очистити</button>
+				<button pButton type="button" class="btn btn--secondary" (click)="openDraftPreview()">Попередній перегляд</button>
+				<button pButton type="submit" class="btn btn--primary">Додати товар</button>
+			</div>
+		</form>
+	</p-dialog>
+
+	@if (isPreviewOpen() && previewProduct(); as product) {
+		<div class="overlay" (click)="closePreview()">
+			<div class="overlay__dialog overlay__dialog--preview" (click)="$event.stopPropagation()">
+				<button type="button" class="overlay__close" (click)="closePreview()">×</button>
+				<div class="merch-preview-card">
+					<div class="merch-preview-card__img">
+						<img [src]="product.image || 'assets/logo.png'" [alt]="product.name" />
+					</div>
+					<div class="merch-preview-card__body">
+						<h3 class="merch-preview-card__title">{{ product.name }}</h3>
+						<p class="merch-preview-card__desc">{{ product.description }}</p>
+						<div class="merch-preview-card__footer">
+							<span class="merch-preview-card__price">{{ product.price }} грн</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	@if (isPhotoPreviewOpen() && previewProduct()) {
+		<div class="overlay" (click)="closePhotoPreview()">
+			<div class="overlay__dialog overlay__dialog--photo" (click)="$event.stopPropagation()">
+				<button type="button" class="overlay__close" (click)="closePhotoPreview()">×</button>
+				<img [src]="previewImageSrc()" alt="Product photo" class="overlay__photo" />
+			</div>
+		</div>
+	}
+
+	<p-dialog
+		[visible]="isEditOpen()"
+		(visibleChange)="onEditDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(720px, 96vw)' }"
+		styleClass="merch-dialog"
+	>
+		<ng-template pTemplate="header">
+			<h2 class="merch-dialog__title">Редагування товару</h2>
+		</ng-template>
+
+		<form [formGroup]="editForm" class="merch-form merch-form--dialog" (ngSubmit)="saveEdit()">
+			<div class="merch-form__grid">
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="edit-photo">Фото товару</label>
+					<label class="merch-form__file" for="edit-photo">
+						<input id="edit-photo" type="file" accept="image/*" (change)="onEditImageChange($event)" />
+						<span class="merch-form__file-btn">Оновити фото</span>
+						<span class="merch-form__file-name">{{ editImageName() }}</span>
+					</label>
+					@if (editSubmitted() && editForm.controls.image.invalid) {
+						<p class="merch-form__error">Фото товару обов'язкове.</p>
+					}
+				</div>
+
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="edit-name">Назва товару</label>
+					<input id="edit-name" pInputText type="text" formControlName="name" />
+					@if (editSubmitted() && editForm.controls.name.invalid) {
+						<p class="merch-form__error">Вкажіть назву товару.</p>
+					}
+				</div>
+
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="edit-price">Ціна (грн)</label>
+					<input id="edit-price" pInputText type="number" formControlName="price" />
+					@if (editSubmitted() && editForm.controls.price.invalid) {
+						<p class="merch-form__error">Вкажіть ціну.</p>
+					}
+				</div>
+
+				<div class="merch-form__field merch-form__field--wide">
+					<label class="merch-form__label" for="edit-description">Опис товару</label>
+					<textarea id="edit-description" rows="4" formControlName="description"></textarea>
+					@if (editSubmitted() && editForm.controls.description.invalid) {
+						<p class="merch-form__error">Опис обов'язковий.</p>
+					}
+				</div>
+			</div>
+
+			<div class="merch-form__actions">
+				<button pButton type="button" class="btn btn--ghost" (click)="closeEdit()">Скасувати</button>
+				<button pButton type="button" class="btn btn--secondary" (click)="openEditDraftPreview()">Попередній перегляд</button>
+				<button pButton type="submit" class="btn btn--primary" [disabled]="editForm.pristine">Зберегти</button>
+			</div>
+		</form>
+	</p-dialog>
+
+	@if (deleteCandidate(); as product) {
+		<div class="overlay" (click)="cancelDelete()">
+			<div class="overlay__dialog overlay__dialog--confirm" (click)="$event.stopPropagation()">
+				<h3>Видалити товар?</h3>
+				<p>
+					Ви впевнені, що хочете видалити товар <strong>{{ product.name }}</strong>?
+				</p>
+				<div class="overlay__actions">
+					<button type="button" class="btn btn--ghost" (click)="cancelDelete()">Ні</button>
+					<button type="button" class="btn btn--danger" (click)="confirmDelete()">Так, видалити</button>
+				</div>
+			</div>
+		</div>
+	}
+</section>

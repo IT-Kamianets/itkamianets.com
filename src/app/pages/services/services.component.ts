@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiceService } from '../../feature/service/service.service';
 
@@ -11,16 +11,27 @@ import { ServiceService } from '../../feature/service/service.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicesComponent {
-	private readonly serviceService = inject(ServiceService);
-	private readonly router = inject(Router);
+	private readonly _serviceService = inject(ServiceService);
+	private readonly _router = inject(Router);
 
-	readonly services = this.serviceService.services;
+	readonly categories = this._serviceService.categories;
 
-	getProviderAvatar(avatar: string): string {
-		return `developer/${avatar}.png`;
+	/** Set of collapsed category IDs */
+	private readonly _collapsed = signal<Set<string>>(new Set());
+
+	isCollapsed(id: string): boolean {
+		return this._collapsed().has(id);
+	}
+
+	toggleCategory(id: string): void {
+		this._collapsed.update((set) => {
+			const next = new Set(set);
+			next.has(id) ? next.delete(id) : next.add(id);
+			return next;
+		});
 	}
 
 	goToDetail(id: string): void {
-		this.router.navigate(['/services', id]);
+		this._router.navigate(['/services', id]);
 	}
 }

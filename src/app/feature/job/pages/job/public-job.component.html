@@ -1,0 +1,120 @@
+<div class="job-detail-page bg-slate-50 dark:bg-slate-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <a routerLink="/jobs" class="inline-flex items-center text-sm font-bold text-[var(--c-primary)] hover:underline mb-8 gap-2">
+            <span class="pi pi-arrow-left text-sm"></span>
+            Назад до всіх вакансій
+        </a>
+
+        @if (job(); as current) {
+            <div class="bg-[var(--c-bg-secondary)] rounded-[3rem] border border-[var(--c-border)] overflow-hidden shadow-sm">
+                <!-- Header Section -->
+                @if (current.preview) {
+                    <div class="relative h-64 sm:h-80 w-full overflow-hidden bg-[var(--c-bg-primary)]">
+                        <img [src]="current.preview" [alt]="current.title" class="h-full w-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-secondary)] via-[var(--c-bg-secondary)]/20 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8 sm:p-12">
+                            <p-tag [severity]="current.status === 'active' ? 'success' : 'danger'" [value]="current.status === 'active' ? 'Активна' : 'Закрита'" class="mb-3"></p-tag>
+                            <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight drop-shadow-lg">
+                                {{ current.title }}
+                            </h1>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="p-8 sm:p-12 border-b border-[var(--c-border)]">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                            <div>
+                                <p-tag [severity]="current.status === 'active' ? 'success' : 'danger'" [value]="current.status === 'active' ? 'Активна' : 'Закрита'" class="mb-4"></p-tag>
+                                <h1 class="text-3xl sm:text-5xl font-black text-[var(--c-text-secondary)] leading-tight mt-2">
+                                    {{ current.title }}
+                                </h1>
+                            </div>
+                            @if (current.status === 'active') {
+                                <p-button label="Відгукнутися" icon="pi pi-send" (onClick)="openApplyModal()" size="large"></p-button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Content Section -->
+                <div class="p-8 sm:p-12 space-y-12">
+                    <!-- Requirements -->
+                    @if (current.requirements && current.requirements.length > 0) {
+                        <div>
+                            <h3 class="text-sm font-black uppercase tracking-widest text-[var(--c-text-muted)] mb-4">Вимоги</h3>
+                            <div class="flex flex-wrap gap-2">
+                                @for (req of current.requirements; track req) {
+                                    <span class="px-4 py-2 bg-[var(--c-bg-primary)] border border-[var(--c-border)] rounded-xl text-sm font-bold text-[var(--c-text-secondary)]">
+                                        {{ req }}
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Description -->
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-[var(--c-text-muted)] mb-4">Опис вакансії</h3>
+                        <div class="prose prose-lg dark:prose-invert max-w-none text-[var(--c-text-secondary)]" [innerHTML]="current.description"></div>
+                    </div>
+                </div>
+
+                <!-- Footer CTA -->
+                @if (current.status === 'active') {
+                    <div class="p-8 sm:p-12 bg-[var(--c-bg-primary)]/50 border-t border-[var(--c-border)] text-center">
+                        <h2 class="text-2xl font-black mb-4">Готові приєднатися?</h2>
+                        <p class="text-[var(--c-text-muted)] mb-8 max-w-md mx-auto font-medium">
+                            Ми шукаємо талановитих людей, які хочуть розвивати IT-спільноту нашого міста.
+                        </p>
+                        <p-button label="Подати заявку зараз" (onClick)="openApplyModal()" severity="primary" size="large" [style]="{width: '100%', maxWidth: '300px'}"></p-button>
+                    </div>
+                }
+            </div>
+        } @else {
+            <div class="flex flex-col items-center justify-center py-32">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--c-primary)]"></div>
+                <p class="mt-4 text-[var(--c-text-muted)] font-bold">Завантаження деталей вакансії...</p>
+            </div>
+        }
+    </div>
+
+    <!-- Apply Modal -->
+    <p-dialog [(visible)]="isApplying" header="Подати заявку" [modal]="true" [style]="{width: '35vw'}" [draggable]="false" [resizable]="false">
+        <div class="flex flex-col gap-4 py-4">
+            <div class="flex flex-col gap-2">
+                <label for="name" class="font-bold">Ваше ім'я</label>
+                <input pInputText id="name" [(ngModel)]="proposal.candidateName" placeholder="Іван Іванов" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="email" class="font-bold">Email для зв'язку</label>
+                <input pInputText id="email" [(ngModel)]="proposal.email" placeholder="ivan@example.com" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="phone" class="font-bold">Телефон (необов'язково)</label>
+                <input pInputText id="phone" [(ngModel)]="proposal.phone" placeholder="+380..." />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="cv" class="font-bold">Посилання на CV / Портфоліо</label>
+                <input pInputText id="cv" [(ngModel)]="proposal.cvUrl" placeholder="https://linkedin.com/in/..." />
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="message" class="font-bold">Супровідний текст (необов'язково)</label>
+                <textarea pInputTextarea id="message" [(ngModel)]="proposal.message" rows="4" placeholder="Чому саме ви?"></textarea>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button label="Скасувати" (onClick)="closeApplyModal()" [text]="true" severity="secondary"></p-button>
+            <p-button label="Відправити" icon="pi pi-check" (onClick)="submitApplication()" [loading]="isSending()" [disabled]="!proposal.candidateName || !proposal.email"></p-button>
+        </ng-template>
+    </p-dialog>
+
+    <!-- Success Message -->
+    @if (isSubmitted()) {
+        <div class="fixed bottom-10 right-10 z-50">
+            <p-message severity="success" text="Вашу заявку успішно надіслано! Ми зв'яжемося з вами найближчим часом."></p-message>
+        </div>
+    }
+</div>

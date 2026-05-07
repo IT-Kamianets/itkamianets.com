@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { CommonModule } from '@angular/common';
 
 interface MerchItem {
 	id: number;
@@ -10,7 +16,15 @@ interface MerchItem {
 }
 
 @Component({
-	imports: [FormsModule],
+	imports: [
+		CommonModule,
+		FormsModule,
+		TableModule,
+		DialogModule,
+		ButtonModule,
+		InputTextModule,
+		TextareaModule
+	],
 	templateUrl: './merch.component.html',
 	styleUrl: './merch.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,13 +57,9 @@ export class MerchComponent {
 		image: '',
 	};
 
-	toggleForm() {
-		if (this.isFormVisible() && this.editingId() === null) {
-			this.isFormVisible.set(false);
-		} else {
-			this.cancelEdit();
-			this.isFormVisible.set(true);
-		}
+	showAddDialog() {
+		this.cancelEdit();
+		this.isFormVisible.set(true);
 	}
 
 	onFileSelected(event: Event) {
@@ -65,7 +75,6 @@ export class MerchComponent {
 	}
 
 	startEdit(item: MerchItem) {
-		this.isFormVisible.set(true);
 		this.editingId.set(item.id);
 		this.newItem = {
 			name: item.name,
@@ -73,7 +82,7 @@ export class MerchComponent {
 			description: item.description,
 			image: item.image,
 		};
-		window.scrollTo({ top: 0, behavior: 'smooth' });
+		this.isFormVisible.set(true);
 	}
 
 	cancelEdit() {

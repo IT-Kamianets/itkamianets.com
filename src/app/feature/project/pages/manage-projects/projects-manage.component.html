@@ -13,8 +13,12 @@
 		</div>
 	</div>
 
-	@if (toastMessage()) {
-		<div class="projects-manage__toast" role="status" aria-live="polite">{{ toastMessage() }}</div>
+	@if (toasts().length) {
+		<div class="projects-manage__toast-stack" role="status" aria-live="polite">
+			@for (toast of toasts(); track toast.id) {
+				<div class="projects-manage__toast">{{ toast.message }}</div>
+			}
+		</div>
 	}
 
 	@if (apiError()) {
@@ -436,8 +440,9 @@
 			</div>
 
 			<div class="project-form__actions">
-				<button type="button" class="btn btn--ghost" (click)="closeEdit()">Скасувати</button>
-				<button type="submit" class="btn btn--primary">Зберегти</button>
+				<button pButton type="button" class="btn btn--ghost" (click)="closeEdit()">Скасувати</button>
+				<button pButton type="button" class="btn btn--secondary" (click)="openEditDraftPreview()">Попередній перегляд</button>
+				<button pButton type="submit" class="btn btn--primary" [disabled]="editForm.pristine">Зберегти</button>
 			</div>
 		</form>
 	</p-dialog>
