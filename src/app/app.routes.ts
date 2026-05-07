@@ -44,7 +44,7 @@ export const routes: Routes = [
 			{
 				path: 'salaries',
 				loadComponent: () =>
-				import('./pages/salaries/salaries.component').then((m) => m.SalariesComponent ),
+					import('./pages/salaries/salaries.component').then((m) => m.SalariesComponent),
 			},
 			{
 				path: 'hackathon',
@@ -247,7 +247,7 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				data: { title: 'Merch' },
 				loadComponent: () =>
-					import('./pages/manage/merch/merch.component').then((m) => m.MerchComponent),
+					import('./feature/merch/pages/manage-merch/manage-merch.component').then((m) => m.ManageMerchComponent),
 			},
 			{
 				path: 'cv-generation',
@@ -265,6 +265,16 @@ export const routes: Routes = [
 					import('./feature/company/pages/manage-companies/manage-companies.component').then(
 						(m) => m.ManageCompaniesComponent,
 					),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/order/manage.routes').then((m) => m.routes),
+			},
+			{
+				path: '',
+				loadChildren: () =>
+					import('./feature/article/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
