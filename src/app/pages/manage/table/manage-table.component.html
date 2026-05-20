@@ -1,0 +1,377 @@
+<section class="manage-table-page">
+	<header class="manage-table-page__hero">
+		<div>
+			<p class="manage-table-page__eyebrow">Manage workspace</p>
+			<h1 class="manage-table-page__title">Content Table</h1>
+			<p class="manage-table-page__subtitle">
+				Робоча сторінка для керування generic items у трьох режимах: dialog edit, inline
+				excel та повний JSON array.
+			</p>
+		</div>
+
+		<div class="manage-table-page__actions">
+			<button
+				type="button"
+				class="manage-table-page__button manage-table-page__button--ghost"
+				(click)="reload()"
+				[disabled]="isLoading() || isSaving()"
+			>
+				Reload
+			</button>
+		</div>
+	</header>
+
+	<nav class="manage-table-page__modes" aria-label="Table view mode">
+		<button
+			type="button"
+			class="manage-table-page__mode"
+			[class.manage-table-page__mode--active]="mode() === 'simple'"
+			(click)="setMode('simple')"
+		>
+			Simple
+		</button>
+		<button
+			type="button"
+			class="manage-table-page__mode"
+			[class.manage-table-page__mode--active]="mode() === 'excel'"
+			(click)="setMode('excel')"
+		>
+			Excel
+		</button>
+		<button
+			type="button"
+			class="manage-table-page__mode"
+			[class.manage-table-page__mode--active]="mode() === 'textarea'"
+			(click)="setMode('textarea')"
+		>
+			JSON
+		</button>
+	</nav>
+
+	@if (statusMessage()) {
+		<p
+			class="manage-table-page__notice"
+			[class.manage-table-page__notice--success]="statusTone() === 'success'"
+			[class.manage-table-page__notice--error]="statusTone() === 'error'"
+			[class.manage-table-page__notice--info]="statusTone() === 'info'"
+		>
+			{{ statusMessage() }}
+		</p>
+	}
+
+	@if (isLoading()) {
+		<p class="manage-table-page__meta">Loading records...</p>
+	} @else {
+		<p class="manage-table-page__meta">
+			Loaded {{ rows().length }} items.
+			@if (mode() === 'excel') {
+				<span> Inline changes pending: {{ excelDirtyCount() }}.</span>
+			}
+		</p>
+	}
+
+	@if (mode() === 'simple') {
+		<div class="manage-table-page__panel">
+			<div class="manage-table-page__panel-topbar">
+				<div>
+					<h2>Simple table</h2>
+					<p>
+						Оновлює title/type/slug/published для існуючих item records через dialog
+						edit.
+					</p>
+				</div>
+
+				<div class="manage-table-page__panel-actions">
+					<button
+						type="button"
+						class="manage-table-page__button manage-table-page__button--primary"
+						(click)="openCreateDialog()"
+						[disabled]="!canMutate()"
+					>
+						Add new item
+					</button>
+				</div>
+			</div>
+
+			@if (!hasRows()) {
+				<div class="manage-table-page__empty-state">
+					<p>Поки що немає записів. Додай новий item через кнопку біля таблиці.</p>
+				</div>
+			}
+
+			<app-table
+				[mode]="'simple'"
+				[columns]="simpleColumns"
+				[rows]="rows()"
+				[showDelete]="true"
+				[dialogTitle]="'Edit item record'"
+				[emptyMessage]="'No items available yet.'"
+				(rowSave)="handleSimpleSave($event)"
+				(rowDelete)="handleSimpleDelete($event)"
+			/>
+		</div>
+	}
+
+	@if (mode() === 'excel') {
+		<div class="manage-table-page__panel">
+			<div class="manage-table-page__panel-topbar">
+				<div>
+					<h2>Excel inline table</h2>
+					<p>
+						Редагує common fields напряму в таблиці. Після змін натисніть зберегти, щоб
+						відправити batch update в API.
+					</p>
+				</div>
+
+				<div class="manage-table-page__panel-actions">
+					<button
+						type="button"
+						class="manage-table-page__button manage-table-page__button--primary"
+						(click)="openCreateDialog()"
+						[disabled]="!canMutate()"
+					>
+						Add new item
+					</button>
+					<button
+						type="button"
+						class="manage-table-page__button manage-table-page__button--ghost"
+						(click)="saveExcelChanges()"
+						[disabled]="!canMutate() || !excelDirtyCount()"
+					>
+						Save inline changes
+					</button>
+				</div>
+			</div>
+
+			@if (!excelDraftRows().length) {
+				<div class="manage-table-page__empty-state">
+					<p>Таблиця порожня. Додай новий item через кнопку біля таблиці.</p>
+				</div>
+			}
+
+			<app-table
+				[mode]="'excel'"
+				[columns]="excelColumns"
+				[rows]="excelDraftRows()"
+				[emptyMessage]="'No items available yet.'"
+				(rowsChange)="handleExcelRowsChange($event)"
+				(cellChange)="handleExcelCellChange($event)"
+			/>
+		</div>
+	}
+
+	<p-dialog
+		[visible]="isCreateDialogOpen()"
+		(visibleChange)="onCreateDialogVisibleChange($event)"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(640px, 96vw)' }"
+		styleClass="manage-table-page__dialog"
+	>
+		<ng-template pTemplate="header">
+			<h3 class="manage-table-page__dialog-title">Add new item</h3>
+		</ng-template>
+
+		<form
+			class="manage-table-page__form"
+			(submit)="submitCreateDialog(); $event.preventDefault()"
+		>
+			<div class="manage-table-page__form-grid">
+				<label class="manage-table-page__field">
+					<span class="manage-table-page__label">Title</span>
+					<input
+						type="text"
+						class="manage-table-page__input"
+						[ngModel]="createDraft().title"
+						(ngModelChange)="updateCreateDraft('title', $event)"
+						name="create-title"
+						required
+					/>
+				</label>
+
+				<label class="manage-table-page__field">
+					<span class="manage-table-page__label">Type</span>
+					<input
+						type="text"
+						class="manage-table-page__input"
+						[ngModel]="createDraft().type"
+						(ngModelChange)="updateCreateDraft('type', $event)"
+						name="create-type"
+					/>
+				</label>
+
+				<label class="manage-table-page__field manage-table-page__field--wide">
+					<span class="manage-table-page__label">Slug</span>
+					<input
+						type="text"
+						class="manage-table-page__input"
+						[ngModel]="createDraft().slug"
+						(ngModelChange)="updateCreateDraft('slug', $event)"
+						name="create-slug"
+					/>
+				</label>
+
+				<label class="manage-table-page__checkbox">
+					<input
+						type="checkbox"
+						[ngModel]="createDraft().published"
+						(ngModelChange)="updateCreateDraft('published', $event)"
+						name="create-published"
+					/>
+					<span>Published</span>
+				</label>
+
+				<label class="manage-table-page__field manage-table-page__field--wide">
+					<span class="manage-table-page__label">Extra data (JSON)</span>
+					<textarea
+						class="manage-table-page__input manage-table-page__textarea"
+						[ngModel]="createDraft().extraDataJson"
+						(ngModelChange)="updateCreateDraft('extraDataJson', $event)"
+						name="create-extra-data"
+						rows="7"
+						placeholder='{"image": "/assets/example.jpg", "category": "news"}'
+					></textarea>
+					<small class="manage-table-page__hint">
+						Необовʼязково. Це збережеться в <code>item.data</code> і буде видно в Data
+						preview.
+					</small>
+				</label>
+			</div>
+
+			<div class="manage-table-page__form-actions">
+				<button
+					type="button"
+					class="manage-table-page__button manage-table-page__button--ghost"
+					(click)="closeCreateDialog()"
+				>
+					Cancel
+				</button>
+				<button
+					type="submit"
+					class="manage-table-page__button manage-table-page__button--primary"
+					[disabled]="!canMutate()"
+				>
+					Create item
+				</button>
+			</div>
+		</form>
+	</p-dialog>
+
+	@if (mode() === 'textarea') {
+		<div class="manage-table-page__panel">
+			<div class="manage-table-page__panel-topbar">
+				<div>
+					<h2>JSON array editor</h2>
+					<p>
+						Можна вставляти або масив обʼєктів, або один JSON object. Також
+						підтримується формат
+						<code>{{ '{ "_id"?: string, "data": { ... } }' }}</code
+						>. Якщо вказати <code>_id</code>, запис оновиться; без <code>_id</code> буде
+						створено новий.
+					</p>
+				</div>
+
+				<div class="manage-table-page__panel-actions">
+					<button
+						type="button"
+						class="manage-table-page__button manage-table-page__button--ghost"
+						(click)="restoreTextareaDraft()"
+						[disabled]="isLoading() || !textareaDirty()"
+					>
+						Load current JSON
+					</button>
+					<button
+						type="button"
+						class="manage-table-page__button manage-table-page__button--ghost"
+						(click)="loadTextareaCreateExample()"
+						[disabled]="isLoading()"
+					>
+						Create example
+					</button>
+					<button
+						type="button"
+						class="manage-table-page__button manage-table-page__button--ghost"
+						(click)="loadTextareaUpdateExample()"
+						[disabled]="isLoading()"
+					>
+						Update example
+					</button>
+				</div>
+			</div>
+
+			<div class="manage-table-page__helper-card">
+				<p>
+					JSON з цього режиму зберігається на backend як <code>item.data</code>. Якщо
+					вказати <code>_id</code>, буде update; без нього створиться новий запис.
+				</p>
+				<p>
+					Підтримуються 2 формати: raw object у масиві або запис виду
+					<code>{{ '{ "_id"?: "string", "data": { ... } }' }}</code>.
+				</p>
+				<p>
+					Після <code>Apply JSON changes</code> textarea не очищується навмисно: вона
+					показує актуальний snapshot записів, які щойно прийшли з backend.
+				</p>
+			</div>
+
+			@if (!hasRows()) {
+				<div class="manage-table-page__empty-state">
+					<p>
+						Можна почати й з JSON-режиму: додай масив записів і натисни Apply JSON
+						changes.
+					</p>
+				</div>
+			}
+
+			<app-table
+				[mode]="'textarea'"
+				[title]="'Items JSON array'"
+				[description]="'Використовуйте цей режим для масового оновлення, створення записів або вставки одного JSON object.'"
+				[textareaValue]="textareaDraft()"
+				[textareaLabel]="'Item records'"
+				[textareaRows]="22"
+				[updateLabel]="'Apply JSON changes'"
+				[updateDisabled]="!canMutate() || !textareaDirty()"
+				[validateTextareaJson]="false"
+				(textareaChange)="handleTextareaChange($event)"
+				(textareaSave)="handleTextareaSave($event)"
+			/>
+
+			<div class="manage-table-page__saved-preview">
+				<div>
+					<h3>Saved records preview</h3>
+					<p>
+						Тут одразу видно, як збережені JSON-дані виглядають після reload з backend,
+						включно з реальним <code>_id</code>. Тут же можна видалити непотрібний JSON
+						record.
+					</p>
+				</div>
+
+				<app-table
+					[mode]="'simple'"
+					[columns]="jsonSavedColumns"
+					[rows]="rows()"
+					[showDelete]="true"
+					[emptyMessage]="'Після першого Apply JSON changes тут зʼявляться збережені записи.'"
+					(rowDelete)="handleSimpleDelete($event)"
+				/>
+
+				<label class="manage-table-page__field manage-table-page__field--wide">
+					<span class="manage-table-page__label">Saved backend JSON snapshot</span>
+					<textarea
+						class="manage-table-page__input manage-table-page__textarea manage-table-page__textarea--readonly"
+						[ngModel]="textareaSnapshot()"
+						name="saved-backend-json"
+						rows="12"
+						readonly
+					></textarea>
+					<small class="manage-table-page__hint">
+						Це точний JSON, який зараз повертає backend після збереження, вже з
+						реальними <code>_id</code>.
+					</small>
+				</label>
+			</div>
+		</div>
+	}
+</section>

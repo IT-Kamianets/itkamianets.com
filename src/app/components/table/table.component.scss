@@ -1,0 +1,225 @@
+:host {
+	display: block;
+}
+
+.table-shell__card {
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: 1.5rem;
+	background: var(--c-bg-secondary);
+	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+.table-shell__card--textarea {
+	padding: 1.5rem;
+}
+
+.table-shell__cell-text {
+	display: inline-block;
+	max-width: 24rem;
+	overflow-wrap: anywhere;
+}
+
+.table-shell__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+	white-space: nowrap;
+}
+
+.table-shell__empty {
+	padding: 2rem 1rem;
+	text-align: center;
+	color: var(--c-text-muted);
+}
+
+.table-shell__form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.table-shell__grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.table-shell__field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.table-shell__field--wide {
+	grid-column: 1 / -1;
+}
+
+.table-shell__label {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--c-text-secondary);
+}
+
+.table-shell__input,
+.table-shell__textarea {
+	width: 100%;
+	border: 1px solid var(--c-border);
+	border-radius: 1rem;
+	background: var(--c-bg-tertiary);
+	color: var(--c-text-primary);
+	padding: 0.85rem 1rem;
+	outline: none;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.table-shell__input:focus,
+.table-shell__textarea:focus {
+	border-color: var(--c-primary);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primary) 18%, transparent);
+}
+
+.table-shell__input--compact,
+.table-shell__textarea--compact {
+	min-width: 10rem;
+	padding: 0.625rem 0.75rem;
+}
+
+.table-shell__textarea {
+	resize: vertical;
+	font-family: inherit;
+}
+
+.table-shell__textarea--full {
+	min-height: 60vh;
+	font-family:
+		'JetBrains Mono',
+		'Fira Code',
+		Consolas,
+		monospace;
+	font-size: 0.95rem;
+	line-height: 1.6;
+}
+
+.table-shell__checkbox {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	min-height: 3rem;
+	border: 1px solid var(--c-border);
+	border-radius: 1rem;
+	background: var(--c-bg-tertiary);
+	padding: 0.75rem 1rem;
+	color: var(--c-text-primary);
+}
+
+.table-shell__inline-checkbox {
+	width: 1rem;
+	height: 1rem;
+	accent-color: var(--c-primary);
+}
+
+.table-shell__footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+}
+
+.table-shell__button {
+	border: 1px solid transparent;
+	border-radius: 999px;
+	padding: 0.75rem 1.25rem;
+	font-size: 0.875rem;
+	font-weight: 700;
+	transition:
+		transform 0.2s ease,
+		opacity 0.2s ease,
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.table-shell__button:hover {
+	transform: translateY(-1px);
+}
+
+.table-shell__button--primary {
+	background: var(--c-primary);
+	color: #fff;
+}
+
+.table-shell__button--secondary,
+.table-shell__button--ghost {
+	border-color: var(--c-border);
+	background: var(--c-bg-tertiary);
+	color: var(--c-text-secondary);
+}
+
+.table-shell__button--danger {
+	border-color: color-mix(in srgb, #ef4444 35%, transparent);
+	background: color-mix(in srgb, #ef4444 10%, transparent);
+	color: #ef4444;
+}
+
+.table-shell__error {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #ef4444;
+}
+
+:host ::ng-deep .table-shell__table .p-datatable-table {
+	min-width: 100%;
+}
+
+:host ::ng-deep .table-shell__table th,
+:host ::ng-deep .table-shell__table td {
+	padding: 1rem;
+	vertical-align: top;
+}
+
+:host ::ng-deep .table-shell__table th {
+	background: var(--c-bg-tertiary);
+	color: var(--c-text-secondary);
+	font-size: 0.875rem;
+	font-weight: 700;
+	border-bottom: 1px solid var(--c-border);
+}
+
+:host ::ng-deep .table-shell__table td {
+	border-bottom: 1px solid color-mix(in srgb, var(--c-border) 80%, transparent);
+	color: var(--c-text-primary);
+}
+
+:host ::ng-deep .table-shell__dialog.p-dialog {
+	border-radius: 1.75rem;
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	background: var(--c-bg-secondary);
+}
+
+:host ::ng-deep .table-shell__dialog .p-dialog-header,
+:host ::ng-deep .table-shell__dialog .p-dialog-content {
+	background: var(--c-bg-secondary);
+	color: var(--c-text-primary);
+}
+
+:host ::ng-deep .table-shell__dialog .p-dialog-content {
+	padding-top: 0;
+}
+
+@media (max-width: 767px) {
+	.table-shell__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.table-shell__actions,
+	.table-shell__footer {
+		flex-direction: column;
+	}
+
+	.table-shell__button {
+		width: 100%;
+	}
+}

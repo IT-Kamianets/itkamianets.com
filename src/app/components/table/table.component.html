@@ -1,0 +1,263 @@
+<section class="table-shell">
+	@if (title() || description()) {
+		<header class="mb-6 flex flex-col gap-2">
+			@if (title()) {
+				<h2 class="text-2xl font-semibold text-[var(--c-text-secondary)]">{{ title() }}</h2>
+			}
+			@if (description()) {
+				<p class="text-sm text-[var(--c-text-muted)]">{{ description() }}</p>
+			}
+		</header>
+	}
+
+	@switch (mode()) {
+		@case ('simple') {
+			<div class="table-shell__card">
+				<p-table
+					[value]="displayRows()"
+					[dataKey]="'id'"
+					[rowHover]="true"
+					styleClass="table-shell__table"
+				>
+					<ng-template pTemplate="header">
+						<tr>
+							@for (column of resolvedColumns(); track column.key) {
+								<th
+									[class]="alignClass(column)"
+									[style.width]="column.width || null"
+								>
+									{{ column.label }}
+								</th>
+							}
+							@if (hasEditableColumns() || showDelete()) {
+								<th class="text-right">Actions</th>
+							}
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+						<tr>
+							@for (column of resolvedColumns(); track column.key) {
+								<td [class]="alignClass(column)">
+									@if (column.type === 'boolean') {
+										<span
+											class="inline-flex rounded-full px-2 py-1 text-xs font-semibold"
+											[class.bg-emerald-500/10]="row[column.key]"
+											[class.text-emerald-500]="row[column.key]"
+											[class.bg-slate-500/10]="!row[column.key]"
+											[class.text-slate-500]="!row[column.key]"
+										>
+											{{ valueAsText(row, column) }}
+										</span>
+									} @else {
+										<span class="table-shell__cell-text">{{ valueAsText(row, column) }}</span>
+									}
+								</td>
+							}
+							@if (hasEditableColumns() || showDelete()) {
+								<td class="table-shell__actions">
+									@if (hasEditableColumns()) {
+										<button
+											type="button"
+											class="table-shell__button table-shell__button--secondary"
+											(click)="openEdit(row, rowIndex)"
+										>
+											{{ editLabel() }}
+										</button>
+									}
+									@if (showDelete()) {
+										<button
+											type="button"
+											class="table-shell__button table-shell__button--danger"
+											(click)="emitDelete(row, rowIndex)"
+										>
+											{{ deleteLabel() }}
+										</button>
+									}
+								</td>
+							}
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="emptymessage">
+						<tr>
+							<td
+								[attr.colspan]="resolvedColumns().length + ((hasEditableColumns() || showDelete()) ? 1 : 0)"
+								class="table-shell__empty"
+							>
+								{{ emptyMessage() }}
+							</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+
+			<p-dialog
+				[visible]="isDialogOpen()"
+				(visibleChange)="onDialogVisibleChange($event)"
+				[modal]="true"
+				[draggable]="false"
+				[resizable]="false"
+				[style]="{ width: 'min(720px, 96vw)' }"
+				styleClass="table-shell__dialog"
+			>
+				<ng-template pTemplate="header">
+					<h3 class="text-xl font-semibold text-[var(--c-text-secondary)]">{{ dialogTitle() }}</h3>
+				</ng-template>
+
+				<form class="table-shell__form" (submit)="saveSimpleRow(); $event.preventDefault()">
+					<div class="table-shell__grid">
+						@for (column of editableColumns(); track column.key) {
+							<label
+								class="table-shell__field"
+								[class.table-shell__field--wide]="column.type === 'textarea'"
+							>
+								<span class="table-shell__label">{{ column.label }}</span>
+								@if (column.type === 'textarea') {
+									<textarea
+										[rows]="column.rows || 5"
+										[placeholder]="column.placeholder || ''"
+										[required]="column.required || false"
+										class="table-shell__textarea"
+										[ngModel]="fieldValue(column)"
+										(ngModelChange)="updateDraftValue(column, $event)"
+										[name]="column.key"
+									></textarea>
+								} @else if (column.type === 'boolean') {
+									<span class="table-shell__checkbox">
+										<input
+											type="checkbox"
+											[ngModel]="fieldValue(column)"
+											(ngModelChange)="updateDraftValue(column, $event)"
+											[name]="column.key"
+										/>
+										<span>{{ column.placeholder || 'Enabled' }}</span>
+									</span>
+								} @else {
+									<input
+										[type]="column.type === 'number' ? 'number' : 'text'"
+										[placeholder]="column.placeholder || ''"
+										[required]="column.required || false"
+										class="table-shell__input"
+										[ngModel]="fieldValue(column)"
+										(ngModelChange)="updateDraftValue(column, $event)"
+										[name]="column.key"
+									/>
+								}
+							</label>
+						}
+					</div>
+
+					<div class="table-shell__footer">
+						<button
+							type="button"
+							class="table-shell__button table-shell__button--ghost"
+							(click)="closeDialog()"
+						>
+							Cancel
+						</button>
+						<button type="submit" class="table-shell__button table-shell__button--primary">
+							{{ saveLabel() }}
+						</button>
+					</div>
+				</form>
+			</p-dialog>
+		}
+
+		@case ('excel') {
+			<div class="table-shell__card">
+				<p-table
+					[value]="excelDraftRows()"
+					[dataKey]="'id'"
+					styleClass="table-shell__table table-shell__table--excel"
+				>
+					<ng-template pTemplate="header">
+						<tr>
+							@for (column of resolvedColumns(); track column.key) {
+								<th
+									[class]="alignClass(column)"
+									[style.width]="column.width || null"
+								>
+									{{ column.label }}
+								</th>
+							}
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+						<tr>
+							@for (column of resolvedColumns(); track column.key) {
+								<td [class]="alignClass(column)">
+									@if (column.editable === false) {
+										<span class="table-shell__cell-text">{{ valueAsText(row, column) }}</span>
+									} @else if (column.type === 'textarea') {
+										<textarea
+											[rows]="column.rows || 4"
+											[placeholder]="column.placeholder || ''"
+											class="table-shell__textarea table-shell__textarea--compact"
+											[ngModel]="cellValue(row, column)"
+											(ngModelChange)="updateExcelValue(rowIndex, column, $event)"
+											[name]="column.key + '-' + rowIndex"
+										></textarea>
+									} @else if (column.type === 'boolean') {
+										<input
+											type="checkbox"
+											class="table-shell__inline-checkbox"
+											[ngModel]="cellValue(row, column)"
+											(ngModelChange)="updateExcelValue(rowIndex, column, $event)"
+											[name]="column.key + '-' + rowIndex"
+										/>
+									} @else {
+										<input
+											[type]="column.type === 'number' ? 'number' : 'text'"
+											[placeholder]="column.placeholder || ''"
+											class="table-shell__input table-shell__input--compact"
+											[ngModel]="cellValue(row, column)"
+											(ngModelChange)="updateExcelValue(rowIndex, column, $event)"
+											[name]="column.key + '-' + rowIndex"
+										/>
+									}
+								</td>
+							}
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="emptymessage">
+						<tr>
+							<td [attr.colspan]="resolvedColumns().length" class="table-shell__empty">
+								{{ emptyMessage() }}
+							</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+		}
+
+		@case ('textarea') {
+			<div class="table-shell__card table-shell__card--textarea">
+				<label class="table-shell__field table-shell__field--wide">
+					<span class="table-shell__label">{{ textareaLabel() }}</span>
+					<textarea
+						class="table-shell__textarea table-shell__textarea--full"
+						[rows]="textareaRows()"
+						[placeholder]="textareaPlaceholder()"
+						[ngModel]="textareaDraft()"
+						(ngModelChange)="updateTextarea($event)"
+						name="table-textarea"
+					></textarea>
+				</label>
+
+				@if (textareaError()) {
+					<p class="table-shell__error">{{ textareaError() }}</p>
+				}
+
+				<div class="table-shell__footer">
+					<button
+						type="button"
+						class="table-shell__button table-shell__button--primary"
+						(click)="saveTextarea()"
+						[disabled]="updateDisabled()"
+					>
+						{{ updateLabel() }}
+					</button>
+				</div>
+			</div>
+		}
+	}
+</section>
