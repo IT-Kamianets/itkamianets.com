@@ -256,7 +256,9 @@ export const routes: Routes = [
 				canActivate: [authenticatedGuard],
 				data: { title: 'Merch' },
 				loadComponent: () =>
-					import('./feature/merch/pages/manage-merch/manage-merch.component').then((m) => m.ManageMerchComponent),
+					import('./feature/merch/pages/manage-merch/manage-merch.component').then(
+						(m) => m.ManageMerchComponent,
+					),
 			},
 			{
 				path: 'cv-generation',
@@ -277,13 +279,11 @@ export const routes: Routes = [
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/order/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/order/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',
-				loadChildren: () =>
-					import('./feature/article/manage.routes').then((m) => m.routes),
+				loadChildren: () => import('./feature/article/manage.routes').then((m) => m.routes),
 			},
 			{
 				path: '',

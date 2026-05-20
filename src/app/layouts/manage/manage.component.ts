@@ -23,6 +23,7 @@ export class ManageComponent {
 		{ label: 'Merch', path: '/manage/merch', icon: 'shopping_bag' },
 		{ label: 'Orders', path: '/manage/orders', icon: 'receipt_long' },
 		{ label: 'Companies', path: '/manage/companies', icon: 'apartment' },
+		{ label: 'Quests', path: '/manage/quests', icon: 'explore' },
 		{ label: 'Projects', path: '/manage/projects', icon: 'deployed_code' },
 		{ label: 'Articles', path: '/manage/articles', icon: 'article' },
 		{ label: 'Schools', path: '/manage/schools', icon: 'school' },
