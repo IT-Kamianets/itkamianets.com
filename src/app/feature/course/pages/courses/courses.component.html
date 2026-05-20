@@ -1,0 +1,41 @@
+<section class="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-6xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+	<div class="rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-secondary)] px-6 py-10 sm:px-8">
+		<p class="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[var(--c-primary)]">
+			Courses
+		</p>
+		<h1 class="max-w-3xl text-4xl font-black leading-tight text-[var(--c-text-secondary)] sm:text-5xl">
+			Навчальні програми IT-Kamianets
+		</h1>
+		<p class="mt-4 max-w-2xl text-base leading-7 text-[var(--c-text-muted)]">
+			Добірка курсів для тих, хто хоче посилити технічну базу, зібрати сильне портфоліо та перейти до реальних командних задач.
+		</p>
+	</div>
+
+	<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+		@for (course of _courses; track course.slug) {
+			<a
+				[routerLink]="['/courses', course.slug]"
+				class="flex h-full flex-col rounded-3xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] p-6 transition-transform duration-200 hover:-translate-y-1"
+			>
+				<div class="flex items-start justify-between gap-4">
+					<h2 class="text-2xl font-bold text-[var(--c-text-secondary)]">
+						{{ course.title }}
+					</h2>
+					<span
+						class="rounded-full bg-[var(--c-primary)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
+					>
+						{{ course.level }}
+					</span>
+				</div>
+
+				<p class="mt-4 flex-1 text-sm leading-6 text-[var(--c-text-muted)]">
+					{{ course.description }}
+				</p>
+
+				<div class="mt-6 border-t border-[var(--c-border)] pt-4 text-sm font-medium text-[var(--c-text-primary)]">
+					Тривалість: {{ course.duration }}
+				</div>
+			</a>
+		}
+	</div>
+</section>
