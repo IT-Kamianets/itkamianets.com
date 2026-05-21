@@ -1,0 +1,35 @@
+@if (loading()) {
+	<div class="text-center py-12">
+		<p class="text-[var(--c-text-secondary)]">Завантаження...</p>
+	</div>
+} @else if (achievement(); as achievement) {
+	<button
+		(click)="goBack()"
+		class="inline-flex items-center gap-2 mb-8 px-4 py-2 text-[var(--c-primary)] hover:text-[var(--c-primary-hover)] font-medium transition-colors"
+	>
+		← Повернутися до переліку
+	</button>
+
+	<article class="max-w-2xl">
+		<header class="mb-8">
+			<h1 class="text-4xl font-bold text-[var(--c-text-primary)] mb-4">
+				{{ achievement.name }}
+			</h1>
+			@if (achievement.description) {
+				<p class="text-lg text-[var(--c-text-secondary)]">{{ achievement.description }}</p>
+			}
+		</header>
+
+		@if (achievement.data) {
+			<div
+				class="border border-[var(--c-border)] rounded-lg p-8 bg-[var(--c-bg-secondary)] space-y-6"
+			>
+				<pre class="whitespace-pre-wrap break-words text-sm font-mono">{{ achievement.data | json }}</pre>
+			</div>
+		}
+	</article>
+} @else {
+	<div class="text-center py-12">
+		<p class="text-[var(--c-text-secondary)] text-lg">Досягнення не знайдене</p>
+	</div>
+}
