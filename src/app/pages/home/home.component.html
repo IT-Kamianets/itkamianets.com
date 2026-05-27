@@ -46,11 +46,11 @@
 					</p>
 					<div class="about-stats">
 						<div class="stat">
-							<span class="stat__number">12+</span>
+							<span class="stat__number">140</span>
 							<span class="stat__label">Проєктів</span>
 						</div>
 						<div class="stat">
-							<span class="stat__number">10+</span>
+							<span class="stat__number">20+</span>
 							<span class="stat__label">Учасників</span>
 						</div>
 						<div class="stat">
@@ -143,49 +143,6 @@
 												<span class="proposal-card__feature">{{ f }}</span>
 											}
 										</div>
-										<div class="proposal-card__meta">
-											<div class="proposal-card__meta-item">
-												<svg
-													width="14"
-													height="14"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-													viewBox="0 0 24 24"
-												>
-													<path
-														d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"
-													/>
-												</svg>
-												<span class="proposal-card__meta-text">
-													<span class="meta-line-1"
-														>{{ p.priceFrom | number }}–</span
-													>
-													<span class="meta-line-2"
-														>{{ p.priceTo | number }} грн</span
-													>
-												</span>
-											</div>
-											<div class="proposal-card__meta-item">
-												<svg
-													width="14"
-													height="14"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-													viewBox="0 0 24 24"
-												>
-													<circle cx="12" cy="12" r="10" />
-													<polyline points="12 6 12 12 16 14" />
-												</svg>
-												<span class="proposal-card__meta-text">
-													<span class="meta-line-1"
-														>{{ p.timeFrom }}–{{ p.timeTo }}</span
-													>
-													<span class="meta-line-2">тиж.</span>
-												</span>
-											</div>
-										</div>
 										<div class="proposal-card__team">
 											@for (member of p.team; track member.name) {
 												<div
@@ -236,7 +193,7 @@
 			</div>
 
 			<div class="section-cta">
-				<a routerLink="/proposals" class="btn-outline btn-services-cta"
+				<a routerLink="/services" class="btn-outline btn-services-cta"
 					>Переглянути всі послуги</a
 				>
 			</div>

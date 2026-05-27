@@ -92,7 +92,7 @@ export const PROPOSALS: Proposal[] = [
 		fullDescription:
 			'Потужна система, яка бере на себе рутинні задачі. Ми впроваджуємо автоматичне опрацювання заявок, інтеграцію з CRM-системами, автоматичні розсилки та сповіщення. Ваша команда зможе фокусуватися на продажах, поки система забезпечує безперебійну технічну роботу та збір даних.',
 		category: 'Автоматизація',
-		image: 'https://images.unsplash.com/photo-1518186239717-2e73f1574900?w=800&h=500&fit=crop',
+		image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80',
 		features: [
 			'Інтеграція з CRM (Bitrix24, Pipedrive тощо)',
 			'Автоматичні Email/Telegram сповіщення',

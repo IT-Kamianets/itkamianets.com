@@ -1173,51 +1173,10 @@
 	border: 1px solid var(--c-border);
 }
 
-.proposal-card__meta {
-	display: flex;
-	gap: 12px;
-	margin-top: auto;
-	padding-top: 8px;
-}
-
-@media (max-width: 640px) {
-	.proposal-card__meta {
-		margin-top: 8px;
-		padding-top: 4px;
-	}
-}
-
-.proposal-card__meta-item {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-	font-size: 0.78rem;
-	color: var(--c-text-muted);
-}
-
-.proposal-card__meta-text {
-	display: inline-flex;
-	gap: 2px;
-}
-
-@media (max-width: 640px) {
-	.proposal-card__meta-item {
-		align-items: flex-start;
-	}
-	.proposal-card__meta-text {
-		flex-direction: column;
-		gap: 0;
-	}
-}
-
-.proposal-card__meta-item svg {
-	color: var(--c-primary);
-}
-
 .proposal-card__team {
 	display: flex;
 	gap: -8px;
-	margin-top: 4px;
+	margin-top: auto;
 	padding-top: 8px;
 	border-top: 1px solid var(--c-border);
 }

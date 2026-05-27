@@ -1,4 +1,4 @@
-import { DecimalPipe, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -13,7 +13,7 @@ import { CATEGORIES, PROPOSALS, Proposal } from '../../data/proposals.data';
 import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 
 @Component({
-	imports: [RouterLink, DecimalPipe],
+	imports: [RouterLink],
 	templateUrl: './home.component.html',
 	styleUrl: './home.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
