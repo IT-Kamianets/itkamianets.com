@@ -35,14 +35,14 @@ export class MerchComponent {
 			id: 1,
 			name: 'Чашка IT-Kamianets',
 			price: 250,
-			image: 'assets/Cup.png',
+			image: 'Cup.png',
 			description: 'Керамічна чашка 330 мл з логотипом IT-Kamianets.',
 		},
 		{
 			id: 2,
 			name: 'Футболка IT-Kamianets',
 			price: 550,
-			image: 'assets/T-shirt.png',
+			image: 'T-shirt.png',
 			description: 'Бавовняна футболка чорного кольору.',
 		},
 	]);
@@ -111,7 +111,7 @@ export class MerchComponent {
 					{
 						...this.newItem,
 						id: Date.now(),
-						image: this.newItem.image || 'assets/logo.png',
+						image: this.newItem.image || 'logo.png',
 					},
 				]);
 			}

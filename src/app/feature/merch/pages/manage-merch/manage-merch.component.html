@@ -41,7 +41,7 @@
 					<td>
 						<div class="publications__photo-cell">
 							<button type="button" class="publications__photo-button" (click)="openPhotoPreview(product)">
-								<img [src]="product.image || 'assets/logo.png'" [alt]="product.name" class="publications__photo" />
+								<img [src]="product.image || 'logo.png'" [alt]="product.name" class="publications__photo" />
 							</button>
 						</div>
 					</td>
@@ -142,7 +142,7 @@
 				<button type="button" class="overlay__close" (click)="closePreview()">×</button>
 				<div class="merch-preview-card">
 					<div class="merch-preview-card__img">
-						<img [src]="product.image || 'assets/logo.png'" [alt]="product.name" />
+						<img [src]="product.image || 'logo.png'" [alt]="product.name" />
 					</div>
 					<div class="merch-preview-card__body">
 						<h3 class="merch-preview-card__title">{{ product.name }}</h3>

@@ -39,12 +39,12 @@ export const PROPOSALS: Proposal[] = [
 		team: [
 			{
 				name: 'Гончар Денис',
-				avatar: 'assets/developer/Honchar_Denys.png',
+				avatar: 'developer/Honchar_Denys.png',
 				role: 'Full-stack',
 			},
 			{
 				name: 'Макуш Валерія',
-				avatar: 'assets/developer/Valery_Makush.png',
+				avatar: 'developer/Valery_Makush.png',
 				role: 'UI/UX Designer',
 			},
 		],
@@ -71,12 +71,12 @@ export const PROPOSALS: Proposal[] = [
 		team: [
 			{
 				name: 'Гончар Денис',
-				avatar: 'assets/developer/Honchar_Denys.png',
+				avatar: 'developer/Honchar_Denys.png',
 				role: 'Full-stack',
 			},
 			{
 				name: 'Вальцер Вадим',
-				avatar: 'assets/developer/Vadim_Valtser.png',
+				avatar: 'developer/Vadim_Valtser.png',
 				role: 'Frontend',
 			},
 		],
@@ -103,12 +103,12 @@ export const PROPOSALS: Proposal[] = [
 		team: [
 			{
 				name: 'Гончар Денис',
-				avatar: 'src/app/assets/developer/Honchar_Denys.png',
+				avatar: 'developer/Honchar_Denys.png',
 				role: 'Full-stack',
 			},
 			{
 				name: 'Шулепко Роман',
-				avatar: 'src/app/assets/developer/Roman_Shulepko.png',
+				avatar: 'developer/Roman_Shulepko.png',
 				role: 'Frontend',
 			},
 		],
@@ -135,12 +135,12 @@ export const PROPOSALS: Proposal[] = [
 		team: [
 			{
 				name: 'Гончар Денис',
-				avatar: 'assets/developer/Honchar_Denys.png',
+				avatar: 'developer/Honchar_Denys.png',
 				role: 'Full-stack',
 			},
 			{
 				name: 'Левчук Владислав',
-				avatar: 'assets/developer/VladLevchuk.png',
+				avatar: 'developer/VladLevchuk.png',
 				role: 'Frontend',
 			},
 		],

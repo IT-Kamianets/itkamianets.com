@@ -31,16 +31,16 @@
 					</p>
 					<div class="about-stats">
 						<div class="stat">
-							<span class="stat__number">4</span>
-							<span class="stat__label">Напрями</span>
+							<span class="stat__number">50+</span>
+							<span class="stat__label">Лендінгів для бізнесу</span>
 						</div>
 						<div class="stat">
-							<span class="stat__number">12</span>
-							<span class="stat__label">Карток</span>
+							<span class="stat__number">10+</span>
+							<span class="stat__label">CRM-рішень</span>
 						</div>
 						<div class="stat">
-							<span class="stat__number">3</span>
-							<span class="stat__label">У кожному блоці</span>
+							<span class="stat__number">20+</span>
+							<span class="stat__label">Мобільних застосунків</span>
 						</div>
 					</div>
 				</div>
@@ -105,19 +105,20 @@
 				<span class="section-label">Змагання</span>
 				<h2 class="section-title">Практика, демонстрації та командний темп</h2>
 				<p class="section-subtitle">
-					Демо-змагання, у яких команди проходять шлях від ідеї до презентації готового
-					результату.
+					Актуальний хакатон, у якому команди проходять шлях від ідеї до презентації
+					готового результату.
 				</p>
 			</div>
 
 			<div class="preview-grid">
 				@for (hackathon of hackathons; track hackathon.id) {
-					<a class="team-card preview-panel" [routerLink]="['/hackathon', hackathon.url]">
+					<a class="team-card preview-panel" [routerLink]="hackathon.cta">
 						<div class="preview-icon">
 							<span class="material-symbols-outlined" aria-hidden="true">trophy</span>
 						</div>
 						<h3 class="team-card__name">{{ hackathon.title }}</h3>
 						<span class="team-card__role">{{ hackathon.format }}</span>
+						<p class="preview-panel__text">{{ hackathon.focus }}</p>
 						<p class="preview-panel__text">{{ hackathon.description }}</p>
 						<span class="team-card__exp">{{ hackathon.period }}</span>
 						<div class="preview-tags">
@@ -180,41 +181,4 @@
 		</div>
 	</section>
 
-	<section class="section promo-section">
-		<div class="container">
-			<div class="section-header">
-				<span class="section-label">Сервіси</span>
-				<h2 class="section-title">Партнери для різних типів робіт</h2>
-				<p class="section-subtitle">
-					Три команди з різним фокусом: платформа, дизайн-продакшн і демонстраційна
-					реалізація.
-				</p>
-			</div>
-
-			<div class="preview-grid">
-				@for (partner of partners; track partner.id) {
-					<a
-						class="promo-card preview-link preview-link--stacked"
-						[routerLink]="['/partner', partner.url]"
-					>
-						<div class="promo-card__icon preview-initial">
-							{{ partner.name.charAt(0) }}
-						</div>
-						<h3 class="promo-card__title">{{ partner.name }}</h3>
-						<p class="promo-card__desc">{{ partner.description }}</p>
-						<div class="project-card-home__tags preview-tags">
-							@for (service of partner.services; track service) {
-								<span class="project-card-home__tag">{{ service }}</span>
-							}
-						</div>
-						<span class="promo-card__link">{{ partner.label }}</span>
-					</a>
-				}
-			</div>
-
-			<div class="section-cta">
-				<a routerLink="/services" class="btn-outline">Переглянути всі сервіси</a>
-			</div>
-		</div>
-	</section>
 </div>

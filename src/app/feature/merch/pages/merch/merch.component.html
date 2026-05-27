@@ -10,7 +10,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (product of ms.products(); track product._id) {
             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition hover:shadow-lg">
-                <img [src]="product.image || 'assets/logo.png'" class="w-full h-64 object-contain p-4 bg-gray-50" />
+                <img [src]="product.image || 'logo.png'" class="w-full h-64 object-contain p-4 bg-gray-50" />
                 <div class="p-4">
                     <h3 class="text-xl font-bold mb-2">{{ product.name }}</h3>
                     <p class="text-gray-600 text-sm mb-4 h-12 overflow-hidden">{{ product.description }}</p>
@@ -29,7 +29,7 @@
             <div class="flex-grow overflow-y-auto">
                 @for (item of cart(); track item._id) {
                     <div class="flex gap-4 p-4 border-b">
-                        <img [src]="item.image || 'assets/logo.png'" class="w-16 h-16 object-contain" />
+                        <img [src]="item.image || 'logo.png'" class="w-16 h-16 object-contain" />
                         <div class="flex-grow">
                             <h4 class="font-bold text-sm">{{ item.name }}</h4>
                             <div class="flex items-center gap-2 mt-2">

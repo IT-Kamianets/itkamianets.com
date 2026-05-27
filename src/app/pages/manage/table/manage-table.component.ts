@@ -688,7 +688,7 @@ export class ManageTableComponent {
 						slug: 'example-item',
 						published: false,
 						category: 'news',
-						image: '/assets/images/example.jpg',
+						image: 'images/example.jpg',
 					},
 				},
 			],

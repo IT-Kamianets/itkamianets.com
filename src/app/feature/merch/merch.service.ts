@@ -84,35 +84,35 @@ export class MerchService {
 			{
 				name: 'Чашка IT-Kamianets',
 				price: 250,
-				image: 'assets/Cup.png',
+				image: 'Cup.png',
 				description:
 					'Керамічна чашка 330 мл з логотипом IT-Kamianets. Ідеальна для ранкової кави під час кодингу.',
 			},
 			{
 				name: 'Футболка IT-Kamianets',
 				price: 550,
-				image: 'assets/T-shirt.png',
+				image: 'T-shirt.png',
 				description:
 					'Бавовняна футболка чорного кольору з мінімалістичним принтом IT-Kamianets на грудях.',
 			},
 			{
 				name: 'Худі IT-Kamianets',
 				price: 950,
-				image: 'assets/Skinny.png',
+				image: 'Skinny.png',
 				description:
 					'Тепле худі з капюшоном та вишитим логотипом IT-Kamianets. Ідеальне для холодних вечорів з кодом.',
 			},
 			{
 				name: 'Кепка IT-Kamianets',
 				price: 350,
-				image: 'assets/Cap.png',
+				image: 'Cap.png',
 				description:
 					'Стильна кепка з вишитим логотипом IT-Kamianets. Регульований розмір та 100% бавовна.',
 			},
 			{
 				name: 'Шкарпетки IT-Kamianets',
 				price: 150,
-				image: 'assets/Socks.png',
+				image: 'Socks.png',
 				description:
 					'Комплект з 3 пар шкарпеток з IT-принтами. Ідеальне для холодних вечорів з кодом. Розмір 39–45.',
 			},
