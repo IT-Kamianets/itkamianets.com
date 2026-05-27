@@ -25,18 +25,6 @@ export class HeaderComponent {
 			title: 'Наша команда',
 			href: '/team',
 		},
-		{
-			_id: 'menu-news',
-			type: 'menu',
-			title: 'Новини',
-			href: '/news',
-		},
-		{
-			_id: 'menu-merch',
-			type: 'menu',
-			title: 'Мерч',
-			href: '/merch',
-		},
 	];
 
 	protected toggleTheme() {
