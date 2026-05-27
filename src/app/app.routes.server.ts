@@ -1,4 +1,5 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
+import { COURSES, COURSE_LESSON_PARAMS } from './feature/course/course.data';
 import { SERVICE_IDS } from './feature/service/service.service';
 
 const COMPETITION_PRERENDER_URL =
@@ -106,6 +107,16 @@ export const serverRoutes: ServerRoute[] = [
 		path: 'services/:id',
 		renderMode: RenderMode.Prerender,
 		getPrerenderParams: async () => SERVICE_IDS.map((id) => ({ id })),
+	},
+	{
+		path: 'courses/:slug',
+		renderMode: RenderMode.Prerender,
+		getPrerenderParams: async () => COURSES.map((course) => ({ slug: course.slug })),
+	},
+	{
+		path: 'courses/:courseSlug/lessons/:lessonSlug',
+		renderMode: RenderMode.Prerender,
+		getPrerenderParams: async () => COURSE_LESSON_PARAMS,
 	},
 	{
 		path: 'competition/:id',

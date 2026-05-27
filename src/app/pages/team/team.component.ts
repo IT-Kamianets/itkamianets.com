@@ -9,6 +9,7 @@ import { TEAM_MEMBERS, TeamMember } from '../../data/team.data';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamComponent {
+	readonly showTemporarySpecialists = false;
 	readonly founders: TeamMember[] = TEAM_MEMBERS.filter((member) => member.isHead).map((member) =>
 		this._mapTeamMember(member)
 	);
