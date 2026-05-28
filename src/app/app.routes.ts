@@ -90,6 +90,11 @@ export const routes: Routes = [
 					import('./pages/merch/merch.component').then((m) => m.MerchComponent),
 			},
 			{
+				path: 'workmap',
+				loadComponent: () =>
+					import('./pages/workmap/workmap.component').then((m) => m.WorkmapComponent),
+			},
+			{
 				path: 'services',
 				loadComponent: () =>
 					import('./pages/services/services.component').then((m) => m.ServicesComponent),
