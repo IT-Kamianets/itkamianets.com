@@ -78,6 +78,13 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'terms',
+				loadComponent: () =>
+					import('./pages/terms/terms.component').then(
+						(m) => m.TermsComponent,
+					),
+			},
+			{
 				path: 'merch',
 				loadComponent: () =>
 					import('./pages/merch/merch.component').then((m) => m.MerchComponent),
