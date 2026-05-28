@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceService } from '../../feature/service/service.service';
 
 @Component({
@@ -13,8 +13,13 @@ import { ServiceService } from '../../feature/service/service.service';
 export class ServicesComponent {
 	private readonly _serviceService = inject(ServiceService);
 	private readonly _router = inject(Router);
+	private readonly _route = inject(ActivatedRoute);
 
-	readonly categories = this._serviceService.categories;
+	readonly categories = computed(() => {
+		const all = this._serviceService.categories();
+		const filter = this._route.snapshot.queryParamMap.get('category');
+		return filter ? all.filter((c) => c.id === filter) : all;
+	});
 
 	/** Set of collapsed category IDs */
 	private readonly _collapsed = signal<Set<string>>(new Set());

@@ -33,8 +33,8 @@ export class FooterComponent {
 	];
 
 	protected readonly serviceLinks: { label: string; routerLink: string; queryParams?: Record<string, string> }[] = [
-		{ label: 'IT Kamianets — базовий сайт', routerLink: '/services/it-kamianets' },
-		{ label: 'Web Art Work — розвиток сайту', routerLink: '/services/web-art-work' },
+		{ label: 'IT Kamianets', routerLink: '/services', queryParams: { category: 'it-kamianets' } },
+		{ label: 'Web Art Work', routerLink: '/services', queryParams: { category: 'web-art-work' } },
 		{ label: 'Всі послуги', routerLink: '/services' },
 	];
 

@@ -53,8 +53,10 @@
 							</div>
 						} @else {
 							<div class="sidebar-card__price">
-								<strong>{{ s.priceFrom | number }} {{ s.currency }}</strong>
-								<span class="sidebar-card__price-label">одноразово</span>
+								<strong>{{ s.priceFrom | number }} {{ s.currency }}{{ s.priceNote ? ' ' + s.priceNote : '' }}</strong>
+								@if (!s.priceNote) {
+									<span class="sidebar-card__price-label">одноразово</span>
+								}
 							</div>
 							@if (s.subscriptionFee) {
 								<div class="sidebar-card__subscription">
