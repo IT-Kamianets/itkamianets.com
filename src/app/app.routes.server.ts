@@ -104,6 +104,10 @@ export const serverRoutes: ServerRoute[] = [
 		renderMode: RenderMode.Client,
 	},
 	{
+		path: 'workmap',
+		renderMode: RenderMode.Client,
+	},
+	{
 		path: 'services/:id',
 		renderMode: RenderMode.Prerender,
 		getPrerenderParams: async () => SERVICE_IDS.map((id) => ({ id })),
