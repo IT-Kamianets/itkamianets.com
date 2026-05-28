@@ -1,5 +1,6 @@
 @use 'tailwindcss';
 @use './styles/theme';
+@import 'leaflet/dist/leaflet.css';
 
 html,
 body {

@@ -69,12 +69,10 @@ export class WorkmapComponent implements OnInit {
 	}
 
 	private initializeMap() {
-		this.map = L.map('map').setView([48.6872565, 26.5864605], 13);
-
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '© OpenStreetMap contributors',
-			maxZoom: 19,
-		}).addTo(this.map);
+		this.map = L.map('map', {
+			center: [48.6872565, 26.5864605],
+			zoom: 13,
+		});
 
 		this.markerClusterGroup = L.markerClusterGroup();
 		this.map.addLayer(this.markerClusterGroup);
