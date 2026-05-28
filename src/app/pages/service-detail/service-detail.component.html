@@ -87,13 +87,13 @@
 							</div>
 						</div>
 
-						<a
+						<button
 							class="cta-btn"
-							href="mailto:info@itkamianets.com?subject=Замовлення: {{ s.title }}"
-							aria-label="Замовити послугу {{ s.title }}"
+							(click)="order()"
+							[attr.aria-label]="'Замовити послугу ' + s.title"
 						>
 							Замовити
-						</a>
+						</button>
 					</div>
 				</aside>
 

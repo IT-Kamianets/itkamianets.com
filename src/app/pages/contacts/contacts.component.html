@@ -1,0 +1,132 @@
+<div class="contacts-page">
+	<section class="page-hero">
+		<div class="page-hero__overlay"></div>
+		<div class="page-hero__content">
+			<span class="section-label">Зв'язок</span>
+			<h1 class="page-hero__title">Контакти</h1>
+			<p class="page-hero__subtitle">
+				Залиште заявку — ми зв'яжемося з вами найближчим часом
+			</p>
+		</div>
+		<div class="section-divider-bar">
+			<span class="section-divider-bar__line"></span>
+		</div>
+	</section>
+
+	<div class="container">
+		<div class="contacts-layout">
+
+			<!-- Info block -->
+			<aside class="contacts-info">
+				<h2 class="contacts-info__title">Як з нами зв'язатися</h2>
+				<p class="contacts-info__text">
+					Ми відкриті до співпраці, нових проєктів та питань. Заповніть форму або
+					скористайтеся контактами нижче.
+				</p>
+
+				<ul class="contacts-info__list">
+					<li class="contacts-info__item">
+						<span class="contacts-info__icon">📍</span>
+						<div>
+							<span class="contacts-info__label">Адреса</span>
+							<span class="contacts-info__value">Кам'янець-Подільський, Україна</span>
+						</div>
+					</li>
+					<li class="contacts-info__item">
+						<span class="contacts-info__icon">💻</span>
+						<div>
+							<span class="contacts-info__label">GitHub</span>
+							<a
+								href="https://github.com/IT-Kamianets"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="contacts-info__link"
+								>github.com/IT-Kamianets</a
+							>
+						</div>
+					</li>
+				</ul>
+			</aside>
+
+			<!-- Form block -->
+			<div class="contacts-form-wrap">
+				@if (submitted()) {
+					<div class="contacts-success">
+						<span class="contacts-success__icon">✅</span>
+						<h3 class="contacts-success__title">Повідомлення надіслано!</h3>
+						<p class="contacts-success__text">
+							Дякуємо за звернення. Ми розглянемо вашу заявку та зв'яжемося з вами
+							найближчим часом.
+						</p>
+						<button class="contacts-btn" (click)="reset()">OK</button>
+					</div>
+				} @else {
+					<form class="contacts-form" (ngSubmit)="onSubmit()">
+						<div class="contacts-form__row">
+							<label class="contacts-form__field">
+								<span class="contacts-form__label">Ім'я</span>
+								<input
+									class="contacts-form__input"
+									type="text"
+									name="name"
+									placeholder="Ваше ім'я"
+									[(ngModel)]="name"
+								/>
+							</label>
+						</div>
+
+						<div class="contacts-form__row">
+							<label class="contacts-form__field">
+								<span class="contacts-form__label">Телефон <span class="contacts-form__required">*</span></span>
+								<input
+									class="contacts-form__input"
+									type="tel"
+									name="phone"
+									placeholder="+380 00 000 00 00"
+									[(ngModel)]="phone"
+								/>
+							</label>
+						</div>
+
+						<div class="contacts-form__field contacts-form__field--full">
+							<span class="contacts-form__label">Наші послуги</span>
+							<div class="contacts-radio-group">
+								@for (subj of subjects; track subj) {
+									<label class="contacts-radio">
+										<input
+											type="radio"
+											name="subject"
+											[value]="subj"
+											[(ngModel)]="subject"
+										/>
+										<span class="contacts-radio__label">{{ subj }}</span>
+									</label>
+								}
+							</div>
+						</div>
+
+						@if (validationError()) {
+							<p class="contacts-error">{{ validationError() }}</p>
+						}
+						@if (error()) {
+							<p class="contacts-error">Не вдалося надіслати. Спробуйте ще раз.</p>
+						}
+
+						<button
+							class="contacts-btn"
+							type="submit"
+							[disabled]="loading()"
+						>
+							@if (loading()) {
+								Надсилання...
+							} @else {
+								Надіслати повідомлення
+							}
+						</button>
+					</form>
+				}
+			</div>
+
+		</div>
+	</div>
+</div>

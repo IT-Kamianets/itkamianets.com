@@ -64,6 +64,20 @@ export const routes: Routes = [
 					import('./pages/news/news.component').then((m) => m.NewsComponent),
 			},
 			{
+				path: 'privacy-policy',
+				loadComponent: () =>
+					import('./pages/privacy-policy/privacy-policy.component').then(
+						(m) => m.PrivacyPolicyComponent,
+					),
+			},
+			{
+				path: 'contacts',
+				loadComponent: () =>
+					import('./pages/contacts/contacts.component').then(
+						(m) => m.ContactsComponent,
+					),
+			},
+			{
 				path: 'merch',
 				loadComponent: () =>
 					import('./pages/merch/merch.component').then((m) => m.MerchComponent),

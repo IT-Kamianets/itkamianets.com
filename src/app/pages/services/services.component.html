@@ -48,7 +48,7 @@
 										<span class="price-sub">/ міс</span>
 									} @else {
 										<span class="price-amount">{{ s.priceFrom | number }}</span>
-										<span class="price-sub">{{ s.currency }}{{ s.subscriptionFee ? ' + ' + (s.subscriptionFee | number) + '/міс' : '' }}</span>
+										<span class="price-sub">{{ s.currency }}{{ s.subscriptionFee ? ' + ' + (s.subscriptionFee | number) + '/міс' : '' }}{{ s.priceNote ? ' ' + s.priceNote : '' }}</span>
 									}
 								</div>
 							</div>

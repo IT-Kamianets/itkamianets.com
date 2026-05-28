@@ -18,15 +18,7 @@
 				</p>
 				<!-- Contact Info -->
 				<div class="footer__contact">
-					<div class="footer__contact-item">
-						<span class="footer__icon">📧</span>
-						<span class="footer__contact-text">info&#64;itkamianets.com</span>
-					</div>
-					<div class="footer__contact-item">
-						<span class="footer__icon">📞</span>
-						<span class="footer__contact-text">+380 00 000 00 00</span>
-					</div>
-					<div class="footer__contact-item">
+<div class="footer__contact-item">
 						<span class="footer__icon">📍</span>
 						<span class="footer__contact-text">Кам'янець-Подільський, Україна</span>
 					</div>
@@ -69,7 +61,11 @@
 				<ul class="footer__list">
 					@for (link of supportLinks; track link.label) {
 						<li>
-							<span class="footer__link footer__link--static">{{ link.label }}</span>
+							@if (link.routerLink) {
+								<a class="footer__link" (click)="navigateFromFooter(link.routerLink)">{{ link.label }}</a>
+							} @else {
+								<span class="footer__link footer__link--static">{{ link.label }}</span>
+							}
 						</li>
 					}
 				</ul>
@@ -169,7 +165,7 @@
 
 			<!-- Legal Links -->
 			<div class="footer__legal">
-				<span class="footer__legal-link">Політика конфіденційності</span>
+				<a class="footer__legal-link" (click)="navigateFromFooter('/privacy-policy')">Політика конфіденційності</a>
 				<span class="footer__legal-sep">·</span>
 				<span class="footer__legal-link">Умови надання послуг</span>
 			</div>

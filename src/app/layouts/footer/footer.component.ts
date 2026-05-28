@@ -26,10 +26,9 @@ export class FooterComponent {
 		{ label: 'Головна', routerLink: '/' },
 		{ label: 'Послуги', routerLink: '/services' },
 		{ label: 'Проєкти', routerLink: '/projects' },
-		{ label: 'Квести', routerLink: '/quests' },
+		{ label: 'Хакатони', routerLink: '/hackathons' },
+		{ label: 'Компанії', routerLink: '/companies' },
 		{ label: 'Команда', routerLink: '/team' },
-		{ label: 'Новини', routerLink: '/news' },
-		{ label: 'Мерч', routerLink: '/merch' },
 		{ label: 'CV Generation', routerLink: '/cv-generation' },
 	];
 
@@ -40,18 +39,15 @@ export class FooterComponent {
 	];
 
 	protected readonly socialLinks = [
-		{ id: 'x', label: 'X', url: 'https://x.com', color: '#000000' },
-		{ id: 'facebook', label: 'Facebook', url: 'https://facebook.com', color: '#1877F2' },
-		{ id: 'instagram', label: 'Instagram', url: 'https://instagram.com', color: '#E4405F' },
-		{ id: 'telegram', label: 'Telegram', url: 'https://t.me', color: '#26A5E4' },
-		{ id: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com', color: '#0A66C2' },
-		{ id: 'github', label: 'GitHub', url: 'https://github.com', color: '#8B5CF6' },
+		// { id: 'x', label: 'X', url: 'https://x.com', color: '#000000' },
+		// { id: 'facebook', label: 'Facebook', url: 'https://facebook.com', color: '#1877F2' },
+		// { id: 'instagram', label: 'Instagram', url: 'https://instagram.com', color: '#E4405F' },
+		// { id: 'telegram', label: 'Telegram', url: 'https://t.me', color: '#26A5E4' },
+		// { id: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com', color: '#0A66C2' },
+		{ id: 'github', label: 'GitHub', url: 'https://github.com/IT-Kamianets', color: '#8B5CF6' },
 	];
 
 	protected readonly supportLinks = [
-		{ label: 'Help Center' },
-		{ label: 'Contact Us' },
-		{ label: 'FAQ' },
-		{ label: 'Status' },
+		{ label: 'Контакти', routerLink: '/contacts' },
 	];
 }

@@ -22,6 +22,8 @@ export interface Service {
 	currency: 'UAH' | 'USD' | 'EUR';
 	/** Monthly subscription fee, if any */
 	subscriptionFee?: number;
+	/** Optional label shown after price, e.g. "/ год" */
+	priceNote?: string;
 	timeFrom: number;
 	timeTo: number;
 	timeUnit: 'days' | 'weeks' | 'months';

@@ -21,10 +21,14 @@ export class ServiceDetailComponent {
 	});
 
 	getProviderAvatar(avatar: string): string {
-		return `developer/${avatar}.png`;
+		return `/developer/${avatar}.png`;
 	}
 
 	goBack(): void {
 		this.router.navigate(['/services']);
+	}
+
+	order(): void {
+		this.router.navigate(['/contacts']);
 	}
 }
