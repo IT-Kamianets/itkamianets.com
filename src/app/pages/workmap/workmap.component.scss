@@ -5,20 +5,57 @@
 
 	:deep {
 		.leaflet-popup-content {
+			width: auto !important;
+
 			.popup-content {
 				margin: 0;
 				font-family: inherit;
+				min-width: 200px;
 
-				strong {
+				> strong {
 					display: block;
-					margin-bottom: 8px;
+					margin-bottom: 12px;
 					font-size: 16px;
+					font-weight: 600;
+					color: #333;
 				}
 
-				p {
-					margin: 0;
+				.popup-item {
+					margin-bottom: 8px;
 					font-size: 14px;
-					line-height: 1.4;
+
+					strong {
+						display: block;
+						margin-bottom: 4px;
+						font-weight: 600;
+						color: #555;
+					}
+
+					a {
+						color: #0066cc;
+						text-decoration: none;
+						word-break: break-all;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
+
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
+
+				.popup-link {
+					display: inline-block;
+					padding: 6px 12px;
+					background-color: #f0f0f0;
+					border-radius: 4px;
+					font-weight: 500;
+
+					&:hover {
+						background-color: #e0e0e0;
+					}
 				}
 			}
 		}
