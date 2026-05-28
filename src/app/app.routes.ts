@@ -3,6 +3,11 @@ import { authenticatedGuard } from './feature/user/authenticated.guard';
 
 export const routes: Routes = [
 	{
+		path: 'workmap',
+		loadComponent: () =>
+			import('./pages/workmap/workmap.component').then((m) => m.WorkmapComponent),
+	},
+	{
 		path: '',
 		loadComponent: () =>
 			import('./layouts/public/public.component').then((m) => m.PublicComponent),
@@ -88,11 +93,6 @@ export const routes: Routes = [
 				path: 'merch',
 				loadComponent: () =>
 					import('./pages/merch/merch.component').then((m) => m.MerchComponent),
-			},
-			{
-				path: 'workmap',
-				loadComponent: () =>
-					import('./pages/workmap/workmap.component').then((m) => m.WorkmapComponent),
 			},
 			{
 				path: 'services',

@@ -105,7 +105,7 @@ export const serverRoutes: ServerRoute[] = [
 	},
 	{
 		path: 'workmap',
-		renderMode: RenderMode.Client,
+		renderMode: RenderMode.Prerender,
 	},
 	{
 		path: 'services/:id',

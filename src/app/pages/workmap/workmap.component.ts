@@ -1,5 +1,16 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
-import * as L from 'leaflet';
+import { isPlatformBrowser } from '@angular/common';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	OnDestroy,
+	PLATFORM_ID,
+	ViewChild,
+	inject,
+	input,
+} from '@angular/core';
+import type * as Leaflet from 'leaflet';
 
 export interface MapMarker {
 	title: string;
@@ -8,21 +19,23 @@ export interface MapMarker {
 	phone?: string | null;
 	googlePlaceUrl?: string;
 	websiteUrl?: string;
-	icon?: L.Icon | L.DivIcon;
+	icon?: Leaflet.Icon | Leaflet.DivIcon;
 }
 
 @Component({
 	selector: 'app-workmap',
 	templateUrl: './workmap.component.html',
 	styleUrl: './workmap.component.scss',
-	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkmapComponent implements OnInit {
+export class WorkmapComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
-	@Input() markers: MapMarker[] = [];
 
-	private map!: L.Map;
-	private markerClusterGroup!: L.MarkerClusterGroup;
+	readonly markers = input<MapMarker[]>([]);
+
+	private _platformId = inject(PLATFORM_ID);
+	private _map?: Leaflet.Map;
+	private _markerClusterGroup?: Leaflet.MarkerClusterGroup;
 
 	private defaultMarkers: MapMarker[] = [
 		{ title: 'ai-lab', lat: 48.680416, lng: 26.5869576, phone: '+380679323237', googlePlaceUrl: 'https://www.google.com/maps/place/%D0%A1%D0%B0%D0%BB%D0%BE%D0%BD+%D0%9A%D1%80%D0%B0%D1%81%D0%B8+%22Al.lab%22/@48.6913184,26.5517157,13z/data=!4m6!3m5!1s0x4733b9db2dd765b9:0x880898b234ece537!8m2!3d48.680416!4d26.5869576!16s%2Fg%2F11y4791tl_', websiteUrl: 'https://ai-lab.itkamianets.com/' },
@@ -47,7 +60,6 @@ export class WorkmapComponent implements OnInit {
 		{ title: 'mc', lat: 48.67858997118671, lng: 26.582496312781483, phone: '+380983820359', googlePlaceUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2630.906233075217!2d26.582496312781483!3d48.67858997118671', websiteUrl: 'http://mc.itkamianets.com/' },
 		{ title: 'meni-by-mnyasa', lat: 48.677057, lng: 26.586791, phone: '+380986319850', googlePlaceUrl: 'https://www.google.com/maps?daddr=48.6770570000%2C26.5867910000', websiteUrl: 'http://meni-by-mnyasa.itkamianets.com/' },
 		{ title: 'mini-home', lat: 48.674139, lng: 26.5739245, phone: '+380970010332', googlePlaceUrl: 'https://www.google.com/maps/place/Mini+Home+Hostel/@48.674139,26.5739245,17z', websiteUrl: 'https://mini-home.itkamianets.com/' },
-		{ title: 'museumsun', lat: 50.426527779472025, lng: 30.55986691573048, phone: '+380990150452', googlePlaceUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2541.7822902825333!2d30.55986691573048!3d50.426527779472025', websiteUrl: 'http://museumsun.itkamianets.com/' },
 		{ title: 'novita', lat: 48.6847211, lng: 26.597681, phone: '+380679311545', googlePlaceUrl: 'https://www.google.com/maps?q=48.6847211,26.597681&hl=uk&z=17&output=embed', websiteUrl: 'http://novita.itkamianets.com/' },
 		{ title: 'optima-collection', lat: 48.6749961, lng: 26.5717488, phone: '+380672382876', googlePlaceUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2605.5843478950343!2d26.5717488!3d48.6749961', websiteUrl: 'http://optima-collection.itkamianets.com/' },
 		{ title: 'pulse-gym-club', lat: 48.6744696, lng: 26.5891048, phone: null, googlePlaceUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2616.5168010419356!2d26.5891048!3d48.6744696', websiteUrl: 'https://pulse-gym-club.itkamianets.com/' },
@@ -61,28 +73,50 @@ export class WorkmapComponent implements OnInit {
 		{ title: 'vilen', lat: 48.684589, lng: 26.591684, phone: '+380672550251', googlePlaceUrl: 'https://maps.google.com/maps?q=48.684589,26.591684&z=17&t=m&output=embed', websiteUrl: 'http://vilen.itkamianets.com/' }
 	];
 
-	ngOnInit() {
-		this.initializeMap();
-		const markersToUse = this.markers.length > 0 ? this.markers : this.defaultMarkers;
-		this.addMarkers(markersToUse);
-		this.fitMapToBounds(markersToUse);
+	async ngAfterViewInit() {
+		if (!isPlatformBrowser(this._platformId)) return;
+
+		const leafletModule = await import('leaflet');
+		await import('leaflet.markercluster');
+
+		const L = ((leafletModule as unknown as { default?: typeof Leaflet }).default ??
+			leafletModule) as typeof Leaflet;
+
+		this.initializeMap(L);
+
+		const markers = this.markers();
+		const markersToUse = markers.length > 0 ? markers : this.defaultMarkers;
+		this.addMarkers(L, markersToUse);
+
+		this._map?.whenReady(() => {
+			this._map?.invalidateSize();
+			this.fitMapToBounds(L, markersToUse);
+		});
 	}
 
-	private initializeMap() {
-		this.map = L.map('map', {
+	ngOnDestroy() {
+		this._map?.remove();
+	}
+
+	private initializeMap(L: typeof Leaflet) {
+		this._map = L.map(this.mapContainer.nativeElement, {
 			center: [48.6872565, 26.5864605],
 			zoom: 13,
 		});
 
-		this.markerClusterGroup = L.markerClusterGroup();
-		this.map.addLayer(this.markerClusterGroup);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			maxZoom: 19,
+		}).addTo(this._map);
 
-		setTimeout(() => {
-			this.map.invalidateSize();
-		}, 100);
+		this._markerClusterGroup = L.markerClusterGroup();
+		this._map.addLayer(this._markerClusterGroup);
 	}
 
-	addMarkers(markersArray: MapMarker[]) {
+	addMarkers(L: typeof Leaflet, markersArray: MapMarker[]) {
+		const markerClusterGroup = this._markerClusterGroup;
+		if (!markerClusterGroup) return;
+
 		markersArray.forEach((markerData) => {
 			const marker = L.marker([markerData.lat, markerData.lng], {
 				icon: markerData.icon || L.icon({
@@ -98,7 +132,7 @@ export class WorkmapComponent implements OnInit {
 			const popupContent = this.createPopupContent(markerData);
 			marker.bindPopup(popupContent);
 
-			this.markerClusterGroup.addLayer(marker);
+			markerClusterGroup.addLayer(marker);
 		});
 	}
 
@@ -122,15 +156,22 @@ export class WorkmapComponent implements OnInit {
 	}
 
 	clearMarkers() {
-		this.markerClusterGroup.clearLayers();
+		this._markerClusterGroup?.clearLayers();
 	}
 
-	fitMapToBounds(markers: MapMarker[]) {
-		if (markers.length === 0) return;
+	fitMapToBounds(L: typeof Leaflet, markers: MapMarker[]) {
+		if (!this._map || markers.length === 0) return;
 
 		const bounds = L.latLngBounds(
 			markers.map((m) => [m.lat, m.lng] as [number, number])
 		);
-		this.map.fitBounds(bounds, { padding: [50, 50] });
+
+		if (!bounds.isValid()) return;
+
+		this._map.fitBounds(bounds, {
+			animate: false,
+			maxZoom: 15,
+			padding: [32, 32],
+		});
 	}
 }
