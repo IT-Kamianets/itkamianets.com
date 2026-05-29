@@ -1,0 +1,1 @@
+import"./chunk-C6Q5SG76.js";var t=[{path:"certificates",loadComponent:()=>import("./chunk-3L74G343.js").then(e=>e.CertificatesComponent)},{path:"certificate/:id",loadComponent:()=>import("./chunk-4LDHY6UR.js").then(e=>e.CertificateComponent)}];export{t as routes};

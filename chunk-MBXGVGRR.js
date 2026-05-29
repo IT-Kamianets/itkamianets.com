@@ -1,0 +1,1 @@
+import"./chunk-C6Q5SG76.js";var o=[{path:"jobs",loadComponent:()=>import("./chunk-YADXCD2K.js").then(e=>e.PublicJobsComponent)},{path:"job/:id",loadComponent:()=>import("./chunk-HMC3NIS4.js").then(e=>e.PublicJobComponent)}];export{o as routes};

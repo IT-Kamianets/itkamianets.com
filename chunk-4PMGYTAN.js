@@ -1,0 +1,1 @@
+import"./chunk-C6Q5SG76.js";var o=[{path:"profiles",loadComponent:()=>import("./chunk-5A7ZECUM.js").then(e=>e.ProfilesComponent)},{path:"profile/:id",loadComponent:()=>import("./chunk-OVJSC3DK.js").then(e=>e.ProfileDetailComponent)}];export{o as routes};

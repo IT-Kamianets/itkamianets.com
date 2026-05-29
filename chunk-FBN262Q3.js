@@ -1,0 +1,1 @@
+import"./chunk-C6Q5SG76.js";var o=[{path:"competitions",loadComponent:()=>import("./chunk-CRLCMLMI.js").then(e=>e.CompetitionsComponent)},{path:"competition/:id",loadComponent:()=>import("./chunk-23BQDZT3.js").then(e=>e.CompetitionComponent)}];export{o as routes};

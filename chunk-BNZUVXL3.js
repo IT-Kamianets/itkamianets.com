@@ -1,0 +1,1 @@
+import{a as r}from"./chunk-2R3ADUO6.js";import{c as e}from"./chunk-TDLJ26WS.js";import{O as t}from"./chunk-CGR4FBK6.js";var s=()=>{let i=t(r),n=t(e);return i.isAuthenticated()?!0:n.createUrlTree(["/sign"])};export{s as a};

@@ -1,0 +1,1 @@
+import"./chunk-C6Q5SG76.js";var o=[{path:"courses",loadComponent:()=>import("./chunk-5TJIZII7.js").then(e=>e.CoursesComponent)},{path:"courses/:slug",loadComponent:()=>import("./chunk-PUFC5WAK.js").then(e=>e.CourseComponent)},{path:"courses/:courseSlug/lessons/:lessonSlug",loadComponent:()=>import("./chunk-3EAZGZ3C.js").then(e=>e.LessonComponent)}];export{o as routes};
